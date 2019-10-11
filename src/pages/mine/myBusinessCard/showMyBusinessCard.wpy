@@ -1,0 +1,242 @@
+<!--  -->
+<style lang='scss'>
+    .container {
+        .lawyerAvatar {
+            position: relative;
+            height: 100%;
+            .avatar {
+                position: absolute;
+                top: 0;
+                z-index: 9;
+            }
+            .avatar-btn {
+                position: absolute;
+                bottom: -25rpx;
+                right: 28rpx;
+                z-index: 99;
+                display: flex;
+                >view {
+                    padding: 14rpx;
+                    width: 44rpx;
+                    height: 44rpx;
+                    border-radius: 50%;
+                    background: #ffffff;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 8px 15px rgba(112, 112, 112, 0.3);
+                    >icon {
+                        color: #A57E46;
+                        font-size: 40rpx;
+                    }
+                }
+                >view:not(:first-child):not(:last-child) {
+                    margin: 0 20rpx;
+                }
+            }
+        }
+        .lawyerInfo {
+            padding: 44rpx 28rpx;
+            .info-top {
+                padding-bottom: 44rpx;
+                border-bottom: 1px solid #f4f4f4;
+                >view:not(:last-child) {
+                    margin-bottom: 24rpx;
+                }
+                .info-name {
+                    font-size: 36rpx;
+                    >text:last-child {
+                        color: #7a7a7a;
+                        margin-left: 20rpx;
+                        font-size: 28rpx;
+                    }
+                }
+                .info-originalFirm {
+                    font-size: 32rpx;
+                }
+                .info-goodBusiness {
+                    color: #A57E46;
+                }
+            }
+            .info-bottom {
+                padding-top: 44rpx;
+                >view:not(:last-child) {
+                    margin-bottom: 14rpx;
+                }
+                >view {
+                    >icon {
+                        color: #000;
+                        font-size: 32rpx;
+                        margin-right: 20rpx;
+                    }
+                }
+            }
+            .info-btn {
+                        padding: 70rpx 0;
+                        display: flex;
+                        // height: 20%;
+                        align-items: center;
+                        justify-content: center;
+                        >view {
+                            width: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            .share-btn {
+                                width: 65%;
+                                height: 100%;
+                                background: #A57E46;
+                                display: flex;
+                                align-items: baseline;
+                                justify-content: center;
+                                font-size: 28rpx;
+                                color: #fff;
+                                >icon {
+                                    margin-right: 14rpx;
+                                }
+                            }
+                        }
+                    }
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="lawyerAvatar" style="width:100vw;height:{{viewSize*0.7}}px">
+            <image class="avatar" style="width:100vw;height:{{viewSize*0.7}}px" src="{{baseData.currentAvatar}}" lazy-load="false" />
+            <view class="avatar-btn">
+                <view catchtap='dial'>
+                    <icon class="iconfont icon-dianhua"></icon>
+                </view>
+                <view catchtap="map">
+                    <icon class="iconfont icon-dizhi"></icon>
+                </view>
+                <view>
+                    <icon class="iconfont icon-youxiang"></icon>
+                </view>
+            </view>
+        </view>
+        <view class="lawyerInfo">
+            <view class="info-top">
+                <view class="info-name">
+                    <text>{{baseData.name||'未填写'}}</text>
+                    <text>律师</text>
+                </view>
+                <view class="info-originalFirm">
+                    {{baseData.originalFirm||'未填写'}}
+                </view>
+                <view class="info-goodBusiness">
+                    {{baseData.goodBusiness||'未填写'}}
+                </view>
+            </view>
+            <view class="info-bottom">
+                <view>
+                    <icon class="iconfont icon-dianhua"></icon>
+                    <text>{{baseData.phone||'未填写'}}</text>
+                </view>
+                <view>
+                    <icon class="iconfont icon-youxiang"></icon>
+                    <text>{{baseData.perEmail||'未填写'}}</text>
+                </view>
+                <view>
+                    <icon class="iconfont icon-dizhi"></icon>
+                    <text>{{baseData.homeAddress||'未填写'}}</text>
+                </view>
+            </view>
+            <view class="info-btn">
+                <view>
+                    <button class="share-btn" @tap="contactNow">
+                                            <icon class="iconfont icon-dianhua"></icon>
+                                            <text>立即联系</text>
+                            </button>
+                </view>
+                <view>
+                    <button class="share-btn" open-type="share">
+                                                <icon class="iconfont icon-fenxiang"></icon>
+                                                <text>分享</text>
+                                            </button>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../utils/cofig/ajax.js';
+    export default class showMyBusinessCard extends wepy.page {
+        config = {
+            navigationBarTitleText: "个人名片",
+            navigationBarBackgroundColor: '#ffffff',
+            navigationBarTextStyle: 'black'
+        };
+        data = {
+            baseData: {},
+            viewSize: ''
+        };
+        components = {};
+        methods = {
+            dial(){
+                wx.makePhoneCall({
+                    phoneNumber: this.baseData.phone
+                });
+            },
+            map(){
+                wx.navigateTo({ url: './map' });
+            },
+            contactNow() {
+                wx.showActionSheet({
+                    itemList: ['立即呼叫', '保存至通讯录'], //按钮的文字数组，数组长度最大为6个,
+                    itemColor: '#5d73fa', //按钮的文字颜色,
+                    success: res => {
+                        switch (res.tapIndex) {
+                            case 0:
+                                wx.makePhoneCall({
+                                    phoneNumber: this.baseData.phone,
+                                    //  success
+                                });
+                                break;
+                            case 1:
+                                wx.addPhoneContact({
+                                    //   photoFilePath: ,
+                                    //   nickName: ,
+                                    //   lastName: ,
+                                    //   middleName: ,
+                                    firstName: this.baseData.name,
+                                    mobilePhoneNumber: this.baseData.phone,
+                                    //   weChatNumber: ,
+                                    //   email: ,
+                                    success: (result) => {
+                                        console.log(result)
+                                    },
+                                    fail: () => {},
+                                    complete: () => {}
+                                });
+                                break;
+                        }
+                    }
+                });
+            },
+        };
+        events = {};
+        watch = {};
+        computed = {};
+        onShareAppMessage() {
+            return {
+                title: '个人名片',
+                path: '/pages/mine/myBusinessCard/showMyBusinessCard?originalFirm=' + this.baseData.originalFirm + '&name=' + this.baseData.name + '&phone=' + this.baseData.phone + '&perEmail=' + this.baseData.perEmail + '&homeAddress=' + this.baseData.homeAddress + '&goodBusiness=' + this.baseData.goodBusiness + '&currentAvatar=' + this.baseData.currentAvatar,
+            }
+        }
+        onLoad(options) {
+            this.viewSize = wx.getSystemInfo({
+                success: res => {
+                    this.viewSize = res.windowWidth;
+                    this.$apply();
+                }
+            });
+            this.baseData = options;
+            this.$apply();
+        };
+    }
+</script>

@@ -1,0 +1,142 @@
+
+    <view class="body">
+        <view class="top-title">
+            <text>{{title}}</text>
+        </view>
+        <view class="main">
+            <view class="checked">
+                <view>
+                    <text>类别</text>
+                </view>
+                <radio-group class="radio-group" bindchange="bindPickerChange" style="padding-bottom:20rpx;border-bottom:1px solid #dfdfdf;" data-wpybindpickerchange-a="Category">
+                    <label class="radio"  wx:for="{{Category}}" wx:key="index">
+                                <radio value="{{item.value}}" checked="{{item.isShow}}" color="#5d73fa" disabled="{{item.isShow}}"/>
+                                <text style="margin-right:60rpx">{{item.displayText}}</text>
+                            </label>
+                </radio-group>
+                <view class="warming"  wx:if="{{warning[2]}}">
+                    <text>此字段是必需的</text>
+                </view>
+            </view>
+            <view class="option">
+                <view>
+                    <text class="title">客户名称</text>
+                </view>
+                <picker bindchange="bindPickerChange" value="{{ClientId.index}}" range="{{ClientId.displayText}}" name="ClientId" disabled="{{ClientId.isSelected}}" data-wpybindpickerchange-a="ClientId">
+                    <view class="picker" style="background:{{ClientId.isSelected?'#dfdfdf':''}}">
+                        <view>
+                            <text>{{ClientId.displayText[ClientId.index]}}</text>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+                    </view>
+                </picker>
+            </view>
+            <view class="option">
+                <view>
+                    <text class="title">案件名称</text>
+                </view>
+                <picker bindchange="bindPickerChange" value="{{CaseId.index}}" range="{{CaseId.displayText}}" name="CaseId" disabled="{{CaseId.isSelected}}" data-wpybindpickerchange-a="CaseId">
+                    <view class="picker" style="background:{{CaseId.isSelected?'#dfdfdf':''}}">
+                        <view>
+                            <text>{{CaseId.displayText[CaseId.index]}}</text>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+                    </view>
+                </picker>
+            </view>
+            
+    <view class="tui-picker-content">
+        <view>{{$StartTime$timeObj.title}}</view>
+        <picker mode="multiSelector" value="{{$StartTime$dateTime}}" bindchange="$StartTime$changeDateTime" range="{{$StartTime$dateTimeArray}}" name="{{$StartTime$timeObj.name}}" disabled="{{$StartTime$timeObj.isChecked}}" bindcolumnchange="$StartTime$changeDateTimeColumn">
+            <view class="tui-picker-detail" style="background:{{$StartTime$timeObj.isChecked?'#dfdfdf':''}}">
+                  {{$StartTime$dateData[0]+'/'+$StartTime$dateData[1]+'/'+$StartTime$dateData[2]+' '+$StartTime$dateData[3]+':'+$StartTime$dateData[4]+':'+$StartTime$dateData[5]}}
+                 <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+        </picker>
+    </view>
+
+            <view class="warming" wx:if="{{dateOptions.isData}}" style="margin:-36rpx 0 36rpx 0">
+                <text>此字段是必需的</text>
+            </view>
+            
+    <view class="tui-picker-content">
+        <view>{{$EndTime$timeObj.title}}</view>
+        <picker mode="multiSelector" value="{{$EndTime$dateTime}}" bindchange="$EndTime$changeDateTime" range="{{$EndTime$dateTimeArray}}" name="{{$EndTime$timeObj.name}}" disabled="{{$EndTime$timeObj.isChecked}}" bindcolumnchange="$EndTime$changeDateTimeColumn">
+            <view class="tui-picker-detail" style="background:{{$EndTime$timeObj.isChecked?'#dfdfdf':''}}">
+                  {{$EndTime$dateData[0]+'/'+$EndTime$dateData[1]+'/'+$EndTime$dateData[2]+' '+$EndTime$dateData[3]+':'+$EndTime$dateData[4]+':'+$EndTime$dateData[5]}}
+                 <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+        </picker>
+    </view>
+
+            <view class="warming" wx:if="{{dateOptions1.isData}}" style="margin:-36rpx 0 36rpx 0">
+                <text>此字段是必需的</text>
+            </view>
+            <view class="input">
+                <view>
+                    <text>自报时长(小时)</text>
+                </view>
+                <view class="input-container" style="border-bottom:1px solid {{inputChecked[0]?'#5d73fa':'#dedede'}};color:#7a7a7a">
+                    <input id="SelfDuration" name="SelfDuration" bindfocus="bindfocus" bindblur="bindblur" placeholder="请输入自报时长" bindinput="bindinput" type="digit" value="{{SelfDuration}}" data-wpybindfocus-a="{{0}}" data-wpybindblur-a="{{0}}"/>
+                </view>
+                <view class="warming" wx:if="{{warning[3]}}">
+                    <text>自报时长必须在0和24之间</text>
+                </view>
+            </view>
+            <view class="option">
+                <view>
+                    <text class="title">工作类别</text>
+                </view>
+                <picker bindchange="bindPickerChange" value="{{WorkType.index}}" range="{{WorkType.displayText}}" name="WorkType" disabled="{{WorkType.isSelected}}" data-wpybindpickerchange-a="WorkType">
+                    <view class="picker" style="background:{{WorkType.isSelected?'#dfdfdf':''}}">
+                        <view>
+                            <text>{{WorkType.displayText[WorkType.index]}}</text>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+                    </view>
+                </picker>
+                <view class="warming" wx:if="{{warning[0]}}">
+                    <text>此字段是必需的</text>
+                </view>
+            </view>
+            <view class="option" wx:if="{{!Participant.isSelected}}">
+                <view>
+                    <text class="title">参与人</text>
+                </view>
+                <picker bindchange="bindPickerChange" value="{{Participant.index[Participant.index.length-1]}}" range="{{Participant.displayText}}" name="Participant" data-wpybindpickerchange-a="Participant">
+                    <view class="picker">
+                        <view style="display:flex;flex-wrap: wrap">
+                            <block wx:for="{{Participant.index}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                                <view class="part-item">
+                                    <text>{{Participant.displayText[item]}}</text>
+                                    <icon class="iconfont icon-zirenwushanchu1" style="font-size:48rpx" catchtap="deletePItem" data-wpydeletepitem-a="{{index}}"/>
+                                </view>
+                            </block>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+                    </view>
+                </picker>
+            </view>
+            <view class="input">
+                <view>
+                    <text>描述</text>
+                </view>
+                <view class="input-container" style="border-bottom:1px solid {{inputChecked[1]?'#5d73fa':'#dedede'}};color:#7a7a7a">
+                    <textarea id="Description" name="Description" bindfocus="bindfocus" bindblur="bindblur" placeholder="请输入描述" bindinput="bindinput" value="{{Description?Description:''}}" auto-height style="width:83%" data-wpybindfocus-a="{{1}}" data-wpybindblur-a="{{1}}"/>
+                </view>
+                <view class="warming" wx:if="{{warning[1]}}">
+                    <text>此字段是必需的</text>
+                </view>
+            </view>
+            <view class="input">
+                <view>
+                    <text>备注</text>
+                </view>
+                <view class="input-container" style="border-bottom:1px solid {{inputChecked[2]?'#5d73fa':'#dedede'}};color:#7a7a7a">
+                    <textarea id="Remark" name="Remark" bindfocus="bindfocus" bindblur="bindblur" placeholder="请输入备注" bindinput="bindinput" type="text" value="{{Remark?Remark:''}}" auto-height style="width:83%;" data-wpybindfocus-a="{{2}}" data-wpybindblur-a="{{2}}"/>
+                </view>
+            </view>
+        </view>
+        <image src="{{'../../../../images/test.png'}}" style="opacity:{{addOpacity}} ;" mode="scaleToFill" class="addImage" bindtouchstart="touchStart" bindtouchend="touchEnd">
+        </image>
+    </view>

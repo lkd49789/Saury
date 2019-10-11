@@ -1,0 +1,105 @@
+<!--  -->
+<style lang='scss'>
+    .container {
+        .main {
+            padding: 149rpx 28rpx 44rpx 28rpx;
+            >view:not(:last-child){
+                border-bottom:1px solid #f4f4f4;
+            }
+            .items{
+                display: flex;
+                align-items: center;
+                margin-bottom: 22rpx;
+                padding-bottom: 22rpx;
+                // justify-content: space-between;
+                .items-left{
+                    // width:20%;
+                    display: flex;
+                    flex-direction:column;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right:30rpx;
+                    >image{
+                        width:70rpx;
+                        height:70rpx;
+                        background:#7a7a7a;
+                        border-radius:50%;
+                        margin-bottom: 14rpx;
+                    }
+                }
+                .items-right{
+                    width:80%;
+                    color:#7a7a7a;
+                   .items-right-top{
+                       display: flex;
+                       justify-content: space-between;
+                       align-content: center;
+                       margin-bottom: 20rpx;
+                   }
+                   .items-right-bottom{
+                       display: flex;
+                       justify-content: space-between;
+                       align-content: center;
+                   }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="page-title">
+            审核记录
+        </view>
+        <view class="main">
+            <repeat for="{{approvalList}}" key="index" index="index" item="item">
+                <view class="items">
+                    <view class="items-left">
+                        <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false" />
+                        <text>{{item.employeeName||'未填写'}}</text>
+                    </view>
+                    <view class="items-right"> 
+                        <view class="items-right-top">
+                            <text style="color:{{item.result=='A'?'#069400':item.result=='R'?'#e20000':'#7a7a7a'}}">{{item.resultText||'未填写'}}</text>
+                            <text>{{item.approvalDateText||'未填写'}}</text>
+                        </view>
+                        <view class="items-right-bottom">
+                            <text>{{item.remark||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+            </repeat>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import {formatTime} from '../../../../utils/cofig/api.js'
+    export default class auditResultsDetail extends wepy.page {
+        data = {
+            approvalList: []
+        };
+        components = {};
+        methods = {};
+        events = {};
+        watch = {};
+        computed = {};
+        async getAvatar() {
+            for (var index in this.approvalList) {
+                this.approvalList[index].approvalDateText=formatTime(this.approvalList[index].approvalDate)
+                var http = '/api/services/web/personal/GetEmployeePhoto?id=' + this.approvalList[index].employeeId;
+                this.approvalList[index].avatar = await ajax.getAavatar(http);
+            }
+            this.$apply()
+        }
+        onLoad(options) {
+            var approvalList = JSON.parse(options.approvalList);
+            this.approvalList = approvalList;
+            this.getAvatar();
+        };
+        onShow() {};
+    }
+</script>

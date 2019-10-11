@@ -1,0 +1,613 @@
+<!--  -->
+<style lang='scss'>
+    .container {
+        height: 100%;
+        .titles {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .checked {
+            margin: 149rpx 28rpx 0 28rpx;
+            .radio-group {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 20rpx;
+                .radio {
+                    width: 100%;
+                }
+            }
+        }
+        .tui-picker-content {
+            margin-bottom: 36rpx;
+            picker {
+                padding: 20rpx 0;
+                border-bottom: 1px solid #dfdfdf;
+                .tui-picker-detail {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    color: #7a7a7a;
+                }
+            }
+        }
+        .space-between{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            >view:first-child{
+                width:70%;
+            }
+            >view:last-child{
+                width:30%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+         .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 999999;
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="titles">
+            <text>创建客户</text>
+        </view>
+        <view class="checked">
+            <radio-group class="radio-group" @change="bindPickerChang" style="padding-bottom:20rpx;">
+                <label class="radio" wx:for="{{ClientType}}" wx:key="index">
+                    <view>
+                        <radio value="{{item.value}}" checked="{{item.isSelected}}" color="#5d73fa"/>
+                    <text>{{item.displayText}}</text>
+                    </view>
+                </label>
+            </radio-group>
+            <Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
+            <EnName :input.sync="EnName" :inputValue.sync='EnNameValue' :twoWayTitle="EnNameValue" />
+            <pyName :input.sync="pyName" :inputValue.sync='pyNameValue' :twoWayTitle="pyNameValue" />
+            <Address :input.sync="Address" :inputValue.sync='AddressValue' :twoWayTitle="AddressValue" />
+            <RegisteredName :input.sync="RegisteredName" :inputValue.sync='RegisteredNameValue' :twoWayTitle="RegisteredNameValue" />
+            <RegisteredNo :input.sync="RegisteredNo" :inputValue.sync='RegisteredNoValue' :twoWayTitle="RegisteredNoValue" />
+            <OrganizationUnitId :options.sync="OrganizationUnitId" :index.sync='OrganizationUnitIdIndex' :twoWayTitle="OrganizationUnitIdIndex" />
+            <view class="tui-picker-content">
+                <view>客户类型</view>
+                <picker mode="multiSelector" value="{{CategoryIndex}}" @tap="getData('Category')" @change="change('Category')" bindcolumnchange="bindMultiPickerColumnChangeCategory" range="{{Category}}" range-key="name">
+                    <view class="tui-picker-detail">
+                        {{getCategoryArr.length!==0?getCategoryArr:'请选择'}}
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+            <view class="tui-picker-content">
+                <view>客户行业</view>
+                <picker mode="multiSelector" value="{{IndustryTypeIndex}}" @tap="getData('IndustryType')" @change="change('IndustryType')" bindcolumnchange="bindMultiPickerColumnChangeCategory2" range="{{IndustryType}}" range-key="name">
+                    <view class="tui-picker-detail">
+                        {{getTradeArr.length!==0?getTradeArr:'请选择'}}
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+            <view class="tui-picker-content">
+                <view>地区</view>
+                <picker mode="region" value="{{region}}" bindchange="changePickerData" name="region" bindcolumnchange="changePickerDataColumn" custom-item="{{customItem}}">
+                    <view class="tui-picker-detail">
+                        {{region.length!==0?region[0]+'/'+region[1]+'/'+region[2]:'请选择'}}
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+             <Post :input.sync="Post" :inputValue.sync='PostValue' :twoWayTitle="PostValue" />
+             <HomePage :input.sync="HomePage" :inputValue.sync='HomePageValue' :twoWayTitle="HomePageValue" />
+             <view class="space-between">
+                  <Origin :options.sync="Origin" :index.sync='OriginIndex' :twoWayTitle="OriginIndex" />
+                  <view>
+                        <checkbox id="ImportLevel" value="{{ImportLevel.checked}}"  checked="{{ImportLevel.checked}}" @tap="isImportLevel" color="#5d73fa"/>{{ImportLevel.title}}
+                    </view>
+             </view>
+            <Description :input.sync="Description" :inputValue.sync='DescriptionValue' :twoWayTitle="DescriptionValue" />
+        </view>
+        <image src="{{'../../../../images/next.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;" @touchstart="touchStart" @touchend="touchEnd">
+        </image>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import Name from '../../../../components/picker/input';
+    import EnName from '../../../../components/picker/input';
+    import pyName from '../../../../components/picker/input';
+    import Address from '../../../../components/picker/input';
+    import Post from '../../../../components/picker/input';
+    import RegisteredName from '../../../../components/picker/input';
+    import RegisteredNo from '../../../../components/picker/input';
+    import HomePage from '../../../../components/picker/input';
+    import Description from '../../../../components/picker/input';
+    import OrganizationUnitId from '../../../../components/picker/option';
+    import Origin from '../../../../components/picker/option';
+    export default class createClient extends wepy.page {
+        config = {
+            navigationBarTitleText: "",
+        };
+        components = {
+            Name,
+            EnName,
+            pyName,
+            Address,
+            RegisteredName,
+            RegisteredNo,
+            OrganizationUnitId,
+            Origin,
+            Post,
+            HomePage,
+            Description
+        };
+        data = {
+            addOpacity:1,
+            clientBaseData: {
+                // Address: "地址"
+                // Birthday: "2019-03-06"
+                // CardNo: "123123123123123123"
+                // Category: "10"
+                // ClientType: "G"
+                // Description: "描述"
+                // Email: "ou_tong@163.com"
+                // EnName: "客户名称英文"
+                // Fax: ""
+                // HomePage: ""
+                // Id: ""
+                // ImportLevel: "02"
+                // IndustryType: "0211" //客户行业
+                // Landline: ""
+                // LegalDuty: "GM"
+                // LegalPerson: "LP01"
+                // Linker: ""
+                // Name: "客户名称"
+                // Nation: "1"
+                // Occupation: "职业"
+                // OrganizationUnitId: "12"
+                // Origin: "02"
+                // Post: ""
+                // Region: "340803001"
+                // RegisteredName: ""
+                // RegisteredNo: ""
+                // ShortName: ""
+                // Tid: ""
+                // TycName: ""
+            },
+            ClientType: [],
+            Name: {
+                title: '客户名称',
+                name: 'Name',
+                warning: true,
+                type: 'text',
+                options: false
+            },
+            NameValue: '',
+            EnName: {
+                title: '客户名称(英文)',
+                name: 'EnName',
+                warning: false,
+                type: 'text',
+                options: false
+            },
+            EnNameValue: '',
+            pyName: {
+                title: '客户名称缩写',
+                name: 'pyName',
+                warning: false,
+                type: 'text',
+                options: false
+            },
+            pyNameValue: '',
+            RegisteredName: {
+                title: '企业工商注册名称',
+                name: 'RegisteredName',
+                warning: false,
+                type: 'text',
+                options: false
+            },
+            RegisteredNameValue: '',
+            RegisteredNo: {
+                title: '企业公司注册号',
+                name: 'RegisteredNo',
+                warning: false,
+                type: 'text',
+                options: false
+            },
+            RegisteredNoValue: '',
+            Address: {
+                title: '客户地址',
+                name: 'Address',
+                warning: false,
+                type: 'text',
+                options: false
+            },
+            AddressValue: '',
+            OrganizationUnitId: {
+                title: '隶属组织架构',
+                name: 'OrganizationUnitId',
+                value: [""],
+                displayText: ["请选择"],
+                warning: true
+            },
+            OrganizationUnitIdIndex: 0,
+            //业务类型
+            getCategoryArr: [],
+            Category: [
+                [],
+                [],
+                []
+            ],
+            CategoryIndex: [0,0],
+            CategoryTrue: true,
+            getTradeArr: [],
+            IndustryType: [
+                [],
+                [],
+                [],
+                []
+            ],
+            IndustryTypeIndex: [0, 0, 0, 0],
+            tradeTrue: true,
+            //地区
+            region:[],
+            // 邮编
+            Post: {
+                title: '邮编号码',
+                name: 'Post',
+                warning: false,
+                type: 'number',
+                options: false
+            },
+            PostValue: '',
+            // 主页
+            HomePage: {
+                title: '主页',
+                name: 'HomePage',
+                warning: false,
+                type: 'text',
+                options: false
+            },
+            HomePageValue: '',
+            //客户来源
+            Origin: {
+                title: '客户来源',
+                name: 'OrganizationUnitId',
+                value: [""],
+                displayText: ["请选择"],
+                warning: true
+            },
+            OriginIndex:0,
+            //是否重要
+            ImportLevel:{
+                title:'是否重要',
+                checked:false,
+                ImportLevelData:[]
+            },
+              // 客户描述
+            Description: {
+                title: '客户描述',
+                name: 'Description',
+                warning: false,
+                options: true
+            },
+             DescriptionValue: '',
+        };
+        methods = {
+            touchStart() {
+                this.addOpacity = 0.6;
+                this.$apply();
+            },
+            touchEnd(){
+                if(this.clientBaseData.Name&&this.clientBaseData.OrganizationUnitId&&this.clientBaseData.Origin){
+                    try {
+                        wx.setStorageSync('CLIENT_CREATE_DATA',this.clientBaseData);
+                        wx.navigateTo({ url: './createClientPrincipalInfo' });
+                        this.addOpacity=1;
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }else{
+                    this.OrganizationUnitId.warning=true;
+                    this.Origin.warning=true;
+                    wx.showToast({
+                      title: '请完成必填项！', //提示的内容,
+                      icon: 'none', //图标,
+                      duration: 2000, //延迟时间,
+                      mask: false, //显示透明蒙层，防止触摸穿透,
+                      success: res => {
+                          this.addOpacity=1;
+                          this.$apply();
+                      }
+                    });
+                }
+            },
+            bindPickerChang(e){
+                this.clientBaseData.ClientType=e.detail.value;
+            },
+            //是否重要
+            isImportLevel(){
+                this.ImportLevel.checked=!this.ImportLevel.checked;
+                if(this.ImportLevel.checked){
+                    this.clientBaseData.ImportLevel=this.ImportLevel.ImportLevelData[0].value;
+                }else{
+                    this.clientBaseData.ImportLevel=this.ImportLevel.ImportLevelData[1].value;    
+                } 
+            },
+            changePickerData(e) {
+                console.log(e);
+                this.region = e.detail.value;
+                this.clientBaseData.Region = e.detail.postcode;
+                this.$apply();
+            },
+            getData(type) {
+                if (type == "Category") {
+                    this.Category = [
+                        [],
+                        [],
+                        []
+                    ]
+                    this.$apply()
+                    this.GetGeneralCodeComboOutput('CLKL', 0, '');
+                    this.CategoryTrue = false
+                } else if (type == "IndustryType") {
+                    this.IndustryType = [
+                        [],
+                        [],
+                        [],
+                        []
+                    ]
+                    this.$apply()
+                    this.GetGeneralCodeComboOutput('CLIDT', 0, '');
+                    this.tradeTrue = false
+                }
+            },
+            change(type) {
+                console.log(type);
+                if (type == "Category") {
+                    if (this.Category[1].length == 0) {
+                        this.getCategoryArr = this.Category[0][this.CategoryIndex[0]].name;
+                        this.clientBaseData.Category = this.Category[0][this.CategoryIndex[0]].id;
+                    } else if (this.Category[2].length == 0) {
+                        this.getCategoryArr = this.Category[0][this.CategoryIndex[0]].name + '/' + this.Category[1][this.CategoryIndex[1]].name;
+                        this.clientBaseData.Category = this.Category[1][this.CategoryIndex[1]].id;
+                    } else {
+                        this.getCategoryArr = this.Category[0][this.CategoryIndex[0]].name + '/' + this.Category[1][this.CategoryIndex[1]].name + '/' + this.Category[2][this.CategoryIndex[2]].name;
+                        this.clientBaseData.Category = this.Category[2][this.CategoryIndex[2]].id;
+                    }
+                } else if (type == "IndustryType") {
+                    if (this.IndustryType[1].length == 0) {
+                        this.getTradeArr = this.IndustryType[0][this.IndustryTypeIndex[0]].name;
+                        this.clientBaseData.IndustryType = this.IndustryType[0][this.IndustryTypeIndex[0]].id;
+                    } else if (this.IndustryType[2].length == 0) {
+                        this.getTradeArr = this.IndustryType[0][this.IndustryTypeIndex[0]].name + '/' + this.IndustryType[1][this.IndustryTypeIndex[1]].name
+                        this.clientBaseData.IndustryType = this.IndustryType[1][this.IndustryTypeIndex[1]].id;
+                    } else if (this.IndustryType[3].length == 0) {
+                        this.getTradeArr = this.IndustryType[0][this.IndustryTypeIndex[0]].name + '/' + this.IndustryType[1][this.IndustryTypeIndex[1]].name + '/' + this.IndustryType[2][this.IndustryTypeIndex[2]].name;
+                        this.clientBaseData.IndustryType = this.IndustryType[2][this.IndustryTypeIndex[2]].id;
+                    } else {
+                        this.getTradeArr = this.IndustryType[0][this.IndustryTypeIndex[0]].name + '/' + this.IndustryType[1][this.IndustryTypeIndex[1]].name + '/' + this.IndustryType[3][this.IndustryTypeIndex[3]].name + '/' + this.IndustryType[3][this.IndustryTypeIndex[3]].name;
+                        this.clientBaseData.IndustryType = this.IndustryType[3][this.IndustryTypeIndex[3]].id;
+                    }
+                }
+                this.$apply();
+            },
+            bindMultiPickerColumnChangeCategory(e) {
+                console.log(e);
+                switch (e.detail.column) {
+                    case 0:
+                        this.Category[1] = []
+                        this.Category[2] = []
+                        this.GetGeneralCodeComboOutput("CLKL", 1, this.Category[0][e.detail.value].id);
+                        this.CategoryIndex[0] = e.detail.value
+                        this.CategoryIndex[1] = 0
+                        this.CategoryIndex[2] = 0
+                        break;
+                    case 1:
+                        this.Category[2] = []
+                        this.GetGeneralCodeComboOutput("CLKL", 2, this.Category[1][e.detail.value].id);
+                        this.CategoryIndex[1] = e.detail.value
+                        this.CategoryIndex[2] = 0
+                        break;
+                    case 2:
+                        this.CategoryIndex[2] = e.detail.value
+                        break;
+                }
+                this.$apply()
+            },
+            bindMultiPickerColumnChangeCategory2(e) {
+                switch (e.detail.column) {
+                    case 0:
+                        this.IndustryType[1] = []
+                        this.IndustryType[2] = []
+                        this.IndustryType[3] = []
+                        this.GetGeneralCodeComboOutput("CLIDT", 1, this.IndustryType[0][e.detail.value].id);
+                        this.IndustryTypeIndex[0] = e.detail.value
+                        this.IndustryTypeIndex[1] = 0
+                        this.IndustryTypeIndex[2] = 0
+                        this.IndustryTypeIndex[3] = 0
+                        break;
+                    case 1:
+                        this.IndustryType[2] = []
+                        this.IndustryType[3] = []
+                        this.GetGeneralCodeComboOutput("CLIDT", 2, this.IndustryType[1][e.detail.value].id);
+                        this.IndustryTypeIndex[1] = e.detail.value
+                        this.IndustryTypeIndex[2] = 0
+                        this.IndustryTypeIndex[3] = 0
+                        break;
+                    case 2:
+                        this.IndustryType[3] = []
+                        this.GetGeneralCodeComboOutput("CLIDT", 3, this.IndustryType[2][e.detail.value].id);
+                        this.IndustryTypeIndex[2] = e.detail.value
+                        this.IndustryTypeIndex[3] = 0
+                        break;
+                    case 3:
+                        this.IndustryTypeIndex[3] = e.detail.value
+                    default:
+                        break;
+                }
+                this.$apply();
+            },
+        };
+        events = {};
+        watch = {
+            NameValue(value){
+                this.clientBaseData.Name=value;
+                this.$apply();
+            },
+            EnNameValue(value){
+                this.clientBaseData.EnName=value;
+                this.$apply();
+            },
+            pyNameValue(value){
+                this.clientBaseData.pyName=value;
+                this.$apply();
+            },
+            RegisteredNameValue(value){
+                this.clientBaseData.RegisteredName=value;
+                this.$apply();
+            },
+            RegisteredNoValue(value){
+                this.clientBaseData.RegisteredNo=value;
+                this.$apply();
+            },
+            AddressValue(value){
+                this.clientBaseData.Address=value;
+                this.$apply();
+            },  
+            PostValue(value){
+                this.clientBaseData.Post=value;
+                this.$apply();
+            },
+            HomePageValue(value){
+                this.clientBaseData.HomePage=value;
+                this.$apply();
+            },
+            DescriptionValue(value){
+                this.clientBaseData.Description=value;
+                this.$apply();
+            },
+            OrganizationUnitIdIndex(index){
+                this.clientBaseData.OrganizationUnitId=this.OrganizationUnitId.value[index];
+                this.$apply();
+            },
+            OriginIndex(index){
+                this.clientBaseData.Origin=this.Origin.value[index];
+                this.$apply();
+            },
+            
+        };
+        computed = {};
+        async GetClientForEdit() {
+            var resData = await ajax.getData(
+                '/api/services/web/client/GetClientForEdit',
+                'post', {}
+            )
+            console.log(resData.data.result)
+            if (resData.statusCode == 200) {
+                var GetClientForEdit_data = resData.data.result;
+                //客户类型
+                this.ClientType = GetClientForEdit_data.customerTypeCombobox;
+                this.clientBaseData.ClientType=this.ClientType[0].value;
+                this.ClientType[0].isSelected=true;
+                //客户来源
+                var OriginData=GetClientForEdit_data.customerOriginCombobox;
+                var Origin_value=[];
+                var Origin_displayText=[];
+                for (var index in OriginData) {
+                    Origin_value[index] = OriginData[index].value;
+                    Origin_displayText[index] = OriginData[index].displayText;
+                }
+                this.Origin.value = this.Origin.value.concat(Origin_value);
+                this.Origin.displayText = this.Origin.displayText.concat(Origin_displayText);
+                //是否重要
+                this.ImportLevel.ImportLevelData=GetClientForEdit_data.importantLevelCombobox;
+                this.clientBaseData.ImportLevel=this.ImportLevel.ImportLevelData[1].value;
+            }
+            this.$apply();
+        }
+        //获取隶属组织架构
+        async GetOrganizations() {
+            var resData = await ajax.getData(
+                '/api/services/web/common/GetOrganizations',
+                'post'
+            )
+            if (resData.statusCode == 200) {
+                var GetOrganizationsData = resData.data.result;
+                var OrganizationUnitId_value = [];
+                var OrganizationUnitId_displayText = [];
+                for (var index in GetOrganizationsData) {
+                    OrganizationUnitId_value[index] = GetOrganizationsData[index].id;
+                    OrganizationUnitId_displayText[index] = GetOrganizationsData[index].displayName;
+                }
+                this.OrganizationUnitId.value = this.OrganizationUnitId.value.concat(OrganizationUnitId_value);
+                this.OrganizationUnitId.displayText = this.OrganizationUnitId.displayText.concat(OrganizationUnitId_displayText)
+            }
+            this.$apply();
+        }
+        //获取业务类型
+        async GetGeneralCodeComboOutput(keyWords, Depth, ParentId) {
+            var data = {
+                Class: keyWords,
+                Depth: Depth,
+                IsMaxDepth: true,
+                ParentId: ParentId,
+                IsRecursive: false,
+                // isAll: true
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/common/GetGeneralCodeComboOutput',
+                'post',
+                data
+            )
+            // console.log(resData);
+            // console.log(keyWords,Depth,ParentId);
+            if (resData.statusCode == 200 && resData.data.result.length !== 0 && keyWords == "CLIDT") {
+                for (let i = 0; i < resData.data.result.length; i++) {
+                    this.IndustryType[Depth].push(resData.data.result[i])
+                }
+                if (Depth < 4) {
+                    this.GetGeneralCodeComboOutput("CLIDT", Depth + 1, this.IndustryType[Depth][0].id)
+                }
+                this.$apply();
+            }
+            if (resData.statusCode == 200 && resData.data.result.length !== 0 && keyWords == "CLKL") {
+                for (let i = 0; i < resData.data.result.length; i++) {
+                    this.Category[Depth].push(resData.data.result[i])
+                }
+                console.log(Depth);
+                // if (this.Category[Depth].length == 0) {
+                //     this.Category[Depth].push({name:"无"})
+                // }
+                if (Depth < 2) {
+                    this.GetGeneralCodeComboOutput("CLKL", Depth + 1, this.Category[Depth][0].id)
+                }
+                this.$apply();
+            }
+        }
+        onLoad() {
+            this.GetClientForEdit();
+            this.GetOrganizations();
+            this.GetGeneralCodeComboOutput("CLKL",0,0);
+            this.GetGeneralCodeComboOutput("CLIDT",0,0);
+        };
+    }
+</script>

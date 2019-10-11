@@ -1,0 +1,183 @@
+<!--  -->
+
+<style lang='scss'>
+    .container {
+        .pageTitle {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .list-box {
+            margin: 149rpx 28rpx 20rpx 28rpx;
+            >view {
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                margin-bottom: 44rpx;
+                font-size: 28rpx;
+                color: #2a2a2a;
+                border-radius: 20rpx;
+                padding: 30rpx 28rpx;
+                display: flex;
+                flex-direction: column;
+                >view {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 14rpx;
+                }
+                .name {
+                    display: flex;
+                    justify-content: space-between;
+                }
+                .category {
+                    color: #7a7a7a;
+                }
+                .legalType {
+                    >text {
+                        margin-left: 20rpx;
+                    }
+                }
+            }
+        }
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 999999;
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="pageTitle">
+            <text>利益冲突列表</text>
+        </view>
+        <view class="list-box">
+            <repeat for="{{conflictListData}}" key="index" index="index" item="item">
+                <view @tap="toConflictDetial('{{index}}')">
+                    <view class="name">
+                        <text>{{item.name}}</text>
+                        <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:40rpx;color:#bfbfbf" catchtap="compileBtn('{{index}}')"></icon>
+                    </view>
+                    <view class="category">
+                        {{item.category}}
+                    </view>
+                    <view class="legalType">
+                        <icon class="iconfont icon-ren" style="font-size:40rpx;color:#ff9900"></icon>
+                        <text>{{item.linker||'未填写'}}</text>
+                        <text style="color:#7a7a7a">{{item.legalTypeText||'未填写'}}</text>
+                    </view>
+                    <view class="phone">
+                        <icon class="iconfont icon-dianhua1" style="font-size:40rpx;color:#ff9900;margin-right:20rpx"></icon>
+                        <text>{{item.phone||'未填写'}}</text>
+                    </view>
+                </view>
+            </repeat>
+        </view>
+        <image src="{{'../../../../images/add.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" @tap="toCreateConflict">
+        </image>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    export default class conflictList extends wepy.page {
+        data = {
+            subCaseInfoData: {},
+            conflictListData: [],
+        };
+        components = {};
+        methods = {
+            toConflictDetial(index) {
+                wx.navigateTo({
+                    url: './conflictDetail?id=' + index
+                });
+            },
+            compileBtn(index) {
+                console.log(index);
+                wx.showModal({
+                    title: '提示', //提示的标题,
+                    content: '是否删除', //提示的内容,
+                    showCancel: true, //是否显示取消按钮,
+                    cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
+                    cancelColor: '#000000', //取消按钮的文字颜色,
+                    confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
+                    confirmColor: '#5d73fa', //确定按钮的文字颜色,
+                    success: res => {
+                        if (res.confirm) {
+                            this.conflictListData.splice(index, 1);
+                            try {
+                                wx.setStorageSync('CREATE_CONFLICTLIST_DATA', this.conflictListData)
+                            } catch (error) {
+                                console.log(error)
+                            }
+                            this.$apply();
+                        } else if (res.cancel) {
+                            console.log('用户点击取消')
+                        }
+                    }
+                });
+            },
+            toCreateConflict() {
+                var createPage = 'prevPageListPage';
+                wx.navigateTo({
+                    url: './createConflict?listPage=' + createPage
+                });
+            }
+        };
+        events = {};
+        watch = {
+            conflictListData(data, data1) {
+                // console.log(data,data1)
+                // if(data1.length!==0){
+                this.subCaseInfoData.CaseClientRelationList = data;
+                this.CreateOrUpdateCaseGeneralInfo();
+                // }
+                this.$apply();
+            }
+        };
+        computed = {};
+        //案件基本信息提交
+        async CreateOrUpdateCaseGeneralInfo() {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/case/CreateOrUpdateCaseGeneralInfo',
+                'post',
+                this.subCaseInfoData
+            )
+            if (resData.statusCode == 200) {
+                wx.setStorageSync('CREATE_CASEINFO_DATA', this.subCaseInfoData);
+            } else {
+                wx.showToast({
+                    title: resData.data.error.message,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
+            }
+        }
+        onLoad() {
+            this.subCaseInfoData = wx.getStorageSync('CREATE_CASEINFO_DATA');
+        };
+        onShow() {
+            var conflictListData = wx.getStorageSync('CREATE_CONFLICTLIST_DATA');
+            if (conflictListData.length !== 0) {
+                this.conflictListData = conflictListData;
+            }
+        };
+    }
+</script>

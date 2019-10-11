@@ -1,0 +1,47 @@
+
+    <view class="container">
+        <view class="top-title">
+            <view class="flex">
+                <view style="margin-left:28rpx">
+                    <text>案件管理</text>
+                </view>
+                <view style="margin-right:28rpx">
+                    <icon class="iconfont icon-sousuo1 " style="font-size:60rpx;color:#5d73fa;margin-right:14rpx" bindtap="toSearchPage"/>
+                    <icon class="iconfont icon-shaixuan1" style="font-size:60rpx;color:#5d73fa" bindtap="ishowFilter"/>
+                </view>
+            </view>
+            <view class="filter animation"  wx:if="{{false}}">
+                <view catchtap="filter" data-wpyfilter-a="cteateTime">创建时间排序</view>
+                <!-- <view catchtap="filter('processStatusList')">状态排序</view>
+                                    <view catchtap="filter('categoryList')">类别排序</view> -->
+            </view>
+        </view>
+        <view class="main">
+            <block wx:for="{{caseManageData}}" wx:for-index="index_1" wx:for-item="item" wx:key="index_1">
+                <view class="caseItem" bindtap="toCaseDetail" data-wpytocasedetail-a="{{item}}">
+                    <view>
+                        <view class="whitespace">{{item.name}}</view>
+                        <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#b2b2b2" catchtap="operations" data-wpyoperations-a="{{item}}" data-wpyoperations-b="{{index_1}}"/>
+                    </view>
+                    <view class="textColor whitespace">
+                        {{item.clientName||'未填写'}}
+                    </view>
+                    <view class="textColor whitespace">
+                        {{item.categoryText||'未填写'}}
+                    </view>
+                    <view class="caseLawyer"  wx:if="{{avatarList[index_1].length>0}}">
+                        <block wx:for="{{avatarList[index_1]}}" wx:for-index="index_2" wx:for-item="item_2" wx:key="index_2">
+                            <image class="avator" style="z-index:{{index_2}};left:{{index_2*70}}rpx" src="{{avatarList[index_1][index_2]}}" mode="scaleToFill" lazy-load="false"/>
+                        </block>
+                    </view>
+                    <view>
+                        <view>
+                            <text/>
+                            <text class="whitespace">{{item.processStatusText||'未填写'}}</text>
+                        </view>
+                        <view class="textColor">{{item.acceptDateText}}</view>
+                    </view>
+                </view>
+            </block>
+        </view>
+    </view>

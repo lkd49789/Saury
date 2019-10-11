@@ -1,0 +1,722 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .warming {
+            color: #e20000;
+        }
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 9999;
+        }
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .main {
+            margin: 149rpx 28rpx 0 28rpx;
+            .checked {
+                margin-bottom: 30rpx; //    padding-bottom: 20rpx;
+                >view:first-child {
+                    margin-bottom: 30rpx;
+                }
+            }
+            .input {
+                margin-bottom: 36rpx;
+                position: relative;
+                view:first-child {
+                    color: #2a2a2a;
+                }
+                .input-container {
+                    display: flex;
+                    align-items: center; // justify-content: center;
+                    width: 100%;
+                    padding: 28rpx 0;
+                    >input {
+                        width: 100%;
+                    }
+                }
+            }
+            .option {
+                margin-bottom: 36rpx;
+                picker {
+                    padding: 20rpx 0;
+                    border-bottom: 1px solid #dfdfdf;
+                    .picker {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        color: #7a7a7a;
+                        .part-item {
+                            position: relative;
+                            margin: 10rpx; // background: #dfdfdf;
+                            border: 1px dotted #dedede; // border-radius: 20rpx;
+                            padding: 5rpx 20rpx;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            >icon {
+                                position: absolute;
+                                bottom: 27rpx;
+                                right: -21rpx;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <text>{{title}}</text>
+        </view>
+        <view class='main'>
+            <view class="checked">
+                <view>
+                    <text>类别</text>
+                </view>
+                <radio-group class="radio-group" @change="bindPickerChange('Category')" style="padding-bottom:20rpx;border-bottom:1px solid #dfdfdf;">
+                    <label class="radio" wx:for="{{Category}}" wx:key="index">
+                                <radio value="{{item.value}}" checked="{{item.isShow}}" color="#5d73fa"  disabled="{{item.isShow}}"/>
+                                <text  style="margin-right:60rpx">{{item.displayText}}</text>
+                            </label>
+                </radio-group>
+                <view class="warming" wx:if="{{warning[2]}}">
+                    <text>此字段是必需的</text>
+                </view>
+            </view>
+            <view class="option">
+                <view>
+                    <text class="title">客户名称</text>
+                </view>
+                <picker @change="bindPickerChange('ClientId')" value="{{ClientId.index}}" range="{{ClientId.displayText}}" name='ClientId' disabled="{{ClientId.isSelected}}">
+                    <view class="picker" style="background:{{ClientId.isSelected?'#dfdfdf':''}}">
+                        <view>
+                            <text>{{ClientId.displayText[ClientId.index]}}</text>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+            <view class="option">
+                <view>
+                    <text class="title">案件名称</text>
+                </view>
+                <picker @change="bindPickerChange('CaseId')" value="{{CaseId.index}}" range="{{CaseId.displayText}}" name='CaseId' disabled="{{CaseId.isSelected}}">
+                    <view class="picker" style="background:{{CaseId.isSelected?'#dfdfdf':''}}">
+                        <view>
+                            <text>{{CaseId.displayText[CaseId.index]}}</text>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+            <StartTime :timeObj.sync="dateOptions" :dateData.sync='StartTime' :twoWayTitle="StartTime" />
+            <view class="warming" wx:if="{{dateOptions.isData}}" style="margin:-36rpx 0 36rpx 0">
+                <text>此字段是必需的</text>
+            </view>
+            <EndTime :timeObj.sync="dateOptions1" :dateData.sync='EndTime' :twoWayTitle="EndTime" />
+            <view class="warming" wx:if="{{dateOptions1.isData}}" style="margin:-36rpx 0 36rpx 0">
+                <text>此字段是必需的</text>
+            </view>
+            <view class="input">
+                <view>
+                    <text>自报时长(小时)</text>
+                </view>
+                <view class="input-container" style="border-bottom:1px solid {{inputChecked[0]?'#5d73fa':'#dedede'}};color:#7a7a7a">
+                    <input id="SelfDuration" name="SelfDuration" bindfocus="bindfocus('{{0}}')" bindblur="bindblur('{{0}}')" placeholder="请输入自报时长" bindinput="bindinput" type="digit" value="{{SelfDuration}}" />
+                </view>
+                <view class="warming" wx:if="{{warning[3]}}">
+                    <text>自报时长必须在0和24之间</text>
+                </view>
+            </view>
+            <view class="option">
+                <view>
+                    <text class="title">工作类别</text>
+                </view>
+                <picker @change="bindPickerChange('WorkType')" value="{{WorkType.index}}" range="{{WorkType.displayText}}" name='WorkType' disabled="{{WorkType.isSelected}}">
+                    <view class="picker" style="background:{{WorkType.isSelected?'#dfdfdf':''}}">
+                        <view>
+                            <text>{{WorkType.displayText[WorkType.index]}}</text>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+                <view class="warming" wx:if="{{warning[0]}}">
+                    <text>此字段是必需的</text>
+                </view>
+            </view>
+            <view class="option" wx:if="{{!Participant.isSelected}}">
+                <view>
+                    <text class="title">参与人</text>
+                </view>
+                <picker @change="bindPickerChange('Participant')" value="{{Participant.index[Participant.index.length-1]}}" range="{{Participant.displayText}}" name='Participant'>
+                    <view class="picker">
+                        <view style="display:flex;flex-wrap: wrap">
+                            <repeat for="{{Participant.index}}" key="index" index="index" item="item">
+                                <view class="part-item">
+                                    <text>{{Participant.displayText[item]}}</text>
+                                    <icon class="iconfont icon-zirenwushanchu1" style="font-size:48rpx" catchtap="deletePItem('{{index}}')"></icon>
+                                </view>
+                            </repeat>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+            <view class="input">
+                <view>
+                    <text>描述</text>
+                </view>
+                <view class="input-container" style="border-bottom:1px solid {{inputChecked[1]?'#5d73fa':'#dedede'}};color:#7a7a7a">
+                    <textarea id="Description" name="Description" bindfocus="bindfocus('{{1}}')" bindblur="bindblur('{{1}}')" placeholder="请输入描述" bindinput="bindinput" value="{{Description?Description:''}}" auto-height style="width:83%" />
+                </view>
+                <view class="warming" wx:if="{{warning[1]}}">
+                    <text>此字段是必需的</text>
+                </view>
+            </view>
+            <view class="input">
+                <view>
+                    <text>备注</text>
+                </view>
+                <view class="input-container" style="border-bottom:1px solid {{inputChecked[2]?'#5d73fa':'#dedede'}};color:#7a7a7a">
+                    <textarea id="Remark" name="Remark" bindfocus="bindfocus('{{2}}')" bindblur="bindblur('{{2}}')" placeholder="请输入备注" bindinput="bindinput" type="text" value="{{Remark?Remark:''}}" auto-height style="width:83%;" />
+                </view>
+            </view>
+        </view>
+        <image src="{{'../../../../images/test.png'}}" style="opacity:{{addOpacity}} ;" mode="scaleToFill" class="addImage" @touchstart="touchStart" @touchend="touchEnd">
+        </image>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import {
+        myDistinct
+    } from '../../../../utils/cofig/api.js';
+    import StartTime from '../../../../components/Date/DateTimePicker';
+    import EndTime from '../../../../components/Date/DateTimePicker';
+    export default class clientDetail extends wepy.page {
+        components = {
+            StartTime,
+            EndTime
+        };
+        data = {
+            title: '',
+            addOpacity: 1,
+            submitData: {
+
+            },
+            inputChecked: [
+                false,
+                false,
+                false,
+            ],
+            warning: [
+                false,
+                false,
+                false
+            ],
+            // 类别
+            Category: null,
+            //客户名称
+            ClientId: {
+                value: [],
+                displayText: [],
+                index: -1,
+            },
+            //案件名称
+            CaseId: {
+                value: [],
+                displayText: [],
+                index: -1,
+            },
+            //时间选择器
+            dateOptions: {
+                title: '开始时间',
+                name: 'StartTime',
+                isChecked: false,
+                time: '',
+                date: true
+            },
+            StartTime: '',
+            dateOptions1: {
+                title: '结束时间',
+                name: 'endTime',
+                isChecked: false,
+                time: '',
+                date: false
+            },
+            EndTime: '',
+            // 自报时长
+            SelfDuration: 0,
+            //工作类别
+            WorkType: {
+                value: [],
+                displayText: [],
+                index: -1,
+            },
+            //参与人
+            Participant: {
+                value: [],
+                displayText: [],
+                index: [],
+            },
+            // 描述
+            Description: '',
+            //备注
+            Remark: '',
+            Timeout: '',
+            isData: false,
+            // Start:0,
+            // End:0
+        };
+        watch = {
+            StartTime(start) {
+                this.submitData.StartTime = start[0] + '/' + start[1] + '/' + start[2] + ' ' + start[3] + ':' + start[4] + ':' + start[5];
+                // this.Start=new Date(this.submitData.StartTime).getTime();
+                this.$apply();
+            },
+            EndTime(end) {
+                this.submitData.EndTime = end[0] + '/' + end[1] + '/' + end[2] + ' ' + end[3] + ':' + end[4] + ':' + end[5]
+                this.$apply();
+            },
+            SelfDuration(value){
+                 if(value>24){
+                    this.warning[3] = true;
+                 }else{
+                     this.warning[3] = false
+                    this.submitData.SelfDuration = value;
+                 }
+            }
+
+        };
+        computed={
+            SelfDuration(){
+                var start = new Date(this.submitData.StartTime).getTime();
+                var end = new Date(this.submitData.EndTime).getTime();
+                var time=end-start;
+                var  hours=time/3600000<1?0:(time/3600000).toFixed(1);
+                var  minute=time%3600000/60000>0?(time%3600000/60000/60).toFixed(2):0;
+                var mistiming=(Number(hours)+Number(minute)).toFixed(2);
+                return  mistiming;
+            }
+        }
+        methods = {
+            touchStart() {
+                this.addOpacity = 0.6;
+                this.$apply();
+            },
+            touchEnd() {
+                if(this.submitData.WorkType&&this.submitData.Description){
+                     this.CreateOrUpdateWorklog(this.submitData);    
+                }else{
+                    this.addOpacity=1;
+                    if(!this.submitData.Description){
+                        this.warning[1]=true
+                    }
+                    if(!this.submitData.WorkType){
+                        this.warning[0]=true
+                    }
+                    if(!this.submitData.Category){
+                        this.warning[2]=true
+                    }
+                    if(!this.submitData.StartTime){
+                        this.dateOptions.isData=true;
+                    }
+                    if(!this.submitData.EndTime){
+                        this.dateOptions1.isData=true;
+                    }
+                  }
+                this.$apply();
+            },
+            // submitData(){
+           
+            //     this.$apply();
+            // },
+            deletePItem(index) {
+                this.Participant.index.splice(index, 1);
+                var Pvalue = this.submitData.Participant.split(',');
+                Pvalue.splice(index, 1)
+                Pvalue = Pvalue.toString();
+                this.submitData.Participant = Pvalue;
+                this.$apply();
+            },
+            bindPickerChange(res, e) {
+                switch (res) {
+                    case 'Category':
+                        this.warning[2] = false;
+                        this.submitData.Category = e.detail.value;
+                        break;
+                    case 'WorkType':
+                        this.warning[0] = false
+                        this.WorkType.index = +e.detail.value;
+                        this.submitData.WorkType = this.WorkType.value[this.WorkType.index];
+                        break;
+                    case 'ClientId':
+                        this.ClientId.index = +e.detail.value;
+                        this.submitData.ClientId = this.ClientId.value[this.ClientId.index];
+                        this.GetGeneralComboboxList('case', this.isData, this.ClientId.value[this.ClientId.index]);
+                        this.GetGeneralComboboxList('employee', this.isData);
+                        break;
+                    case 'CaseId':
+                        this.CaseId.index = +e.detail.value;
+                        this.submitData.CaseId = this.CaseId.value[this.CaseId.index];
+                        this.GetGeneralComboboxList('employee', this.isData, this.CaseId.value[this.CaseId.index]);
+                        break;
+                        break;
+                    case 'Participant':
+                        this.warning[3] = false;
+                        this.Participant.index.push(+e.detail.value);
+                        myDistinct(this.Participant.index);
+                        var Pindex = this.Participant.index;
+                        var Pvalue = [];
+                        for (var index in Pindex) {
+                            Pvalue[index] = this.Participant.value[Pindex[index]];
+                        }
+                        this.submitData.Participant = Pvalue.toString();
+                        break;
+                    default:
+                        break;
+                }
+                this.$apply();
+            },
+            bindinput(e) {
+                var inputData = e.detail.value;
+                switch (e.target.id) {
+                    case 'Description':
+                        if (inputData) {
+                            this.warning[1] = false;
+                            this.submitData.Description = e.detail.value;
+                        } else {
+                            this.warning[1] = true;
+                        }
+                        break;
+                    case 'Remark':
+                        this.submitData.Remark = e.detail.value;
+                        break
+                    case 'SelfDuration':
+                        if (+e.detail.value > 24) {
+                            this.warning[3] = true
+                        } else {
+                            this.warning[3] = false
+                            this.submitData.SelfDuration = e.detail.value;
+                        }
+                        break
+                    default:
+                        break;
+                }
+                this.$apply();
+            },
+            // input获取焦点
+            bindfocus(index, e) {
+                if (e.target.id == 'Description' && !e.detail.value) {
+                    this.warning[1] = true;
+                }
+                this.inputChecked[index] = !this.inputChecked[index];
+                this.$apply();
+            },
+            //input失去焦点
+            bindblur(index) {
+                this.inputChecked[index] = !this.inputChecked[index];
+                this.$apply();
+            },
+        };
+        async GetWorklogForEdit(data) {
+            if (data.isData) {
+                var formatData = {
+                    id: data.id,
+                    clientid: data.clientId,
+                    caseid: data.caseId,
+                    isconverted: true,
+                }
+                var resData = await ajax.getData(
+                    '/api/services/web/worklog/GetWorklogForEdit',
+                    'post',
+                    formatData
+                )
+                if (resData.statusCode == 200) {
+                    var WorklogForEditData = resData.data.result;
+                    console.log(WorklogForEditData);
+                    //类别
+                    var categoryCombobox = WorklogForEditData.categoryCombobox;
+                    for (var i = 0; i < categoryCombobox.length; i++) {
+                        if (categoryCombobox[i].isSelected) {
+                            categoryCombobox[i]['isShow'] = true;
+                            this.submitData.Category = categoryCombobox[i].value;
+                        }
+                    }
+                    this.Category = categoryCombobox;
+                    //客户名称
+                    this.submitData.ClientId = WorklogForEditData.clientId;
+                    this.ClientId.value[0] = WorklogForEditData.clientId;
+                    this.ClientId.displayText[0] = WorklogForEditData.clientName;
+                    this.ClientId.index = 0;
+                    this.ClientId.isSelected = true;
+                    // if(WorklogForEditData.clientId){
+                    //     var ClientIdValue=this.ClientId.value;
+                    //     for(var index in ClientIdValue){
+                    //         if(ClientIdValue[index]==WorklogForEditData.clientId){
+                    //             this.ClientId.index=index;
+                    //         }
+                    //     }
+                    // }
+                    // 案件名称
+                    this.submitData.CaseId = WorklogForEditData.caseId;
+                    this.CaseId.value[0] = WorklogForEditData.caseId;
+                    this.CaseId.displayText[0] = WorklogForEditData.caseName;
+                    this.CaseId.index = 0;
+                    this.CaseId.isSelected = true;
+                    // if(WorklogForEditData.caseId){
+                    //     var CaseIdValue=this.CaseId.value;
+                    //     for(var index in CaseIdValue){
+                    //         if(CaseIdValue[index]==WorklogForEditData.caseId){
+                    //             this.CaseId.index=index;
+                    //         }
+                    //     }
+                    // }
+                    //工作类别
+                    this.submitData.WorkType = WorklogForEditData.workType;
+                    var workType = WorklogForEditData.workType
+                    for (var index in WorklogForEditData.workTypeCombobox) {
+                        this.WorkType.value[index] = WorklogForEditData.workTypeCombobox[index].value;
+                        this.WorkType.displayText[index] = WorklogForEditData.workTypeCombobox[index].displayText;
+                    }
+                    this.WorkType.isSelected = true;
+                    if (workType) {
+                        var WorkType = this.WorkType.value;
+                        for (var index in WorkType) {
+                            if (WorkType[index] == workType) {
+                                this.WorkType.index = index;
+                            }
+                        }
+                    }
+                    //参与人
+                    this.submitData.Participant = WorklogForEditData.participant;
+                    //自报时长
+                    this.submitData.SelfDuration = WorklogForEditData.selfDuration;
+                    this.SelfDuration = WorklogForEditData.selfDuration;
+                    //描述
+                    this.submitData.Description = WorklogForEditData.description;
+                    this.Description = WorklogForEditData.description;
+                    //备注
+                    this.submitData.Remark = WorklogForEditData.remark;
+                    this.Remark = WorklogForEditData.remark;
+                    this.submitData.IsConverted = 'True';
+                    this.submitData.Origin = data.id;
+                    this.submitData.Id = data.id;
+                    this.$apply();
+                } else {
+                    wx.showToast({
+                        title: '网络故障',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            } else {
+                var formatData = {}
+                var resData = await ajax.getData(
+                    '/api/services/web/worklog/GetWorklogForEdit',
+                    'post',
+                    formatData
+                )
+                if (resData.statusCode == 200) {
+                    var WorklogForEditData = resData.data.result;
+                    this.submitData.Id = WorklogForEditData.id;
+                    //类别
+                    var categoryCombobox = WorklogForEditData.categoryCombobox;
+                    this.Category = categoryCombobox;
+                    //工作类别
+                    for (var index in WorklogForEditData.workTypeCombobox) {
+                        this.WorkType.value[index] = WorklogForEditData.workTypeCombobox[index].value;
+                        this.WorkType.displayText[index] = WorklogForEditData.workTypeCombobox[index].displayText;
+                    }
+                } else {
+                    wx.showToast({
+                        title: '网络故障',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            }
+            this.$apply();
+        }
+        async GetGeneralComboboxList(keyWord, isData, ...arg) {
+            switch (keyWord) {
+                case 'case':
+                    var data = {
+                        class: keyWord,
+                        parentId: arg[0],
+                    }
+                    var resData = await ajax.getData(
+                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
+                        'post',
+                        data
+                    )
+                    if (resData.statusCode == 200) {
+                        console.log(resData.data.result.length !== 0)
+                        if (resData.data.result.length !== 0) {
+                            var ComboboxList = resData.data.result
+                            for (var index in ComboboxList) {
+                                var item = ComboboxList[index];
+                                this.CaseId.value[index] = item.value;
+                                this.CaseId.displayText[index] = item.displayText;
+                                if (isData) {
+                                    this.CaseId.isSelected = true;
+                                } else {
+                                    this.CaseId.isSelected = false;
+                                }
+                                this.CaseId.index = -1;
+                            }
+                        } else {
+                            this.submitData.CaseId = '';
+                            this.CaseId.index = -1;
+                            this.CaseId.value = [];
+                            this.CaseId.displayText = [];
+                        }
+                        this.$apply();
+                    }
+                    break;
+                case 'client':
+                    var data = {
+                        class: keyWord,
+                        parentId: ""
+                    }
+                    var resData = await ajax.getData(
+                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
+                        'post',
+                        data
+                    )
+                    if (resData.statusCode == 200) {
+                        var ComboboxList = resData.data.result
+                        for (var index in ComboboxList) {
+                            var item = ComboboxList[index];
+                            this.ClientId.value[index] = item.value;
+                            this.ClientId.displayText[index] = item.displayText;
+                            if (isData) {
+                                this.ClientId.isSelected = true;
+                            } else {
+                                this.ClientId.isSelected = false;
+                            }
+                        }
+                    }
+                    this.$apply();
+                    break
+                case 'employee':
+                    var data = {
+                        class: keyWord,
+                        shortCode: arg[0]
+                    }
+                    var resData = await ajax.getData(
+                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
+                        'post',
+                        data
+                    )
+                    if (resData.statusCode == 200) {
+                        this.Participant.value = [];
+                        this.Participant.displayText = [];
+                        this.Participant.isSelected = false;
+                        this.Participant.index = [];
+                        var ComboboxList = resData.data.result
+                        for (var index in ComboboxList) {
+                            var item = ComboboxList[index];
+                            this.Participant.value[index] = item.value;
+                            this.Participant.displayText[index] = item.displayText;
+                            if (isData) {
+                                this.Participant.isSelected = true;
+                            } else {
+                                this.Participant.isSelected = false;
+                            }
+                        }
+                    }
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+        }
+        async CreateOrUpdateWorklog(data) {
+            wx.showLoading({
+                title: '提交中，请稍等！', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success:()=>{
+                    this.addOpacity = 1;
+                    this.$apply();
+                }
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/worklog/CreateOrUpdateWorklog',
+                'post',
+                data
+            );
+            if (resData.statusCode == 200) {
+                var isRefresh = wx.getStorageSync('isRefresh');
+                isRefresh.isRefresh = true;
+                wx.setStorageSync('isRefresh', isRefresh);
+                if (this.isData) {
+                    wx.navigateBack({
+                        delta: 2
+                    });
+                } else {
+                    wx.navigateBack({
+                        delta: 1
+                    });
+                }
+            } else {
+                wx.showToast({
+                    title: '提交失败！',
+                    icon: 'none',
+                    duration: 1500,
+                    mask: true,
+                });
+            }
+        }
+        onLoad(options) {
+            var data = JSON.parse(options.data);
+            this.isData = data.isData;
+            // this.GetGeneralComboboxList('case',data.isData);
+            this.GetGeneralComboboxList('client', data.isData);
+            this.GetGeneralComboboxList('employee', data.isData);
+            if (data.isData) {
+                this.dateOptions.time = data.startTime.Y + ' ' + data.startTime.M;
+                this.dateOptions1.time = data.endTime.Y + ' ' + data.endTime.M;
+                this.dateOptions1.date = true;
+                this.dateOptions.isChecked = true;
+                this.submitData.IsConverted = 'true',
+                    this.title = "转化参与工作日志"
+                this.GetWorklogForEdit(data);
+            } else {
+                var now = new Date();
+                this.dateOptions1.time = now;
+                this.dateOptions.time = now;
+                this.submitData.IsConverted = 'False';
+                // this.submitData.SelfDuration = 0;
+                this.title = "创建工作日志"
+                this.GetWorklogForEdit(data);
+            }
+            this.$apply();
+        }
+        onUnload() {
+            // clearTimeout(this.Timeout);
+        }
+    }
+</script>

@@ -1,0 +1,111 @@
+
+    <view class="bill">
+        <view class="bill_title">
+            <text class="title">账单详情</text>
+        </view>
+        <view class="bill_content">
+            <view class="bill_view">
+                <span class="bill_gray"> 账单编号: </span>{{billDataDetail.id}}
+                <view class="bill_state {{billDataDetail.processStatus=='Y'?'bill_blue':billDataDetail.processStatus=='N'?'bill_yellow':billDataDetail.processStatus=='A'?'bill_green':'bill_red'}}">{{billDataDetail.processStatusText}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_blue">{{billDataDetail.caseName}}</view>
+                <view class="bill_view bill_gray">{{billDataDetail.serialId}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_blue">{{billDataDetail.clientName}}</view>
+                <view class="bill_view bill_gray">{{billDataDetail.clientId}}</view>
+            </view>
+        </view>
+        <view class="bill_content">
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">日志区间</view>
+                    <view class="bill_view">{{billDataDetail.logStartDateText}}至{{billDataDetail.logEndDateText}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">账单日期</view>
+                    <view class="bill_view">{{billDataDetail.billingDateText}}</view>
+                </view>
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">预估到账日期</view>
+                    <view class="bill_view">{{billDataDetail.arrivedDateText}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">律师费</view>
+                    <view class="bill_view">{{billDataDetail.lawyerAmount}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">律师费折扣率</view>
+                    <view class="bill_view">{{billDataDetail.discountRate}}%</view>
+                </view>
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">金额</view>
+                    <view class="bill_view">{{billDataDetail.disMoney}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">律师费税率</view>
+                    <view class="bill_view">{{billDataDetail.lawyerRatio}}%</view>
+                </view>
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">金额</view>
+                    <view class="bill_view">{{billDataDetail.lawyerMoney}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">办案费</view>
+                    <view class="bill_view">{{billDataDetail.caseAmount}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">办案费税率</view>
+                    <view class="bill_view">{{billDataDetail.caseRatio}}%</view>
+                </view>
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">金额</view>
+                    <view class="bill_view">{{billDataDetail.caseMoney}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">账单金额</view>
+                    <view class="bill_view">{{billDataDetail.billingAmount}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">货币类型</view>
+                    <view class="bill_view">{{billDataDetail.currencyText}}</view>
+                </view>
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">汇率</view>
+                    <view class="bill_view">{{billDataDetail.currencyRate}}</view>
+                </view>
+            </view>
+        </view>
+        <view class="bill_content" style="padding-bottom:{{billDataDetail.processStatusText=='审核通过'?'0':'98rpx'}}">
+            <view class="bill_view bill_gray">
+                <view>关联账单信息</view>
+            </view>
+            <view class="bill_x" bindtap="into" data-wpyinto-a="1">
+                <span>合同信息</span><span style="float:right">总计｜ <span style="color:#009dff">{{contractMoney}}</span></span>
+            </view>
+            <view class="bill_x" bindtap="into" data-wpyinto-a="2">
+                <span>日志清单</span><span style="float:right">总计｜ <span style="color:#009dff">{{journalAllMoney}}</span></span>
+            </view>
+            <view class="bill_x" bindtap="into" data-wpyinto-a="3">
+                <span>费用清单</span><span style="float:right">总计｜ <span style="color:#009dff">{{costAllMoney}}</span></span>
+            </view>
+        </view>
+        <button class="bill_btn"  wx:if="{{billDataDetail.processStatus=='Y' || billDataDetail.processStatus=='R'}}" catchtap="toAuditing" data-wpytoauditing-a="">发送审核</button>
+    </view>

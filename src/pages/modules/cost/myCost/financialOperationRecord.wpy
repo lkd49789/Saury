@@ -1,0 +1,157 @@
+<!--  -->
+<style lang='scss'>
+    .main{
+        margin-top:149rpx;
+        padding:0 28rpx 24rpx 28rpx;
+        .bill_content {
+            background: #ffffff;
+            margin: 0 auto;
+            // padding: 44rpx 28rpx 34rpx 28rpx;
+            font-size: 28rpx;
+            overflow: auto;
+            // border-bottom: 20rpx solid #f2f2f2;
+            &:last-child {
+                border-bottom: 0
+            }
+            .caseConflictBorder_radius {
+                border: 1px solid;
+                width: 15rpx;
+                height: 15rpx;
+                line-height: 28rpx;
+                border-radius: 15rpx;
+                margin-right: 10rpx;
+                display: inline-block;
+            }
+            .bill_box {
+                margin: 20rpx 0;
+                .bill_view {
+                    line-height: 42rpx;
+                }
+                .bill_box-item{
+                    margin:20rpx 0;
+                    display: flex;
+                    align-items: center;
+                }
+            }
+            .bill_box2 {
+                line-height: 42rpx;
+                width: 50%;
+            }
+            image {
+                width: 80rpx;
+                height: 80rpx;
+                border-radius: 100%
+            }
+            .bill_x {
+                padding: 24rpx 28rpx 24rpx 28rpx;
+                background: #f2f2f2;
+                margin: 15rpx 0;
+                border-radius: 20rpx;
+            }
+            .bill_gray {
+                color: #7a7a7a;
+                border-color: #7a7a7a
+            }
+            .bill_blue {
+                color: #009dff;
+                border-color: #009dff
+            }
+            .bill_red {
+                color: #e20000;
+                border-color: #e20000
+            }
+            .bill_yellow {
+                color: #ff9900;
+                border-color: #ff9900
+            }
+            .bill_green {
+                color: #069400;
+                border-color: #069400
+            }
+            .bill_state {
+                float: right;
+                position: relative;
+            }
+        }
+    }
+</style>
+<template>
+  <view class='container'>
+    <view class="page-title">
+            <text class="title">财务操作记录</text>
+    </view>
+    <view class="main">
+        <view class="bill_content">
+            <view class="bill_box">
+                <repeat for="{{workflows}}" key="index" index="index" item="item">
+                    <view class="bill_box-item" >
+                        <view class="bill_box2" style="width:20%">
+                                <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false" style="z-index:{{index}};background:#7a7a7a;left:{{index*30}}rpx"></image>
+                                <view class="bill_view">{{item.creatorUserName||'未填写'}}</view>
+                            </view>
+                            <view class="bill_box2" style="width:80%">
+                                <view class="bill_view bill_gray left" style="margin-bottom:10rpx">{{item.operationTypeName||'未填写'}} <span style="float:right">{{item.creationTime||'未填写'}}</span> </view>
+                                <view class="bill_view bill_blue left">{{item.remark||'未填写'}}</view>
+                        </view>
+                    </view>
+                </repeat>
+            </view>
+        </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import ajax from '../../../../utils/cofig/ajax.js'
+  import {formatTime} from '../../../../utils/cofig/api.js'
+  export default class financialOperationRecord extends wepy.page {
+    data = {
+        workflows:[]
+    };
+
+    components = {};
+
+    methods = {};
+
+    events = {};
+
+    watch = {};
+
+    computed = {};
+     //获取账单
+        async getbill() {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/financialCharge/GetCharge',
+                'post', {
+                    id: this.invoiceDetailId
+                }
+            );
+            if(resData.statusCode==200){
+                this.workflows = resData.data.result.workflows;
+                // this.$apply();
+                for (var index in this.workflows) {
+                    this.workflows[index].creationTime=formatTime(this.workflows[index].creationTime)
+                    var http = "/api/services/web/personal/GetEmployeePhoto?id=" + this.workflows[index].creatorUserId
+                    var avatar = await ajax.getAavatar(http);
+                    this.workflows[index].avatar = avatar;
+                    this.$apply();
+                }
+                 this.$apply();
+            }
+           
+        }
+    onLoad(options) {
+        this.invoiceDetailId=options.invoiceDetailId;
+        this.getbill();
+        this.$apply();
+     };
+
+    onShow() { };
+  }
+</script>

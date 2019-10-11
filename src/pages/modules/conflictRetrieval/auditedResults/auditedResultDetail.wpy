@@ -1,0 +1,184 @@
+<!--  -->
+
+<style lang='scss'>
+    .container {
+        height: 100%;
+        .main {
+            margin: 149rpx 28rpx 44rpx 28rpx;
+            .search-condition {
+                
+                >view:first-child {
+                    margin-bottom: 20rpx;
+                }
+                >view:last-child {
+                     box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                    border-radius: 20rpx;
+                    padding: 30rpx 24rpx;
+                    margin-bottom: 44rpx;
+                    position: relative;
+                    >view:not(:last-child){
+                        margin-bottom: 20rpx;
+                    }
+                    >view{
+                        >view:first-child{
+                            color:#7a7a7a;
+                            margin-bottom: 14rpx;
+                        }
+                    }
+                }
+            }
+            .search-result {
+                >view:first-child {
+                    margin-bottom: 20rpx;
+                }
+                >view:not(:first-child ){
+                    box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                    border-radius: 20rpx;
+                    padding: 30rpx 24rpx;
+                    // margin-bottom: 44rpx;
+                    position: relative;
+                    >view:not(:last-child){
+                        margin-bottom:14rpx;
+                    }
+                    >view:not(:first-child){
+                        color:#7a7a7a;
+                    }
+                    >view:first-child {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                    }
+                    >view:last-child{
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                    }
+                    
+                }
+                .litigantList {
+                    box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                    border-radius: 20rpx;
+                    padding: 30rpx 24rpx;
+                    margin: 0 20rpx 44rpx 20rpx;
+                    .litigantList-item {
+                        border-bottom: 1px solid #dedede;
+                        padding-bottom: 20rpx;
+                        margin-bottom: 20rpx;
+                        display: flex;
+                        align-items: center;
+                        >view:first-child {
+                            color: #7a7a7a;
+                        }
+                        >view{
+                            margin-bottom: 14rpx;
+                        }
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="page-title">
+            案件冲突检索结果详情
+        </view>
+        <view class="main">
+           <view class="search-condition">
+                <view>检索条件</view>
+                <view>
+                    <view>
+                        <view>类别</view>
+                        <view>{{OrderItemData.conflictCondition.conflictList[0].category||"未填写"}}</view>
+                    </view>
+                    <view>
+                        <view>客户名称（中）</view>
+                        <view>{{OrderItemData.conflictCondition.conflictList[0].name||"未填写"}}</view>
+                    </view>
+                    <view>
+                        <view>客户名称（英）</view>
+                        <view>{{OrderItemData.conflictCondition.conflictList[0].enName||"未填写"}}</view>
+                    </view>
+                    <view>
+                        <view>检索关键字（中）</view>
+                        <view>{{OrderItemData.conflictCondition.conflictList[0].searchName||"未填写"}}</view>
+                    </view>
+                    <view>
+                        <view>检索关键字（英）</view>
+                        <view>{{OrderItemData.conflictCondition.conflictList[0].searchEnName||"未填写"}}</view>
+                    </view>
+                </view>
+            </view>
+            <view class="search-result" wx:if="{{OrderItemData.conflictResults.length>0}}">
+                <view>检索结果</view>
+                <repeat for="{{OrderItemData.conflictResults}}" key="index" index="index" item="item">
+                    <view style="margin-bottom: {{item.litigantList.length>0?'0':'44rpx'}};">
+                        <view>
+                            <text>{{item.clientName||"未填写"}}</text>
+                            <icon wx:if="{{item.litigantList.length>0}}" class="iconfont icon-gengduo" style="font-size:40rpx;color:#b2b2b2"></icon>
+                        </view>
+                        <view>{{item.clientEnName||"未填写"}}</view>
+                        <view>{{item.caseName||'未填写'}}</view>
+                        <view></view>
+                        <view>
+                            <view>{{item.caseManager||'未填写'}}</view>
+                            <view>{{item.caseStatusText||'未填写'}}</view>
+                        </view>
+                    </view>
+                    <view wx:if="{{item.litigantList.length>0}}" class="litigantList">
+                        <repeat for="{{OrderItemData.conflictResults[index].litigantList}}" key="litigantList_index" index="litigantList_index" item="item">
+                            <view class="litigantList-item">
+                                <view>{{item.category||'未填写'}}</view>
+                                <view>{{item.name||'未填写'}}</view>
+                                <view>{{item.enName||'未填写'}}</view>
+                            </view>
+                        </repeat>
+                    </view>
+                </repeat>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import {
+        formatTimeSymbol
+    } from '../../../../utils/cofig/api.js';
+    export default class auditedResultDetail extends wepy.page {
+        config = {
+            navigationBarTitleText: "",
+        };
+        data = {
+            OrderItemData: {},
+        };
+        components = {};
+        methods = {};
+        events = {};
+        watch = {};
+        computed = {};
+        //检索结果
+        async GetOrderItem(id) {
+            var resData = await ajax.getData(
+                '/api/services/web/caseOrder/GetOrderItem',
+                'post', {
+                    id
+                }
+            )
+            if (resData.statusCode == 200) {
+                var OrderItemData = resData.data.result;
+                console.log(OrderItemData);
+                //完成时间
+                OrderItemData.completeTime = OrderItemData.completeTime.split('T')[0];
+                this.OrderItemData = OrderItemData;
+                this.$apply();
+            }
+        }
+        onLoad(options) {
+            this.GetOrderItem(options.id);
+        };
+        onShow() {};
+    }
+</script>

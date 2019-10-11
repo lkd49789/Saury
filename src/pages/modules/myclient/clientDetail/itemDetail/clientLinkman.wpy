@@ -1,0 +1,197 @@
+<!--  -->
+<style lang="less">
+.body {
+  height: 100%;
+  .fixed {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    right: 0;
+    background: #fff;
+  }
+  .container-title {
+    height: 104rpx;
+    font-size: 48rpx;
+    padding:0 28rpx;
+    color: #2a2a2a;
+    line-height: 104rpx;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #dedede;
+  }
+  .linkman-container {
+    padding: 149rpx 28rpx 0 28rpx;
+    font-size: 28rpx;
+    .linkman-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .linkman-item-left {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+      }
+      .linkman-item-right {
+        width: 80%;
+        border-bottom: 1px solid #f4f4f4;
+        padding: 30rpx 0;
+        > text:first-child {
+          //   display: flex;
+          //   align-items: center;
+          //   height: 80%;
+          padding-right: 18rpx;
+          border-right: 1px solid #2a2a2a;
+        }
+        > text:nth-child(2) {
+          padding-left: 20rpx;
+          color: #7a7a7a;
+        }
+        > view {
+          color: #7a7a7a;
+        }
+      }
+    }
+  }
+}
+</style>
+
+<template>
+    <!-- <view></view> -->
+    <!-- <text></text> -->
+    <view class="body">
+        <view class="container-title fixed" >
+            <text class="title-text">{{title}}</text>
+            <!-- <icon class="iconfont icon-bianji" style="font-size:60rpx;color:#5d73fa"></icon> -->
+        </view>
+        <view class="linkman-container">
+          <repeat for="{{linkerData}}" key="index" index="index" item="item">
+            <view class="linkman-item" @tap="toclientlinkmandetail('{{index}}')" >
+                <view class="linkman-item-left">
+                    <image src="{{item.avatar}}" mode="scaleToFill"
+                      lazy-load="false" style="width: 80rpx;height: 80rpx;border-radius:50%">
+                    </image>
+                </view>
+                <view class="linkman-item-right">
+                    <text>{{item.name||'未填写'}}</text>
+                    <text>{{item.dutyText||'未填写'}}</text>
+                    <view>
+                        <text>{{item.workPhone||'未填写'}}</text>
+                    </view>
+                </view>
+            </view>
+          </repeat>
+        </view>
+        <placeHolderImage :placeHolder.sync="placeHolder" />
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import ajax from '../../../../../utils/cofig/ajax.js';
+import mixins from '../../../../../utils/cofig/mixin.js';
+import placeHolderImage from '../../../../../components/placeHolderImage';
+export default class caseintroduce extends wepy.page {
+  components = { placeHolderImage};
+  config = {
+    enablePullDownRefresh: true,
+    backgroundTextStyle: 'dark',
+    backgroundColorTop: '#f4f4f4',
+    backgroundColorBottom: '#f4f4f4'
+  };
+  data = {
+    // linkerDatas: {
+    title:'',
+    linkerData: [],
+    clientId: '',
+    pageNumber: 1,
+    pageSize: 10,
+    totalCount: 0,
+    
+    // };
+  };
+   mixins = [mixins ];
+  methods = {
+    toclientlinkmandetail(index) {
+      // console.log(index);
+      wx.navigateTo({
+        url: './clientLinkmanDetail/clientLinkmanDetail?index=' + index
+      });
+    }
+  };
+  // 下拉刷新
+  // onPullDownRefresh() {
+  //   this.linkerData = [];
+  //   this.linkerPhoto = [];
+  //   this.pageNumber = 1;
+  //   this.getLinkerData();
+
+    //结束下拉刷新
+  //   wx.hideNavigationBarLoading(); //完成停止加载
+  //   // this.isUpdate = !this.isUpdate;
+  //   wx.stopPullDownRefresh(); //停止下拉刷新
+  // }
+  //上拉加载
+  onReachBottom() {
+    if (this.pageNumber < this.totalCount / 10) {
+      this.pageNumber += 1;
+      this.getLinkerData();
+      wepy.showToast({
+        title: '加载更多...',
+        icon: 'loading',
+        mask: true
+      });
+    } else {
+      wepy.showToast({
+        title: '没有更多...',
+        icon: 'none',
+        mask: true,
+        duration: 1000
+      });
+    }
+  }
+  // 获取联系人信息
+  async getLinkerData() {
+    var clientId = {
+      ClientId: this.clientId,
+      caseId:this.caseId,
+      pageNumber: this.pageNumber,
+      pageSize: this.pageSize
+    };
+    wx.showLoading({
+      title: '加载中，请稍等哦！',
+      mask: true,
+    });
+    var resData = await ajax.getData(
+      '/api/services/web/clientContacts/GetClientContactsList',
+      'post',
+      clientId
+    );
+    if(resData.statusCode==200){
+      this.totalCount=resData.data.result.totalCount;
+      var linkerData =resData.data.result.items;
+      for (var i in linkerData) {
+        var id = linkerData[i].id;
+        var http =
+          '/api/services/web/clientContacts/GetClientContactAvatar?id=' + id;
+        var linkerPhotoData = await ajax.getAavatar(http);
+        linkerData[i]['avatar'] = linkerPhotoData;
+      }
+      this.linkerData.push(...linkerData);
+      var contactsListData=wx.getStorageSync('clientData');
+      contactsListData.ContactsListData=this.linkerData;
+      wx.setStorageSync('clientData', contactsListData);
+      this.$apply();
+    }
+    
+  }
+  onLoad(options) {
+    console.log(options);
+    this.clientId=options.id;
+    this.title=options.title||'客户联系人';
+    this.caseId=options.caseId||'';
+    this.getLinkerData();
+  }
+}
+</script>

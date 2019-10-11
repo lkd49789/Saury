@@ -1,0 +1,44 @@
+<style lang="scss">
+    page{
+        position: relative;
+        .placeHolderImage{
+        position:fixed;
+        // height: 100%;
+        top:0rpx;
+        left:0;
+        height:100%;
+        width:100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index:999;
+        background:#fff
+     }
+    }
+</style>
+<template>
+    <view wx:if="{{placeHolder.placeHolderShow}}" class="placeHolderImage" catchtouchmove="true">
+                <image src="{{placeHolderImage[placeHolder.placeHolderImageIndex]}}" mode="scaleToFill"
+                  lazy-load="false"  style="width:580rpx;height:580rpx">
+                </image>
+    </view>
+</template>
+<script>
+import wepy from 'wepy';
+export default class placeHoldImage extends wepy.component {
+  props = {
+     placeHolder:{
+         type:Object,
+         twoWay: true
+     }
+  };
+  data={
+      placeHolderImage:[
+          '/images/noData.png',
+          '/images/noRequest.png',
+          '/images/noNet.png',
+          '/images/noTaccredit.png',
+      ]
+  }
+}
+</script>

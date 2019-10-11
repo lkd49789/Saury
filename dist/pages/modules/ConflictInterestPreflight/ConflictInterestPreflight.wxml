@@ -1,0 +1,59 @@
+
+    <view class="container">
+        <view class="page-title">
+            利益冲突预检
+        </view>
+        <view class="main">
+            <view class="shadowBox searchBox">
+                <view>检索关键字</view>
+                <view>
+                    <input value="{{keyWord}}" type="text" placeholder="请输入关键字" maxlength="30" bindinput="keyWordValue"/>
+                </view>
+                <view>
+                    <view bindtap="searchKeyWord">检索</view>
+                </view>
+            </view>
+            <view class="shadowBox keywordBox" style="padding: 20rpx 24rpx;"  wx:if="{{keyWordArray.length>0}}">
+                <view>检索关键字：</view>
+                <view class="keywordItems">
+                    <block wx:for="{{keyWordArray}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                        <view>
+                            <view>{{item}}</view>
+                            <icon class="iconfont icon-guanbi" style="font-size:20rpx;color:#7a7a7a;" bindtap="deleteItem" data-wpydeleteitem-a="{{index}}"/>
+                        </view>
+                    </block>
+                </view>
+            </view>
+            <view  wx:if="{{ConflictCaseListData.length>0}}">
+                <view style="margin-bottom:20rpx;">检索结果</view>
+                <block wx:for="{{ConflictCaseListData}}" wx:for-index="ConflictCaseListData_index" wx:for-item="ConflictCaseListData_item" wx:key="inConflictCaseListData_indexdex">
+                    <view class="shadowBox searchResultBox" style="margin-bottom: {{ConflictCaseListData_item.lawyerList.length>0&&ConflictCaseListData_item.isUnfoldData?'0rpx':'44rpx'}};">
+                        <view>
+                            <view>{{ConflictCaseListData_item.clientName}}</view>
+                            <view wx:if="{{ConflictCaseListData_item.lawyerList.length>0}}" catchtap="toggleBtn" data-wpytogglebtn-a="{{ConflictCaseListData_item}}" data-wpytogglebtn-b="{{ConflictCaseListData_index}}"> 
+                                <icon wx:if="{{ConflictCaseListData_item.isUnfoldData}}" class="iconfont icon-zhankaishi" style="color:#7a7a7a;font-size:30rpx"/>
+                                <icon wx:else class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="color:#7a7a7a;font-size:30rpx"/>
+                            </view>
+                        </view>
+                        <view>{{ConflictCaseListData_item.clientEnName||'未填写'}}</view>
+                        <view>{{ConflictCaseListData_item.name}}</view>
+                        <view>
+                            <view>{{ConflictCaseListData_item.acceptDate}}</view>
+                            <view>
+                                <view/>
+                                <view>{{ConflictCaseListData_item.statusText}}</view>
+                            </view>
+                        </view>
+                    </view>
+                    <view class="shadowBox lawyerList" style="margin:0 20rpx 44rpx 20rpx" wx:if="{{ConflictCaseListData_item.lawyerList.length>0&&ConflictCaseListData_item.isUnfoldData}}">
+                        <block wx:for="{{ConflictCaseListData_item.lawyerList}}" wx:for-index="lawyerList_index" wx:for-item="lawyerList_item" wx:key="lawyerList_index">
+                            <view>
+                                <view>{{lawyerList_item.lawyerRoleText||'未填写'}}</view>
+                                <view>{{lawyerList_item.employeeName||'未填写'}}</view>
+                            </view>
+                        </block>
+                    </view>
+                </block>
+            </view>
+        </view>
+    </view>

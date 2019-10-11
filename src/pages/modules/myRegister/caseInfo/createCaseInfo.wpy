@@ -1,0 +1,1122 @@
+<!--  -->
+<style lang='scss'>
+    .container {
+        .pageTitle {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .auditContent {
+            margin: 149rpx 28rpx 0 28rpx;
+            .flex-container {
+                display: flex;
+                justify-content: space-between;
+                >view {
+                    width: 45%;
+                }
+            }
+            .tui-picker-content {
+                margin-bottom: 36rpx;
+                picker {
+                    padding: 28rpx 0;
+                    border-bottom: 1px solid #dfdfdf;
+                    .tui-picker-detail {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        color: #7a7a7a;
+                    }
+                }
+            }
+            .checked-box {
+                margin: 10rpx 0 40rpx 0;
+                display: flex;
+                align-items: center;
+                >view {
+                    flex: 1;
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                }
+            }
+            .option {
+                margin-bottom: 36rpx;
+                picker {
+                    padding: 20rpx 0;
+                    border-bottom: 1px solid #dfdfdf;
+                    .picker {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        color: #7a7a7a;
+                        .part-item {
+                            position: relative;
+                            margin: 10rpx;
+                            border: 1px dotted #dedede;
+                            padding: 5rpx 20rpx;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            >icon {
+                                position: absolute;
+                                bottom: 27rpx;
+                                right: -21rpx;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 999999;
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="pageTitle">
+            <text>案件基本信息</text>
+        </view>
+        <view class="auditContent">
+            <Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
+            <view class="flex-container">
+                <Category :options.sync="Category" :index.sync='CategoryIndex' :twoWayTitle="CategoryIndex" />
+                <Partition :options.sync="Partition" :index.sync='PartitionIndex' :twoWayTitle="PartitionIndex" />
+            </view>
+            <view class="tui-picker-content" wx:if="{{Category.value[CategoryIndex]=='FS'||Category.value[CategoryIndex]=='ZS'}}">
+                <view>案件业务子类</view>
+                <picker mode="multiSelector" value="{{SubCategoryIndex}}" range="{{SubCategory.displayText}}" bindcolumnchange="bindcolumnSubCategoryChange" @change="dateChange('CACT')">
+                    <view class="tui-picker-detail">
+                        <text>{{SubCategory.content.length!==0?SubCategory.content:'请选择'}}</text>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+            <view wx:if="{{Category.value[CategoryIndex]=='XS'||Category.value[CategoryIndex]=='MS'||Category.value[CategoryIndex]=='XZ'}}">
+                <Stage :options.sync="Stage" :index.sync='StageIndex' :twoWayTitle="StageIndex" />
+            </view>
+            <view class="flex-container">
+                <OrganizationUnitId :options.sync="OrganizationUnitId" :index.sync='OrganizationUnitIdIndex' :twoWayTitle="OrganizationUnitIdIndex" />
+                <view class="tui-picker-content">
+                    <view>收案日期</view>
+                    <picker id="AcceptDateText" mode="date" value="{{submitData.AcceptDateText}}" start="2000-01-01" end="2050-12-31" bindchange="bindAcceptDateChange" style="flex:1">
+                        <view class="tui-picker-detail">
+                            {{submitData.AcceptDateText||'请选择'}}
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                        </view>
+                    </picker>
+                    <view wx:if="{{AcceptDateWarning}}" style="color:#e20000">
+                        <text>此字段是必填字段</text>
+                    </view>
+                </view>
+            </view>
+            <view class="flex-container">
+                <Language :options.sync="Language" :index.sync='LanguageIndex' :twoWayTitle="LanguageIndex" />
+                <SecretLevel :options.sync="SecretLevel" :index.sync='SecretLevelIndex' :twoWayTitle="SecretLevelIndex" />
+            </view>
+            <view class="checked-box">
+                <view>
+                    <checkbox id="" value="{{IsForeign.checked}}" checked="{{IsForeign.checked}}" @tap="IsForeign" color="#5d73fa" />{{IsForeign.title}}
+                </view>
+                <view>
+                    <checkbox id="" value="{{IsLegal.checked}}" checked="{{IsLegal.checked}}" @tap="Legal" color="#5d73fa" />{{IsLegal.title}}
+                </view>
+                <!-- <view>
+                    <checkbox id="" value="{{ImportLevel.checked}}" checked="{{ImportLevel.checked}}" @tap="isImportLevel" color="#5d73fa" />{{ImportLevel.title}}
+                </view> -->
+            </view>
+            <ImportLevel :options.sync="ImportLevel" :index.sync='ImportLevelIndex' :twoWayTitle="ImportLevelIndex" />
+            <view class="flex-container" wx:if="{{Category.value[CategoryIndex]=='FG'}}">
+                <view class="tui-picker-content">
+                    <view>开始日期</view>
+                    <picker id="StartDate" mode="date" value="{{submitData.StartDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindStartDateDateChange" style="flex:1">
+                        <view class="tui-picker-detail">
+                            {{submitData.StartDate||'请选择'}}
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                        </view>
+                    </picker>
+                </view>
+                <view class="tui-picker-content">
+                    <view>结束日期</view>
+                    <picker id="EndDate" mode="date" value="{{submitData.EndDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindEndDateDateChange" style="flex:1">
+                        <view class="tui-picker-detail">
+                            {{submitData.EndDate||'请选择'}}
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="tui-picker-content" wx:if="{{Category.value[CategoryIndex]=='XS'||Category.value[CategoryIndex]=='MS'||Category.value[CategoryIndex]=='XZ'}}">
+                <view>案由分类</view>
+                <picker mode="multiSelector" value="{{ReasonIndex}}" range="{{Reason.displayText}}" bindcolumnchange="bindcolumnReasonChange" @change="dateChange('CAAY')">
+                    <view class="tui-picker-detail">
+                        <text>{{Reason.content.length!==0?Reason.content:'请选择'}}</text>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+            <view wx:if="{{Category.value[CategoryIndex]=='XS'||Category.value[CategoryIndex]=='MS'||Category.value[CategoryIndex]=='XZ'}}">
+                <ReasonSupplement :input.sync="ReasonSupplement" :inputValue.sync='ReasonSupplementValue' :twoWayTitle="ReasonSupplementValue" />
+            </view>
+            <view wx:if="{{Category.value[CategoryIndex]=='ZC'}}">
+                <MattersEntrusted :input.sync="MattersEntrusted" :inputValue.sync='MattersEntrustedValue' :twoWayTitle="MattersEntrustedValue" />
+            </view>
+            <view wx:if="{{Category.value[CategoryIndex]=='MS'||Category.value[CategoryIndex]=='XZ'||Category.value[CategoryIndex]=='ZC'}}">
+                <Agent :options.sync="Agent" :index.sync='AgentIndex' :twoWayTitle="AgentIndex" />
+            </view>
+            <!-- <view wx:if="{{Category.value[CategoryIndex]=='XS'||Category.value[CategoryIndex]=='MS'||Category.value[CategoryIndex]=='XZ'||Category.value[CategoryIndex]=='ZC'}}">
+                                                        <AgencyAuthority :options.sync="AgencyAuthority" :index.sync='AgencyAuthorityIndex' :twoWayTitle="AgencyAuthorityIndex" />
+                                                    </view> -->
+            <view class="option" wx:if="{{Category.value[CategoryIndex]=='XS'||Category.value[CategoryIndex]=='MS'||Category.value[CategoryIndex]=='XZ'||Category.value[CategoryIndex]=='ZC'}}">
+                <view>
+                    <text class="title">代理权限</text>
+                </view>
+                <picker @change="bindPickerChangeAgencyAuthorityData" value="{{AgencyAuthorityData[AgencyAuthorityData.length-1]}}" range="{{AgencyAuthority.displayText}}" name='AgencyAuthority'>
+                    <view class="picker">
+                        <view style="display:flex;flex-wrap: wrap" wx:if="{{AgencyAuthorityData.length!==0}}">
+                            <repeat for="{{AgencyAuthorityData}}" key="index" index="index" item="item">
+                                <view class="part-item">
+                                    <text>{{AgencyAuthority.displayText[item]}}</text>
+                                    <icon class="iconfont icon-zirenwushanchu1" style="font-size:48rpx" catchtap="deletePItem('{{index}}')"></icon>
+                                </view>
+                            </repeat>
+                        </view>
+                        <view wx:else>请选择</view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+            <Description :input.sync="Description" :inputValue.sync='DescriptionValue' :twoWayTitle="DescriptionValue" />
+        </view>
+        <image src="{{'../../../../images/test.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;" @touchstart="touchStart" @touchend="touchEnd">
+        </image>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import {
+        myDistinct
+    } from '../../../../utils/cofig/api.js'
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import Name from '../../../../components/picker/input';
+    import ReasonSupplement from '../../../../components/picker/input';
+    import MattersEntrusted from '../../../../components/picker/input';
+    import Description from '../../../../components/picker/input';
+    import Category from '../../../../components/picker/option';
+    import Partition from '../../../../components/picker/option';
+    import OrganizationUnitId from '../../../../components/picker/option';
+    import Language from '../../../../components/picker/option';
+    import SecretLevel from '../../../../components/picker/option';
+    import Stage from '../../../../components/picker/option';
+    import AgencyAuthority from '../../../../components/picker/option';
+    import Agent from '../../../../components/picker/option';
+    import ImportLevel from '../../../../components/picker/pickerOption';
+    export default class caseInfo extends wepy.page {
+        components = {
+            Name,
+            ReasonSupplement,
+            MattersEntrusted,
+            Description,
+            Category,
+            OrganizationUnitId,
+            Partition,
+            Language,
+            SecretLevel,
+            Stage,
+            AgencyAuthority,
+            Agent,
+            ImportLevel
+        };
+        data = {
+            addOpacity: 1,
+            AcceptDateWarning: true,
+            caseInfoData: {},
+            isCaseInfoData: false,
+            submitData: {
+                // AcceptDateText: "",
+                // AgencyAuthority: "", //代理权限
+                // Agent: "", //代理方
+                // CaseClientRelationList: [],
+                // CaseContactsList: [],
+                // Category: "",
+                // ClientId: "",
+                // ClientName: "",
+                // Description: "",
+                // EndDate: "",
+                // Id: "",
+                // ImportLevel: "",
+                // IsForeign: "",
+                // IsLegal: "",
+                // IsTemp: "N",
+                // Language: "",
+                // MattersEntrusted: "", //委托事项
+                // Name: "",
+                // OrganizationUnitId: "",
+                // Partition: "",
+                // ProcessStatus: "",
+                // ReasonSupplement: "", //补充案由
+                // SecretLevel: "",
+                // SerialId: "",
+                // Stage: "",
+                // StartDate: "",
+                // Status: "",
+                // SubCategory_id: "" ,//案件子类
+                // SubCategory:''
+            },
+            //案件名称
+            Name: {
+                title: '案件名称',
+                name: 'Name',
+                warning: true,
+                type: 'text',
+                options: false
+            },
+            NameValue: '',
+            //案由分类
+            Reason: {
+                title: '案由分类',
+                name: 'Reason',
+                value: [
+                    [],
+                    [],
+                    []
+                ],
+                displayText: [
+                    ["请选择"],
+                    ["请选择"],
+                    ["请选择"]
+                ],
+                content: '',
+            },
+            ReasonIndex: [0, 0, 0],
+            //补充案由
+            ReasonSupplement: {
+                title: '补充案由',
+                name: 'ReasonSupplement',
+                warning: false,
+                type: 'text',
+                options: true
+            },
+            ReasonSupplementValue: '',
+            //委托事项
+            MattersEntrusted: {
+                title: '委托事项',
+                name: 'MattersEntrusted',
+                warning: false,
+                type: 'text',
+                options: true
+            },
+            MattersEntrustedValue: '',
+            // //案件名称
+            // Name: {
+            //     title: '案件名称',
+            //     name: 'Name',
+            //     warning: true,
+            //     type: 'text',
+            //     options: false
+            // },
+            // NameValue: '',
+            //案件类别
+            Category: {
+                title: '案件类别',
+                name: 'Category',
+                value: [""],
+                displayText: ["请选择"],
+                warning: true
+            },
+            CategoryIndex: 0,
+            //案件业务划分
+            Partition: {
+                title: '案件业务划分',
+                name: 'Partition',
+                value: [""],
+                displayText: ["请选择"],
+                warning: false
+            },
+            PartitionIndex: 0,
+            //案件业务子类
+            SubCategory: {
+                title: '案件业务子类',
+                name: 'SubCategory',
+                value: [
+                    [],
+                    []
+                ],
+                displayText: [
+                    ["请选择"],
+                    ["请选择"]
+                ],
+                content: '',
+            },
+            SubCategoryIndex: [0, 0],
+            //案件阶段
+            Stage: {
+                title: '案件阶段',
+                name: 'Stage',
+                value: [""],
+                displayText: ["请选择"],
+                warning: true
+            },
+            StageIndex: 0,
+            //组织结构
+            OrganizationUnitId: {
+                title: '组织结构',
+                name: 'OrganizationUnitId',
+                value: [""],
+                displayText: ["请选择"],
+                warning: true
+            },
+            OrganizationUnitIdIndex: 0,
+            //书写语言
+            Language: {
+                title: '书写语言',
+                name: 'Language',
+                value: [""],
+                displayText: ["请选择"],
+                warning: true
+            },
+            LanguageIndex: 0,
+            //保密级别
+            SecretLevel: {
+                title: '保密级别',
+                name: 'SecretLevel',
+                value: [""],
+                displayText: ["请选择"],
+                warning: true
+            },
+            SecretLevelIndex: 0,
+            //代理权限
+            AgencyAuthority: {
+                value: [],
+                displayText: [],
+            },
+            AgencyAuthorityData: [],
+            //代理方
+            Agent: {
+                title: '代理方',
+                name: 'Agent',
+                value: [""],
+                displayText: ["请选择"],
+                warning: false
+            },
+            AgentIndex: 0,
+            AgentData: [],
+            //是否涉外
+            IsForeign: {
+                title: '是否涉外',
+                checked: false,
+                IsForeign: [],
+            },
+            //是否法律援助
+            IsLegal: {
+                title: '是否法律援助',
+                checked: false,
+                IsLegal: [],
+            },
+            // 重要级别
+            ImportLevel: {
+                title: '重要级别',
+                key: 'displayText',
+                name: 'ImportLevel',
+                data: [],
+                warning: false
+            },
+            ImportLevelIndex: -1,
+
+            //案情介绍
+            Description: {
+                title: '案情介绍',
+                name: 'Description',
+                warning: true,
+                type: 'text',
+                options: true
+            },
+            DescriptionValue: '',
+        };
+        methods = {
+            touchStart() {
+                this.addOpacity = 0.6;
+                this.$apply();
+            },
+            touchEnd() {
+                if (this.submitData.Name && this.submitData.Description && this.submitData.Category && this.submitData.AcceptDateText&&this.submitData.OrganizationUnitId&&this.submitData.Language&&this.submitData.SecretLevel) {
+                     this.CreateOrUpdateCaseGeneralInfo();
+                } else {
+                    this.addOpacity = 1;
+                    // this.AcceptDateWarning = true;
+                    // this.Stage.warning = true;
+                    // this.Category.warning = true;
+                    wx.showToast({
+                        title: '请填写必填项！', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: false, //显示透明蒙层，防止触摸穿透,
+                    });
+                }
+            },
+            //删除已选权限
+            deletePItem(index) {
+                this.AgencyAuthorityData.splice(index, 1);
+                var Pvalue = this.submitData.AgencyAuthority.split(',');
+                Pvalue.splice(index, 1)
+                Pvalue = Pvalue.toString();
+                this.submitData.AgencyAuthority = Pvalue;
+                this.$apply();
+            },
+            //权限
+            bindPickerChangeAgencyAuthorityData(e) {
+                if(+e.detail.value>0){
+                    this.AgencyAuthorityData.push(+e.detail.value);
+                    myDistinct(this.AgencyAuthorityData);
+                    var Pindex = this.AgencyAuthorityData;
+                    var Pvalue = [];
+                    for (var index in Pindex) {
+                        Pvalue[index] = this.AgencyAuthority.value[Pindex[index]];
+                    }
+                    this.submitData.AgencyAuthority = Pvalue.toString();
+                }
+            },
+            //开始时间
+            bindStartDateDateChange(e) {
+                this.submitData.StartDate = e.detail.value;
+                this.$apply();
+            },
+            //结束时间
+            bindEndDateDateChange(e) {
+                this.submitData.EndDate = e.detail.value;
+                this.$apply();
+            },
+            // isImportLevel() {
+            //     this.ImportLevel.checked = !this.ImportLevel.checked;
+            //     if (this.ImportLevel.checked) {
+            //         this.submitData.ImportLevel = this.ImportLevel.ImportLevel[0].value;
+            //     } else {
+            //         this.submitData.ImportLevel = this.ImportLevel.ImportLevel[1].value;
+            //     }
+            //     this.$apply()
+            // },
+            Legal() {
+                this.IsLegal.checked = !this.IsLegal.checked;
+                if (this.IsLegal.checked) {
+                    this.submitData.IsLegal = this.IsLegal.IsLegal[0].value;
+                } else {
+                    this.submitData.IsLegal = this.IsLegal.IsLegal[1].value;
+                }
+                this.$apply()
+            },
+            IsForeign() {
+                this.IsForeign.checked = !this.IsForeign.checked;
+                if (this.IsForeign.checked) {
+                    this.submitData.IsForeign = this.IsForeign.IsForeign[0].value;
+                } else {
+                    this.submitData.IsForeign = this.IsForeign.IsForeign[1].value;
+                }
+                this.$apply()
+            },
+            bindAcceptDateChange(e) {
+                if (e.detail.value) {
+                    this.AcceptDateWarning = false;
+                    this.submitData.AcceptDateText = e.detail.value;
+                    this.submitData.AcceptDate = e.detail.value;
+                } else {
+                    this.AcceptDateWarning = true
+                }
+                this.$apply();
+            },
+            bindcolumnSubCategoryChange(e) {
+                this.isCaseInfoData = false;
+                switch (e.detail.column) {
+                    case 0:
+                        if (e.detail.value !== 0) {
+                            this.GetGeneralCodeComboOutput('CACT', this.SubCategory.value[0][e.detail.value], 6, true);
+                        } else {
+                            this.SubCategory.value[1] = [''];
+                            this.SubCategory.displayText[1] = ['请选择'];
+                        }
+                        this.SubCategoryIndex[0] = e.detail.value
+                        this.SubCategoryIndex[1] = 0;
+                        break;
+                    case 1:
+                        this.SubCategoryIndex[1] = e.detail.value
+                }
+                this.$apply()
+            },
+            bindcolumnReasonChange(e) {
+                this.isCaseInfoData = false;
+                switch (e.detail.column) {
+                    case 0:
+                        if (e.detail.value !== 0) {
+                            this.GetGeneralCodeComboOutput('CAAY', this.Reason.value[0][e.detail.value], 6, true);
+                        } else {
+                            this.Reason.value[1] = [''];
+                            this.Reason.displayText[1] = ['请选择'];
+                            this.Reason.value[2] = [''];
+                            this.Reason.displayText[2] = ['请选择'];
+                        }
+                        this.ReasonIndex[0] = e.detail.value
+                        this.ReasonIndex[1] = 0
+                        this.ReasonIndex[2] = 0
+                        break;
+                    case 1:
+                        if (e.detail.value !== 0) {
+                            this.GetGeneralCodeComboOutput('CAAY', this.Reason.value[1][e.detail.value], 7, true);
+                        } else {
+                            this.Reason.value[2] = [''];
+                            this.Reason.displayText[2] = ['请选择'];
+                        }
+                        this.ReasonIndex[1] = e.detail.value
+                        this.ReasonIndex[2] = 0
+                        break;
+                    case 2:
+                        this.ReasonIndex[2] = e.detail.value
+                        break;
+                }
+                this.$apply()
+            },
+            dateChange(type) {
+                switch (type) {
+                    case 'CACT':
+                        if (this.SubCategoryIndex[1] == 0) {
+                            this.SubCategory.content = this.SubCategory.displayText[0][this.SubCategoryIndex[0]];
+                            this.submitData.SubCategory = this.SubCategory.value[0][this.SubCategoryIndex[0]]
+                        } else {
+                            this.SubCategory.content = this.SubCategory.displayText[0][this.SubCategoryIndex[0]] + '/' + this.SubCategory.displayText[1][this.SubCategoryIndex[1]]
+                            this.submitData.SubCategory = this.SubCategory.value[0][this.SubCategoryIndex[0]] + ',' + this.SubCategory.value[1][this.SubCategoryIndex[1]]
+                        }
+                        break;
+                    case 'CAAY':
+                        if (this.ReasonIndex[1] == 0) {
+                            this.Reason.content = this.Reason.displayText[0][this.ReasonIndex[0]];
+                            this.submitData.Reason = this.Reason.value[0][this.ReasonIndex[0]]
+                        } else if (this.ReasonIndex[2] == 0) {
+                            this.Reason.content = this.Reason.displayText[0][this.ReasonIndex[0]] + '/' + this.Reason.displayText[1][this.ReasonIndex[1]]
+                            this.submitData.Reason = this.Reason.value[0][this.ReasonIndex[0]] + ',' + this.Reason.value[1][this.ReasonIndex[1]]
+                        } else {
+                            this.Reason.content = this.Reason.displayText[0][this.ReasonIndex[0]] + '/' + this.Reason.displayText[1][this.ReasonIndex[1]] + '/' + this.Reason.displayText[2][this.ReasonIndex[2]]
+                            this.submitData.Reason = this.Reason.value[0][this.ReasonIndex[0]] + ',' + this.Reason.value[1][this.ReasonIndex[1]] + ',' + this.Reason.value[2][this.ReasonIndex[2]]
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        events = {};
+        watch = {
+            SubCategoryIndex(index, oldIndex) {
+                if (this.isCaseInfoData) {
+                    if (this.SubCategoryIndex[1] == 0) {
+                        this.SubCategory.content = this.SubCategory.displayText[0][this.SubCategoryIndex[0]];
+                        this.submitData.SubCategory = this.SubCategory.value[0][this.SubCategoryIndex[0]]
+                    } else {
+                        this.SubCategory.content = this.SubCategory.displayText[0][this.SubCategoryIndex[0]] + '/' + this.SubCategory.displayText[1][this.SubCategoryIndex[1]]
+                        this.submitData.SubCategory = this.SubCategory.value[0][this.SubCategoryIndex[0]] + ',' + this.SubCategory.value[1][this.SubCategoryIndex[1]]
+                    }
+                }
+            },
+            ReasonIndex(ReasonIndex) {
+                if (this.isCaseInfoData) {
+                    if (this.ReasonIndex[1] == 0) {
+                        this.Reason.content = this.Reason.displayText[0][this.ReasonIndex[0]];
+                        this.submitData.Reason = this.Reason.value[0][this.ReasonIndex[0]]
+                    } else if (this.ReasonIndex[2] == 0) {
+                        this.Reason.content = this.Reason.displayText[0][this.ReasonIndex[0]] + '/' + this.Reason.displayText[1][this.ReasonIndex[1]]
+                        this.submitData.Reason = this.Reason.value[0][this.ReasonIndex[0]] + ',' + this.Reason.value[1][this.ReasonIndex[1]]
+                    } else {
+                        this.Reason.content = this.Reason.displayText[0][this.ReasonIndex[0]] + '/' + this.Reason.displayText[1][this.ReasonIndex[1]] + '/' + this.Reason.displayText[2][this.ReasonIndex[2]]
+                        this.submitData.Reason = this.Reason.value[0][this.ReasonIndex[0]] + ',' + this.Reason.value[1][this.ReasonIndex[1]] + ',' + this.Reason.value[2][this.ReasonIndex[2]]
+                    }
+                }
+            },
+            CategoryIndex(index, oldIndex) {
+                console.log(index, oldIndex);
+                this.submitData.Category = this.Category.value[index];
+                this.submitData.CategoryText = this.Category.displayText[index]
+                this.GetGeneralCodeComboOutput('CABA', this.Category.value[index]);
+                if (oldIndex !== 0) {
+                    this.isCaseInfoData = false;
+                }
+                switch (this.Category.value[index]) {
+                    case 'FS':
+                        this.SubCategory.content = ""
+                        this.GetGeneralCodeComboOutput('CACT', 'FS', 5, true);
+                        this.SubCategoryIndex = [0, 0];
+                        this.SubCategory.value[1] = [''];
+                        this.SubCategory.displayText[1] = ['请选择'];
+                        break;
+                    case 'XS':
+                        this.Reason.content = "";
+                        this.ReasonIndex = [0, 0, 0]
+                        this.GetGeneralCodeComboOutput('CASTAGE', 'XS', 0);
+                        this.GetGeneralCodeComboOutput('CADQ', 'XS', 0);
+                        this.GetGeneralCodeComboOutput('CAAY', 'XS', 5, true);
+                        this.Reason.value[1] = [''];
+                        this.Reason.displayText[1] = ['请选择'];
+                        this.Reason.value[2] = [''];
+                        this.Reason.displayText[2] = ['请选择'];
+                        break;
+                    case 'MS':
+                        this.GetGeneralCodeComboOutput('CASTAGE', 'MS', 0);
+                        this.GetGeneralCodeComboOutput('CADQ', 'MS', 0);
+                        this.GetGeneralCodeComboOutput('CAWS', 'MS')
+                        this.Reason.content = "";
+                        this.ReasonIndex = [0, 0, 0];
+                        this.Reason.value[1] = [''];
+                        this.Reason.displayText[1] = ['请选择'];
+                        this.Reason.value[2] = [''];
+                        this.Reason.displayText[2] = ['请选择'];
+                        this.GetGeneralCodeComboOutput('CAAY', 'MS', 5, true);
+                        break;
+                    case 'XZ':
+                        this.GetGeneralCodeComboOutput('CASTAGE', 'XZ', 0);
+                        this.GetGeneralCodeComboOutput('CADQ', 'XZ', 0);
+                        this.GetGeneralCodeComboOutput('CAWS', 'XZ')
+                        this.Reason.content = "";
+                        this.ReasonIndex = [0, 0, 0];
+                        this.Reason.value[1] = [''];
+                        this.Reason.displayText[1] = ['请选择'];
+                        this.Reason.value[2] = [''];
+                        this.Reason.displayText[2] = ['请选择'];
+                        this.GetGeneralCodeComboOutput('CAAY', 'XZ', 5, true);
+                        break;
+                    case 'ZS':
+                        this.SubCategory.content = ""
+                        this.GetGeneralCodeComboOutput('CACT', 'ZS', 5, true);
+                        this.SubCategoryIndex = [0, 0];
+                        this.SubCategory.value[1] = [''];
+                        this.SubCategory.displayText[1] = ['请选择'];
+                        break;
+                    case 'ZC':
+                        this.GetGeneralCodeComboOutput('CADQ', 'ZC', 0);
+                        this.GetGeneralCodeComboOutput('CAWS', 'ZC')
+                        break;
+                    default:
+                        break;
+                }
+                if (oldIndex !== 0 && !this.isCaseInfoData) {
+                    this.isCaseInfoData = false;
+                    this.AgencyAuthorityData = [];
+                    this.submitData.AgencyAuthority = '';
+                    this.submitData.StartDate = '';
+                    this.submitData.EndDate = '';
+                    this.submitData.SubCategory = '';
+                    this.submitData.Stage = '';
+                    this.submitData.Reason = '';
+                    this.submitData.MattersEntrusted = '';
+                    this.submitData.ReasonSupplement = '';
+                    this.submitData.Agent = '';
+                    this.ReasonSupplementValue = '';
+                }
+                // this.$apply();
+            },
+            NameValue(value) {
+                this.submitData.Name = value;
+                this.$apply();
+            },
+            ReasonSupplementValue(value) {
+                this.submitData.ReasonSupplement = value;
+                this.$apply();
+            },
+            MattersEntrustedValue(value) {
+                this.submitData.MattersEntrusted = value;
+                this.$apply();
+            },
+            DescriptionValue(value) {
+                this.submitData.Description = value;
+                this.$apply();
+            },
+            PartitionIndex(index) {
+                this.submitData.Partition = this.Partition.value[index];
+                this.$apply();
+            },
+            StageIndex(index) {
+                this.submitData.Stage = this.Stage.value[index];
+                this.$apply();
+            },
+            OrganizationUnitIdIndex(index) {
+                this.submitData.OrganizationUnitId = this.OrganizationUnitId.value[index];
+                this.$apply();
+            },
+            LanguageIndex(index) {
+                this.submitData.Language = this.Language.value[index];
+                this.$apply();
+            },
+            SecretLevelIndex(index) {
+                this.submitData.SecretLevel = this.SecretLevel.value[index];
+                this.$apply();
+            },
+            AgentIndex(index) {
+                this.submitData.Agent = this.Agent.value[index];
+                this.$apply();
+            },
+            ImportLevelIndex(index) {
+                this.submitData.ImportLevel = this.ImportLevel.data[index].value;
+                this.$apply();
+            },
+        };
+        computed = {};
+        filterAgent(data, key) {
+            var ary_id = [''];
+            var ary_name = ['请选择'];
+            for (var index in data) {
+                var reg = new RegExp(key);
+                var result = reg.test(data[index].description);
+                if (result) {
+                    ary_id.push(data[index].id);
+                    ary_name.push(data[index].name);
+                }
+            }
+            this.Agent.value = ary_id;
+            this.Agent.displayText = ary_name;
+            if (this.isCaseInfoData) {
+                for (var Agent_index in this.Agent.value) {
+                    if (this.Agent.value[Agent_index] == this.caseInfoData.Agent) {
+                        this.AgentIndex = Agent_index;
+                    }
+                }
+            } else {
+                this.AgentIndex = 0;
+            }
+        }
+        //案件基本信息提交
+        async CreateOrUpdateCaseGeneralInfo() {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/case/CreateOrUpdateCaseGeneralInfo',
+                'post',
+                this.submitData
+            )
+            if (resData.statusCode == 200) {
+
+                this.submitData.Id = resData.data.result;
+                wx.setStorage({
+                    key: 'CREATE_CASEINFO_DATA',
+                    data: this.submitData,
+                    success: () => {
+                        wx.showToast({
+                            title: '提交完成', //提示的内容,
+                            icon: 'success', //图标,
+                            duration: 2000, //延迟时间,
+                            mask: true, //显示透明蒙层，防止触摸穿透,
+                            success: res => {
+                                this.addOpacity = 1;
+                                wx.navigateBack({
+                                    delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                                });
+                            }
+                        });
+                    }
+                });
+                this.$apply();
+            } else {
+                wx.showToast({
+                    title: resData.data.error.message,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
+            }
+        }
+        //案件待编辑基础数据
+        async GetCaseGeneralInfo() {
+            var resData = await ajax.getData(
+                '/api/services/web/case/GetCaseGeneralInfo',
+                'post', {
+                    Id: ''
+                }
+            )
+            if (resData.statusCode == 200) {
+                var caseGeneralInfoData = resData.data.result;
+                //案件类别
+                var Category = this.cacheData(caseGeneralInfoData.caseCategoryCombobox);
+                this.Category.value = this.Category.value.concat(Category.value);
+                this.Category.displayText = this.Category.displayText.concat(Category.displayText);
+                //案件业务划分
+                var Partition = this.cacheData(caseGeneralInfoData.partitionCombobox);
+                this.Partition.value = this.Partition.value.concat(Partition.value);
+                this.Partition.displayText = this.Partition.displayText.concat(Partition.displayText);
+                //书面语言
+                var Language = this.cacheData(caseGeneralInfoData.caseWrittenLanguageCombobox);
+                this.Language.value = this.Language.value.concat(Language.value);
+                this.Language.displayText = this.Language.displayText.concat(Language.displayText);
+                //保密级别
+                var SecretLevel = this.cacheData(caseGeneralInfoData.secretLevelCombobox);
+                this.SecretLevel.value = this.SecretLevel.value.concat(SecretLevel.value);
+                this.SecretLevel.displayText = this.SecretLevel.displayText.concat(SecretLevel.displayText);
+                //是否涉外
+                this.IsForeign.IsForeign = caseGeneralInfoData.whetherCombobox;
+                this.submitData.IsForeign = 'N';
+                //是否法律援助
+                this.IsLegal.IsLegal = caseGeneralInfoData.whetherCombobox;
+                this.submitData.IsLegal = 'N';
+                //是否重要
+                this.ImportLevel.data = caseGeneralInfoData.importLevelCombobox;
+                this.fillData();
+            }
+            this.$apply();
+        }
+        //填充数据
+        fillData() {
+            if (this.isCaseInfoData) {
+                //开始时间
+                this.submitData.StartDate=this.caseInfoData.StartDate?this.caseInfoData.StartDate.split('T')[0]:'';
+                //结束时间
+                this.submitData.EndDate=this.caseInfoData.EndDate?this.caseInfoData.EndDate.split('T')[0]:'';
+                this.NameValue = this.caseInfoData.Name;
+                this.DescriptionValue = this.caseInfoData.Description;
+                for (var Category_index in this.Category.value) {
+                    if (this.Category.value[Category_index] == this.caseInfoData.Category) {
+                        this.CategoryIndex = Category_index;
+                    }
+                }
+                this.GetGeneralCodeComboOutput('CABA', this.caseInfoData.Category);
+                for (var OrganizationUnitId_index in this.OrganizationUnitId.value) {
+                    if (this.OrganizationUnitId.value[OrganizationUnitId_index] == this.caseInfoData.OrganizationUnitId) {
+                        this.OrganizationUnitIdIndex = OrganizationUnitId_index;
+                    }
+                }
+                for (var Language_index in this.Language.value) {
+                    if (this.Language.value[Language_index] == this.caseInfoData.Language) {
+                        this.LanguageIndex = Language_index;
+                    }
+                }
+                for (var SecretLevel_index in this.SecretLevel.value) {
+                    if (this.SecretLevel.value[SecretLevel_index] == this.caseInfoData.SecretLevel) {
+                        this.SecretLevelIndex = SecretLevel_index;
+                    }
+                }
+                if (this.caseInfoData.IsForeign == 'Y') {
+                    this.IsForeign.checked = true;
+                    this.submitData.IsForeign = 'Y';
+                }
+                if (this.caseInfoData.IsLegal == 'Y') {
+                    this.IsLegal.checked = true;
+                    this.submitData.IsLegal = 'Y';
+                }
+                if (this.caseInfoData.ImportLevel == '02') {
+                    this.ImportLevelIndex=0;
+                }else{
+                    this.ImportLevelIndex=1;
+                }
+                switch (this.caseInfoData.Category) {
+                    case 'FS':
+                        // this.GetGeneralCodeComboOutput('CACT', 'FS', 5, true);
+                        break;
+                    case 'XS':
+                        // this.GetGeneralCodeComboOutput('CAAY', 'XS', 5, true);
+                        // this.GetGeneralCodeComboOutput('CASTAGE', 'XZ', 0);
+                        this.ReasonSupplementValue = this.caseInfoData.ReasonSupplement
+                        break;
+                    case 'MS':
+                        // this.GetGeneralCodeComboOutput('CAAY', 'MS', 5, true);
+                        // this.GetGeneralCodeComboOutput('CASTAGE', 'XZ', 0);
+                        // this.filterAgent('MZ')
+                        this.ReasonSupplementValue = this.caseInfoData.ReasonSupplement
+                        break;
+                    case 'XZ':
+                        // this.GetGeneralCodeComboOutput('CAAY', 'XZ', 5, true);
+                        // this.GetGeneralCodeComboOutput('CASTAGE', 'XZ', 0);
+                        // this.filterAgent('XZ')
+                        this.ReasonSupplementValue = this.caseInfoData.ReasonSupplement
+                        break;
+                    case 'ZS':
+                        // this.GetGeneralCodeComboOutput('CACT', 'ZS', 5, true);
+                        break;
+                    case 'ZC':
+                        // this.filterAgent('ZC')
+                        this.MattersEntrustedValue = this.caseInfoData.MattersEntrusted;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            this.$apply();
+        }
+        //获取隶属组织架构
+        async GetOrganizations() {
+            var resData = await ajax.getData(
+                '/api/services/web/common/GetOrganizations',
+                'post'
+            )
+            if (resData.statusCode == 200) {
+                var GetOrganizationsData = resData.data.result;
+                var OrganizationUnitId_value = [];
+                var OrganizationUnitId_displayText = [];
+                for (var index in GetOrganizationsData) {
+                    OrganizationUnitId_value[index] = GetOrganizationsData[index].id;
+                    OrganizationUnitId_displayText[index] = GetOrganizationsData[index].displayName;
+                }
+                this.OrganizationUnitId.value = this.OrganizationUnitId.value.concat(OrganizationUnitId_value);
+                this.OrganizationUnitId.displayText = this.OrganizationUnitId.displayText.concat(OrganizationUnitId_displayText)
+                if (this.isCaseInfoData) {
+                    for (var index in this.OrganizationUnitId.value) {
+                        if (this.OrganizationUnitId.value[index] == this.caseInfoData.OrganizationUnitId) {
+                            this.OrganizationUnitIdIndex = index;
+                        }
+                    }
+                }
+            }
+            this.$apply();
+        }
+        //获取案件业务子类
+        async GetGeneralCodeComboOutput(keyWords, ParentId, Depth = 0, IsRecursive) {
+            if (keyWords == 'CAWS') {
+                var key = ParentId;
+            } else {
+                var Pid = ParentId || '';
+            }
+            IsRecursive = IsRecursive || false;
+            ParentId = ParentId || '';
+            var data = {
+                Class: keyWords,
+                Depth,
+                IsMaxDepth: true,
+                ParentId: Pid,
+                IsRecursive: IsRecursive,
+                // isAll: true
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/common/GetGeneralCodeComboOutput',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                var value = [''];
+                var displayText = ['请选择'];
+                for (var index = 1; index < resData.data.result.length; index++) {
+                    value[index ] = resData.data.result[index].id;
+                    displayText[index] = resData.data.result[index].name;
+                }
+                switch (keyWords) {
+                    case "CACT":
+                        this.SubCategory.value[Depth - 5] = value
+                        this.SubCategory.displayText[Depth - 5] = displayText
+                        if (this.isCaseInfoData && this.caseInfoData.SubCategory) {
+                            var SubCategory = this.caseInfoData.SubCategory.split(',');
+                            if (Depth < 6) {
+                                this.GetGeneralCodeComboOutput('CACT', SubCategory[Depth - 5], Depth + 1, true);
+                            }
+                            for (var index in this.SubCategory.value[Depth - 5]) {
+                                if (this.SubCategory.value[Depth - 5][index] == SubCategory[Depth - 5]) {
+                                    this.SubCategoryIndex[Depth - 5] = index;
+                                }
+                            }
+                        }
+                        break
+                    case "CABA":
+                        this.Partition.value = value;
+                        this.Partition.displayText = displayText;
+                        if (this.isCaseInfoData) {
+                            for (var index in this.Partition.value) {
+                                if (this.Partition.value[index] == this.caseInfoData.Partition) {
+                                    this.PartitionIndex = index;
+                                }
+                            }
+                        } else {
+                            this.PartitionIndex = 0;
+                        }
+                        break;
+                    case "CASTAGE":
+                        this.Stage.value = value;
+                        this.Stage.displayText = displayText;
+                        if (this.isCaseInfoData) {
+                            for (var Stage_index in this.Stage.value) {
+                                if (this.Stage.value[Stage_index] == this.caseInfoData.Stage) {
+                                    this.StageIndex = Stage_index;
+                                }
+                            }
+                        } else {
+                            this.StageIndex = 0;
+                        }
+                        break;
+                    case "CADQ":
+                        this.AgencyAuthority.value = value;
+                        this.AgencyAuthority.displayText = displayText;
+                        if (this.isCaseInfoData && this.caseInfoData.AgencyAuthority) {
+                            var AgencyAuthority = this.caseInfoData.AgencyAuthority.split(',')
+                            for (var i = 0; i < AgencyAuthority.length; i++) {
+                                for (var j = 0; j < this.AgencyAuthority.value.length; j++) {
+                                    if (this.AgencyAuthority.value[j] == AgencyAuthority[i]) {
+                                        this.AgencyAuthorityData[i] = j
+                                    }
+                                }
+                            }
+                        } else {
+                            this.AgencyAuthorityData = [];
+                        }
+                        break;
+                    case "CAWS":
+                        var AgentData = resData.data.result;
+                        this.filterAgent(AgentData, key)
+                        break;
+                    case "CAAY":
+                        this.Reason.value[Depth - 5] = value
+                        this.Reason.displayText[Depth - 5] = displayText;
+                        if (this.isCaseInfoData && this.caseInfoData.Reason) {
+                            var Reason = this.caseInfoData.Reason.split(',');
+                            if (Depth < 7) {
+                                this.GetGeneralCodeComboOutput('CAAY', Reason[Depth - 5], Depth + 1, true);
+                            }
+                            for (var index in this.Reason.value[Depth - 5]) {
+                                if (this.Reason.value[Depth - 5][index] == Reason[Depth - 5]) {
+                                    this.ReasonIndex[Depth - 5] = index;
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            this.$apply();
+        }
+        cacheData(data) {
+            var value = [];
+            var displayText = [];
+            for (var index in data) {
+                value[index] = data[index].value;
+                displayText[index] = data[index].displayText;
+            }
+            var filterData = {
+                value,
+                displayText
+            }
+            return filterData
+        }
+        onLoad(options) { 
+            this.caseInfoData = wx.getStorageSync('CREATE_CASEINFO_DATA');
+            if (Object.keys(this.caseInfoData).length !== 0) {
+                this.submitData = wx.getStorageSync('CREATE_CASEINFO_DATA');
+                this.isCaseInfoData = true;
+            } else {
+                this.submitData.ClientName =options.ClientName;
+                 this.submitData.ClientId = options.ClientId;
+                this.submitData.CaseClientRelationList=[];
+                this.submitData.CaseContactsList=[];
+                this.isCaseInfoData = false
+            }
+            this.$apply();
+            this.GetCaseGeneralInfo();
+            this.GetOrganizations();
+        };
+    }
+</script>

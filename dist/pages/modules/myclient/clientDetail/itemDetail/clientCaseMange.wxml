@@ -1,0 +1,35 @@
+
+    <view class="body">
+        <view class="top-title">
+            <text>关联项目</text>
+        </view>
+        <view class="main">
+            <block wx:for="{{clientCaseMangeData}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                <view class="mange-item" bindtap="toCaseDetail" data-wpytocasedetail-a="{{item.id}}">
+                    <view>
+                        <text>{{item.name}}</text>
+                    </view>
+                    <view>
+                        <text>{{item.clientName}}</text>
+                    </view>
+                    <view>
+                        <text>{{item.categoryText}}</text>
+                    </view>
+                    <view>
+                        <view class="item-status">
+                            <view style="height:20rpx;width:20rpx;border-radius:50%;border:1px solid {{item.statusColor}};margin-right:15rpx;">
+                            </view>
+                            <text style="color:#7a7a7a;">{{item.processStatusText}}</text>
+                        </view>
+                        <text>{{item.acceptDateText}}</text>
+                    </view>
+                </view>
+            </block>
+        </view>
+        
+    <view  wx:if="{{$placeHolderImage$placeHolder.placeHolderShow}}" class="placeHolderImage" catchtouchmove="$placeHolderImage$true">
+                <image src="{{$placeHolderImage$placeHolderImage[$placeHolderImage$placeHolder.placeHolderImageIndex]}}" mode="scaleToFill" lazy-load="false" style="width:580rpx;height:580rpx">
+                </image>
+    </view>
+
+    </view>

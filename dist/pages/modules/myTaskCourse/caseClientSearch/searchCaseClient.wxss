@@ -1,0 +1,115 @@
+.bill {
+  margin: 44rpx 28rpx;
+}
+.bill .bill_title {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 9999;
+}
+.bill .bill_title .title {
+  height: 104rpx;
+  line-height: 104rpx;
+  padding: 0 28rpx;
+  font-size: 48rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.bill .search_top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx 28rpx;
+}
+.bill .search_top .search_input {
+  width: 100%;
+  padding: 10rpx 20rpx;
+  border-radius: 100rpx;
+  background: #f4f4f4;
+  display: flex;
+  align-items: center;
+  margin-right: 14rpx;
+}
+.bill .search_top .search_input > icon {
+  margin-right: 14rpx;
+}
+.bill .search_top .search_input > input {
+  width: 100%;
+}
+.bill .search_top .top_right_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bill .bill_content {
+  background: #ffffff;
+  margin: 0 auto;
+  box-shadow: 0rpx 8rpx 30rpx 0rpx rgba(65, 98, 213, 0.25);
+  border-radius: 20rpx;
+  padding: 0 24rpx;
+  margin: 44rpx 28rpx;
+  font-size: 28rpx;
+  overflow: auto;
+}
+.bill .bill_content .bill_box {
+  margin: 20rpx 0;
+}
+.bill .bill_content .bill_box .bill_view {
+  line-height: 42rpx;
+}
+.bill .bill_content .bill_view {
+  line-height: 50rpx;
+}
+.bill .bill_content .bill_gray {
+  color: #7a7a7a;
+  border-color: #7a7a7a;
+}
+.bill .bill_content .bill_blue {
+  color: #009dff;
+  border-color: #009dff;
+}
+.bill .bill_content .bill_red {
+  color: #e20000;
+  border-color: #e20000;
+}
+.bill .bill_content .bill_yellow {
+  color: #ff9900;
+  border-color: #ff9900;
+}
+.bill .bill_content .bill_green {
+  color: #069400;
+  border-color: #069400;
+}
+.bill .bill_content .bill_state {
+  float: right;
+  position: relative;
+}
+.bill .bill_content .warming {
+  color: #e20000;
+}
+.bill .advanced-search-input-panel .advanced-search-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.bill .advanced-search-input-panel .advanced-search-title > text {
+  font-size: 40rpx;
+}
+.bill .advanced-search-input-panel .advanced-search-title > icon {
+  font-size: 40rpx;
+  color: #7a7a7a;
+}
+.bill .advanced-search-input-panel .advanced-search-content {
+  margin: 30rpx 0 40rpx 0;
+}
+.bill .advanced-search-input-panel .btn-sub {
+  width: 160rpx;
+  height: 160rpx;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 99;
+}

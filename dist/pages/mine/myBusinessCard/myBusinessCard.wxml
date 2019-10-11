@@ -1,0 +1,101 @@
+
+    <view class="container">
+        <view class="lawyer-baseInfo">
+            <view class="lawyerAvatar" style="width:100vw;height:{{viewSize*0.7}}px">
+                <image class="avatar" style="width:100vw;height:{{viewSize*0.7}}px" src="{{currentAvatar}}" lazy-load="false"/>
+                <view class="avatar-btn">
+                    <view catchtap="dial">
+                        <icon class="iconfont icon-dianhua"/>
+                    </view>
+                    <view catchtap="map">
+                        <icon class="iconfont icon-dizhi"/>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-youxiang"/>
+                    </view>
+                </view>
+            </view>
+            <view class="lawyerInfo">
+                <view class="info-top">
+                    <view class="info-name">
+                        <text>{{baseData.name||'未填写'}}</text>
+                        <text>律师</text>
+                    </view>
+                    <view class="info-originalFirm">
+                        {{baseData.originalFirm||'未填写'}}
+                    </view>
+                    <view class="info-goodBusiness">
+                        {{baseData.goodBusiness||'未填写'}}
+                    </view>
+                </view>
+                <view class="info-bottom">
+                    <view>
+                        <icon class="iconfont icon-dianhua"/>
+                        <text>{{baseData.phone||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-youxiang"/>
+                        <text>{{baseData.perEmail||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-dizhi"/>
+                        <text>{{baseData.homeAddress||'未填写'}}</text>
+                    </view>
+                </view>
+                <view class="info-btn">
+                    <view>
+                        <button class="share-btn" bindtap="contactNow">
+                                                    <icon class="iconfont icon-dianhua"/>
+                                                    <text>立即联系</text>
+                                    </button>
+                    </view>
+                    <view>
+                        <button class="share-btn" open-type="share">
+                            <icon class="iconfont icon-fenxiang"/>
+                            <text>分享</text>
+                        </button>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <!-- <view class="list-container" wx:if="{{!isCard}}">
+                <view class="work-experience">
+                    <view class="work-title" style="padding-bottom:{{isShowWorkList?'0':'28rpx'}}">
+                        <text>工作经历</text>
+                        <icon class="iconfont icon-zhankaishi" wx:if="{{isShowWorkList}}" bindtap="toggleWorkList"></icon>
+                        <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" wx:else bindtap="toggleWorkList"></icon>
+                    </view>
+                    <view class="work-items-container" wx:if="{{isShowWorkList}}">
+                        <repeat for="{{resumeData.workExperiences}}" key="index" index="index" item="item">
+                            <view class="work-item">
+                                <view class="workUnits">{{item.workUnits||'未填写'}}</view>
+                                <view class="date">{{item.startDate}}至{{item.endDate}}</view>
+                                <view class="duty">{{item.duty||'未填写'}}</view>
+                                <view class="memo">
+                                    <icon class="iconfont icon-beizhu"></icon>
+                                    <text>{{item.memo||'未填写'}}</text>
+                                </view>
+                            </view>
+                        </repeat>
+                    </view>
+                </view>
+                <view class="project-case">
+                    <view class="project-title">
+                        <text>项目案例</text>
+                        <icon class="iconfont icon-zhankaishi" wx:if="{{isShowProjectList}}" bindtap="toggleProjectList"></icon>
+                        <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" wx:else bindtap="toggleProjectList"></icon>
+                    </view>
+                    <view class="project-items-container" wx:if="{{isShowProjectList}}">
+                        <repeat for="{{resumeData.projectExperiences}}" key="index" index="index" item="item">
+                            <view class="project-item">
+                                <view class="date">{{item.startDate}}至{{item.endDate}}</view>
+                                <view class="projectName">{{item.projectName||'未填写'}}</view>
+                                <view class="projectSource">{{item.projectSource||'未填写'}}</view>
+                                <view class="description">{{item.description||'未填写'}}</view>
+                                <view class="projectLink">{{item.projectLink||'未填写'}}</view>
+                            </view>
+                        </repeat>
+                    </view>
+                </view>
+            </view> -->
+    </view>

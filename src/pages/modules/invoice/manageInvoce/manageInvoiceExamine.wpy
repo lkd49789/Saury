@@ -1,0 +1,360 @@
+<style lang="less">
+    .bill {
+        .bill_title {
+            height: 104rpx;
+            line-height: 104rpx;
+            padding-left: 28rpx;
+            font-size: 48rpx;
+            position: relative;
+            border-bottom: 1px solid #dedede;
+        }
+        .bill_content {
+            background: #ffffff;
+            margin: 0 auto;
+            padding: 44rpx 28rpx;
+            font-size: 28rpx;
+            overflow: auto;
+            .checked {
+                margin-bottom: 30rpx; //    padding-bottom: 20rpx;
+                >view:first-child {
+                    margin-bottom: 30rpx;
+                }
+            }
+            .input {
+                margin-bottom: 36rpx;
+                position: relative;
+                view:first-child {
+                    color: #2a2a2a;
+                }
+                .input-container {
+                    display: flex;
+                    align-items: center; // justify-content: center;
+                    width: 100%;
+                    padding: 28rpx 0;
+                    >input {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99999;
+        }
+        .warming {
+            color: #e20000;
+        }
+    }
+</style>
+
+<template>
+    <view class="bill">
+        <view class="bill_title">
+            <text class="title">{{type!=='0'?type!=='1'?type!=='2'?'发票认领':'财务审核':'开具发票':'财务审核'}}</text>
+        </view>
+        <view class="bill_content" hidden="{{type==0?'':true}}">
+            <returnInvoice :input.sync="returnInvoice" :inputValue.sync='returnInvoiceValue' :twoWayTitle="returnInvoiceValue" />
+        </view>
+        <view class="bill_content" hidden="{{type==1?'':true}}">
+            <registerInvoice :input.sync="registerInvoice" :inputValue.sync='registerInvoiceValue' :twoWayTitle="registerInvoiceValue" />
+        </view>
+        <view class="bill_content" hidden="{{type==2?'':true}}">
+            <cancelInvoice :input.sync="cancelInvoice" :inputValue.sync='cancelInvoiceValue' :twoWayTitle="cancelInvoiceValue" />
+        </view>
+        <view class="bill_content" hidden="{{type==3?'':true}}">
+            <claimInvoiceId :options.sync="claimInvoiceId" :index.sync='claimInvoiceIdIndex' :twoWayTitle="claimInvoiceIdIndex" />
+            <claimInvoice :input.sync="claimInvoice" :inputValue.sync='claimInvoiceValue' :twoWayTitle="claimInvoiceValue" />
+        </view>
+        <image src="{{'../../../../images/test.png'}}" style="opacity:{{addOpacity}}" mode="scaleToFill" lazy-load="true" class="addImage" @tap="auditing()"></image>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import input1 from '../../../../components/picker/input'
+    import input2 from '../../../../components/picker/input'
+    import input3 from '../../../../components/picker/input'
+    import input4 from '../../../../components/picker/input'
+    import option from '../../../../components/picker/option'
+    export default class Index extends wepy.page {
+        components = {
+            returnInvoice: input1,
+            registerInvoice: input2,
+            cancelInvoice: input3,
+            claimInvoice: input4,
+            claimInvoiceId: option
+        };
+        data = {
+            addOpacity: 1,
+            type: '',
+            id: '',
+            creatorUserId: '',
+            billDataDetail: {},
+            returnInvoiceValue: '',
+            returnInvoice: {
+                title: '退回原因 ',
+                name: 'returnInvoice',
+                warning: false,
+                options:true
+            },
+            registerInvoiceValue: '',
+            registerInvoice: {
+                title: '发票编号',
+                name: 'registerInvoice',
+                warning: false,
+                options:true
+            },
+            cancelInvoiceValue: '',
+            cancelInvoice: {
+                title: '作废原因 ',
+                name: 'cancelInvoice',
+                warning: false,
+                options:true
+            },
+            claimInvoiceValue: '',
+            claimInvoice: {
+                title: '备注 ',
+                name: 'claimInvoice',
+                warning: false,
+                options:true
+            },
+            claimInvoiceId: {
+                title: '领用人',
+                name: 'VacationType',
+                value: [],
+                displayText: ['请选择'],
+                warning: false,
+            },
+            claimInvoiceIdIndex: 0,
+            claimInvoiceData: []
+        };
+        onLoad(e) {
+            this.id = e.id;
+            this.type = e.type
+            this.displayText()
+            this.$apply()
+        };
+        async auditing() {
+            switch (this.type) {
+                case '0':
+                    if (this.returnInvoiceValue == '') {
+                        this.returnInvoice.warning = true
+                        this.$apply()
+                        break;
+                    }
+                    wx.showLoading({
+                        title: '提交中，请稍等！', //提示的内容,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: () => {
+                            this.addOpacity = 1;
+                            this.$apply();
+                        }
+                    });
+                    var resData = await ajax.getData(
+                        '/api/services/web/financialInvoice/ReturnInvoice',
+                        'post', {
+                            Id: this.id,
+                            Remark: this.returnInvoiceValue
+                        }
+                    );
+                    switch (resData.statusCode) {
+                        case 200:
+                            var pages = getCurrentPages();
+                            var prevPage = pages[pages.length - 3];
+                            prevPage.data.refresh = true;
+                            wx.navigateBack({
+                                delta: 2
+                            });
+                            this.$apply();
+                            break;
+                        case 403:
+                            this.placeHolder.placeHolderImageIndex = 3;
+                            this.placeHolder.placeHolderShow = true;
+                            this.$apply();
+                            break;
+                        case 500:
+                            this.placeHolder.placeHolderImageIndex = 1;
+                            this.placeHolder.placeHolderShow = true;
+                            this.$apply();
+                            break
+                        default:
+                            break;
+                    }
+                    break;
+                case '1':
+                    if (this.registerInvoiceValue == '') {
+                        this.registerInvoice.warning = true
+                        this.$apply()
+                        break;
+                    }
+                    wx.showLoading({
+                        title: '提交中，请稍等！', //提示的内容,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: () => {
+                            this.addOpacity = 1;
+                            this.$apply();
+                        }
+                    });
+                    var resData = await ajax.getData(
+                        '/api/services/web/financialInvoice/RegisterInvoice',
+                        'post', {
+                            invoiceId: this.id,
+                            invoiceNo: this.registerInvoiceValue
+                        }
+                    );
+                    switch (resData.statusCode) {
+                        case 200:
+                            var pages = getCurrentPages();
+                            var prevPage = pages[pages.length - 3];
+                            prevPage.data.refresh = true;
+                            wx.navigateBack({
+                                delta: 2
+                            });
+                            this.$apply();
+                            break;
+                        case 403:
+                            this.placeHolder.placeHolderImageIndex = 3;
+                            this.placeHolder.placeHolderShow = true;
+                            this.$apply();
+                            break;
+                        case 500:
+                            this.placeHolder.placeHolderImageIndex = 1;
+                            this.placeHolder.placeHolderShow = true;
+                            this.$apply();
+                            break
+                        default:
+                            break;
+                    }
+                    break;
+                case '2':
+                    if(this.cancelInvoiceValue==''){
+                        this.cancelInvoice.warning = true
+                        this.$apply()
+                        break;
+                    }
+                    wx.showLoading({
+                        title: '提交中，请稍等！', //提示的内容,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: () => {
+                            this.addOpacity = 1;
+                            this.$apply();
+                        }
+                    });
+                    var resData = await ajax.getData(
+                        '/api/services/web/financialInvoice/CancelInvoice',
+                        'post', {
+                            Id: this.id,
+                            Remark: this.cancelInvoiceValue
+                        }
+                    );
+                    switch (resData.statusCode) {
+                        case 200:
+                            var pages = getCurrentPages();
+                            var prevPage = pages[pages.length - 3];
+                            prevPage.data.refresh = true;
+                            wx.navigateBack({
+                                delta: 2
+                            });
+                            this.$apply();
+                            break;
+                        case 403:
+                            this.placeHolder.placeHolderImageIndex = 3;
+                            this.placeHolder.placeHolderShow = true;
+                            this.$apply();
+                            break;
+                        case 500:
+                            this.placeHolder.placeHolderImageIndex = 1;
+                            this.placeHolder.placeHolderShow = true;
+                            this.$apply();
+                            break
+                        default:
+                            break;
+                    }
+                    break;
+                case '3':
+                    if (this.claimInvoiceIdIndex == 0) {
+                        this.claimInvoiceId.warning = true
+                        this.$apply()
+                        break;
+                    }
+                    wx.showLoading({
+                        title: '提交中，请稍等！', //提示的内容,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: () => {
+                            this.addOpacity = 1;
+                            this.$apply();
+                        }
+                    });
+                    var resData = await ajax.getData(
+                        '/api/services/web/financialInvoice/ClaimInvoice',
+                        'post', {
+                            InvoiceId: this.id,
+                            UserName: this.claimInvoiceData[this.claimInvoiceIdIndex - 1].name,
+                            UserId: this.claimInvoiceData[this.claimInvoiceIdIndex - 1].id,
+                            Remark: this.claimInvoiceValue
+                        }
+                    );
+                    switch (resData.statusCode) {
+                        case 200:
+                            var pages = getCurrentPages();
+                            var prevPage = pages[pages.length - 3];
+                            prevPage.data.refresh = true;
+                            wx.navigateBack({
+                                delta: 2
+                            });
+                            this.$apply();
+                            break;
+                        case 403:
+                            this.placeHolder.placeHolderImageIndex = 3;
+                            this.placeHolder.placeHolderShow = true;
+                            this.$apply();
+                            break;
+                        case 500:
+                            this.placeHolder.placeHolderImageIndex = 1;
+                            this.placeHolder.placeHolderShow = true;
+                            this.$apply();
+                            break
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        async displayText() {
+            var resData = await ajax.getData(
+                '/api/services/web/common/GetEmployees',
+                'post', {
+                    pageNumber: 1,
+                    pageSize: 100
+                }
+            );
+            switch (resData.statusCode) {
+                case 200:
+                    this.claimInvoiceData = resData.data.result.items
+                    for (var i in resData.data.result.items) {
+                        this.claimInvoiceId.displayText = this.claimInvoiceId.displayText.concat(resData.data.result.items[i].name)
+                    }
+                    this.$apply();
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+        }
+    }
+</script>

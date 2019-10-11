@@ -1,0 +1,32 @@
+.body {
+  height: 100%;
+}
+.body .container-title {
+  height: 104rpx;
+  font-size: 48rpx;
+  padding-left: 28rpx;
+  color: #2a2a2a;
+  line-height: 104rpx;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #dedede;
+}
+.body .personnel-container {
+  padding: 0 28rpx;
+  font-size: 28rpx;
+}
+.body .personnel-container .personnel-item {
+  display: flex;
+  align-items: center;
+}
+.body .personnel-container .personnel-item .personnel-content {
+  border-bottom: 1px solid #f4f4f4;
+  width: 100%;
+  padding: 44rpx 0;
+  display: flex;
+  color: #7a7a7a;
+}
+.body .personnel-container .personnel-item .personnel-content > view:first-child {
+  font-weight: bold;
+  color: #2a2a2a;
+}

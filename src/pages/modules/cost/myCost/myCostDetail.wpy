@@ -1,0 +1,236 @@
+<style lang="less">
+    .bill {
+        .flex{
+            display: flex;
+            justify-content: space-between;
+        }
+        .main{
+            margin-top:119rpx;
+        }
+        .bill_content {
+            // &:last-child{
+            //     border:0;
+            // }
+            background: #ffffff;
+            margin: 0 auto;
+            padding: 30rpx 28rpx;
+            font-size: 28rpx;
+            overflow: auto;
+            border-bottom: 20rpx solid #f2f2f2;
+            .bill_gray{
+                color: #7a7a7a;
+            }
+            .bill_yellow{
+                color: #ff9900;
+            }
+            .bill_gary{
+                color: #38a633;
+            }
+            .bill_box {
+                .bill_view {
+                    line-height: 42rpx;
+                    margin-bottom: 20rpx;
+                }
+                .bill_blue{
+                    color: #3EB5ff;
+                }
+            }
+        }
+        .workflows{
+            box-shadow: 0rpx 8rpx 30rpx 0rpx rgba(65, 98, 213, 0.25);
+            border-radius: 20rpx;
+            margin: 44rpx 28rpx;
+            .title{
+                align-items: center;
+            }
+            .status{
+                margin-right: 20rpx;
+            }
+            .bill-del{
+                >text{
+                    color:#5d73fa;
+                }
+            }
+        }
+        .bill_btn {
+            border-radius: 0;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            height: 98rpx;
+            background: #5d73fa;
+            color: #fff;
+            line-height: 98rpx;
+            text-align: center;
+            font-size: 32rpx
+        }
+    }
+</style>
+
+<template>
+    <view class="bill">
+        <view class="page-title">
+            <text class="title">费用详情</text>
+        </view>
+        <view class="main" style="padding-bottom:{{costData.status=='Returned'? '128rpx':'30rpx'}}">
+            <view class="bill_content">
+                <view class="bill_box">
+                    <view class="bill_view bill_blue">{{costData.chargeCase.name||'未填写'}}</view>
+                    <view class="bill_view bill_gray">{{costData.chargeCase.serialId||'未填写'}}</view>
+                </view>
+                <view class="bill_box">
+                    <view class="bill_view bill_blue">{{costData.chargeCase.clientName||'未填写'}}</view>
+                    <view class="bill_view bill_gray">{{costData.chargeCase.clientId||'未填写'}}</view>
+                </view>
+            </view>
+            <view class="bill_content">
+                <view class="bill_view flex"><text> <text class="bill_gray">申请时间：</text> {{costData.creationTime||'未填写'}}</text><text class="bill_state {{costData.status=='WaitForApproved'?'bill_yellow':costData.status=='Returned'?'bill_gray':'bill_green'}}">{{costData.statusName||'未填写'}}</text></view>
+                <repeat for="{{costData.chargeItems}}" key="index" index="index" item="item">
+                    <view class="bill_box bill_b">
+                        <view class="bill_view bill_mar">
+                            <text>{{item.chargeDate||'未填写'}}</text>
+                            <text class="bill_state">{{item.chargeTypeName||'未填写'}}</text>
+                        </view>
+                        <view class="bill_view bill_mar">
+                            <text class="bill_gray bill_blue">{{item.chargeAmount}}({{item.chargeCurrency}})</text>
+                            <text class="bill_state">{{item.chargeRate||'未填写'}}</text>
+                        </view>
+                        <view class="bill_view bill_mar">{{item.remark||'未填写'}}</view>
+                    </view>
+                </repeat>
+            </view>
+            <view class="bill_content workflows">
+                <view class="bill_box" @tap="toFOR">
+                    <view class="title flex bill_view ">
+                        <text class="bill_gray">财务操作记录</text>
+                        <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                    <view class="bill_view "><text class="{{costData.status=='WaitForApproved'?'bill_yellow':costData.status=='Returned'?'bill_gray':'bill_green'}} status">{{costData.statusName}}</text><text class="bill_gray">{{costData.workflows[0].creationTime}}</text></view>
+                    <view class="bill-del bill_gray">
+                        通过<text>{{costData.workflows.length}}</text>的审核
+                    </view>
+                </view>
+            </view>
+        </view>
+        <button class="bill_btn" wx:if="{{costData.status=='Returned'}}" catchtap="toAuditing()">重新提交</button>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import ajax from '@/utils/cofig/ajax.js'
+    import {
+        formatDate,
+        formatTime
+    } from '@/utils/cofig/api.js';
+    export default class myCostDetail extends wepy.page {
+        components = {};
+        data = {
+            costData: {},
+            invoiceDetailId: '',
+            avatar: []
+        };
+        methods = {
+           toFOR() {
+                wx.navigateTo({
+                    url: '../myCost/financialOperationRecord?invoiceDetailId=' + this.invoiceDetailId
+                });
+            },
+        };
+        onLoad(options) {
+            this.invoiceDetailId = options.id;
+            this.getbill();
+            this.$apply();
+        };
+        onShow() {
+            
+        }
+        //获取账单
+        async getbill(num) {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/financialCharge/GetCharge',
+                'post', {
+                    id: this.invoiceDetailId
+                }
+            );
+            console.log(resData);
+            switch (resData.statusCode) {
+                case 200:
+                    this.costData = resData.data.result;
+                    this.costData.creationTime = formatTime(this.costData.creationTime);
+                    for (var item in this.costData.chargeItems) {
+                        this.costData.chargeItems[item].chargeDate = formatTime(this.costData.chargeItems[item].chargeDate);
+                        this.costData.chargeItems[item].chargeRate = (Number(this.costData.chargeItems[item].chargeRate) * 100).toFixed(2) + '%'
+                    }
+                    for (var index in this.costData.invoiceBillings) {
+                        this.costData.invoiceBillings[index].creationTime = formatTime(this.costData.invoiceBillings[index].creationTime)
+                    }
+                    for (var index in this.costData.workflows) {
+                        this.costData.workflows[index].creationTime = formatTime(this.costData.workflows[index].creationTime)
+                        // var http = "/api/services/web/personal/GetEmployeePhoto?id=" + this.costData.workflows[index].creatorUserId
+                        // var avatar = await ajax.getAavatar(http);
+                        // this.costData.workflows[index].avatar = avatar;
+                    }
+                    this.$apply();
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+        }
+        //发送审核
+        async toAuditing() {
+            wx.showLoading({
+                title: '提交中，请稍等！', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: () => {
+                    this.addOpacity = 1;
+                    this.$apply();
+                }
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/financialCharge/SubmitCharge',
+                'post', {
+                    id: this.costData.id
+                }
+            );
+            switch (resData.statusCode) {
+                case 200:
+                    console.log(resData);
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2];
+                    prevPage.data.refresh = true;
+                    wx.navigateBack({
+                        delta: 1
+                    });
+                    this.$apply();
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+        }
+    }
+</script>

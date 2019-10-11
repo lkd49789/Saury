@@ -1,0 +1,458 @@
+<style lang="less">
+    .bill {
+        .bill_title {
+            height: 104rpx;
+            line-height: 104rpx;
+            padding-left: 28rpx;
+            font-size: 48rpx;
+            position: relative;
+            border-bottom: 1px solid #dedede;
+        }
+        .warning {
+            color: #e20000
+        }
+        .bill_content {
+            background: #ffffff;
+            margin: 0 auto;
+            padding: 44rpx 28rpx 34rpx 28rpx;
+            font-size: 28rpx;
+            overflow: auto;
+            border-bottom: 20rpx solid #f2f2f2;
+            &:last-child {
+                border-bottom: 0
+            }
+            .caseConflictBorder_radius {
+                border: 1px solid;
+                width: 15rpx;
+                height: 15rpx;
+                line-height: 28rpx;
+                border-radius: 15rpx;
+                margin-right: 10rpx;
+                display: inline-block;
+            }
+            .bill_box {
+                margin: 20rpx 0;
+                .bill_view {
+                    line-height: 42rpx;
+                }
+            }
+            .bill_box2 {
+                line-height: 42rpx;
+                width: 50%;
+            }
+            image {
+                width: 80rpx;
+                height: 80rpx;
+                border-radius: 100%
+            }
+            .bill_x {
+                padding: 24rpx 28rpx 24rpx 28rpx;
+                background: #f2f2f2;
+                margin: 15rpx 0;
+                border-radius: 20rpx;
+            }
+            .bill_gray {
+                color: #7a7a7a;
+                border-color: #7a7a7a
+            }
+            .bill_blue {
+                color: #009dff;
+                border-color: #009dff
+            }
+            .bill_red {
+                color: #e20000;
+                border-color: #e20000
+            }
+            .bill_yellow {
+                color: #ff9900;
+                border-color: #ff9900
+            }
+            .bill_green {
+                color: #069400;
+                border-color: #069400
+            }
+            .bill_state {
+                float: right;
+                position: relative;
+            }
+        }
+        .search_input {
+            width: 100%;
+            padding: 10rpx 20rpx;
+            border-radius: 100rpx;
+            background: #f4f4f4;
+            display: ﬂex;
+            align-items: center;
+            margin-right: 14rpx;
+            >icon {
+                margin-right: 14rpx;
+            }
+            >input {
+                width: 100%;
+            }
+        }
+        .flex {
+            display: flex;
+            margin-bottom: 15rpx;
+        }
+        .right {
+            text-align: right;
+        }
+        .left {
+            text-align: left;
+        }
+        .bill_btn {
+            border-radius: 0;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            height: 98rpx;
+            background: #5d73fa;
+            color: #fff;
+            line-height: 98rpx;
+            text-align: center;
+            font-size: 32rpx;
+            z-index:999;
+        }
+    }
+</style>
+
+<template>
+    <view class="bill">
+        <view class="bill_title">
+            <text class="title">收款认领</text>
+        </view>
+        <view wx:if="{{costData.status=='UnClaimed'}}">
+            <view class="bill_content">
+                <view class="flex" >
+                    <view class="bill_box2">
+                        <view class="bill_view bill_blue" @tap="toChange()">请选择关联案件</view>
+                        <view class="warning" wx:if="{{warning[0]}}">
+                            <text>请选择关联案件</text>
+                        </view>
+                    </view>
+                </view>
+                <view wx:if="{{getcase.isCaseData}}">
+                    <view class="bill_box">
+                        <view class="bill_view bill_blue">{{getcase.name||'未填写'}}</view>
+                        <view class="bill_view bill_gray">{{getcase.serialId||'未填写'}}</view>
+                    </view>
+                    <view class="bill_box">
+                        <view class="bill_view bill_blue">{{getcase.clientName||'未填写'}}</view>
+                        <view class="bill_view bill_gray">{{getcase.clientId||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box">
+                        <view class="bill_view bill_gray">支 付 方</view>
+                        <view class="bill_view">{{costData.payer||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">支票编号</view>
+                        <view class="bill_view">{{costData.checkNo||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">收款金额</view>
+                        <view class="bill_view">{{costData.payAmount||'未填写'}}</view>
+                    </view>
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">收款方式</view>
+                        <view class="bill_view">{{costData.payModeName||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">收款日期</view>
+                        <view class="bill_view">{{costData.receiptDate||'未填写'}}</view>
+                    </view>
+                </view>
+            </view>
+            <view class="bill_content">
+                <lawyerFee :input.sync="lawyerFee" :inputValue.sync='lawyerFeeValue' :twoWayTitle="lawyerFeeValue" />
+                <caseFee :input.sync="caseFee" :inputValue.sync='caseFeeValue' :twoWayTitle="caseFeeValue" />
+            </view>
+        </view>
+        <view wx:if="{{costData .status=='Claimed'||costData .status=='WaitForAssigned'||costData .status=='WaitForConfirmed'}}">
+            <view class="bill_content">
+                <view class="bill_box">
+                    <view class="bill_view bill_blue">{{costData.receiptCase.name||'未填写'}}</view>
+                    <view class="bill_view bill_gray">{{costData.receiptCase.serialId||'未填写'}}</view>
+                </view>
+                <view class="bill_box">
+                    <view class="bill_view bill_blue">{{costData.receiptCase.clientName||'未填写'}}</view>
+                    <view class="bill_view bill_gray">{{costData.receiptCase.clientId||'未填写'}}</view>
+                </view>
+            </view>
+            <view class="bill_content">
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">支票编号</view>
+                        <view class="bill_view">{{costData.checkNo||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box">
+                        <view class="bill_view bill_gray">支 付 方</view>
+                        <view class="bill_view">{{costData.payer||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">收款方式</view>
+                        <view class="bill_view">{{costData.payModeName||'未填写'}}</view>
+                    </view>
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">收款日期</view>
+                        <view class="bill_view">{{costData.receiptDate||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">付款总额</view>
+                        <view class="bill_view">{{costData.payAmount||'未填写'}}</view>
+                    </view>
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">支付币种</view>
+                        <view class="bill_view">{{costData.payCurrencyName||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">律师费用</view>
+                        <view class="bill_view">{{costData.lawyerFee||'未填写'}}</view>
+                    </view>
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">办 案 费</view>
+                        <view class="bill_view">{{costData.caseFee||'未填写'}}</view>
+                    </view>
+                </view>
+            </view>
+            <view claim="bill_content">
+            </view>
+        </view>
+        <!-- <view style="height:{{costData.status=='Claimed'? '200rpx':'0'}}"></view>
+        <view style="height:{{costData.status=='UnClaimed'? '200rpx':'0'}}"></view> -->
+        <button class="bill_btn" wx:if="{{costData.status=='UnClaimed'}}" catchtap="toAuditing('{{0}}')">认领</button>
+        <button class="bill_btn" wx:if="{{costData.status=='Claimed'}}" catchtap="toAuditing('{{1}}')">发送合伙人</button>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import input1 from '../../../../components/picker/input';
+    import input2 from '../../../../components/picker/input';
+    import {
+        formatTime
+    } from '../../../../utils/cofig/api.js';
+    import {
+        getUserAvatar
+    } from '../../../../utils/cofig/ajax.js';
+    export default class Index extends wepy.page {
+        components = {
+            lawyerFee: input1,
+            caseFee: input2,
+        };
+        data = {
+            costData: {},
+            invoiceDetailId: '',
+            avatar: [],
+            getcase: {
+                isCaseData:false
+            },
+            warning: [
+                false,
+            ],
+            lawyerFee: {
+                title: '律师费',
+                name: 'lawyerFee',
+                options: false,
+                warning: false,
+                type: 'digit'
+            },
+            lawyerFeeValue: '',
+            caseFee: {
+                title: '办案费',
+                name: 'caseFee',
+                options: false,
+                warning: false,
+                type: 'digit'
+            },
+            caseFeeValue: '',
+        };
+        methods = {
+            toChange() {
+                wx.setStorageSync('getcase', this.getcase);
+                wepy.navigateTo({
+                    url: './manageReceivablesExamine'
+                });
+            },
+            toAuditing(type) {
+                if (type == 0) {
+                    if (this.getcase.ifshow && this.lawyerFeeValue && this.caseFeeValue) {
+                        this.claim(this.costData.id)
+                    } else {
+                        if (!this.getcase.ifshow) {
+                            this.warning[0] = true;
+                        }
+                        this.warning[0] = true
+                        if (!this.lawyerFeeValue) {
+                            this.lawyerFee.warning = true;
+                        }
+                        if (!this.caseFeeValue) {
+                            this.caseFee.warning = true;
+                        }
+                    }
+                    if (!this.getcase.ifshow) {
+                        this.warning[0] = true;
+                    } else {
+                        this.warning[0] = false;
+                    }
+                    this.warning[0] = true
+                    if (!this.lawyerFeeValue) {
+                        this.lawyerFee.warning = true;
+                    }
+                    if (!this.caseFeeValue) {
+                        this.caseFee.warning = true;
+                    }
+                    this.$apply()
+                } else {
+                    this.partner(this.costData.id)
+                }
+            }
+        };
+        async getbill(num) {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/financialReceipt/GetReceipt',
+                'post', {
+                    id: this.invoiceDetailId
+                }
+            );
+            console.log(resData);
+            switch (resData.statusCode) {
+                case 200:
+                    console.log(resData);
+                    this.costData = resData.data.result;
+                    if(this.costData.creationTime)
+                    this.costData.creationTime =this.costData.creationTime?formatTime(this.costData.creationTime).split(' ')[0]:'';
+                    this.costData.receiptDate = this.costData.receiptDate?formatTime(this.costData.receiptDate).split(' ')[0]:'';
+                    this.$apply();
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+        }
+        //发送合伙人
+        async partner(id) {
+            wx.showLoading({
+                title: '提交中，请稍等！', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: () => {
+                    this.addOpacity = 1;
+                    this.$apply();
+                }
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/financialCharge/ApproveCharge',
+                'post', {
+                    Id: id
+                }
+            );
+            console.log(resData);
+            switch (resData.statusCode) {
+                case 200:
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2];
+                    prevPage.data.refresh = true;
+                    wx.navigateBack({
+                        delta: 1
+                    });
+                    this.$apply();
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+        }
+        async claim(id) {
+            wx.showLoading({
+                title: '提交中，请稍等！', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: () => {
+                    this.addOpacity = 1;
+                    this.$apply();
+                }
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/financialReceipt/ClaimReceipt',
+                'post', {
+                    CaseFee: this.caseFeeValue,
+                    CaseId: this.getcase.caseId,
+                    Id: id,
+                    LawyerFee: this.lawyerFeeValue,
+                }
+            );
+            console.log(resData);
+            switch (resData.statusCode) {
+                case 200:
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2];
+                    prevPage.data.refresh = true;
+                    wx.navigateBack({
+                        delta: 1
+                    });
+                    this.$apply();
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+        }
+        isRefresh(item){
+            this.getcase=item;
+            this.getcase.isCaseData=true;
+            this.$apply();
+        }
+         onLoad(options) {
+            this.invoiceDetailId = options.id;
+            this.getbill();
+            this.$apply();
+        };
+    }
+</script>

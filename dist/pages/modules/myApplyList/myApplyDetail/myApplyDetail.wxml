@@ -1,0 +1,98 @@
+
+    <view class="body">
+        <view class="top-title">
+            <text>请假详情</text>
+        </view>
+        <view class="main">
+            <view class="content-top">
+                <view>
+                    <text  wx:if="{{auditStatus=='W'}}">{{VacationApplyOutputData.eName}}</text>
+                    <text  wx:else="{{auditStatus=='W'}}">{{VacationApplyOutputData.vacationTypeText}}</text>
+                    <text style="color:#ff9900">{{VacationApplyOutputData.totalDay}}天</text>
+                </view>
+                <view>
+                    <text wx:if="{{auditStatus}}">{{VacationApplyOutputData.vacationTypeText}}</text>
+                </view>
+                <view>
+                    <text>请假时间</text>
+                    <text>{{VacationApplyOutputData.startDateText}}至{{VacationApplyOutputData.endDateText}}</text>
+                </view>
+                <view>
+                    <text>此区间节假日天数</text>
+                    <text>{{VacationApplyOutputData.vacationDay}}天</text>
+                </view>
+                <view>
+                    <text>备注</text>
+                    <text>{{VacationApplyOutputData.memo||'未填写'}}</text>
+                </view>
+            </view>
+            <view class="border-line" wx:if="{{VacationApplyOutputData.status!=='W'||auditStatus=='W'}}">
+            </view>
+            <view class="content-bottom" wx:if="{{VacationApplyOutputData.status!=='W'}}">
+                <view>
+                    <text>审核信息</text>
+                </view>
+                <view>
+                    <view>
+                        <image src="{{VacationApplyOutputData.avatar}}" mode="scaleToFill" lazy-load="false">
+                        </image>
+                        <view>
+                            <text>{{VacationApplyOutputData.approveUserText}}</text>
+                        </view>
+                    </view>
+                    <view>
+                        <view>
+                            <text style="color:{{VacationApplyOutputData.status=='A'?'#069400':'#e20000'}}">{{VacationApplyOutputData.statusText}}</text>
+                            <text>{{VacationApplyOutputData.approveTimeText}}</text>
+                        </view>
+                        <view>
+                            <text style="color:#7a7a7a">{{VacationApplyOutputData.approveMemo||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="auditStatus" wx:if="{{auditStatus=='W'}}">
+                <view class="checked">
+                    <radio-group class="radio-group" bindchange="bindPickerChange">
+                        <label class="radio" wx:for="{{isPass}}" wx:key="index" style="width:50%;">
+                                <radio value="{{item.value}}" color="#5d73fa" checked="{{item.isChecked}}" bindtap="click"/>
+                                <text style="margin-right:60rpx">{{item.displayText}}</text>
+                            </label>
+                    </radio-group>
+                    <view wx:if="{{warning}}" style="color:#e20000">
+                        <text>此字段是必填字段</text>
+                    </view>
+                </view>
+                
+<view>
+     <view class="textarea"  wx:if="{{$textarea$isShow}}">
+        <view>
+            <text>{{$textarea$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$textarea$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$textarea$input.name}}" bindfocus="$textarea$bindfocus" bindblur="$textarea$bindblur" placeholder="请输入{{$textarea$input.title}}" bindinput="$textarea$bindinput" maxlength="-1" value="{{$textarea$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$textarea$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$textarea$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$textarea$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$textarea$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$textarea$input.name}}" bindfocus="$textarea$bindfocus" bindblur="$textarea$bindblur" placeholder="请输入{{$textarea$input.title}}" bindinput="$textarea$bindinput" disabled="{{$textarea$input.disabled}}" value="{{$textarea$inputValue}}" type="{{$textarea$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$textarea$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+            </view>
+        </view>
+         <image src="{{'../../../../images/test.png'}}" wx:if="{{auditStatus=='W'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;" bindtouchstart="touchStart" bindtouchend="touchEnd">
+        </image>
+    </view>

@@ -1,0 +1,480 @@
+<!--  -->
+
+<style lang='scss'>
+    .container {
+        height: 100%;
+        position: relative;
+        .top-title {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 999;
+            .flex {
+                height: 104rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 48rpx;
+            }
+            .filter {
+                left: 0;
+                width: 100%;
+                background: #fff;
+                padding: 20rpx 28rpx 0 28rpx;
+                >view {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 10rpx 0;
+                }
+            }
+        }
+        .main {
+            margin: 230rpx 28rpx 0 28rpx;
+            font-size: 28rpx;
+            color: #7a7a7a;
+            .items {
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                padding: 30rpx 24rpx;
+                margin-bottom: 44rpx;
+                position: relative;
+                >view:first-child {
+                    color: #2a2a2a;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                >view:nth-child(3) {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                 >view:not(:last-child) {
+                    margin-bottom: 14rpx;
+                }
+                >icon {
+                    position: absolute;
+                    top: 5rpx;
+                    right: 0;
+                }
+            }
+        }
+        .return-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .content {
+                height: 40%;
+                width: 70%;
+                background: #fff;
+                position: relative;
+                >view:first-child {
+                    width: 110rpx;
+                    height: 110rpx;
+                    background: #5d73fa;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 80rpx;
+                    position: absolute;
+                    top: 0;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    z-index: 1000;
+                    color: #fff;
+                }
+                >view:nth-child(2) {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20rpx 0;
+                    border-bottom: 1px solid #dfdfdf;
+                    color: #2a2a2a;
+                    font-weight: bold;
+                    margin-top: 55rpx;
+                }
+                >view:nth-child(3) {
+                    height: 59%;
+                    margin-top: 20rpx;
+                    position: relative;
+                    >textarea {
+                        width: 480rpx;
+                        margin: 0 auto;
+                        height: 90%;
+                    }
+                    .fixed-text-count {
+                        position: absolute;
+                        bottom: 0rpx;
+                        right: 0rpx;
+                        color: #7a7a7a;
+                        font-size: 28rpx;
+                    }
+                }
+                >view:nth-child(4) {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    height: 15%;
+                    background: #5d73fa;
+                    display: flex;
+                    >text {
+                        height: 100%;
+                        flex: 1;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: #fff
+                    }
+                    >text:first-child {
+                        border-right: 1px solid #ffffff;
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="top-title">
+            <view class="flex">
+                <view style="margin-left:28rpx">
+                    <text>冲突检索</text>
+                </view>
+                <view style="margin-right:28rpx">
+                    <icon class="iconfont icon-sousuo1 " style="font-size:60rpx;color:#5d73fa;margin-right:14rpx" @tap="toSearch"></icon>
+                    <icon class="iconfont icon-shaixuan1" style="font-size:60rpx;color:#5d73fa" @tap="isShowFilter"></icon>
+                </view>
+            </view>
+            <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" />
+            <view class="filter animation" wx:if="{{isFilterBox}}">
+                <view catchtap="filter('cteateTime')">创建时间排序</view>
+                <view catchtap="filter('completeTime')">完成时间排序</view>
+                <view catchtap="filter('AcceptDate')">同意时间排序</view>
+            </view>
+        </view>
+        <view class="main" wx:if="{{caseChecksData.length>0}}">
+            <repeat for="{{caseChecksData}}" key="index" index="index" item="item">
+                <view class="items">
+                    <view>
+                        {{item.caseName||'未填写'}}
+                    </view>
+                    <view>
+                        {{item.clientName||'未填写'}}
+                    </view>
+                    <view>
+                        <text>{{item.caseCategoryText||'未填写'}}</text>
+                        <text>{{item.acceptDateText||'未填写'}}</text>
+                    </view>
+                    <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#b2b2b2" catchtap="operations('{{item}}','{{index}}')"></icon>
+                </view>
+            </repeat>
+        </view>
+        <view class="placeHolderImage" wx:else>
+            <image src="{{placeHolderImage}}" mode="scaleToFill" lazy-load="false" style="width:580rpx;height:580rpx" />
+        </view>
+        <view class="return-dialog" wx:if="{{isDialog}}" catchtouchmove='{{true}}'>
+            <view class="content">
+                <view>?</view>
+                <view>
+                    退回原因
+                </view>
+                <view>
+                    <textarea placeholder="备注原因" name="textarea" maxlength="200" fixed='true' value="{{remarkValue}}" bindinput="bindinput" />
+                    <view class="fixed-text-count">
+                        <text>200/{{TextCount}}</text>
+                    </view>
+                </view>
+                <view>
+                    <text @tap="closeDialog">取消</text>
+                    <text @tap="subReturnRemark">确定</text>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../utils/cofig/ajax.js';
+    import navbar from '../../../components/navbar';
+    export default class conflictRetrievalList extends wepy.page {
+        config = {
+            enablePullDownRefresh: true,
+            backgroundTextStyle: 'dark',
+            backgroundColorTop: '#f4f4f4',
+            backgroundColorBottom: '#f4f4f4',
+        };
+        data = {
+            currentTab: 0,
+            navbars: ['待检索', '已检索'],
+            placeHolderImage: '../../../images/noData.png',
+            caseChecksData: [],
+            pageSize: 10,
+            pageNumber: 1,
+            totalCount: 0,
+            queryStream: {},
+            isDialog: false,
+            remarkValue: '',
+            TextCount: 0,
+            isFilterBox:false,
+            caseChecksDataIndex: 0,
+            status: '0',
+            sorting:'',
+        };
+        components = {
+            navbar
+        };
+        methods = {
+            //筛选
+            filter(KeyWord){
+                this.isFilterBox=false;
+                this.caseChecksData = [];
+                this.pageNumber = 1;
+                switch (KeyWord) {
+                    case 'cteateTime':
+                        this.sorting='CreationTime desc';
+                        this.GetCaseChecks();
+                        break;
+                    case 'completeTime':
+                        this.sorting='AcceptDate desc';
+                        this.GetCaseChecks();
+                        break;
+                    case 'AcceptDate':
+                        this.sorting='AcceptDate desc';
+                        this.GetCaseChecks();
+                        break;
+                    default:
+                        break;
+                }
+                this.$apply();
+            },
+            //控制筛选是否显示
+            isShowFilter(){
+                this.isFilterBox=!this.isFilterBox;
+                this.$apply();
+            },
+            //前往搜索页面
+            toSearch(){
+                wx.navigateTo({ url: './search/conflictSearch' });
+            },
+            // 提交退回信息
+            subReturnRemark() {
+                var caseId = this.caseChecksData[this.caseChecksDataIndex].caseId
+                var id = this.caseChecksData[this.caseChecksDataIndex].id
+                this.ProcessOrderItem(caseId, id)
+            },
+            //退回备注
+            bindinput(e) {
+                this.remarkValue = e.detail.value;
+                this.$apply();
+            },
+            closeDialog() {
+                this.isDialog = false;
+                this.$apply();
+            },
+            operations(item, caseChecksDataIndex) {
+                var opition = item.operations.map((item) => {
+                    return item.text
+                })
+                wx.showActionSheet({
+                    itemList: opition, //按钮的文字数组，数组长度最大为6个,
+                    //   itemColor: '#000000', //按钮的文字颜色,
+                    success: res => {
+                        switch (res.tapIndex) {
+                            case 0:
+                                switch (item.operations[0].className) {
+                                    case 'Check':
+                                        wx.navigateTo({
+                                            url: './conflictRetrievalAudit/conflictRetrievalDetail?id=' + item.id + '&caseId=' + item.caseId
+                                        });
+                                        break;
+                                    case 'Return':
+                                        this.isDialog = !this.isDialog
+                                        this.caseChecksDataIndex = caseChecksDataIndex;
+                                        break;
+                                    case 'View':
+                                        wx.navigateTo({
+                                            url: './auditedResults/auditedResults?id=' + item.id+ '&caseId=' + item.caseId 
+                                        });
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case 1:
+                                if (item.operations[1].className == 'Check') {
+                                    wx.navigateTo({
+                                        url: './conflictRetrievalAudit/conflictRetrievalDetail?id=' + item.id + '&caseId=' + item.caseId
+                                    });
+                                } else if (item.operations[1].className == 'Return') {
+                                    this.isDialog = !this.isDialog;
+                                    this.caseChecksDataIndex = caseChecksDataIndex;
+                                }
+                                break;
+                        }
+                        this.$apply();
+                    }
+                });
+            }
+        };
+        events = {};
+        watch = {
+            currentTab(cur) {
+                if (cur == 0) {
+                    this.status = '0';
+                } else if (cur == 1) {
+                    this.status = '1'
+                }
+                this.caseChecksData = [];
+                this.pageNumber = 1;
+                this.GetCaseChecks();
+                this.$apply();
+            },
+            remarkValue(value) {
+                this.TextCount = value.length;
+                this.$apply();
+            },
+            isDialog(value) {
+                if (!value) {
+                    this.remarkValue = '';
+                }
+                this.$apply();
+            }
+        };
+        computed = {};
+        // 下拉刷新
+        onPullDownRefresh() {
+            this.caseChecksData = [];
+            this.pageNumber = 1;
+            this.queryStream = {};
+            this.sorting='';
+            this.GetCaseChecks();
+            wx.hideNavigationBarLoading(); //完成停止加载
+            wx.stopPullDownRefresh(); //停止下拉刷新
+        }
+        // 上拉加载
+        onReachBottom() {
+            if (this.totalCount / 10 > this.pageNumber && this.$parent.global.netWorkString) {
+                this.pageNumber += 1;
+                this.GetCaseChecks();
+            } else {
+                if (this.$parent.global.netWorkString) {
+                    wx.showToast({
+                        title: '我们是有底线的！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                } else {
+                    wx.showToast({
+                        title: '网络连接失败！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            }
+        }
+        async GetCaseChecks() {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+             var data = {
+                CaseCategory: "",
+                CaseName: "",
+                ClientName: "",
+                EndDate: "",
+                KeyWord: "",
+                StartDate: "",
+                Status: this.status,
+                pageNumber: this.pageNumber,
+                pageSize: this.pageSize,
+                sorting:this.sorting
+            }
+            if(Object.keys(this.queryStream).length>0){
+                data.CaseCategory=this.queryStream.CaseCategory;
+                data.CaseName=this.queryStream.CaseName;
+                data.ClientName=this.queryStream.ClientName;
+                data.EndDate=this.queryStream.EndDate;
+                data.KeyWord=this.queryStream.KeyWord;
+                data.StartDate=this.queryStream.StartDate;
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/caseCheck/GetCaseChecks',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                var caseChecksData = resData.data.result.items;
+                this.totalCount = resData.data.result.totalCount;
+                this.caseChecksData.push(...caseChecksData);
+            }
+            this.$apply();
+        }
+        async ProcessOrderItem(caseId, id) {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {
+                    this.caseChecksData = [];
+                    this.pageNumber = 1;
+                    this.queryStream = {};
+                    this.isDialog = false;
+                    this.GetCaseChecks();
+                    this.$apply()
+                }
+            });
+            var data = {
+                caseId,
+                checkResults: [],
+                id,
+                remark: this.remarkValue,
+                result: "ConflictReturn",
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/caseCheck/ProcessOrderItem',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                console.log('退回完成')
+            }
+        }
+        onLoad() {
+            this.GetCaseChecks();
+        };
+        isRefresh(searchData){
+            if(searchData){
+                this.queryStream=searchData;
+            }
+            this.caseChecksData = [];
+            this.pageNumber = 1;
+            this.GetCaseChecks();
+        }
+        onShow() {
+            let pages = getCurrentPages(); //获取当前页面信息栈
+            let prevPage = pages[pages.length - 1] //获取上一个页面信息栈
+            if (prevPage.data.refresh) {
+                this.queryStream = prevPage.data.queryStream;
+                prevPage.data.refresh = false;
+                this.caseChecksData = [];
+                this.pageNumber = 1;
+                this.GetCaseChecks();
+            }
+        };
+    }
+</script>

@@ -1,0 +1,191 @@
+<!--  -->
+<style lang="less">
+Page {
+  /* background: #1baceb; */
+  position: absolute;
+  font-size: 36rpx;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #fafafa;
+  overflow-y: hidden;
+  .extra-word {
+    height: 100%;
+  }
+}
+.body {
+  height: 100%;
+  .container-title {
+    height: 104rpx;
+    font-size: 48rpx;
+    padding: 28rpx;
+    color: #2a2a2a;
+    line-height: 104rpx;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #dedede;
+  }
+  .conflictinterest-detail-container {
+    padding: 44rpx 28rpx 0 28rpx;
+    font-size: 28rpx;
+    color: #2a2a2a;
+    .detail-item {
+      box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+      border-radius: 20rpx;
+      padding: 30rpx 22rpx;
+      margin-bottom: 44rpx;
+      > view {
+        display: flex;
+        align-items: center;
+        margin-bottom: 22rpx;
+      }
+    }
+  }
+}
+//背景模糊
+.commodity_attr_box {
+  height: 196rpx;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 2000;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  .box {
+    margin: 0 28rpx;
+    width: 694rpx;
+    color: #7a7a7a;
+    font-size: 34rpx;
+    .box1 {
+      height: 98rpx;
+      width: 100%;
+      border-bottom: 1px solid #bfbfbf;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .box2 {
+      height: 98rpx;
+      width: 100%; // border-bottom: 1px solid #bfbfbf;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  } // padding: 10rpx;
+}
+.commodity_screen {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000;
+  opacity: 0.6;
+  z-index: 1000;
+}
+</style>
+
+<template>
+    <!-- <view></view> -->
+    <!-- <text></text> -->
+    <scroll-view class='extra-word'>
+        <view style="height:100%;width:100%;">
+            <view class="body">
+                <view class="container-title">
+                    <text class="title-text">利益冲突信息</text>
+                </view>
+                <view class="conflictinterest-detail-container">
+                  <repeat for="{{caseClientRelationList}}" key="index" index="index" item="item">
+                      <view class="detail-item" @tap="toDetail('{{index}}')">
+                        <view style="justify-content:space-between;align-items:baseline;margin-bottom:36rpx">
+                            <text style="font-weight: bold;">{{caseClientRelationList[index].name||'未填写'}}</text>
+                        </view>
+                        <view>
+                            <text style="color:#7a7a7a">{{caseClientRelationList[index].category||'未填写'}}</text>
+                        </view>
+                        <view>
+                            <icon class="iconfont icon-canyurenjiabinricheng" style="font-size:40rpx;color:#ff9900;margin-right:20rpx"></icon>
+                            <text style="font-weight: bold;margin-right:20rpx">{{caseClientRelationList[index].linker||'未填写'}}</text>
+                            <text style="color:#7a7a7a">{{caseClientRelationList[index].legalType||'未填写'}}</text>
+                        </view>
+                        <view style="margin-bottom:0">
+                            <icon class="iconfont icon-dianhuaxiantiao" style="font-size:40rpx;color:#ff9900; margin-right:20rpx"></icon>
+                            <text>{{caseClientRelationList[index].phone||'未填写'}}</text>
+                        </view>
+                    </view>
+                  </repeat>
+                    
+                </view>
+            </view>
+        </view>
+    </scroll-view>
+</template>
+
+<script>
+import wepy from 'wepy';
+// import navbar from '../../../components/navbar';
+export default class conflictinterest extends wepy.page {
+  components = {};
+  data = {
+    animationData: [],
+    caseClientRelationList: {}
+  };
+  methods = {
+    // chooseSize() {
+    //   var animation = wepy.createAnimation({
+    //     // 动画持续时间
+    //     duration: 200,
+    //     // 定义动画效果，当前是匀速
+    //     timingFunction: 'linear'
+    //   });
+    //   animation.translateY(196).step();
+    //   this.animationData = animation.export();
+    //   this.chooseSize = !this.chooseSize;
+    //   this.isScroll = false;
+    //   setTimeout(() => {
+    //     animation.translateY(0).step();
+    //     this.setData({
+    //       animationData: animation.export()
+    //     });
+    //   }, 100);
+    // },
+    // close() {
+    //   var animation = wepy.createAnimation({
+    //     // 动画持续时间
+    //     duration: 200,
+    //     // 定义动画效果，当前是匀速
+    //     timingFunction: 'linear'
+    //   });
+    //   animation.translateY(196).step();
+    //   this.animationData = animation.export();
+    //   this.isScroll = true;
+    //   this.chooseSize = !this.chooseSize;
+    // },
+    toDetail(index) {
+      // console.log(e);
+      // for (var i in this.caseClientRelationList) {
+      wx.navigateTo({
+        url: './conflictinterest-detail?index=' + index
+      });
+      this.$apply();
+      // }
+    }
+  };
+  onLoad(options) {
+    wx.getStorage({
+      key: 'caseDetailData',
+      success: res => {
+        console.log(res.data.caseData.caseClientRelationList);
+        this.caseClientRelationList = res.data.caseData.caseClientRelationList;
+      }
+    });
+    this.$apply();
+  }
+}
+</script>

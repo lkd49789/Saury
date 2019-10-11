@@ -1,0 +1,148 @@
+
+    <view class="body">
+      <view class="self-title">
+        <text class="self-text">个人简历</text>
+      </view>
+      
+    <view class="navbar">
+        <scroll-view scroll-x>
+            <block wx:for="{{$navbar$navbars}}" wx:for-index="$navbar$index" wx:for-item="$navbar$item" wx:key="$navbar$index">
+                <view class="item {{$navbar$currentTab == $navbar$index ? 'active' : ''}} " bindtap="$navbar$navbarTap" data-wpynavbartap-a="{{$navbar$index}}">
+                    <text>{{$navbar$item}}</text>
+                    <view  wx:if="{{$navbar$currentTab == $navbar$index}}" class="navbar_box"/>
+                </view>
+            </block>
+        </scroll-view>
+    </view>
+
+          <view class="container "  wx:if="{{currentTab==0}}">
+            <block wx:for="{{educationsData}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                <view class="bg-container">
+                  <view class="container-top">
+                    <view class="icon">
+                      <text class="iconfont icon-shijian" style="color:#ffcb46;font-size:40rpx ;margin-right:30rpx"/>
+                    </view>
+                    <view class="content">
+                      <text>{{item.startDate||'未填写'}} 至 {{item.endDate||'未填写'}}</text>
+                      <!-- <text class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="color:#7a7a7a;font-size:30rpx;" bindtap="chooseSezi"></text> -->
+                    </view>
+                  </view>
+                  <view class="container-main">
+                    <view class="one-line">
+                      <text style="color:#2a2a2a;font-size:28rpx">{{item.school||'未填写'}}</text>
+                      <view class="education-degree">
+                        <text>{{item.education||'未填写'}}</text>
+                        <text>{{item.degree||'未填写'}}</text>
+                      </view>
+                    </view>
+                    <view class="two-line">
+                      <text>{{item.speciality||'未填写'}}</text>
+                    </view>
+                    <view class="three-line">
+                      <text>{{item.memo||'未填写'}}</text>
+                    </view>
+                  </view>
+                  <!-- 固定定位修改图标 -->
+                  <!-- 向上弹出框 -->
+                </view>
+            </block>
+           
+          </view>
+          <view class="container "  wx:if="{{currentTab == 1}}">
+            <block wx:for="{{workExperiencesData}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+              <view class="bg-container">
+                <view class="container-top">
+                  <view class="icon">
+                    <text class="iconfont icon-shijian" style="color:#ffcb46;font-size:40rpx ;margin-right:30rpx"/>
+                  </view>
+                  <view class="content">
+                    <text>{{item.startDate||'未填写'}} 至 {{item.endDate||'未填写'}}</text>
+                    <!-- <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="color:#7a7a7a;font-size:30rpx;" bindtap="chooseSezi"></icon> -->
+                  </view>
+                </view>
+                <view class="container-main">
+                  <view class="one-line">
+                    <view><text style="color:#2a2a2a;font-size:28rpx">{{item.workUnits||'未填写'}}</text></view>
+                    <view style="margin-top:20rpx;"><text style="color:#5d74fa;">{{item.jobContent||'未填写'}}</text></view>
+                  </view>
+                  <view class="two-line">
+                    <text>{{item.duty||'未填写'}}</text>
+                  </view>
+                  <view class="three-line">
+                    <text class="iconfont icon-beizhu" style="color:#5d73fa;font-size:40rpx ;margin-right:30rpx"/>
+                    <text>{{item.memo||'未填写'}}</text>
+                  </view>
+                </view>
+              </view>
+            </block>
+            
+          </view>
+          <view class="container " wx:if="{{currentTab==2}}">
+            <block wx:for="{{projectExperiences}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+              <view class="bg-container">
+                <view class="container-top">
+                  <view class="icon">
+                    <text class="iconfont icon-shijian" style="color:#ffcb46;font-size:40rpx ;margin-right:30rpx"/>
+                  </view>
+                  <view class="content">
+                    <text>{{item.startDate||'未填写'}} 至 {{item.endDate||'未填写'}}</text>
+                    <!-- <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="color:#7a7a7a;font-size:30rpx;" bindtap="chooseSezi"></icon> -->
+                  </view>
+                </view>
+                <view class="container-main">
+                  <view class="one-line">
+                    <view><text style="color:#2a2a2a;font-size:28rpx">{{item.projectName||'未填写'}}</text></view>
+                    <!-- <view><text style="color:#7a7a7a;">{{item.statusText||'未填写'}}</text></view> -->
+                  </view>
+                  <view class="two-line" style="margin-top:20rpx;">
+                    <text>{{item.projectSource||'未填写'}}</text>
+                  </view>
+                  <view class="three-line">
+                    <icon class="iconfont icon-beizhu" style="color:#5d73fa;font-size:40rpx ;margin-right:30rpx"/>
+                    <text>{{item.memo||'未填写'}}</text>
+                  </view>
+                </view>
+                <!-- 固定定位修改图标 -->
+                <!-- 向上弹出框 -->
+              </view>
+            </block>
+          
+          </view>
+          <view class="container " wx:if="{{currentTab==3}}">
+            <block wx:for="{{socialDuites}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+              <view class="bg-container">
+                <view class="container-top">
+                  <view class="icon">
+                    <text class="iconfont icon-shijian" style="color:#ffcb46;font-size:40rpx ;margin-right:30rpx"/>
+                  </view>
+                  <view class="content">
+                    <text>{{item.startDate||'未填写'}} 至 {{item.endDate||'未填写'}}</text>
+                    <!-- <text class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="color:#7a7a7a;font-size:30rpx;" bindtap="chooseSezi"></text> -->
+                  </view>
+                </view>
+                <view class="container-main">
+                  <view class="one-line">
+                    <text style="color:#ff9900;font-size:28rpx">{{item.category||'未填写'}}</text>
+                    <text style="color:#7a7a7a;padding-left:40rpx;margin-left:10rpx;color:#5d73fa">{{item.societyName||'未填写'}}</text>
+                  </view>
+                  <view class="two-line">
+                    <text>{{item.content||'未填写'}}</text>
+                  </view>
+                  <view class="three-line">
+                    <icon class="iconfont icon-beizhu" style="color:#5d73fa;font-size:40rpx ;margin-right:30rpx"/>
+                    <text>{{item.memo||'未填写'}}</text>
+                  </view>
+                </view>
+                <!-- 固定定位修改图标 -->
+                <!-- 向上弹出框 -->
+              </view>
+            </block>
+            
+          </view>
+      
+    <view  wx:if="{{$placeHolderImage$placeHolder.placeHolderShow}}" class="placeHolderImage" catchtouchmove="$placeHolderImage$true">
+                <image src="{{$placeHolderImage$placeHolderImage[$placeHolderImage$placeHolder.placeHolderImageIndex]}}" mode="scaleToFill" lazy-load="false" style="width:580rpx;height:580rpx">
+                </image>
+    </view>
+
+    </view>

@@ -1,0 +1,425 @@
+<!--  -->
+<style lang='less'>
+    .container {
+        position: relative;
+        .calendar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: -1;
+            transition: height .2s;
+            color: #fff;
+            .calendar_content {
+                margin: 44rpx 28rpx 0 0;
+                position: absolute;
+                z-index: 100;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                .picker {
+                    >view {
+                        margin-left: 28rpx;
+                    }
+                    .date-year {
+                        font-size: 32rpx;
+                        display: flex;
+                        align-items: center;
+                    }
+                    .date-mouth {
+                        display: flex;
+                        align-items: center;
+                        font-size: 50rpx;
+                    }
+                }
+                .date_header {
+                    display: flex;
+                    flex-wrap: nowrap;
+                    justify-content: space-around;
+                    margin-top: 20rpx;
+                }
+                .date-box {
+                    height: 50%;
+                    margin-top: 10rpx;
+                    display: flex;
+                    flex-wrap: wrap;
+                    .date-head {
+                        height: 60rpx;
+                        width: 14.285%;
+                        text-align: center;
+                        line-height: 60rpx;
+                        font-size: 26rpx; // margin: 5px 0;
+                    }
+                    .nowDay {
+                        width: 60rpx;
+                        border-radius: 50%;
+                        color: #fff;
+                        background-color: #5D73FA;
+                        margin: 0 auto;
+                    }
+                }
+                @keyframes opacity {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+                .animation {
+                    animation: opacity 1s linear;
+                }
+            }
+        }
+        .list-content {
+            transition: height .2s;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            background: #fff;
+            border-top-left-radius: 20rpx;
+            border-top-right-radius: 20rpx;
+        }
+    }
+</style>
+
+<template>
+    <view class='container' bindtouchstart="handletouchtart" bindtouchmove="handletouchmove">
+        <view class="calendar">
+            <view class="calendar_content">
+                <picker mode="date" fields="month" bindchange="bindDateChange" start="{{startDate}}" end="{{endDate}}" value="{{nowDate_Year}}-{{nowDate_Month}}" style="width: 35%;">
+                    <view class="picker">
+                        <view class='date-year'>{{nowDate_Year}}</view>
+                        <view class='date-mouth'>
+                            <text>{{mouthCh}}月</text>
+                            <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;margin-left:8rpx"></icon>
+                        </view>
+                    </view>
+                </picker>
+                <view class='date_header'>
+                    <repeat for="{{date}}" key="index" index="index" item="item">
+                        <view>{{item}}</view>
+                    </repeat>
+                </view>
+                <view class="date-box {{ifDateSmall?'animation':''}}" wx:if="{{ifDateSmall}}">
+                    <repeat for="{{dateArrSmall}}" key="index" index="index" item="item">
+                        <view class="date-head">
+                            <view class="{{isToday == item.isToday ? 'nowDay' : ''}}" catchtap="getToday('{{item.isToday}}')">{{item.dateNum}}</view>
+                        </view>
+                    </repeat>
+                </view>
+                <view class="date-box {{!ifDateSmall?'animation':''}}" wx:else="{{ifDateSmall}}">
+                    <repeat for="{{dateArr}}" key="index" index="index" item="item">
+                        <view class="date-head" catchtap="getToday('{{item.isToday}}')" @tap="getToday">
+                            <view class="{{isToday == item.isToday ? 'nowDay' : ''}}">{{item.dateNum}}</view>
+                        </view>
+                    </repeat>
+                </view>
+            </view>
+            <image class="imgage" src="../../../images/date.jpg" mode="aspectFill" lazy-load="false" style="width:100%; height:{{viewHeight*0.6}}rpx"></image>
+        </view>
+        <view class="list-content" style=" height: {{viewHeight*listHeight}}rpx">
+            <scroll-view scroll-y="{{true}}" style="height:100%">
+                <view class="item_box">
+                    <repeat for="{{schedule_data}}" key="index" index="index" item="item">
+                        <view class="item">
+                            <view>
+                                <text>{{item.start}}</text>
+                                <text>{{item.end}}</text>
+                            </view>
+                            <view>
+                                <view>
+                                    <view>
+                                        <text>{{item.title}}</text>
+                                    </view>
+                                    <view>
+                                        <text></text>
+                                        <text>{{item.statusText}}</text>
+                                    </view>
+                                </view>
+                                <view>
+                                    <view>
+                                        <text></text>
+                                        <text>{{item.clientName}}</text>
+                                    </view>
+                                    <view>
+                                        <text>{{item.categoryText}}</text>
+                                        <text>{{item.eventTypeText}}</text>
+                                    </view>
+                                </view>
+                            </view>
+                        </view>
+                    </repeat>
+                </view>
+            </scroll-view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../utils/cofig/ajax.js';
+    export default class schedule extends wepy.page {
+        data = {
+            viewHeight: 0,
+            lastY: 0,
+            listHeight: 0.75,
+            startDate: '',
+            endDate: '',
+            nowDate_Year: '',
+            nowDate_Month: '',
+            nowDate_Day: '',
+            mouthCh: '',
+            date: ['日', '一', '二', '三', '四', '五', '六'],
+            isToday: '',
+            dateArr: [],
+            dateArrSmall: '',
+            ifDateSmall: true,
+            schedule_data: []
+        };
+        components = {};
+        methods = {
+            bindDateChange(e) {
+                this.nowDate_Year = e.detail.value.split('-')[0]
+                this.nowDate_Month = e.detail.value.split('-')[1]
+                this.mouthC(this.nowDate_Month)
+                this.dateInit(this.nowDate_Year, this.nowDate_Month)
+                this.isToday = this.nowDate_Year + '-' + this.nowDate_Month + '-01';
+                for (var i = 0; i < this.dateArr.length; i++) {
+                    if (this.dateArr[i].isToday == this.isToday) {
+                        this.dateArrSmall = this.dateArr.slice(parseInt(i / 7) * 7, parseInt(i / 7) * 7 + 7)
+                    }
+                }
+                this.GetScheduleCenterForCalendar(this.isToday);
+                if (this.ifDateSmall) {
+                    this.ifDateSmall = false
+                    this.listHeight = 0.5;
+                }
+                this.$apply()
+            },
+            handletouchtart(event) {
+                this.lastY = event.touches[0].pageY
+                this.$apply();
+            },
+            handletouchmove(event) {
+                let currentY = event.touches[0].pageY;
+                let ty = currentY - this.lastY;
+                if (Math.abs(ty) > 50) {
+                    if (ty < 0) {
+                        this.listHeight = 0.75;
+                        this.ifDateSmall = true
+                    } else if (ty >= 0) {
+                        this.listHeight = 0.5
+                        this.ifDateSmall = false;
+                    }
+                    this.lastY = currentY
+                    this.$apply();
+                }
+            },
+            getToday(isToday) {
+                this.isToday = isToday
+                for (var i = 0; i < this.dateArr.length; i++) {
+                    if (this.dateArr[i].isToday == this.isToday) {
+                        this.dateArrSmall = this.dateArr.slice(parseInt(i / 7) * 7, parseInt(i / 7) * 7 + 7)
+                    }
+                }
+                this.GetScheduleCenterForCalendar(isToday);
+                this.$apply()
+            },
+        };
+        events = {};
+        watch = {
+            // ty(value) {
+            // }
+        };
+        computed = {};
+        getViewPoint() {
+            wx.getSystemInfo({
+                success: (res) => {
+                    let clientHeight = res.windowHeight;
+                    let clientWidth = res.windowWidth;
+                    let ratio = 750 / clientWidth;
+                    let height = clientHeight * ratio;
+                    this.viewHeight = height;
+                    this.$apply();
+                }
+            })
+        }
+        mouthC(mouth) {
+            mouth = mouth.toString();
+            switch (mouth) {
+                case '01':
+                    this.mouthCh = '一';
+                    break;
+                case '02':
+                    this.mouthCh = '二';
+                    break;
+                case '03':
+                    this.mouthCh = '三';
+                    break;
+                case '04':
+                    this.mouthCh = '四';
+                    break;
+                case '05':
+                    this.mouthCh = '五';
+                    break;
+                case '06':
+                    this.mouthCh = '六';
+                    break;
+                case '07':
+                    this.mouthCh = '七';
+                    break;
+                case '08':
+                    this.mouthCh = '八';
+                    break;
+                case '09':
+                    this.mouthCh = '九';
+                    break;
+                case '10':
+                    this.mouthCh = '十';
+                    break;
+                case '11':
+                    this.mouthCh = '十一';
+                    break;
+                case '12':
+                    this.mouthCh = '十二';
+                    break;
+                default:
+                    break;
+            }
+        }
+        dateInit(setYear, setMonth) {
+            var dateArr = []
+            var arrLen = 0
+            var now = setYear ? new Date(setYear, setMonth) : new Date()
+            var year = setYear || now.getFullYear()
+            var month = setMonth || now.getMonth()
+            var startWeek = new Date(year + '/' + month + '/' + 1).getDay()
+            var dayNums = new Date(parseInt(year), parseInt(month), 0).getDate()
+            arrLen = startWeek + dayNums
+            var obj = {}
+            var num = 0
+            for (var i = 0; i < arrLen; i++) {
+                if (i >= startWeek) {
+                    num = i - startWeek + 1
+                    if (num < 10) {
+                        num = '0' + num
+                    }
+                    obj = {
+                        isToday: '' + year + '-' + month + '-' + num,
+                        dateNum: num,
+                    }
+                } else {
+                    obj = {}
+                }
+                dateArr[i] = obj
+            }
+            this.dateArr = dateArr
+            for (var i = 0; i < this.dateArr.length; i++) {
+                if (this.dateArr[i].isToday == this.isToday) {
+                    this.dateArrSmall = this.dateArr.slice(parseInt(i / 7) * 7, parseInt(i / 7) * 7 + 7)
+                }
+            }
+            this.$apply()
+        }
+        async GetScheduleCenterForCalendar(now_day) {
+            this.schedule_data = []
+            // console.log(now_day);
+            wx.showLoading({
+                title: '加载中，请稍等！', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var date = Date.parse(new Date(now_day));
+            var startDate = new Date(date - 24 * 3600000);
+            var endDate = new Date(date + 24 * 3600000);
+            var timeStamp = new Date(this.isToday).getTime() - 28800000
+            var timeStamp2 = new Date(this.isToday).getTime() + 57600000
+            var data = {
+                CaseId: "",
+                CaseName: "",
+                ClientId: "",
+                ClientName: "",
+                EndTime: '',
+                KeyWord: "",
+                StartTime: '',
+                category: 'Schedule',
+                creationTime: {
+                    startDate: "",
+                    endDate: "",
+                },
+                dataNumber: 100,
+                dateRange: {
+                    startDate,
+                    endDate
+                },
+                isCurrent: true,
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/schedule/GetScheduleCenterForCalendar',
+                'post',
+                data
+            );
+            switch (resData.statusCode) {
+                case 200:
+                    if (resData.data.result.schedules.length !== 0) {
+                        var screeningData = []
+                        for (var i in resData.data.result.schedules) {
+                            var timeStart = new Date(resData.data.result.schedules[i].start).getTime()
+                            var timeEnd = new Date(resData.data.result.schedules[i].end).getTime()
+                            if (!(timeStart > timeStamp2 || timeEnd < timeStamp)) {
+                                screeningData.push(resData.data.result.schedules[i])
+                            }
+                        }
+                        console.log(screeningData)
+                        if (screeningData.length !== 0) {
+                            this.schedule_data = screeningData
+                        } else {
+                            // this.placeHolder.placeHolderImageIndex = 0;
+                            // this.placeHolder.placeHolderShow = true;
+                        }
+                    } else {
+                        // this.placeHolder.placeHolderImageIndex = 0;
+                        // this.placeHolder.placeHolderShow = true;
+                    }
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+            this.$apply();
+        }
+        onLoad() {
+            let now_Date = new Date();
+            this.nowDate_Year = now_Date.getFullYear();
+            this.nowDate_Month = now_Date.getMonth() + 1;
+            this.startDate = now_Date.getFullYear() - 50;
+            this.endDate = now_Date.getFullYear() + 50;
+            if (this.nowDate_Month < 10) {
+                this.nowDate_Month = '' + 0 + this.nowDate_Month
+            }
+            this.nowDate_Day = now_Date.getDate()
+            if (this.nowDate_Day < 10) {
+                this.nowDate_Day = '' + 0 + this.nowDate_Day
+            }
+            this.isToday = this.nowDate_Year + '-' + this.nowDate_Month + '-' + this.nowDate_Day
+            this.mouthC(this.nowDate_Month);
+            this.dateInit(this.nowDate_Year, this.nowDate_Month);
+            this.GetScheduleCenterForCalendar(now_Date)
+            this.getViewPoint();
+            this.$apply();
+        };
+        onShow() {};
+    }
+</script>

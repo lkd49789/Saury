@@ -1,0 +1,463 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        position: relative;
+        .top-title {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 9999;
+            .flex {
+                height: 104rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 48rpx;
+                border-bottom: 1px solid #dedede;
+            }
+            .filter {
+                left: 0;
+                width: 100%;
+                background: #fff;
+                z-index: 99999;
+                padding: 20rpx 28rpx 0 28rpx;
+                >view {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 10rpx 0;
+                }
+            }
+        }
+        .clientList-container {
+            margin: 149rpx 28rpx 44rpx 28rpx;
+            .client-top {
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                padding: 30rpx 24rpx;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                font-size: 28rpx;
+                color: #7a7a7a;
+                .client-sum {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-bottom: 44rpx;
+                }
+                .client-year {
+                    display: flex;
+                    justify-content: space-between;
+                    width: 90%;
+                }
+                .icon {
+                    position: absolute;
+                    top: 20rpx;
+                    right: 20rpx;
+                }
+            }
+            .client-list {
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                padding: 30rpx 24rpx;
+                margin-top: 44rpx;
+                display: flex;
+                flex-direction: column;
+                font-size: 28rpx;
+                color: #7a7a7a;
+                .list-top {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    >view:first-child{
+                        width: 75%;
+                    }
+                }
+                .list-center {
+                    margin-top: 20rpx;
+                    color: #7a7a7a;
+                }
+                .list-bottom {
+                    margin-top: 20rpx;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    >view:last-child {
+                        color: #5d73fa;
+                    }
+                }
+            }
+        }
+        .AnnualCountsClient-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 99;
+            font-size: 28rpx;
+            color: #7a7a7a;
+            background: #f9f9f9;
+            .sumCount {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #5d73fa;
+                width: 100%;
+                height: 20%;
+                color: #fff;
+                icon {
+                    position: absolute;
+                    top: 0;
+                    right: 10rpx;
+                    color: #fff;
+                    font-size: 60rpx;
+                    opacity: 0.5;
+                    z-index: 100;
+                }
+                .sumCount-text {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+            }
+            .client-type {
+                margin: 30rpx 28rpx 0 28rpx;
+                background: #fff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 15%;
+                border-radius: 20rpx;
+                .type-text {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+            }
+        }
+        .fixed-right-bottom-btn {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 999999;
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <view class="flex">
+                <view style="margin-left:28rpx">
+                    <text wx:if="{{IsAll}}">客户管理</text>
+                    <text wx:else>我的客户</text>
+                </view>
+                <view style="margin-right:28rpx">
+                    <icon class="iconfont icon-sousuo1 " style="font-size:60rpx;color:#5d73fa;margin-right:14rpx" @tap="toSearchPage"></icon>
+                    <icon class="iconfont icon-shaixuan1" style="font-size:60rpx;color:#5d73fa" @tap="ishowFilter"></icon>
+                </view>
+            </view>
+            <view class="filter animation" wx:if="{{isShow}}">
+                <view catchtap="filter('cteateTime')">创建时间排序</view>
+                <view catchtap="filter('id')">客户编号排序</view>
+                <view wx:if="{{!IsAll}}" catchtap="filter('name')">客户名称排序</view>
+                <view catchtap="filter('importLevel')">重要级别排序</view>
+            </view>
+        </view>
+        <view class="clientList-container">
+            <view class="client-top" @tap="toRecordClient" wx:if="{{clientStatisticsIsShow}}">
+                <view class="client-sum">
+                    <text>客户总数</text>
+                    <text style="font-size:44rpx;color:#5d73fa;margin-top:20rpx;">{{AnnualCountsClient.value}}</text>
+                </view>
+                <view class="client-year">
+                    <view class="Down">
+                        <text>去年减少 |</text>
+                        <text style="color:#069400"> {{AnnualCountsClient.annualData[1].value}}</text>
+                    </view>
+                    <view class="year-over-year">
+                        <text>今年增加 |</text>
+                        <text style="color:#ff9900"> {{AnnualCountsClient.annualData[0].value}}</text>
+                    </view>
+                </view>
+                <view class="icon">
+                    <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#dedede"></icon>
+                </view>
+            </view>
+            <view class="viewHeight">
+                <repeat for="{{clientsData}}" key="index" index="index" item="item">
+                    <view class="client-list" @tap="toClientDetail('{{index}}')">
+                        <view class="list-top">
+                            <view>
+                                <text style="color:#2a2a2a">{{item.name||'未填写'}}</text>
+                            </view>
+                            <view style="display:flex;align-items:center">
+                                <view style="height:20rpx;width:20rpx;border-radius:50%;background:{{item.bgcolor||'#7a7a7a'}};margin-right:10rpx">
+                                </view>
+                                <view>
+                                    <text>{{item.clientTypeText||'未填写'}}</text>
+                                </view>
+                            </view>
+                        </view>
+                        <view class="list-center">
+                            客户来源：{{item.originText}}
+                        </view>
+                        <view class="list-bottom">
+                            <view>
+                                所属人：{{item.creationUserName||'未填写'}}
+                            </view>
+                            <view>
+                                {{item.importLevelText||'未填写'}}
+                            </view>
+                        </view>
+                    </view>
+                </repeat>
+            </view>
+        </view>
+        <!-- 展位图 -->
+        <placeHolderImage :placeHolder.sync="placeHolder" />
+        <image src="{{'../../../images/add.png'}}" mode="scaleToFill" lazy-load="true" class="fixed-right-bottom-btn" @tap="toCreateClientPage" />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../utils/cofig/ajax.js'
+    import mixin from '../../../utils/cofig/mixin.js';
+    import placeHolderImage from '../../../components/placeHolderImage';
+    export default class myClientList extends wepy.page {
+        config = {
+            enablePullDownRefresh: true,
+            backgroundTextStyle: 'dark',
+            backgroundColorTop: '#f4f4f4',
+            backgroundColorBottom: '#f4f4f4',
+        };
+        components = {
+            placeHolderImage
+        };
+        data = {
+            IsAll:false,
+            queryStream: {},
+            searchData: {},
+            clientsData: [],
+            AnnualCountsClient: '',
+            pageNumber: 1,
+            totalCount: 0,
+            clientY: 0,
+            clientStatisticsIsShow: true,
+            isShow: false,
+            sorting: '',
+        };
+        methods = {
+            toCreateClientPage() {
+                wx.navigateTo({
+                    url: './createClient/createClientBaseInfo'
+                });
+            },
+            toSearchPage() {
+                wx.navigateTo({
+                    url: './search/search_client'
+                });
+            },
+            toRecordClient() {
+                wx.navigateTo({
+                    url: './clientDetail/clientStatistics'
+                });
+            },
+            toClientDetail(index) {
+                wx.navigateTo({
+                    url: './clientDetail/clientDetail?index=' + index
+                });
+            },
+            ishowFilter() {
+                this.isShow = !this.isShow
+                this.$apply();
+            },
+            filter(name) {
+                this.clientsData = [];
+                this.pageNumber = 1;
+                switch (name) {
+                    case 'cteateTime':
+                        this.GetClients('CreationTime desc')
+                        break;
+                    case 'id':
+                        this.GetClients('Id desc')
+                        break;
+                    case 'name':
+                        this.GetClients('Name desc')
+                        break;
+                    case 'importLevel':
+                        this.GetClients('ImportLevel desc')
+                        break;
+                    default:
+                        break;
+                }
+            },
+        };
+        mixins = [mixin];
+        async GetClients(sort) {
+            this.sorting = sort ? sort : this.sorting;
+            var data = {
+                IsAll:this.IsAll,
+                pageNumber: this.pageNumber,
+                pageSize: 10,
+                KeyWord: '',
+                Name: '',
+                CreationTime: '',
+                Region: '',
+                Origin: '',
+                OrganizationUnitId: '',
+                Category: '',
+                ClientType: '',
+                ImportLevel: '',
+                IndustryType: '',
+                Id: '',
+                sorting: this.sorting,
+            }
+            if (Object.keys(this.queryStream).length > 0) {
+                data.KeyWord = this.queryStream.KeyWord || '';
+                data.Name = this.queryStream.Name || '';
+                data.CreationTime = this.queryStream.CreationTime || '';
+                data.Region = this.queryStream.Region || '';
+                data.OrganizationUnitId = this.queryStream.OrganizationUnitId || '';
+                data.Category = this.queryStream.Category || '';
+                data.Origin = this.queryStream.Origin || '';
+                data.Id = this.queryStream.Id || '';
+                data.ClientType = this.queryStream.ClientType || '';
+                data.ImportLevel = this.queryStream.ImportLevel || '';
+                data.IndustryType = this.queryStream.IndustryType || '';
+            }
+            wx.showLoading({
+                title: '数据加载中',
+                mask: true,
+            });
+            var clientsData = await ajax.getData(
+                '/api/services/web/client/GetClients',
+                'post',
+                data
+            )
+            this.totalCount = clientsData.data.result.totalCount;
+            switch (clientsData.statusCode) {
+                case 200:
+                    if (clientsData.data.result.items.length !== 0) {
+                        var clientsData = clientsData.data.result.items;
+                        for (var index in clientsData) {
+                            switch (clientsData[index].clientType) {
+                                case 'G':
+                                    clientsData[index]['bgcolor'] = '#069400'
+                                    break;
+                                case 'N':
+                                    clientsData[index]['bgcolor'] = '#ff9900'
+                                    break;
+                                case 'V':
+                                    clientsData[index]['bgcolor'] = '#5d73fa'
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        this.GetPersonAnnualCounts();
+                        this.clientsData = this.clientsData.concat(clientsData);
+                        var clientsDataStorage = {
+                            clientDetailDatas: this.clientsData
+                        };
+                        wx.setStorageSync('clientDatas', clientsDataStorage);
+                        this.placeHolder.placeHolderShow = false;
+                    } else {
+                        this.placeHolder.placeHolderImageIndex = 0;
+                        this.placeHolder.placeHolderShow = true;
+                    }
+                    this.$apply();
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                default:
+                    break;
+            }
+            this.$apply();
+        }
+        async GetPersonAnnualCounts() {
+            var resData = await ajax.getData(
+                '/api/services/web/analyzeStatistics/GetPersonAnnualCounts', //获取swiper数据
+                'post'
+            );
+            if (resData.statusCode == 200) {
+                this.AnnualCountsClient = resData.data.result[0];
+                this.$apply();
+            }
+        }
+        //下拉刷新
+        onPullDownRefresh() {
+            this.clientsData = [];
+            this.pageNumber = 1;
+            this.queryStream = {};
+            this.clientStatisticsIsShow = true;
+            this.GetClients();
+            wx.hideNavigationBarLoading(); //完成停止加载
+            wx.stopPullDownRefresh(); //停止下拉刷新
+            this.$apply();
+        }
+        // 上拉加载
+        onReachBottom() {
+            if (this.totalCount / 10 > this.pageNumber && this.$parent.global.netWorkString) {
+                this.pageNumber += 1;
+                this.GetClients();
+            } else {
+                if (this.$parent.global.netWorkString) {
+                    wx.showToast({
+                        title: '我们是有底线的！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                } else {
+                    wx.showToast({
+                        title: '网络连接失败！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            }
+            this.$apply();
+        }
+        onLoad(options) {
+            if(options.IsAll){
+                this.IsAll=options.IsAll?true:false;
+            }
+            // this.sorting=this.IsAll?'Name desc':'CreationTime desc'
+            this.GetClients();
+            this.$apply();
+        }
+        isRefresh(queryStream) {
+            this.queryStream = queryStream
+            this.clientsData = [];
+            this.pageNumber = 1;
+            this.GetClients();
+            this.$apply();
+        }
+        isDataRefresh(){
+            this.clientsData = [];
+            this.pageNumber = 1;
+            this.GetClients();
+            this.$apply();
+        }
+        
+    }
+</script>

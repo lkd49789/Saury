@@ -1,0 +1,33 @@
+
+    <view class="container">
+        <view class="pageTitle">
+            客户联系人
+        </view>
+        <view class="listBox">
+            <block wx:for="{{ClientContacts_data}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                <view class="clientItem">
+                    <view class="item-left">
+                        <checkbox value="{{index}}" checked="{{item.checked}}" color="#5d73fa" catchtap="checkboxChange" data-wpycheckboxchange-a="{{index}}"/>
+                    </view>
+                    <view class="item-right" catchtap="toclientLinkerDetail" data-wpytoclientlinkerdetail-a="{{item.id}}">
+                        <view class="avatar">
+                            <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false"/>
+                        </view>
+                        <view class="name-workPhone">
+                            <text>{{item.name}} | <text style="color:#7a7a7a;">{{item.dutyText||'未填写'}}</text></text>
+                            <text style="color:#7a7a7a;">{{item.workPhone||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+            </block>
+        </view>
+        <view class="chooseFixedBtn">
+            <view style="border-right:1px solid #fff" bindtap="allselected">
+                <text style="margin-right:14rpx;">全选</text>
+                <text>{{selectedCount}}<text>/{{curTotalCount}}</text></text>
+            </view>
+            <view bindtap="subBtn">
+                <text>确定</text>
+            </view>
+        </view>
+    </view>

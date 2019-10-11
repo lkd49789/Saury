@@ -1,0 +1,32 @@
+
+    <view class="container">
+        <!-- <view class="title">
+            <text>我的客户</text>
+        </view> -->
+        <!-- 左侧列表内容部分 -->
+        <scroll-view class="content" enable-back-to-top="enable-back-to-top" scroll-into-view="{{toView}}" scroll-y="true" scroll-with-animation="true" bindscroll="onPageScroll">
+            <block wx:for="{{clientData}}" wx:for-index="index" wx:for-item="item" wx:key="{{item}}">
+                <view  wx:if="{{item.items.length}}" data-id="{{item.id}}" id="{{'inToView' + item.id}}">
+                    <view class="address_top">{{item.region}}</view>
+                    <view class="address_bottom" wx:for="{{item.items}}" wx:for-item="item" wx:key="{{item.id}}" bindtap="addClient" data-wpyaddclient-a="{{item}}">
+                        <text>{{item.name}}</text>
+                        <text>{{item.clientTypeText}}</text>
+                    </view>
+                </view>
+            </block>
+        </scroll-view>
+        <!-- 顶部固定分类 -->
+        <view class="list-fixed {{fixedTitle=='' ? 'hide':''}}">
+            <view class="fixed-title">
+                {{fixedTitle}}
+            </view>
+        </view>
+        <!-- 右侧字母导航 -->
+        <view class="orientation_region"  wx:if="{{clientData[0].items.length!==0}}">
+            <block wx:if="{{item.items.length}}" wx:for="{{clientData}}" wx:for-index="index" wx:for-item="item" wx:key="key">
+                <view class="orientation_city {{isActive==item.id?'active':''}}" bindtap="scrollToViewFn" data-id="{{item.id}}">
+                    {{item.region}}
+                </view>
+            </block>
+        </view>
+    </view>

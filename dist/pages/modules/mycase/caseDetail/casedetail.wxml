@@ -1,0 +1,568 @@
+
+  <view>
+    <view class="body">
+      <view class="fixed">
+        <!-- <view class="fixed2"> -->
+        <view class="container-title">
+          <text class="title-text">案件详情</text>
+        </view>
+        
+    <view class="navbar">
+        <scroll-view scroll-x>
+            <block wx:for="{{$navbar$navbars}}" wx:for-index="$navbar$index" wx:for-item="$navbar$item" wx:key="$navbar$index">
+                <view class="item {{$navbar$currentTab == $navbar$index ? 'active' : ''}} " bindtap="$navbar$navbarTap" data-wpynavbartap-a="{{$navbar$index}}">
+                    <text>{{$navbar$item}}</text>
+                    <view  wx:if="{{$navbar$currentTab == $navbar$index}}" class="navbar_box"/>
+                </view>
+            </block>
+        </scroll-view>
+    </view>
+
+        <view  wx:if="{{currentTab==3}}">
+          <view class="doc-fixed">
+            <view class="search_top">
+              <view class="search_input">
+                <icon class="iconfont icon-sousuo1 input_sousuo"/>
+                <input value="{{caseDetailData.documentDatas.searchDocValue}}" type="text" confirm-type="search" placeholder="文档搜索" maxlength="50" bindconfirm="searchDoc" auto-focus/>
+                <icon class="iconfont icon-zirenwushanchu input-delete" style="font-size:30rpx;color:#7a7a7a" wx:if="{{caseDetailData.documentDatas.isValue}}" catchtap="clearDoc"/>
+              </view>
+              
+            </view>
+            <view class="flex">
+               <text bindtap="goBack" style="color:{{caseDetailData.documentDatas.filePath.length==0?'#5d73fa':'#7a7a7a'}}" data-wpygoback-a="{{caseDetailData.documentDatas.fixedPath.lastPathId}}" data-wpygoback-b="{{caseDetailData.documentDatas.fixedPath.lastPathClass}}">{{caseDetailData.documentDatas.fixedPath.filePath}}</text>
+              <block wx:for="{{caseDetailData.documentDatas.filePath}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                <text bindtap="goBack" style="color:{{index==caseDetailData.documentDatas.filePath.length-1?'#5d73fa':'#7a7a7a'}}" data-wpygoback-a="{{caseDetailData.documentDatas.lastPathId[index]}}" data-wpygoback-b="{{caseDetailData.documentDatas.lastPathClass[index]}}" data-wpygoback-c="{{index}}">{{item}}</text>
+              </block>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="personal-information"  wx:if="{{currentTab==0}}">
+        <!-- <repeat for="{{caseDetailData.caseData}}" key="index" index="index" item="item"> -->
+        <view class="case-container" wx:if="{{caseDetailData.caseData.caseDetail!==null}}">
+          <view class="case-one-item" bindtap="tocasebase">
+            <view class="case-one-line">
+              <text>{{caseDetailData.caseData.caseDetail.name||'未填写'}} </text>
+              <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+            <view class="marg-bot">
+              <text>{{caseDetailData.caseData.caseDetail.serialId||'未填写'}}</text>
+            </view>
+            <view class="marg-bot">
+              <text>{{caseDetailData.caseData.caseDetail.categoryText||'未填写'}}</text>
+            </view>
+            <view style="color: #ff9900;">
+              <text>{{caseDetailData.caseData.caseDetail.processStatusText||'未填写'}}</text>
+            </view>
+          </view>
+          <view class="case-two-item" bindtap="tocaseintroduce">
+            <view class="case-one-line">
+              <text style="color:#7a7a7a">案情简介
+                                      </text>
+              <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+            <view class="case-introduce">
+              <text>{{caseDetailData.caseData.caseDetail.description||'未填写'}}
+                                                                                      </text>
+            </view>
+          </view>
+          <view class="case-three-item" bindtap="tocasepersonnelin" wx:if="{{caseDetailData.caseData.userPhoto.length!==0}}">
+            <view class="case-one-line">
+              <text style="color:#7a7a7a">案件律师信息
+                                                                                                          </text>
+              <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+            <view class="linkman">
+              <block wx:for="{{caseDetailData.caseData.userPhoto}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                <image class="avator" style="z-index:{{index}};left:{{index*40}}rpx" src="{{caseDetailData.caseData.userPhoto[index]}}" mode="scaleToFill" lazy-load="false"/>
+              </block>
+            </view>
+          </view>
+          <view class="case-four-item" bindtap="toconflictinterest">
+            <view class="case-one-line">
+              <text style="color:#7a7a7a">利益冲突信息
+                                                                                                          </text>
+              <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+            <view style="margin-bottom:22rpx;" wx:if="{{caseDetailData.caseData.caseDetail.caseClientRelationList[0].name}}">
+              <text>{{caseDetailData.caseData.caseDetail.caseClientRelationList[0].name}}
+                                                                                          </text>
+            </view>
+            <view class="case-one-line" style="margin-bottom:0">
+              <text style="color:#7a7a7a">{{caseDetailData.caseData.caseDetail.caseClientRelationList[0].category||'未填写'}}
+                                                                                                          </text>
+              <text style="color:#7a7a7a">共{{caseDetailData.caseData.caseDetail.caseClientRelationList.length}}条冲突信息</text>
+            </view>
+          </view>
+          <view class="case-five-item" bindtap="tocontractinfo">
+            <view class="case-one-line">
+              <text style="color:#7a7a7a">合同信息
+                                                                                                          </text>
+              <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+            <view class="marg-bot">
+              <text>案件项下的办案费用支出:{{caseDetailData.caseData.caseDetail.paidPartyText!==''?caseDetailData.caseData.caseDetail.paidPartyText:'未填写'}}
+                                                                           </text>
+            </view>
+            <view style="color:#7a7a7a" class="marg-bot">
+              <text>办案费限额:{{caseDetailData.caseData.caseDetail.chargeLimit||'未填写'}}</text>
+            </view>
+            <view style="color:#7a7a7a">
+              <text>收费方式:{{caseDetailData.caseData.payStyleText||'未填写'}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="placeholderImage" wx:else="{{caseDetailData.caseData.caseDetail!==null}}">
+          <image src="{{placeholderImage}}" mode="widthFix" lazy-load="false"/>
+        </view>
+        <!-- </repeat> -->
+      </view>
+      <!-- </swiper-item> -->
+      <!-- 客户 -->
+      <!-- <swiper-item> -->
+      <view class="personal-information" wx:if="{{currentTab==1}}">
+        <view class="case-container" wx:if="{{caseDetailData.clientData.clientAllData!==null}}">
+          <view class="personal-container">
+            <view class="personal-item1" bindtap="toclientbase">
+              <view class="personal-item1-title">
+                <text>{{caseDetailData.clientData.clientAllData.name||'未填写'}}</text>
+                <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#b2b2b2;margin-left:20rpx"/>
+              </view>
+              <view class="marg-bot color">
+                <text>{{caseDetailData.clientData.clientAllData.id||'未填写'}}</text>
+              </view>
+              <view class="marg-bot">
+                <text>{{caseDetailData.clientData.clientAllData.industryTypeText||'未填写'}}</text>
+              </view>
+              <view class="flex">
+                <icon class="iconfont icon-dizhi" style="font-size:40rpx;margin-right:20rpx ;color:#ff9900"/>
+                <text>{{caseDetailData.clientData.clientAllData.address||'未填写'}}</text>
+              </view>
+            </view>
+            <view class="personal-item2" bindtap="toclientlinkman" wx:if="{{caseDetailData.clientData.linkerPhoto.length!==0}}">
+              <view class="personal-item2-two">
+                <text style="color:#7a7a7a">客户联系人
+                                                                                                          </text>
+                <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#b2b2b2"/>
+              </view>
+              <view class="linkman">
+                <block wx:for="{{caseDetailData.clientData.linkerPhoto}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                  <image src="{{caseDetailData.clientData.linkerPhoto[index]}}" lazy-load="false" style="z-index:{{index}};left:{{index*40}}rpx">
+                  </image>
+                </block>
+              </view>
+            </view>
+            <view class="personal-item3" wx:if="{{caseDetailData.clientData.clientAllData.categoryText=='公民个人'}}">
+              <view style="display:flex; flex-direction: column;">
+                <view class="flex" style="margin-bottom:32rpx">
+                  <text style="font-size:32rpx;">自然人</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-shenfenzheng" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"/>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.cardNo||'未填写'}}</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-minzu" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"/>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.nationText||'未填写'}}</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-chushengriqi" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"/>
+                  <text class="color">{{caseDetailData.clientData.birthday||'未填写'}}</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-zhiye" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"/>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.occupation||'未填写'}}</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-youxiang" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"/>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.email||'未填写'}}</text>
+                </view>
+              </view>
+            </view>
+            <view class="personal-item3" wx:else="{{caseDetailData.clientData.clientAllData.categoryText!=='公民个人'}}">
+              <view style="display:flex; flex-direction: column;">
+                <view class="flex" style="margin-bottom:32rpx">
+                  <text style="font-size:32rpx;">客户负责人/法定代表人信息</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <text class="color" style="border-right:1px solid #bfbfbf;padding-right:19rpx">{{caseDetailData.clientData.clientAllData.legalDutyText}}</text>
+                  <text style="color:#5d73fa;margin-left:20rpx;">{{caseDetailData.clientData.clientAllData.legalPersonText}}</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-ren" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"/>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.linker||'未填写'}}</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-dianhua" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"/>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.landline||'未填写'}}</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-youxiang" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"/>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.email||'未填写'}}</text>
+                </view>
+                <view style="" class="flex">
+                  <icon class="iconfont icon-chuanzhen" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"/>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.landline||'未填写'}}</text>
+                </view>
+              </view>
+            </view>
+            <view class="personal-item4" bindtap="tovisitrecord" wx:if="{{caseDetailData.clientData.contactLength!==0}}">
+              <view class="personal-item4-four">
+                <text class="color">拜访记录</text>
+                <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#b2b2b2"/>
+              </view>
+              <view class="marg-bot">
+                <text>{{caseDetailData.clientData.clientContactsListLastData.startDateText}}至{{caseDetailData.clientData.clientContactsListLastData.endDateText}}</text>
+              </view>
+              <view class="personal-last">
+                <view class="personal-last-left">
+                  <view style="width:20rpx;height:20rpx;border:1px solid #5d73fa;border-radius:50%;;"/>
+                  <view>
+                    <text style="padding-left:20rpx">{{caseDetailData.clientData.clientContactsListLastData.communicationModeText}}</text>
+                  </view>
+                </view>
+                <view>
+                  <text style="color:#ff9900; ">共{{caseDetailData.clientData.contactLength}}条记录</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="placeholderImage" wx:else="{{caseDetailData.clientData.clientAllData!==null}}">
+          <image src="{{placeholderImage}}" mode="widthFix" lazy-load="false">
+          </image>
+        </view>
+      </view>
+      <!-- </swiper-item> -->
+      <!-- 任务 -->
+      <!-- <swiper-item> -->
+      <view class="personal-information" wx:if="{{currentTab==2}}">
+        <!-- <view class="case-container" style="margin-top:0 "> -->
+        <view class="task-content-container" wx:if="{{caseDetailData.taskDatas.TaskStagesDatas.length!==0}}">
+          <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{'300'}}" style="min-height:{{caseDetailData.taskDatas.viewHeight[caseDetailData.taskDatas.current]}}rpx" circular="{{false}}" previous-margin="30rpx" next-margin="30rpx" bindchange="taskBindChange" current="{{caseDetailData.taskDatas.current}}">
+            <block wx:for="{{caseDetailData.taskDatas.TaskStagesDatas}}" wx:for-index="sIndex" wx:for-item="item" wx:key="index">
+              <swiper-item>
+                <view class="task-list">
+                  <view>
+                    <view>
+                      <text>{{item.name}}</text>
+                      <view>
+                        <view>
+                          <text>{{item.taskCount}}</text>
+                        </view>
+                        <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" catchtap="moreChoose" data-wpymorechoose-a="{{item}}" data-wpymorechoose-b="{{sIndex}}"/>
+                      </view>
+                    </view>
+                    <view>
+                      <text>{{item.remark||'未填写'}}</text>
+                    </view>
+                  </view>
+                  <!-- <scroll-view scroll-y scroll-with-animation bindscroll="scroll" style="heihgt:500rpx;white-space:nowrap;"> -->
+                  <block wx:for="{{caseDetailData.taskDatas.TasksDatas[sIndex].items}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                    <view class="task-item" bindtap="toTaskDetail" bindlongpress="longpress" data-wpytotaskdetail-a="{{item.id}}" data-wpylongpress-a="{{item.id}}">
+                      <view style="margin-right:20rpx" wx:if="{{item.isAccept=='Y'&&item.isParticipant=='Y'}}">
+                        <checkbox value="{{item.title}}" checked="{{item.checked}}" color="#5d73fa" catchtap="isChecked" data-wpyischecked-a="{{sIndex}}" data-wpyischecked-b="{{index}}" data-wpyischecked-c="{{item.checked}}" data-wpyischecked-d="{{item.id}}"/>
+                      </view>
+                      <view style="width:{{item.isAccept=='Y'?'86%':'97%'}};" class="{{item.checked?'loseColor':''}} item-info">
+                        <view class="item-title">
+                          <text>{{item.title||'未填写'}}</text>
+                        </view>
+                        <view class="item-statistics">
+                          <view style="color:#7a7a7a">
+                            <icon class="iconfont icon-riqi" style="font-size:30rpx;margin-right:20rpx"/>
+                            <text>{{item.endTime||'未填写'}}</text>
+                          </view>
+                          <view>
+                            <icon class="iconfont icon-fujian-copy" style="font-size:30rpx;color:#5d73fa;margin-right:20rpx"/>
+                            <text style="margin-right:20rpx">{{item.checkItemCount}}</text>
+                            <icon class="iconfont icon-zirenwu-copy" style="font-size:30rpx;color:#5d73fa;margin-right:20rpx"/>
+                            <text>{{item.commentCount}}</text>
+                          </view>
+                        </view>
+                      </view>
+                      <view class="item-isAccept" style="background:#ff9900" wx:if="{{item.isAccept=='N'&&item.isParticipant=='Y'}}">
+                        <text>未确认</text>
+                      </view>
+                    </view>
+                  </block>
+                  <!-- </scroll-view> -->
+                </view>
+                <view class="add-task" catchtap="addTask" data-wpyaddtask-a="{{item.projectId}}">
+                  <text>+</text>
+                  <text>新建任务</text>
+                </view>
+              </swiper-item>
+            </block>
+          </swiper>
+        </view>
+        <view class="placeholderImage" wx:else="{{caseDetailData.taskDatas.TaskStagesDatas.length!==0}}">
+          <image src="{{placeholderImage}}" mode="widthFix" lazy-load="false">
+          </image>
+        </view>
+      </view>
+      <!-- </swiper-item> -->
+      <!-- 文档管理 -->
+      <!-- <swiper-item> -->
+      <view class="personal-information document" wx:if="{{currentTab==3}}" style=" margin-top: 326rpx;">
+        <view class="case-container" wx:if="{{caseDetailData.documentDatas.documentData.length!==0}}">
+          <block wx:for="{{caseDetailData.documentDatas.documentData}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+            <view class="doc-container" bindtap="preview" data-wpypreview-a="{{item.id}}" data-wpypreview-b="{{item.fileExtension}}" data-wpypreview-c="{{item.docClass}}" data-wpypreview-d="{{item.filePath}}">
+              <view class="doc-item">
+                <icon class="iconfont {{caseDetailData.documentDatas.fileIcon[index]}}" style="font-size:100rpx;color:{{caseDetailData.documentDatas.fileColor[index]}}"/>
+                <view class="item-right">
+                  <view class="item-text">
+                     <text>{{item.title}}</text>
+                  </view>
+                  <view class="item-count">
+                    <view>
+                      <icon class="iconfont icon-wendang" styl="color:#7a7a7a;font-size:30rpx;"/>
+                      <text style="margin-left:14rpx;">{{item.folderCount||'0'}}</text>
+                    </view>
+                    <view>
+                      <icon class="iconfont icon-wenjian" styl="color:#7a7a7a;font-size:30rpx;"/>
+                      <text style="margin-left:14rpx;">{{item.fileSize||'0'}}</text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </block>
+        </view>
+        <view class="placeholderImage" wx:else="{{caseDetailData.documentDatas.documentData.length!==0}}">
+          <image src="{{placeholderImage}}" mode="widthFix" lazy-load="false">
+          </image>
+        </view>
+      </view>
+      <!-- </swiper-item> -->
+      <!-- 日志 -->
+      <!-- <swiper-item> -->
+      <view class="personal-information" wx:if="{{currentTab==4}}">
+        <!-- <view class=" height5"> -->
+        <view class="log-container" wx:if="{{caseDetailData.workLogsDatas.workLogData.length!==0}}">
+          <view class="statistics-win">
+            <view class="statisticsIcon">
+              <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#dedede"/>
+            </view>
+            <view class="flex win-hidden">
+              <view class="flex-column " style="width:33%">
+                <text style="" class="blue-text margin-bot-10">{{caseDetailData.workLogsDatas.selfDuration+'0'}}h</text>
+                <text class="color" style="font-size:28rpx;">自报时长</text>
+              </view>
+              <view class="flex-column" style="width:33%">
+                <text class="blue-text margin-bot-10">{{caseDetailData.workLogsDatas.businessDuration+'0'}}</text>
+                <text class="color" style="font-size:28rpx;">业务时长</text>
+              </view>
+              <view class="flex-column" style="width:33%">
+                <text class="blue-text margin-bot-10">{{caseDetailData.workLogsDatas.billDuration+'0'}}</text>
+                <text class="color" style="font-size:28rpx;">账单时长</text>
+              </view>
+            </view>
+          </view>
+          <!-- 日志列表 -->
+          <view class="log-list-container">
+            <block wx:for="{{caseDetailData.workLogsDatas.workLogData}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+              <view class="log-list-content" bindtap="tologdetail" data-wpytologdetail-a="{{item.id}}">
+                <view class="log-list-item1">
+                  <view class="item1-left">
+                    {{caseDetailData.workLogsDatas.startTime[index][0]}} {{caseDetailData.workLogsDatas.startTime[index][1]}}-{{caseDetailData.workLogsDatas.startTime[index][0]==caseDetailData.workLogsDatas.endTime[index][0]?caseDetailData.workLogsDatas.endTime[index][1]:caseDetailData.workLogsDatas.endTime[index][0]+caseDetailData.workLogsDatas.endTime[index][1]}}
+                  </view>
+                  <text class="item1-right">{{item.selfDuration+'.0'}}h</text>
+                </view>
+                <view class="log-list-item2">
+                  <text>{{item.description}}</text>
+                </view>
+                <view class="log-list-item3">
+                  <view class="item3-left">
+                    <!-- <view style="background: #5d73fa"></view> -->
+                    <image src="{{caseDetailData.workLogsDatas.avatarData[index]}}" mode="scaleToFill" lazy-load="false" style="width:70rpx;height:70rpx;border-radius:50%;">
+                    </image>
+                    <text style="margin-left:30rpx">{{item.employeeName}}</text>
+                  </view>
+                  <view class="item3-right">
+                    <view style="width:30rpx;height:30rpx;border-radius:50%;border:1px solid {{caseDetailData.workLogsDatas.processStatus[index]}}"/>
+                    <text style="margin-left:30rpx">{{item.processStatusText}}</text>
+                  </view>
+                </view>
+              </view>
+            </block>
+          </view>
+          <!-- </view> -->
+        </view>
+        <view class="placeholderImage" wx:else="{{caseDetailData.workLogsDatas.workLogData.length==0}}">
+          <image src="{{placeholderImage}}" mode="widthFix" lazy-load="false">
+          </image>
+        </view>
+      </view>
+      <!-- </swiper-item> -->
+      <!-- <swiper-item> -->
+      <!-- 开庭 -->
+      <view class="personal-information" wx:if="{{currentTab==5}}">
+        <view class="case-container" wx:if="{{caseDetailData.CourtsDatas.CourtsData.length!==0}}">
+          <!-- <view style="position:relative;"> -->
+          <block wx:for="{{caseDetailData.CourtsDatas.CourtsData}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+            <view class="court-info-container">
+              <view class="court-item1">
+                <view class="item1-left">
+                  <icon class="iconfont icon-fayuankaiting"/>
+                  <text>{{item.courtText}}</text>
+                </view>
+                <view class="item1-right">
+                  <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2" bindtap="courtShow" data-wpycourtshow-a="{{index}}"/>
+                </view>
+              </view>
+              <view class="court-item1">
+                <view class="item1-left">
+                  <icon class="iconfont icon-tixingkaiting"/>
+                  <text>提前{{item.warningTime}}天提醒 @{{item.warningLawyerName}}</text>
+                </view>
+                <view class="item1-right" style="display:flex;align-items:center">
+                  <text style="width:30rpx;height:30rpx;border-radius:50%;background:{{item.singleColor}};margin-right:20rpx"/>
+                  <text style="color:#7a7a7a">{{item.categoryText}}</text>
+                </view>
+              </view>
+              <view class="court-item1">
+                <view class="item1-left">
+                  <icon class="iconfont icon-riqi"/>
+                  <text style="font-size:32rpx">{{caseDetailData.CourtsDatas.startYear[index]}} {{caseDetailData.CourtsDatas.startHour[index]}}至 {{caseDetailData.CourtsDatas.endYear[index]}} {{caseDetailData.CourtsDatas.endHour[index]}}</text>
+                </view>
+              </view>
+              <view class="court-item1">
+                <view class="item1-left">
+                  <icon class="iconfont icon-dizhi1"/>
+                  <text>{{item.address}}</text>
+                </view>
+              </view>
+              <view class="info-item">
+                <view class="fayuan" style="width:100%;">
+                  <text>法院</text>
+                  <text>{{item.courtText}}</text>
+                </view>
+                <view>
+                  <text>主审法官／指定仲裁员</text>
+                  <text>{{item.courtPerson}}</text>
+                </view>
+                <view>
+                  <text>法院简称</text>
+                  <text>{{item.memo}}</text>
+                </view>
+                <view>
+                  <text>座机</text>
+                  <text>{{item.telPhone}}</text>
+                </view>
+                <view>
+                  <text>手机号码</text>
+                  <text>{{item.cellPhone}}</text>
+                </view>
+                <view style="width:100%">
+                  <text>备注</text>
+                  <text>{{item.remark}}</text>
+                </view>
+              </view>
+            </view>
+          </block>
+          <!-- </view> -->
+        </view>
+        <view class="placeholderImage" wx:else="{{caseDetailData.CourtsDatas.CourtsData.length==0}}">
+          <image src="{{placeholderImage}}" mode="widthFix" lazy-load="false">
+          </image>
+        </view>
+      </view>
+      <!-- </swiper-item> -->
+      <!-- <swiper-item> -->
+      <!-- 财务 -->
+      <view class="personal-information" wx:if="{{currentTab==6}}">
+        <swiper duration="{{duration}}" circular="{{circular}}" style="white-space: nowrap;width:100%; height:{{caseDetailData.AmountDatas.AmountDataHeight+400}}rpx;" next-margin="50rpx" catchchange="getAmountData">
+          <swiper-item>
+            <view class="case-container height1" style="padding:44rpx 0rpx">
+              <view class="amount-container">
+                <view id="aggregate-amount" class="aggregate-amount">
+                  <view class="amount-content">
+                    <text style="font-size:28rpx;color:#7a7a7a;margin-bottom:24rpx">账单总金额</text>
+                    <text style="font-size:48rpx;color:#5d73fa">{{caseDetailData.AmountDatas.AmountData[0].UserCaseBillingCount}}</text>
+                  </view>
+                </view>
+                <block wx:for="{{caseDetailData.AmountDatas.UserCaseBillingItem}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                  <view class="amount-item">
+                    <view class="amount-item-top">
+                      <text>账单金额:{{item.billingAmount}}</text>
+                      <text style="color:{{item.textColor}}">{{item.processStatusText}}</text>
+                    </view>
+                    <text class="color">账单日期:{{item.billingDateText}}</text>
+                  </view>
+                </block>
+              </view>
+            </view>
+          </swiper-item>
+          <swiper-item>
+            <view class="case-container height2" style="padding:44rpx 0rpx">
+              <view class="amount-container">
+                <view class="aggregate-amount">
+                  <view class="amount-content">
+                    <text style="font-size:28rpx;color:#7a7a7a;margin-bottom:24rpx">发票<text>{{caseDetailData.AmountDatas.AmountData[1].displayName}}</text></text>
+                    <text style="font-size:48rpx;color:#5d73fa">{{caseDetailData.AmountDatas.AmountData[1].total||0}}</text>
+                  </view>
+                </view>
+                <block wx:for="{{caseDetailData.AmountDatas.UserInvoicesItem}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                  <view class="amount-item">
+                    <view class="amount-item-top">
+                      <text>发票金额：{{item.invoiceAmount}}</text>
+                      <text/>
+                      <text style="color:{{item.statusColor}}">{{item.statusName}}</text>
+                    </view>
+                    <text class="color">开票日期:{{caseDetailData.AmountDatas.UserInvoicesDate[index]}}</text>
+                  </view>
+                </block>
+              </view>
+            </view>
+          </swiper-item>
+          <swiper-item>
+            <view class="case-container" style="padding:44rpx 0rpx">
+              <view class="amount-container">
+                <view class="aggregate-amount">
+                  <view class="amount-content">
+                    <text style="font-size:28rpx;color:#7a7a7a;margin-bottom:24rpx">收款<text>{{caseDetailData.AmountDatas.AmountData[2].displayName}}</text></text>
+                    <text style="font-size:48rpx;color:#5d73fa">{{caseDetailData.AmountDatas.AmountData[2].total||0}}</text>
+                  </view>
+                </view>
+                <block wx:for="{{caseDetailData.AmountDatas.UserReceiptsItem}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                  <view class="amount-item">
+                    <view class="amount-item-top">
+                      <text>收款金额：{{item.payAmount}}</text>
+                      <text style="color:{{item.statusColor}}">{{item.statusName}}</text>
+                    </view>
+                    <text class="color">收款日期:{{caseDetailData.AmountDatas.UserReceiptsDate[index]}}</text>
+                  </view>
+                </block>
+              </view>
+            </view>
+          </swiper-item>
+          <swiper-item>
+            <view class="case-container" style="padding:44rpx 0rpx">
+              <view class="amount-container">
+                <view class="aggregate-amount">
+                  <view class="amount-content">
+                    <text style="font-size:28rpx;color:#7a7a7a;margin-bottom:24rpx">费用<text>{{caseDetailData.AmountDatas.AmountData[3].displayName}}</text></text>
+                    <text style="font-size:48rpx;color:#5d73fa">{{caseDetailData.AmountDatas.AmountData[3].total||0}}</text>
+                  </view>
+                </view>
+                <block wx:for="{{caseDetailData.AmountDatas.UserChargesItem}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                  <view class="amount-item">
+                    <view class="amount-item-top">
+                      <text>发票金额：{{item.chargeAmount}}</text>
+                      <text style="color:{{item.statusColor}}">{{item.statusName}}</text>
+                    </view>
+                    <text class="color">收款日期:{{caseDetailData.AmountDatas.UserChargesDate[index]}}</text>
+                  </view>
+                </block>
+              </view>
+            </view>
+          </swiper-item>
+        </swiper>
+        <view class="placeholderImage" wx:if="{{false}}">
+          <image src="{{placeholderImage}}" mode="widthFix" lazy-load="false">
+          </image>
+        </view>
+      </view>
+      <image src="../../../../images/add.png" mode="scaleToFill" lazy-load="false" class="addimage" wx:if="{{currentTab==2}}" bindtap="tocreate"/>
+    </view>
+  </view>

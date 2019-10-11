@@ -1,0 +1,110 @@
+@import "./../../../../../components/placeHolderImage.wxss";
+.body {
+  height: 100%;
+  position: relative;
+}
+.body .container-title {
+  height: 104rpx;
+  width: 100%;
+  font-size: 48rpx;
+  padding-left: 28rpx;
+  color: #2a2a2a;
+  line-height: 104rpx;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #dedede;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  background: #fff;
+}
+.body .item-container {
+  padding: 149rpx 0rpx;
+  font-size: 28rpx;
+  color: #2a2a2a;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.body .item-container .item-content {
+  display: flex;
+  padding: 0 28rpx 36rpx 28rpx;
+}
+.body .item-container .item-content .item-left {
+  width: 10%;
+}
+.body .item-container .item-content .item-right {
+  width: 85%;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+}
+.body .item-container .item-content .item-right > view {
+  margin-bottom: 14rpx;
+}
+.body .item-container .item-content .item-right > view:nth-child(4) {
+  display: flex;
+  align-items: center;
+}
+.body .item-container .item-content .item-right > view:nth-child(4) > view {
+  height: 20rpx;
+  width: 20rpx;
+  border-radius: 50%;
+  background: #5d73fa;
+  margin-right: 20rpx;
+}
+.body .item-container .item-content .item-right > view:nth-child(6) {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  color: #ffffff;
+  flex-wrap: wrap;
+}
+.body .item-container .item-content .item-right > view:nth-child(6) > view {
+  width: 20%;
+  margin-top: 20rpx;
+  display: flex;
+}
+.body .item-container .item-content .item-right > view:nth-child(6) > view > image {
+  height: 80rpx;
+  width: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.body .item-container .item-content .item-right .visitorAvatar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  color: #ffffff;
+  flex-wrap: wrap;
+}
+.body .item-container .item-content .item-right .visitorAvatar > view {
+  width: 20%;
+  margin-top: 20rpx;
+  display: flex;
+}
+.body .item-container .item-content .item-right .visitorAvatar > view > image {
+  height: 80rpx;
+  width: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.body .item-container .item-content .item-right .between {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.body .item-container > view:not(:last-child)::after {
+  content: '';
+  display: block;
+  height: 14rpx;
+  background: #f4f4f4;
+}
+.body .item-container > view:not(:first-child) {
+  padding: 36rpx 0;
+}

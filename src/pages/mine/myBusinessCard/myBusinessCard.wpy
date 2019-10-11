@@ -1,0 +1,449 @@
+<!--  -->
+<style lang='scss'>
+    .container {
+        margin-bottom: 40rpx;
+        .lawyer-baseInfo {
+            .lawyerAvatar {
+                position: relative;
+                height: 100%;
+                .avatar {
+                    position: absolute;
+                    top: 0;
+                    z-index: 9;
+                }
+                .avatar-btn {
+                    position: absolute;
+                    bottom: -25rpx;
+                    right: 28rpx;
+                    z-index: 99;
+                    display: flex;
+                    >view {
+                        padding: 14rpx;
+                        width: 44rpx;
+                        height: 44rpx;
+                        border-radius: 50%;
+                        background: #ffffff;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        box-shadow: 0 8px 15px rgba(112, 112, 112, 0.3);
+                        >icon {
+                            color: #A57E46;
+                            font-size: 40rpx;
+                        }
+                    }
+                    >view:not(:first-child):not(:last-child) {
+                        margin: 0 20rpx;
+                    }
+                }
+            }
+            .lawyerInfo {
+                padding: 44rpx 28rpx 0 28rpx;
+                .info-top {
+                    padding-bottom: 44rpx;
+                    border-bottom: 1px solid #f4f4f4;
+                    >view:not(:last-child) {
+                        margin-bottom: 24rpx;
+                    }
+                    .info-name {
+                        font-size: 36rpx;
+                        >text:last-child {
+                            color: #7a7a7a;
+                            margin-left: 20rpx;
+                            font-size: 28rpx;
+                        }
+                    }
+                    .info-originalFirm {
+                        font-size: 32rpx;
+                    }
+                    .info-goodBusiness {
+                        color: #A57E46;
+                    }
+                }
+                .info-bottom {
+                    padding-top: 44rpx;
+                    >view:not(:last-child) {
+                        margin-bottom: 14rpx;
+                    }
+                    >view {
+                        >icon {
+                            color: #000;
+                            font-size: 32rpx;
+                            margin-right: 20rpx;
+                        }
+                    }
+                }
+                .info-btn {
+                    padding: 70rpx 0;
+                    display: flex; // height: 20%;
+                    align-items: center;
+                    justify-content: center;
+                    >view {
+                        width: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        .share-btn {
+                            width: 65%;
+                            height: 100%;
+                            background: #A57E46;
+                            display: flex;
+                            align-items: baseline;
+                            justify-content: center;
+                            font-size: 28rpx;
+                            color: #fff;
+                            >icon {
+                                margin-right: 14rpx;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .list-container {
+            color: #2a2a2a;
+            .work-experience {
+                padding: 30rpx 28rpx 0rpx 28rpx;
+                border-bottom: 16rpx solid #f4f4f4;
+                border-top: 16rpx solid #f4f4f4;
+                .work-title {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    >text {
+                        font-size: 32rpx;
+                    }
+                    >icon {
+                        font-size: 40rpx;
+                        color: #7a7a7a;
+                    }
+                }
+                .work-items-container {
+                    >view:not(:last-child) {
+                        border-bottom: 1px solid #dedede;
+                    }
+                    .work-item {
+                        padding: 30rpx 0;
+                        color: #2a2a2a;
+                        >view:not(:last-child) {
+                            margin-bottom: 20rpx;
+                        }
+                        .date,
+                        .memo {
+                            color: #7a7a7a;
+                        }
+                        .memo {
+                            display: flex;
+                            align-items: center;
+                            >icon {
+                                color: #5d73fa;
+                                height: 100%;
+                                font-size: 44rpx;
+                                margin-right: 14rpx;
+                            }
+                        }
+                    }
+                }
+            }
+            .project-case {
+                padding: 20rpx 28rpx 0rpx 28rpx;
+                margin-bottom: 20rpx;
+                .project-title {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    >text {
+                        font-size: 32rpx;
+                    }
+                    >icon {
+                        font-size: 40rpx;
+                        color: #7a7a7a;
+                    }
+                }
+                .project-items-container {
+                    >view:not(:last-child) {
+                        border-bottom: 1px solid #dedede;
+                    }
+                    .project-item {
+                        padding: 30rpx 0;
+                        color: #2a2a2a;
+                        >view:not(:last-child) {
+                            margin-bottom: 20rpx;
+                        }
+                        .date,
+                        .projectSource,
+                        .description {
+                            color: #7a7a7a;
+                        }
+                        .projectLink {
+                            color: #5d73fa;
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="lawyer-baseInfo">
+            <view class="lawyerAvatar" style="width:100vw;height:{{viewSize*0.7}}px">
+                <image class="avatar" style="width:100vw;height:{{viewSize*0.7}}px" src="{{currentAvatar}}" lazy-load="false" />
+                <view class="avatar-btn">
+                    <view catchtap='dial'>
+                        <icon class="iconfont icon-dianhua"></icon>
+                    </view>
+                    <view catchtap="map">
+                        <icon class="iconfont icon-dizhi"></icon>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-youxiang"></icon>
+                    </view>
+                </view>
+            </view>
+            <view class="lawyerInfo">
+                <view class="info-top">
+                    <view class="info-name">
+                        <text>{{baseData.name||'未填写'}}</text>
+                        <text>律师</text>
+                    </view>
+                    <view class="info-originalFirm">
+                        {{baseData.originalFirm||'未填写'}}
+                    </view>
+                    <view class="info-goodBusiness">
+                        {{baseData.goodBusiness||'未填写'}}
+                    </view>
+                </view>
+                <view class="info-bottom">
+                    <view>
+                        <icon class="iconfont icon-dianhua"></icon>
+                        <text>{{baseData.phone||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-youxiang"></icon>
+                        <text>{{baseData.perEmail||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-dizhi"></icon>
+                        <text>{{baseData.homeAddress||'未填写'}}</text>
+                    </view>
+                </view>
+                <view class="info-btn">
+                    <view>
+                        <button class="share-btn" @tap="contactNow">
+                                                    <icon class="iconfont icon-dianhua"></icon>
+                                                    <text>立即联系</text>
+                                    </button>
+                    </view>
+                    <view>
+                        <button class="share-btn" open-type="share">
+                            <icon class="iconfont icon-fenxiang"></icon>
+                            <text>分享</text>
+                        </button>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <!-- <view class="list-container" wx:if="{{!isCard}}">
+                <view class="work-experience">
+                    <view class="work-title" style="padding-bottom:{{isShowWorkList?'0':'28rpx'}}">
+                        <text>工作经历</text>
+                        <icon class="iconfont icon-zhankaishi" wx:if="{{isShowWorkList}}" @tap="toggleWorkList"></icon>
+                        <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" wx:else @tap="toggleWorkList"></icon>
+                    </view>
+                    <view class="work-items-container" wx:if="{{isShowWorkList}}">
+                        <repeat for="{{resumeData.workExperiences}}" key="index" index="index" item="item">
+                            <view class="work-item">
+                                <view class="workUnits">{{item.workUnits||'未填写'}}</view>
+                                <view class="date">{{item.startDate}}至{{item.endDate}}</view>
+                                <view class="duty">{{item.duty||'未填写'}}</view>
+                                <view class="memo">
+                                    <icon class="iconfont icon-beizhu"></icon>
+                                    <text>{{item.memo||'未填写'}}</text>
+                                </view>
+                            </view>
+                        </repeat>
+                    </view>
+                </view>
+                <view class="project-case">
+                    <view class="project-title">
+                        <text>项目案例</text>
+                        <icon class="iconfont icon-zhankaishi" wx:if="{{isShowProjectList}}" @tap="toggleProjectList"></icon>
+                        <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" wx:else @tap="toggleProjectList"></icon>
+                    </view>
+                    <view class="project-items-container" wx:if="{{isShowProjectList}}">
+                        <repeat for="{{resumeData.projectExperiences}}" key="index" index="index" item="item">
+                            <view class="project-item">
+                                <view class="date">{{item.startDate}}至{{item.endDate}}</view>
+                                <view class="projectName">{{item.projectName||'未填写'}}</view>
+                                <view class="projectSource">{{item.projectSource||'未填写'}}</view>
+                                <view class="description">{{item.description||'未填写'}}</view>
+                                <view class="projectLink">{{item.projectLink||'未填写'}}</view>
+                            </view>
+                        </repeat>
+                    </view>
+                </view>
+            </view> -->
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '@/utils/cofig/ajax.js';
+    export default class myBusinessCard extends wepy.page {
+        config = {
+            navigationBarTitleText: "个人名片",
+            navigationBarBackgroundColor: '#ffffff',
+            navigationBarTextStyle: 'black'
+        };
+        data = {
+            id: '',
+            currentAvatar: '',
+            baseData: {},
+            resumeData: {},
+            viewSize: 0,
+            isShowWorkList: true,
+            isShowProjectList: true,
+            isCard: false
+        };
+        components = {};
+        methods = {
+            dial() {
+                wx.makePhoneCall({
+                    phoneNumber: this.baseData.phone
+                });
+            },
+            // map(){
+            //     wx.navigateTo({ url: './map' });
+            // },
+            contactNow() {
+                wx.showActionSheet({
+                    itemList: ['立即呼叫', '保存至通讯录'], //按钮的文字数组，数组长度最大为6个,
+                    itemColor: '#5d73fa', //按钮的文字颜色,
+                    success: res => {
+                        switch (res.tapIndex) {
+                            case 0:
+                                wx.makePhoneCall({
+                                    phoneNumber: this.baseData.phone,
+                                    //  success
+                                });
+                                break;
+                            case 1:
+                                wx.addPhoneContact({
+                                    //   photoFilePath: ,
+                                    //   nickName: ,
+                                    //   lastName: ,
+                                    //   middleName: ,
+                                    firstName: this.baseData.name,
+                                    mobilePhoneNumber: this.baseData.phone,
+                                    //   weChatNumber: ,
+                                    //   email: ,
+                                    success: (result) => {
+                                        console.log(result)
+                                    },
+                                    fail: () => {},
+                                    complete: () => {}
+                                });
+                                break;
+                        }
+                    }
+                });
+            },
+            toggleWorkList() {
+                this.isShowWorkList = !this.isShowWorkList;
+                this.$apply();
+            },
+            toggleProjectList() {
+                this.isShowProjectList = !this.isShowProjectList;
+                this.$apply();
+            },
+        };
+        events = {};
+        watch = {};
+        computed = {};
+        async GetMe() {
+            var resData = await ajax.getData(
+                '/api/services/web/personal/GetEmployee',
+                'post', {
+                    id: this.id
+                }
+            )
+            if (resData.statusCode == 200) {
+                this.baseData = resData.data.result;
+                // this.baseData.goodBusiness=null;
+                this.$apply();
+            }
+        }
+        async GetResume() {
+            var resData = await ajax.getData(
+                '/api/services/web/employeeResume/GetResume',
+                'post', {
+                    id: this.id
+                }
+            )
+            if (resData.statusCode == 200) {
+                this.resumeData = resData.data.result;
+                this.resumeData.projectExperiences.push(...this.resumeData.firmProjectExperiences)
+                this.resumeData.workExperiences.forEach(item =>{
+                    item.startDate = item.startDate.split('T')[0]
+                    item.endDate = item.endDate.split('T')[0]
+                })
+                this.resumeData.projectExperiences.forEach(item =>{
+                    item.startDate = item.startDate.split('T')[0]
+                    item.endDate = item.endDate.split('T')[0]
+                })
+
+            }
+        }
+        async GetEmployeePhoto() {
+            var http = '/api/services/web/personal/GetEmployeePhoto?id=' + this.id;
+            var imageURL = await ajax.getAavatar(http);
+            this.urlTobase64(imageURL);
+        }
+        onShareAppMessage(res) {
+            if (res.from === 'button') {
+                // 来自页面内转发按钮
+                console.log(res.target)
+            }
+            return {
+                title: `律智荟-${this.baseData.name}律师电子名片，请您惠存；`,
+                path: '/pages/mine/myBusinessCard/myBusinessCard?originalFirm=' + this.baseData.originalFirm + '&name=' + this.baseData.name + '&phone=' + this.baseData.phone + '&perEmail=' + this.baseData.perEmail + '&homeAddress=' + this.baseData.homeAddress + '&goodBusiness=' + this.baseData.goodBusiness + '&currentAvatar=' + this.currentAvatar,
+                success: res => {
+                    console.log("转发成功:" + JSON.stringify(res));
+                }
+            }
+        }
+        urlTobase64(url) {
+            wx.getFileSystemManager().readFile({
+                filePath: url, //选择图片返回的相对路径
+                encoding: 'base64', //编码格式
+                success: res => { //成功的回调
+                    let base64 = 'data:image/png;base64,' + res.data;
+                    base64 = base64.replace(/[\r\n]/g, "");
+                    this.currentAvatar = base64;
+                    this.$apply();
+                }
+            })
+        }
+        onLoad(options) {
+            if (options.id) {
+                this.id = options.id;
+                this.GetEmployeePhoto();
+                this.GetMe()
+                this.GetResume();
+            } else {
+                this.baseData = options;
+                this.currentAvatar = options.currentAvatar;
+                this.isCard = true;
+            }
+            this.viewSize = wx.getSystemInfo({
+                success: res => {
+                    this.viewSize = res.windowWidth;
+                    this.$apply();
+                }
+            });
+        };
+    }
+</script>

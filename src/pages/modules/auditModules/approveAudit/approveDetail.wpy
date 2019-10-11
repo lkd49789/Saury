@@ -1,0 +1,349 @@
+<!--  -->
+
+<style lang='scss'>
+    .container {
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .ellipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .parting-line {
+            height: 14rpx;
+            width: 100%;
+            background: #f4f4f4;
+        }
+        .main {
+            position: relative;
+            margin-top: 149rpx;
+            .one-chunk {
+                padding: 0 28rpx 30rpx 28rpx;
+                >view:nth-child(2n) {
+                    margin-bottom: 20rpx;
+                }
+                >view:nth-child(2n+1):not(:last-child) {
+                    margin-bottom: 14rpx;
+                }
+                .caseName {
+                    color: #5d73fa;
+                }
+                .serialId {
+                    color: #7a7a7a;
+                }
+                .clientName {
+                    color: #5d73fa;
+                }
+                .clientId {
+                    color: #7a7a7a;
+                }
+                .caseCategoryText-statusText {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    >text:last-child {
+                        color: #ff9900;
+                    }
+                }
+            }
+            .document{
+                    display: flex;
+                    flex-direction: column;
+                    width:100%;
+                    >text {
+                            margin-bottom: 20rpx;
+                            color: #7a7a7a;
+                        }
+                    
+                    >view:last-child {
+                        display: flex;
+                        align-items: center;
+                        >view {
+                            display: flex;
+                            flex-direction: column;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                        }
+                    }
+            }
+            .two-chunk {
+                padding: 30rpx 28rpx;
+                display: flex;
+                flex-wrap: wrap;
+                >view:not(:last-child) {
+                    display: flex;
+                    flex-direction: column;
+                    width: 50%;
+                    margin-bottom: 30rpx;
+                    >text:first-child {
+                        color: #7a7a7a;
+                        margin-bottom: 14rpx;
+                    }
+                }
+            }
+            .through-review{
+                padding: 30rpx 28rpx;
+                .approve-title{
+                    margin-bottom: 30rpx;
+                }
+                .approve-content{
+                    display: flex;
+                    align-items: center;
+                    .approve-left{
+                        display: flex;
+                        flex-direction:column;
+                        justify-content: cetner;
+                        flex-wrap: nowrap;
+                        width:15%;
+                        margin-right:20rpx;
+                        >image{
+                            border-radius: 50%;
+                            height:80rpx;
+                            width:80rpx;
+                            margin-bottom:14rpx;
+                        }
+                    }
+                    .approve-right{
+                         width:85%;
+                        .statusText-approveTimeText{
+                            display: flex;
+                            justify-content: space-between;
+                            margin-bottom: 14rpx;
+                            >text:first-child{
+                                color:#069400
+                            }
+                            >text:last-child{
+                                color:#7a7a7a;
+                            }
+                        }
+                        .approveMemo{
+                            color:#7a7a7a;
+                        }
+                    }
+                }
+            }
+            .auditBtn{
+                position:fixed;
+                z-index:999;
+                bottom:0;
+                height:98rpx;
+                width:100%;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                background:#5d73fa;
+                font-size:36rpx;
+                color:#fff;
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="top-title">
+            <text>文书详情</text>
+        </view>
+        <view class="main">
+            <view class="one-chunk">
+                <view class="manyLines-hidden caseName">
+                    <text>{{CaseFileStampOutputData.caseName}}</text>
+                </view>
+                <view class="ellipsis serialId">
+                    <text>{{CaseFileStampOutputData.serialId||'未填写'}}</text>
+                </view>
+                <view class="ellipsis clientName">
+                    <text>{{CaseFileStampOutputData.clientName}}</text>
+                </view>
+                <view class="ellipsis clientId">
+                    <text>{{CaseFileStampOutputData.clientId||'未填写'}}</text>
+                </view>
+                <view class=" caseCategoryText-statusText">
+                    <text class="ellipsis">{{CaseFileStampOutputData.caseCategoryText||'未填写'}}</text>
+                    <text class="ellipsis">{{CaseFileStampOutputData.statusText||'未填写'}}</text>
+                </view>
+            </view>
+            <view class="parting-line"></view>
+            <view class="two-chunk">
+                <view>
+                    <text>盖章份数</text>
+                    <text>{{CaseFileStampOutputData.stampNumber||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>盖章类型</text>
+                    <text>{{CaseFileStampOutputData.stampTypeText||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>报审人</text>
+                    <text>{{CaseFileStampOutputData.creationUserText||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>报审时间</text>
+                    <text>{{CaseFileStampOutputData.creationTimeText||'未填写'}}</text>
+                </view>
+                <view class="document" wx:if="{{CaseFileStampOutputData.status=='A'||CaseFileStampOutputData.status=='R'}}">
+                    <text>报审文件</text>
+                    <view  @tap="previewFile('{{CaseFileStampOutputData.documentId}}','{{CaseFileStampOutputData.fileExtension}}')" >
+                        <icon class="iconfont  {{CaseFileStampOutputData.fileIcon}}" style="color:{{CaseFileStampOutputData.fileColor}};font-size:80rpx;margin-right:14rpx"></icon>
+                        <view>
+                            <text class="ellipsis">{{CaseFileStampOutputData.title||'未填写'}}</text>
+                            <text style="color:#7a7a7a;">{{CaseFileStampOutputData.fileSize||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="parting-line"></view>
+            <view class='through-review' wx:if="{{CaseFileStampOutputData.status=='A'||CaseFileStampOutputData.status=='R'}}">
+                <view class="approve-title">
+                    <text>审核信息</text>
+                </view>
+                <view class="approve-content">
+                    <view class="approve-left">
+                        <image src="{{CaseFileStampOutputData.Avatar}}" mode="scaleToFill"
+                          lazy-load="false"/>
+                        <text>{{CaseFileStampOutputData.approveUserText||'未填写'}}</text>
+                    </view>
+                    <view class="approve-right"> 
+                         <view class="statusText-approveTimeText">
+                             <text style="color:{{CaseFileStampOutputData.status=='R'?'#e20000':'#069400'}}">{{CaseFileStampOutputData.statusText||'未填写'}}</text>
+                             <text>{{CaseFileStampOutputData.approveTimeText||'未填写'}}</text>
+                         </view>
+                         <view class="approveMemo">
+                             <text>{{CaseFileStampOutputData.approveMemo||'未填写'}}</text>
+                         </view>
+                    </view>
+                   
+                </view>
+            </view>
+            <view wx:else class="document" style="padding:30rpx 28rpx">
+                    <text>报审文件</text>
+                    <view @tap="previewFile('{{CaseFileStampOutputData.documentId}}','{{CaseFileStampOutputData.fileExtension}}')" style="margin-right:30rpx" >
+                        <icon class="iconfont {{CaseFileStampOutputData.fileIcon}}" style="color:{{CaseFileStampOutputData.fileColor}};font-size:80rpx;margin-right:14rpx"></icon>
+                        <view >
+                            <text class="ellipsis">{{CaseFileStampOutputData.title}}</text>
+                            <text style="color:#7a7a7a;">{{CaseFileStampOutputData.fileSize}}</text>
+                        </view>
+                    </view>
+            </view>
+            <view class="auditBtn" wx:if="{{CaseFileStampOutputData.status=='W'}}" @tap="toAuditPage('{{CaseFileStampOutputData.id}}')">
+                <text>审核</text>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    export default class approveDetail extends wepy.page {
+        props = {};
+        data = {
+            CaseFileStampOutputData: {}
+        };
+        components = {};
+        methods = {
+            previewFile(fileId, fileClass) {
+                fileClass= fileClass.replace('.', '').toLowerCase();
+                if (fileClass == 'pdf'||fileClass == 'png'||fileClass == 'xsl'||fileClass == 'xlsx'||fileClass == 'jpg'||fileClass == 'doc'||fileClass == 'docx') {
+                    var http = '/api/services/web/document/GetDocumentFile?id=' + fileId;
+                    ajax.preView(http, fileClass);
+                } else {
+                    wx.showToast({
+                        title: '暂不支持此文件预览！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            },
+            toAuditPage(id){
+                wx.navigateTo({ url: './approveAudit?id='+id });
+            }
+        };
+        events = {};
+        watch = {};
+        computed = {};
+        async GetCaseFileStampOutput() {
+            var data = {
+                id: this.id
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/caseFileStamp/GetCaseFileStampOutput',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                var CaseFileStampOutputData = resData.data.result;
+                this.CaseFileStampOutputData = CaseFileStampOutputData;
+                CaseFileStampOutputData.fileExtension=CaseFileStampOutputData.fileExtension.toLowerCase()
+                switch (CaseFileStampOutputData.fileExtension) {
+                    case '.pdf':
+                        CaseFileStampOutputData.fileIcon = 'icon-pdfpng1';
+                        CaseFileStampOutputData.fileColor = '#e20000';
+                        break;
+                    case '.png':
+                        CaseFileStampOutputData.fileIcon = 'icon-pdfpng1';
+                        CaseFileStampOutputData.fileColor = '#e20000';
+                        break;
+                    case '.xls':
+                        CaseFileStampOutputData.fileIcon = 'icon-exl1';
+                        CaseFileStampOutputData.fileColor = '#069400';
+                        break;
+                    case '.xlsx':
+                        CaseFileStampOutputData.fileIcon = 'icon-exl1';
+                        CaseFileStampOutputData.fileColor = '#069400';
+                        break;
+                    case '.docx':
+                        CaseFileStampOutputData.fileIcon = 'icon-wold1';
+                        CaseFileStampOutputData.fileColor = '#009dff';
+                        break;
+                    case '.doc':
+                        CaseFileStampOutputData.fileIcon = 'icon-wold1';
+                        CaseFileStampOutputData.fileColor = '#009dff';
+                        break;
+                    case '.jpg':
+                       CaseFileStampOutputData.fileIcon = 'icon-jpggeshi';
+                       CaseFileStampOutputData.fileColor = '#ff9900';
+                        break;
+                    case '.mp4':
+                        CaseFileStampOutputData.fileIcon = 'icon-shipinwenjian';
+                        CaseFileStampOutputData.fileColor = '#fc5959';
+                        break;
+                    default:
+                        CaseFileStampOutputData.fileIcon = 'icon-weizhiwenjiangeshi';
+                        CaseFileStampOutputDatafileColor = '#7a7a7a';
+                        break;
+                }
+                if (CaseFileStampOutputData.approveUser) {
+                    var http = '/api/services/web/personal/GetEmployeePhoto?id=' + CaseFileStampOutputData.approveUser;
+                    var avatar = await ajax.getAavatar(http);
+                    CaseFileStampOutputData.Avatar = avatar;
+                }
+                CaseFileStampOutputData.fileSize=this.formatFileSize(+CaseFileStampOutputData.fileSize);
+            }
+            this.$apply();
+        }
+        formatFileSize(size){
+            var fileSize=null;
+            fileSize=size>=1024?(size/1024/1024).toFixed(2)+'MB':(size/1024).toFixed(2)+'KB';
+            return fileSize
+        }
+        onLoad(options) {
+            this.id = options.id;
+            this.GetCaseFileStampOutput();
+            this.$apply();
+        };
+    }
+</script>

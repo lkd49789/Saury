@@ -1,0 +1,74 @@
+<!--  -->
+<style lang="less">
+    .picker-date {
+            margin-bottom: 36rpx;
+            picker {
+                padding: 20rpx 0;
+                border-bottom: 1px solid #dfdfdf;
+                .tui-picker-detail {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    color: #7a7a7a;
+                }
+            }
+            .checkbox {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                .checkboxItem {
+                    margin: 20rpx 20rpx 0 0;
+                }
+            }
+    }
+</style>
+
+<template>
+    <view class="picker-date">
+        <view>{{pickerData.title}}</view>
+        <view style="display:flex;align-items:center;">
+            <picker id="startDate" mode="date" value="{{pickerData.startDateData}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
+                <view class="tui-picker-detail">
+                    {{pickerData.startDateData||'请选择'}}
+                    <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                </view>
+            </picker>
+            <text style="margin:0 20rpx">至</text>
+            <picker id="endDate" mode="date" value="{{pickerData.endDateData}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
+                <view class="tui-picker-detail">
+                    {{pickerData.endDateData||'请选择'}}
+                    <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                </view>
+            </picker>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    export default class pickerDate extends wepy.component {
+        props = {
+            pickerData: {
+                type: Object,
+                twoWay: true
+            }
+        };
+        data = {
+        };
+        methods = {
+            bindDateChange(e) {
+                switch (e.currentTarget.id) {
+                    case 'startDate':
+                        this.pickerData.startDateData=e.detail.value;
+                        break;
+                    case 'endDate':
+                        this.pickerData.endDateData=e.detail.value;
+                        break;
+                    default:
+                        break;
+                }
+            },
+        };
+        onLoad() {}
+    }
+</script>

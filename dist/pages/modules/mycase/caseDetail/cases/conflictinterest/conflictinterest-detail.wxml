@@ -1,0 +1,51 @@
+
+    <!-- <view></view> -->
+    <!-- <text></text> -->
+    <view class="body">
+        <view class="container-title">
+            <text class="title-text">利益冲突信息</text>
+            <!-- <icon class="iconfont icon-bianji" style="font-size:60rpx;color:#5d73fa"></icon> -->
+        </view>
+        <view class="box-content">
+            <view class="content-top">
+                <text>类别</text>
+                <text>{{caseClientRelationList.category||'未填写'}}</text>
+                <text>名称（中）</text>
+                <text>{{caseClientRelationList.name||'未填写'}}</text>
+                <text>名称（英文）</text>
+                <text>{{caseClientRelationList.enName||'未填写'}}</text>
+            </view>
+            <view style="height:14rpx;background:#f4f4f4">
+            </view>
+            <view class="content-bottom">
+                    <view style="width:50%">
+                        <text>联系人</text>
+                        <text>{{caseClientRelationList.linker||'未填写'}}</text>
+                    </view>
+                    <view style="width:50%">
+                        <text>职务</text>
+                        <text>{{caseClientRelationList.legalType||'未填写'}}</text>
+                    </view>
+                    <view style="width:50%">
+                        <text>电话</text>
+                        <text>{{caseClientRelationList.phone||'未填写'}}</text>
+                    </view>
+                    <view style="width:50%">
+                        <text>邮箱地址</text>
+                        <text>{{caseClientRelationList.email||'未填写'}}</text>
+                    </view>
+                <view style="width:100%">
+                    <text>身份证</text>
+                    <text>{{caseClientRelationList.cardId||'未填写'}}</text>
+                </view>
+                <view style="width:100%">
+                    <text>地址</text>
+                    <text>{{caseClientRelationList.address||'未填写'}}</text>
+                </view>
+                <view style="width:100%">
+                    <text>备注</text>
+                    <text>{{caseClientRelationList.remark||'未填写'}}</text>
+                </view>
+            </view>
+        </view>
+    </view>

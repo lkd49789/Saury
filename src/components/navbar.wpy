@@ -1,0 +1,64 @@
+<style lang="scss">
+.navbar {
+  margin-top: 20rpx;
+
+  z-index: 9999;
+  border-bottom: 1px #dedede solid;
+  white-space: nowrap;
+  .item {
+    display: inline-block;
+    position: relative;
+    color: #b2b2b2;
+    margin-right: 62rpx;
+    font-size: 28rpx;
+    padding-bottom: 20rpx;
+    &:first-child {
+      margin-left: 28rpx;
+    }
+    &.active {
+      color: #5d73fa;
+    }
+    .navbar_box {
+      width: 100%;
+      height: 8rpx;
+      background: #5d73fa;
+      position: absolute;
+      bottom: 1rpx;
+    }
+  }
+}
+</style>
+
+<template>
+    <view class="navbar">
+        <scroll-view scroll-x>
+            <repeat for="{{navbars}}" key="index" index="index" item="item">
+                <view class="item {{currentTab == index ? 'active' : ''}} " @tap="navbarTap('{{index}}')">
+                    <text>{{item}}</text>
+                    <view wx:if="{{currentTab == index}}" class="navbar_box"></view>
+                </view>
+            </repeat>
+        </scroll-view>
+    </view>
+</template>
+<script>
+import wepy from 'wepy';
+export default class Tab extends wepy.component {
+  props = {
+    navbars: {
+      twoWay: true
+    },
+    currentTab: {
+      twoWay: true
+    }
+  };
+  data = {};
+  // modules() {}
+  methods = {
+    navbarTap(index) {
+      this.currentTab = index;
+      this.$emit('navbarIndex', index);
+    }
+  };
+}
+</script>

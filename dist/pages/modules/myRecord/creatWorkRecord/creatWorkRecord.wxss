@@ -1,0 +1,80 @@
+@import "./../../../../components/Date/DateTimePicker.wxss";
+.body {
+  height: 100%;
+}
+.body .warming {
+  color: #e20000;
+}
+.body .addImage {
+  width: 160rpx;
+  height: 160rpx;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 9999;
+}
+.body .top-title {
+  height: 104rpx;
+  line-height: 104rpx;
+  font-size: 48rpx;
+  padding-left: 28rpx;
+  border-bottom: 1px solid #dedede;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 99;
+}
+.body .main {
+  margin: 149rpx 28rpx 0 28rpx;
+}
+.body .main .checked {
+  margin-bottom: 30rpx;
+}
+.body .main .checked > view:first-child {
+  margin-bottom: 30rpx;
+}
+.body .main .input {
+  margin-bottom: 36rpx;
+  position: relative;
+}
+.body .main .input view:first-child {
+  color: #2a2a2a;
+}
+.body .main .input .input-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 28rpx 0;
+}
+.body .main .input .input-container > input {
+  width: 100%;
+}
+.body .main .option {
+  margin-bottom: 36rpx;
+}
+.body .main .option picker {
+  padding: 20rpx 0;
+  border-bottom: 1px solid #dfdfdf;
+}
+.body .main .option picker .picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #7a7a7a;
+}
+.body .main .option picker .picker .part-item {
+  position: relative;
+  margin: 10rpx;
+  border: 1px dotted #dedede;
+  padding: 5rpx 20rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.body .main .option picker .picker .part-item > icon {
+  position: absolute;
+  bottom: 27rpx;
+  right: -21rpx;
+}

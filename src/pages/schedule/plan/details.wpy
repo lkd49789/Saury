@@ -1,0 +1,416 @@
+<style lang="scss">
+    .plan {
+        .container-title {
+            height: 104rpx;
+            font-size: 48rpx;
+            padding: 28rpx;
+            color: #2a2a2a;
+            line-height: 104rpx;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #dedede;
+        }
+        .plan_box {
+            padding: 28rpx;
+            font-size: 28rpx;
+            .plan_line {
+                margin-bottom: 26rpx;
+                .plan_right {
+                    float: right;
+                }
+                .plan_gray {
+                    color: #b2b2b2
+                }
+                .plan_red {
+                    color: #e20000
+                }
+                .plan_yellow {
+                    color: #ff9900
+                }
+            }
+            .plan_content {
+                margin-bottom: 30rpx;
+                .plan_title {
+                    color: #b2b2b2;
+                    margin-bottom: 20rpx;
+                }
+                .plan_relation {
+                    margin-bottom: 12rpx;
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                    .plan_relationDetail {
+                        color: #5d73fa;
+                    }
+                }
+                .plan_join {
+                    margin-bottom: 30rpx;
+                    .plan_true {
+                        color: #069400;
+                    }
+                    .plan_nottrue {
+                        color: #ff9900;
+                    }
+                    .plan_joinPeople {
+                        margin: 0 auto;
+                        margin-left: 26rpx;
+                        font-size: 26rpx;
+                        color: #fff;
+                        display: inline-block;
+                        width: 60rpx;
+                        height: 60rpx;
+                        line-height: 60rpx;
+                        border-radius: 60rpx;
+                        background: #069400;
+                    }
+                }
+                .plan_down {
+                    margin-bottom: 12rpx;
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                    color: #5d73fa;
+                }
+            }
+            .plan_label {
+                margin-top: 30rpx;
+                color: #5d73fa;
+                text {
+                    display: inline-block;
+                    border: 1px dashed #b2b2b2;
+                    padding: 15rpx;
+                    margin-right: 30rpx;
+                    padding: 10rpx 20rpx;
+                    &:last-child {
+                        margin-right: 0
+                    }
+                }
+            }
+            .plan_address {
+                margin-top: 30rpx;
+            }
+        }
+        .plan_footer {
+            height: 20rpx;
+            width: 100%;
+            background: #5d73fa;
+            opacity: 0.1;
+        }
+        .item-container {
+            display: flex;
+            align-items: center; //   justify-content: space-between;
+            margin: 20rpx 0;
+            font-size: 28rpx;
+            padding-bottom: 40rpx;
+            .icon-content {
+                margin-right: 20rpx
+            }
+            .right-item {
+                display: flex;
+                flex-direction: column;
+                padding: 20rpx 0;
+                width: 85%;
+            }
+        }
+
+        .participant {
+                margin-right: 20rpx;
+                >image {
+                    height: 60rpx;
+                    width: 60rpx;
+                    border-radius: 50%;
+                }
+            }
+    }
+    .body {
+        height: 100%;
+        .container-title {
+            height: 104rpx;
+            font-size: 48rpx;
+            padding: 28rpx;
+            color: #2a2a2a;
+            line-height: 104rpx;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #dedede;
+        }
+        .logDetail-container {
+            font-size: 28rpx;
+            color: #2a2a2a; // > view:not(:first-child)::before {
+            //   content: '';
+            //   display: block;
+            //   height: 14rpx;
+            //   background: #f4f4f4;
+            // }
+            .bold::after {
+                content: '';
+                display: block;
+                height: 14rpx;
+                background: #f4f4f4;
+            }
+            .bold-line {
+                height: 7px;
+                background: #f4f4f4;
+            }
+            .log-chunck1 {
+                padding: 44rpx 28rpx 0 28rpx;
+                display: flex;
+                flex-wrap: wrap;
+                >view {
+                    width: 50%;
+                    display: flex;
+                    flex-direction: column;
+                    margin-bottom: 32rpx;
+                    >text:first-child {
+                        color: #7a7a7a;
+                        margin-bottom: 22rpx
+                    }
+                }
+            }
+            .log-chunck6 {
+                padding: 44rpx 28rpx 44rpx 28rpx;
+                color: #7a7a7a;
+                >view:first-child {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 32rpx;
+                }
+                >view:last-child {
+                    display: flex;
+                    flex-direction: column;
+                    >view:first-child {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 22rpx;
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="plan">
+        <view class="container-title">
+            <text class="title-text">日程详情</text>
+        </view>
+        <view class="plan_box">
+            <view class="plan_line">
+                <text class="plan_name">{{planLogData.employeeName}}（所属人）</text>
+                <text class="plan_yellow plan_right plan_state">{{planLogData.statusText}}</text>
+            </view>
+            <view class="plan_line">
+                <text class="plan_gray plan_work">工作｜{{planLogData.eventTypeText}} <text class="plan_address"> {{planLogData.situationText}}</text></text>
+                <text class="plan_right plan_situation">{{planLogData.title}}</text>
+            </view>
+            <view class="plan_line">
+                <text class="plan_gray plan_time">时间：{{planLogData.startTime}}至{{planLogData.startTime}}</text>
+                <text class="plan_yellow plan_right plan_haveTime">8h</text>
+            </view>
+            <view class="plan_line">
+                <text class="plan_red plan_ifImportant">{{planLogData.priorityText}} </text>
+                <text class="plan_right plan_remind">{{planLogData.remindTime}}分钟前提醒</text>
+            </view>
+        </view>
+        <view class="plan_footer">
+        </view>
+        <view class="plan_box">
+            <view class="plan_content">
+                <view class="plan_title">
+                    <text>日程描述</text>
+                </view>
+                <view>
+                    <text>{{planLogData.description}}</text>
+                </view>
+            </view>
+            <view class="plan_content" wx:if="{{planLogData.remark}}">
+                <view class="plan_title">
+                    <text>备注</text>
+                </view>
+                <view>
+                    <text>{{planLogData.remark}}</text>
+                </view>
+            </view>
+            <view class="plan_label" wx:if="{{planLogData.tag}}">
+                <icon wx:if="{{planLogData.tag[0]!=''}}" class="iconfont icon-biaoqian" style="font-size:21px;color:#5d73fa;margin-right:10rpx"></icon>
+                <repeat for="{{planLogData.tag}}" key="index" index="index" item="item">
+                    <text wx:if="{{planLogData.tag[0]!=''}}">{{item}}</text>
+                </repeat>
+            </view>
+            <view class="plan_content" wx:if="{{planLogData.address}}" style="margin-top:10rpx">
+                <icon class="iconfont icon-dizhi" style="font-size:21px;color:#5d73fa;margin-right:10rpx"></icon>
+                <text>{{planLogData.address}}</text>
+            </view>
+        </view>
+        <view class="plan_footer">
+        </view>
+        <view class="plan_box">
+            <view class="plan_content">
+                <view class="plan_title">
+                    <text>关联项目信息</text>
+                </view>
+                <view>
+                    <view class="plan_relation" wx:if='{{planLogData.caseName}}'>案件名称：<text class="plan_relationDetail">{{planLogData.caseName}}</text></view>
+                    <view class="plan_relation" wx:if='{{planLogData.clientName}}'>客户名称：<text class="plan_relationDetail">{{planLogData.clientName}}</text></view>
+                </view>
+            </view>
+        </view>
+        <view class="plan_footer" wx:if="{{planLogData.participantList.length!==0}}"></view>
+        <view class="plan_box" wx:if="{{planLogData.participantList.length!==0}}">
+            <view class="plan_title" style="margin-bottom:30rpx">
+                <text>会议参与人</text>
+            </view>
+            <view>
+                <view style="display:flex;line-height:60rpx">
+                    <view style="color:#069400;margin-right:20rpx;">
+                        <text>已确认</text>
+                    </view>
+                    <repeat for="{{planLogData.participantList}}" key="index" index="index" item="item">
+                        <view class="participant" wx:if="{{item.status=='A'}}">
+                            <image src="{{item.employeeAvatar}}" mode="scaleToFill" lazy-load="false"></image>
+                        </view>
+                    </repeat>
+                </view>
+                <view>
+                    <view style="color:#ff9900;margin-right:20rpx;">
+                        <text>待确认</text>
+                    </view>
+                    <repeat for="{{planLogData.participantList}}" key="index" index="index" item="item">
+                        <view class="participant" wx:if="{{item.status=='N'}}">
+                            <image src="{{item.employeeAvatar}}" mode="scaleToFill" lazy-load="false"></image>
+                        </view>
+                    </repeat>
+                </view>
+            </view>
+        </view>
+        <view class="plan_footer" wx:if="{{planLogData.attachmentList.length!==0}}"></view>
+        <view class="plan_box" wx:if="{{planLogData.attachmentList.length!==0}}">
+            <view class="plan_content">
+                <view class="plan_title">
+                    <text>日程附件</text>
+                </view>
+                <view>
+                    <repeat for="{{planLogData.attachmentList}}" key="index" index="index" item="item">
+                        <view class="item-container" @tap="preview('{{item.id}}','{{item.extension}}')">
+                            <view class="icon-content">
+                                <icon class="iconfont {{item.icon.icon}}" style="font-size:60rpx; color:{{item.icon.color}}"></icon>
+                            </view>
+                            <view class="right-item">
+                                <text style="color:#2a2a2a">{{item.name||'未填写'}}</text>
+                            </view>
+                        </view>
+                    </repeat>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../utils/cofig/ajax.js';
+    import {
+        formatTimeSymbol
+    } from '../../../utils/cofig/api.js';
+    export default class Index extends wepy.page {
+        components = {};
+        data = {
+            id: 0,
+            planLogData: {},
+            passCount: 0,
+            avatar: []
+        };
+        methods = {
+            preview(fileId, fileName) {
+                console.log(fileId, fileName);
+                var http = '/api/services/web/scheduleAttachment/GetDocumentFile?id=' + fileId
+                var fileClass = '.' + fileName.split('.')[1];
+                ajax.preView(http, fileClass)
+            },
+        };
+        async GetPlanlog() {
+            var id = {
+                id: this.id
+            };
+            var { data } = await ajax.getData(
+                '/api/services/web/schedule/GetSchedule',
+                'post',
+                id
+            )
+            var planLogData = data;
+            planLogData.result.tag = planLogData.result.tag.split(',')
+            planLogData.result.startTime = formatTimeSymbol(planLogData.result.startTime, '/')
+            planLogData.result.endTime = formatTimeSymbol(planLogData.result.endTime, '/')
+
+             //会议参与人
+            for (var i in  planLogData.result.participantList) {
+               //头像
+                var phttp = '/api/services/web/personal/GetEmployeePhoto?id=' + planLogData.result.participantList[i].employeeId
+                var Avatar = await ajax.getUserAvatar(phttp);
+                planLogData.result.participantList[i].employeeAvatar = Avatar.tempFilePath;
+                //状态
+                 planLogData.result.participantList[i].status=planLogData.result.participantList[i].status.replace(/\s+/g,"");
+            }
+
+            for (var i in planLogData.result.attachmentList) {
+                switch (planLogData.result.attachmentList[i].extension.split('.')[1]) {
+                    case 'pdf':
+                        var iconfont = {};
+                        iconfont['icon'] = 'icon-pdfpng1';
+                        iconfont['color'] = '#e20000';
+                        planLogData.result.attachmentList[i].icon = iconfont;
+                        break;
+                    case 'png':
+                        var iconfont = {};
+                        iconfont['icon'] = 'icon-pdfpng1';
+                        iconfont['color'] = '#e20000';
+                        planLogData.result.attachmentList[i].icon = iconfont;
+                        break;
+                    case 'docx':
+                        var iconfont = {};
+                        iconfont['icon'] = 'icon-wold1';
+                        iconfont['color'] = '#009dff';
+                        planLogData.result.attachmentList[i].icon = iconfont;
+                        break;
+                    case 'doc':
+                        var iconfont = {};
+                        iconfont['icon'] = 'icon-wold1';
+                        iconfont['color'] = '#009dff';
+                        planLogData.result.attachmentList[i].icon = iconfont;
+                        break;
+                    case 'xls':
+                        var iconfont = {};
+                        iconfont['icon'] = 'icon-exl1';
+                        iconfont['color'] = '#069400';
+                        planLogData.result.attachmentList[i].icon = iconfont;
+                        break;
+                    case 'xlsx':
+                        var iconfont = {};
+                        iconfont['icon'] = 'icon-exl1';
+                        iconfont['color'] = '#069400';
+                        planLogData.result.attachmentList[i].icon = iconfont;
+                        break;
+                    case 'jpg':
+                        var iconfont = {};
+                        iconfont['icon'] = 'icon-jpggeshi';
+                        iconfont['color'] = '#ff9900';
+                        planLogData.result.attachmentList[i].icon = iconfont;
+                        break;
+                    default:
+                        var iconfont = {};
+                        iconfont['icon'] = 'icon-weizhiwenjiangeshi';
+                        iconfont['color'] = '#7a7a7a';
+                        planLogData.result.attachmentList[i].icon = iconfont;
+                        break;
+                }
+            }
+            this.planLogData = planLogData.result;
+            this.$apply();
+        }
+        onLoad(options) {
+            this.id = options.id;
+            this.GetPlanlog();
+            this.$apply();
+        }
+    }
+</script>

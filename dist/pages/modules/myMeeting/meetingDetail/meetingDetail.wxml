@@ -1,0 +1,246 @@
+
+    <view class="body">
+        <view class="main">
+            <view class="titleChunk">
+                <text>{{meetingData.title||'未填写'}}</text>
+            </view>
+            <view class="oneChunk">
+                <view>
+                    <view>
+                        <view>
+                            <image src="{{meetingData.moderatorAvatar}}" mode="scaleToFill" lazy-load="false" style="height:20px;width:20px;border-radius:50%; color:#7a7a7a;margin-right:15rpx"/>
+                            <text>{{meetingData.employeeName||'未填写'}}(主持人)</text>
+                        </view>
+                        <view style="color:#7a7a7a">
+                            <text>{{meetingData.categoryText||'未填写'}}</text>
+                        </view>
+                    </view>
+                    <view>
+                        <view>
+                           <image src="{{meetingData.linkerAvatar}}" mode="scaleToFill" lazy-load="false" style="height:20px;width:20px;border-radius:50%;color:#7a7a7a;margin-right:15rpx"/>
+                            <text style="color:#7a7a7a">{{meetingData.linkerName||'未填写'}}(联系人)</text>
+                        </view>
+                        <view>
+                            <icon class="iconfont icon-xiaotouxiang" style="font-size:40rpx;color:{{meetingData.privacy=='Y'?'#ff9900':'#069400'}};margin-right:15rpx"/>
+                            <text style="color:#7a7a7a">{{meetingData.privacy=='Y'?'参会人员可见':'公开'}}</text>
+                        </view>
+                    </view>
+                    <view>
+                        <view style="display:flex;align-items:center;">
+                            <view style="width:25rpx;height:25rpx;border-radius:50%;margin-right:15rpx;background:{{meetingData.isMark=='Y'?'#5d73fa':'#7a7a7a'}}">
+                            </view>
+                            <text>{{meetingData.isMark=='Y'?'已标记':'未标记'}}</text>
+                        </view>
+                        <!-- <view style="color:#e20000">
+                            <text>重要且紧急</text>
+                        </view> -->
+                    </view>
+                </view>
+            </view>
+            <view class="twoChunk">
+                <view>
+                    <view>
+                        <view>
+                            <text>{{meetingData.startTime.Y}} </text>
+                            <text>{{meetingData.startTime.M}}至</text>
+                            <!-- <text wx:if="{{meetingData.startTime.Y!==meetingData.endTime.Y}}">{{meetingData.endTime.Y}} </text> -->
+                            <text>{{meetingData.endTime.M}}</text>
+                        </view>
+                        <text style="color:#ff9900">{{meetingData.diffTime}}h</text>
+                    </view>
+                    <view>
+                        <text>{{meetingData.remindTime}}分钟前提醒</text>
+                        <text style="color:{{meetingData.statusColor}}">{{meetingData.statusText||'未填写'}}</text>
+                    </view>
+                </view>
+            </view>
+            <view class="recordChunk"  wx:if="{{meetingData.status=='A'}}">
+                <view>
+                    <view>
+                        <text>会议纪要</text>
+                    </view>
+                    <view bindtap="previewDoc" data-wpypreviewdoc-a="{{meetingData.id}}" data-wpypreviewdoc-b=".docx">
+                        <icon class="iconfont icon-wold1" style="font-size:60rpx;color:#009dff;margin-right:20rpx"/>
+                        <text>{{meetingData.title}}.docx</text>
+                    </view>
+                </view>
+            </view>
+            <view class="threeChunk">
+                <view>
+                    <text>会议议题</text>
+                    <text>{{meetingData.subject||'未填写'}}</text>
+                    <text>会议准备</text>
+                    <text>{{meetingData.prepare||'未填写'}}</text>
+                    <text>备注</text>
+                    <text>{{meetingData.remark||'未填写'}}</text>
+                </view>
+            </view>
+            <view class="fourChunk">
+                <view>
+                    <text>关联项目</text>
+                    <text>案件名称：<text style="color:#5d73fa">{{meetingData.caseName||'未填写'}}</text> </text>
+                    <text>客户名称：<text style="color:#5d73fa">{{meetingData.clientName||'未填写'}}</text></text>
+                </view>
+            </view>
+            <view class="fiveChunk">
+                <view>
+                    <view>
+                        <text>会议附件</text>
+                    </view>
+                    <block wx:for="{{meetingData.attachmentList}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                        <view class="docItem">
+                            <icon class="iconfont {{item.icon}}" style="color:{{item.color}}" bindtap="preview" data-wpypreview-a="{{item.id}}" data-wpypreview-b="{{item.extension}}"/>
+                            <text>{{item.name}}</text>
+                        </view>
+                    </block>
+                </view>
+            </view>
+            <view class="sixChunk">
+                <view>
+                    <view>
+                        <text>会议参与人</text>
+                    </view>
+                    <view>
+                        <view style="color:#069400;margin-right:20rpx;">
+                            <text>已确认</text>
+                        </view>
+                        <block wx:for="{{meetingData.participantList}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                            <view class="participant"  wx:if="{{item.status=='C'}}">
+                                <image src="{{item.Avatar}}" mode="scaleToFill" lazy-load="false">
+                                </image>
+                            </view>
+                        </block>
+                    </view>
+                    <view>
+                        <view style="color:#ff9900;margin-right:20rpx;">
+                            <text>待确认</text>
+                        </view>
+                        <block wx:for="{{meetingData.participantList}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                            <view class="participant" wx:if="{{item.status=='N'}}">
+                                <image src="{{item.Avatar}}" mode="scaleToFill" lazy-load="false">
+                                </image>
+                            </view>
+                        </block>
+                    </view>
+                </view>
+            </view>
+            <view class="sevenChunk">
+                <view>
+                    <view>
+                        <text>会议嘉宾</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-wodedaohang" style="font-size:50rpx;color:#7a7a7a;margin-right:20rpx">
+                        </icon>
+                        <view>
+                            <text>{{meetingData.visitor||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="eightChunk">
+                <view>
+                    <view>
+                        <text>会议室信息</text>
+                    </view>
+                    <view>
+                        <text>{{meetingData.meetingRoom.name}}</text>
+                    </view>
+                    <view>
+                        <text>{{meetingData.meetingRoom.levelText}}</text>
+                        <text>{{meetingData.meetingRoom.scaleText}}</text>
+                    </view>
+                    <view>
+                        <view>
+                            <text style="color:#7a7a7a">会议室风格：</text>
+                        </view>
+                        <view>
+                            <block wx:for="{{meetingData.meetingRoom.styleText}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                                <text>{{item}}</text>
+                            </block>
+                        </view>
+                    </view>
+                    <view>
+                        <view>
+                            <text style="color:#7a7a7a">设备信息：</text>
+                        </view>
+                        <view>
+                            <block wx:for="{{meetingData.meetingRoom.equipmentText}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                                <text>{{item}}</text>
+                            </block>
+                        </view>
+                    </view>
+                    <view style="margin-bottom:{{isParticipate?'98rpx':'30rpx'}}">
+                        <view>
+                            <text style="color:#7a7a7a">会议室地址：</text>
+                        </view>
+                        <view>
+                            <text>{{meetingData.meetingRoom.address||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view wx:if="{{isParticipate}}">
+            <view class="bottom-fixed">
+                <view bindtap="noParticipation">
+                    <text>不参与</text>
+                </view>
+                <view bindtap="participate">
+                    <text>参与</text>
+                </view>
+            </view>
+        </view>
+        <view class="Full-screen" catchtouchmove="true" wx:if="{{noParticipate}}">
+            <view>
+                <view>
+                    <text>?</text>
+                </view>
+                <view>
+                    <view>
+                        <text>不参与</text>
+                    </view>
+                    <view>
+                        <textarea placeholder="备注原因" name="textarea" style="height:254rpx;width:440rpx;" maxlength="200" fixed="true" bindblur="bindblur" value="{{remarkValue}}" bindinput="bindinput"/>
+                    </view>
+                     <view class="fixed-text-count">
+                        <text>200/{{TextCount}}</text>
+                    </view>
+                    <view>
+                        <view bindtap="noParticipation">
+                            <text>取消</text>
+                        </view>
+                        <view bindtap="comfirmNoParticipation">
+                            <text>确定</text>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view class="Full-screen" catchtouchmove="true" wx:if="{{participate}}">
+            <view>
+                <view>
+                    <text>?</text>
+                </view>
+                <view>
+                    <view>
+                        <text>确认参与</text>
+                    </view>
+                    <view>
+                        <textarea placeholder="备注原因" name="textarea" style="height:254rpx;width:440rpx;" maxlength="200" fixed="true" value="{{remarkValue}}" bindinput="bindinput"/>
+                    </view>
+                    <view class="fixed-text-count">
+                        <text>200/{{TextCount}}</text>
+                    </view>
+                    <view>
+                        <view bindtap="participate">
+                            <text>取消</text>
+                        </view>
+                        <view bindtap="comfirmParticipation">
+                            <text>确定</text>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>

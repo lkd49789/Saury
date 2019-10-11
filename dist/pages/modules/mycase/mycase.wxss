@@ -1,0 +1,136 @@
+@import "./../../../components/navbar.wxss";
+.body {
+  height: 100%;
+  position: relative;
+}
+.fixed-view {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 9999;
+}
+.service-information::before {
+  height: 199rpx;
+  content: '';
+  display: block;
+}
+.top-title {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 9999;
+}
+.top-title .flex {
+  height: 104rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 48rpx;
+}
+.top-title .filter {
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 99999;
+  padding: 20rpx 28rpx 0 28rpx;
+}
+.top-title .filter > view {
+  display: flex;
+  flex-direction: column;
+  padding: 10rpx 0;
+}
+/* 案件导航 */
+.case-nav {
+  padding: 20rpx 0rpx 0rpx 28rpx;
+  border-bottom: 1px solid #dedede;
+  display: flex;
+  /* flex-direction: column; */
+  line-height: 100%;
+  font-size: 28rpx;
+  color: #7a7a7a;
+}
+.li-an,
+.ban-li,
+.jie-an {
+  display: block;
+  margin-bottom: 12rpx;
+  line-height: 100%;
+  margin-right: 62rpx;
+  /* height: 100%; */
+}
+/* 激活时显示 */
+.bot-inline {
+  width: 80rpx;
+  height: 8rpx;
+  background: #5d73fa;
+  display: block;
+}
+.color {
+  color: #5d73fa;
+}
+.case-detail {
+  box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+  margin: 44rpx 28rpx;
+  font-size: 28rpx;
+  color: #2a2a2a;
+  border-radius: 20rpx;
+  padding: 30rpx 28rpx;
+}
+.detail {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.detail .about-case {
+  margin-bottom: 32rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.detail .law-office {
+  margin-bottom: 22rpx;
+}
+.detail .case-type {
+  margin-bottom: 32rpx;
+}
+.case-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.case-bottom view {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 73%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.case-bottom view .statusColor {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+}
+.case-bottom view .hint {
+  padding-right: 20rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 90%;
+}
+.about-case {
+  font-weight: bolder;
+}
+.addImage {
+  width: 160rpx;
+  height: 160rpx;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 99999;
+}

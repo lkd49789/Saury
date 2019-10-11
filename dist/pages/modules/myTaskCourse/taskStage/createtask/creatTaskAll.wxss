@@ -1,0 +1,40 @@
+@import "./../../../../../components/picker/input.wxss";
+@import "./../../../../../components/Date/DateTimePicker.wxss";
+@import "./../../../../../components/picker/option.wxss";
+.body {
+  height: 100%;
+}
+.body .top-title {
+  height: 104rpx;
+  line-height: 104rpx;
+  font-size: 48rpx;
+  padding-left: 28rpx;
+  border-bottom: 1px solid #dedede;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 99;
+}
+.body .main {
+  margin: 149rpx 28rpx 0 28rpx;
+}
+.body .main .IsRemind {
+  display: flex;
+  align-items: center;
+  margin-top: -15rpx;
+  margin-bottom: 20rpx;
+}
+.body .main .IsRemind > view {
+  width: 70%;
+  margin-left: 48rpx;
+}
+.body .addImage {
+  width: 160rpx;
+  height: 160rpx;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 99;
+}

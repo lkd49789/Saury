@@ -1,0 +1,52 @@
+@import "./../../../../components/navbar.wxss";
+@import "./../../../../components/placeHolderImage.wxss";
+.body {
+  height: 100%;
+}
+.body .fixed-view {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 9999;
+}
+.body .fixed-view .case-top {
+  height: 104rpx;
+  line-height: 104rpx;
+  padding: 0 28rpx;
+  font-size: 48rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.body .main {
+  margin: 230rpx 28rpx 0 28rpx;
+}
+.body .main > view {
+  box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+  border-radius: 20rpx;
+  padding: 30rpx 24rpx;
+  margin-bottom: 44rpx;
+}
+.body .main > view > view:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  margin-bottom: 36rpx;
+}
+.body .main > view > view:nth-child(2) {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-bottom: 20rpx;
+  color: #7a7a7a;
+}
+.body .main > view > view:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #7a7a7a;
+}

@@ -1,0 +1,71 @@
+
+    <view class="container" bindtouchstart="handletouchtart" bindtouchmove="handletouchmove">
+        <view class="calendar">
+            <view class="calendar_content">
+                <picker mode="date" fields="month" bindchange="bindDateChange" start="{{startDate}}" end="{{endDate}}" value="{{nowDate_Year}}-{{nowDate_Month}}" style="width: 35%;">
+                    <view class="picker">
+                        <view class="date-year">{{nowDate_Year}}</view>
+                        <view class="date-mouth">
+                            <text>{{mouthCh}}月</text>
+                            <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;margin-left:8rpx"/>
+                        </view>
+                    </view>
+                </picker>
+                <view class="date_header">
+                    <block wx:for="{{date}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                        <view>{{item}}</view>
+                    </block>
+                </view>
+                <view class="date-box {{ifDateSmall?'animation':''}}"  wx:if="{{ifDateSmall}}">
+                    <block wx:for="{{dateArrSmall}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                        <view class="date-head">
+                            <view class="{{isToday == item.isToday ? 'nowDay' : ''}}" catchtap="getToday" data-wpygettoday-a="{{item.isToday}}">{{item.dateNum}}</view>
+                        </view>
+                    </block>
+                </view>
+                <view class="date-box {{!ifDateSmall?'animation':''}}"  wx:else="{{ifDateSmall}}">
+                    <block wx:for="{{dateArr}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                        <view class="date-head" catchtap="getToday" bindtap="getToday" data-wpygettoday-a="{{item.isToday}}">
+                            <view class="{{isToday == item.isToday ? 'nowDay' : ''}}">{{item.dateNum}}</view>
+                        </view>
+                    </block>
+                </view>
+            </view>
+            <image class="imgage" src="../../../images/date.jpg" mode="aspectFill" lazy-load="false" style="width:100%; height:{{viewHeight*0.6}}rpx"/>
+        </view>
+        <view class="list-content" style=" height: {{viewHeight*listHeight}}rpx">
+            <scroll-view scroll-y="{{true}}" style="height:100%">
+                <view class="item_box">
+                    <block wx:for="{{schedule_data}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                        <view class="item">
+                            <view>
+                                <text>{{item.start}}</text>
+                                <text>{{item.end}}</text>
+                            </view>
+                            <view>
+                                <view>
+                                    <view>
+                                        <text>{{item.title}}</text>
+                                    </view>
+                                    <view>
+                                        <text/>
+                                        <text>{{item.statusText}}</text>
+                                    </view>
+                                </view>
+                                <view>
+                                    <view>
+                                        <text/>
+                                        <text>{{item.clientName}}</text>
+                                    </view>
+                                    <view>
+                                        <text>{{item.categoryText}}</text>
+                                        <text>{{item.eventTypeText}}</text>
+                                    </view>
+                                </view>
+                            </view>
+                        </view>
+                    </block>
+                </view>
+            </scroll-view>
+        </view>
+    </view>

@@ -1,0 +1,152 @@
+@import "./../../../components/placeHolderImage.wxss";
+.body {
+  height: 100%;
+  position: relative;
+}
+.body .top-title {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 9999;
+}
+.body .top-title .flex {
+  height: 104rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 48rpx;
+  border-bottom: 1px solid #dedede;
+}
+.body .top-title .filter {
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 99999;
+  padding: 20rpx 28rpx 0 28rpx;
+}
+.body .top-title .filter > view {
+  display: flex;
+  flex-direction: column;
+  padding: 10rpx 0;
+}
+.body .clientList-container {
+  margin: 149rpx 28rpx 44rpx 28rpx;
+}
+.body .clientList-container .client-top {
+  box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+  border-radius: 20rpx;
+  padding: 30rpx 24rpx;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 28rpx;
+  color: #7a7a7a;
+}
+.body .clientList-container .client-top .client-sum {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 44rpx;
+}
+.body .clientList-container .client-top .client-year {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+}
+.body .clientList-container .client-top .icon {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+}
+.body .clientList-container .client-list {
+  box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+  border-radius: 20rpx;
+  padding: 30rpx 24rpx;
+  margin-top: 44rpx;
+  display: flex;
+  flex-direction: column;
+  font-size: 28rpx;
+  color: #7a7a7a;
+}
+.body .clientList-container .client-list .list-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.body .clientList-container .client-list .list-top > view:first-child {
+  width: 75%;
+}
+.body .clientList-container .client-list .list-center {
+  margin-top: 20rpx;
+  color: #7a7a7a;
+}
+.body .clientList-container .client-list .list-bottom {
+  margin-top: 20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.body .clientList-container .client-list .list-bottom > view:last-child {
+  color: #5d73fa;
+}
+.body .AnnualCountsClient-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  z-index: 99;
+  font-size: 28rpx;
+  color: #7a7a7a;
+  background: #f9f9f9;
+}
+.body .AnnualCountsClient-container .sumCount {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #5d73fa;
+  width: 100%;
+  height: 20%;
+  color: #fff;
+}
+.body .AnnualCountsClient-container .sumCount icon {
+  position: absolute;
+  top: 0;
+  right: 10rpx;
+  color: #fff;
+  font-size: 60rpx;
+  opacity: 0.5;
+  z-index: 100;
+}
+.body .AnnualCountsClient-container .sumCount .sumCount-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.body .AnnualCountsClient-container .client-type {
+  margin: 30rpx 28rpx 0 28rpx;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 15%;
+  border-radius: 20rpx;
+}
+.body .AnnualCountsClient-container .client-type .type-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.body .fixed-right-bottom-btn {
+  width: 160rpx;
+  height: 160rpx;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 999999;
+}

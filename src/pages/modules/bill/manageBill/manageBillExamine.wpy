@@ -1,0 +1,196 @@
+<style lang="less">
+    .bill {
+        .bill_title {
+            height: 104rpx;
+            line-height: 104rpx;
+            padding-left: 28rpx;
+            font-size: 48rpx;
+            position: relative;
+            border-bottom: 1px solid #dedede;
+        }
+        .bill_content {
+            background: #ffffff;
+            margin: 0 auto;
+            padding: 44rpx 28rpx;
+            font-size: 28rpx;
+            overflow: auto;
+            .checked {
+                margin-bottom: 30rpx; //    padding-bottom: 20rpx;
+                >view:first-child {
+                    margin-bottom: 30rpx;
+                }
+            }
+            .input {
+                margin-bottom: 36rpx;
+                position: relative;
+                view:first-child {
+                    color: #2a2a2a;
+                }
+                .input-container {
+                    display: flex;
+                    align-items: center; // justify-content: center;
+                    width: 100%;
+                    padding: 28rpx 0;
+                    >input {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99999;
+        }
+        .warming {
+            color: #e20000;
+        }
+    }
+</style>
+
+<template>
+    <view class="bill">
+        <view class="bill_title">
+            <text class="title">账单审核</text>
+        </view>
+        <view class="bill_content">
+            <view class="checked">
+                <view>
+                    <text>审核选择</text>
+                </view>
+                <radio-group class="radio-group" @change="bindPickerChange" style="padding-bottom:20rpx;">
+                    <label class="radio" wx:for="{{auditings}}" wx:key="index">
+                        <radio value="{{item.value}}" checked="{{item.isShow}}" color="#5d73fa"  disabled="{{item.isShow}}"/>
+                        <text  style="margin-right:60rpx">{{item.name}}</text>
+                    </label>
+                </radio-group>
+                <view class="warming" wx:if="{{warning[0]}}">
+                    <text>审核选择字段是必需的</text>
+                </view>
+            </view>
+            <view class="input">
+                <view>
+                    <text>审批意见</text>
+                </view>
+                <view class="input-container" style="border-bottom:1px solid {{inputChecked[1]?'#5d73fa':'#dedede'}};color:#7a7a7a">
+                    <textarea id="Remark" name="Remark" bindfocus="bindfocus({{1}})" bindblur="bindblur('{{1}}')"  placeholder="请输入备注" bindinput="bindinput" type="text" value="{{remark?remark:''}}" auto-height style="width:100%;" />
+                </view>
+                <view class="warming" wx:if="{{warning[1]}}">
+                    <text>若退回审核，则审批意见字段是必须的</text>
+                </view>
+            </view>
+        </view>
+        <image src="{{'../../../../images/test.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" @tap="auditing()"></image>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    export default class Index extends wepy.page {
+        data = {
+            id: '',
+            billDataDetail: {},
+            warning: [
+                false,
+                false,
+            ],
+            auditings: [{
+                    value: '0',
+                    name: '审核通过',
+                    ProcessStatus: 'A',
+                    isShow: false,
+                },
+                {
+                    value: '1',
+                    name: '审核退回',
+                    ProcessStatus: 'R',
+                    isShow: false,
+                },
+            ],
+            audtingsSelect: '',
+            remark: '',
+             inputChecked: [
+                false,
+                false,
+            ],
+        };
+        methods = {
+            bindfocus(index, e) {
+                if (e.target.id == 'Description' && !e.detail.value) {
+                    this.warning[1] = true;
+                }
+                this.inputChecked[index] = !this.inputChecked[index];
+                this.$apply();
+            },
+             //input失去焦点
+            bindblur(index) {
+                this.inputChecked[index] = !this.inputChecked[index];
+                this.$apply();
+            },
+            bindPickerChange(e) {
+                console.log(e);
+                this.audtingsSelect = this.auditings[e.detail.value].ProcessStatus
+            },
+            bindinput(e) {
+                if (e.detail.value) {
+                    this.warning[1] = false;
+                    this.remark = e.detail.value;
+                }
+            }
+        };
+        onLoad(e) {
+            this.id = e.id;
+        };
+        async auditing() {
+            if (this.audtingsSelect == '') {
+                this.warning[0] = true
+            } else if (this.audtingsSelect == 'R' && this.remark == '') {
+                this.warning[0] = false
+                this.warning[1] = true
+            } else {
+                wx.showLoading({
+                    title: '提交中，请稍等！', //提示的内容,
+                    mask: true, //显示透明蒙层，防止触摸穿透,
+                    success: () => {
+                        this.addOpacity = 1;
+                        this.$apply();
+                    }
+                });
+                var resData = await ajax.getData(
+                    '/api/services/web/financialBilling/ApprovalBilling',
+                    'post', {
+                        Id: this.id,
+                        ProcessStatus: this.audtingsSelect,
+                        Remark: this.remark
+                    }
+                );
+                switch (resData.statusCode) {
+                    case 200:
+                        var pages = getCurrentPages();
+                        var prevPage = pages[pages.length - 3]; //上两个页面
+                        prevPage.data.refresh = true;
+                        wx.navigateBack({
+                            delta: 2
+                        });
+                        this.$apply();
+                        break;
+                    case 403:
+                        this.placeHolder.placeHolderImageIndex = 3;
+                        this.placeHolder.placeHolderShow = true;
+                        this.$apply();
+                        break;
+                    case 500:
+                        this.placeHolder.placeHolderImageIndex = 1;
+                        this.placeHolder.placeHolderShow = true;
+                        this.$apply();
+                        break
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+</script>

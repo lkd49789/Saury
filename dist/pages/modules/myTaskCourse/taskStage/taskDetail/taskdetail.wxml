@@ -1,0 +1,315 @@
+
+    <!-- <view></view> -->
+    <!-- <text></text> -->
+    <view class="body winHeight">
+        <view class="fixed-view">
+            <view class="container-title">
+                <text class="title-text">{{taskData.title}}</text>
+                <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#7a7a7a"  wx:if="{{taskData.isAccept=='Y'}}" bindtap="operation"/>
+            </view>
+            
+    <view class="navbar">
+        <scroll-view scroll-x>
+            <block wx:for="{{$navbar$navbars}}" wx:for-index="$navbar$index" wx:for-item="$navbar$item" wx:key="$navbar$index">
+                <view class="item {{$navbar$currentTab == $navbar$index ? 'active' : ''}} " bindtap="$navbar$navbarTap" data-wpynavbartap-a="{{$navbar$index}}">
+                    <text>{{$navbar$item}}</text>
+                    <view  wx:if="{{$navbar$currentTab == $navbar$index}}" class="navbar_box"/>
+                </view>
+            </block>
+        </scroll-view>
+    </view>
+
+        </view>
+        <!-- <view style="height:200rpx;width:100%;">
+                                                                </view> -->
+        <view style="margin-top:170rpx;" hidden="{{currentTab==0?'':true}}">
+            <view class="taskdetail-container">
+                <view class="task-title-content">
+                    <view>
+                        <text style="font-size:32rpx;word-wrap:break-word;">{{taskData.title}}</text>
+                    </view>
+                    <view style="color:#7a7a7a">
+                        <text style="word-wrap:break-word;">{{taskData.description||'未填写'}}</text>
+                    </view>
+                    <view class="tag">
+                        <icon class="iconfont icon-biaoqian" style="color:#7a7a7a;font-size:40rpx;margin-right:20rpx"/>
+                        <block wx:for="{{tag}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                            <view>
+                                <text>{{tag[index]}}</text>
+                            </view>
+                        </block>
+                    </view>
+                    <view class="address">
+                        <icon class="iconfont icon-dizhi1" style="font-size:40rpx;color:#ff9900;margin-right:20rpx"/>
+                        <view>
+                            <text>{{taskData.address||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+                <view class="task-time-content">
+                    <view style="" class="tasktime-contianer">
+                        <view style="width:60%;">
+                            <text>任务时间</text>
+                            <view>
+                                <!-- <text style="margin-right:10rpx">04-05</text> -->
+                                <text>{{taskData.endTime||'未知'}}<text  wx:if="{{taskData.endTime}}" style="color:#e20000">截止</text></text>
+                            </view>
+                        </view>
+                        <view style="width:40%;">
+                            <text>任务时长</text>
+                            <text>{{taskData.taskDuration||'0'}}h</text>
+                        </view>
+                        <view style="width:100%;">
+                            <text>预计时长</text>
+                            <text>{{taskData.estimate}}h</text>
+                        </view>
+                    </view>
+                </view>
+                <view class="child-task" wx:if="{{taskData.checkItems.length>0||taskData.isAccept!=='N'}}">
+                    <view class="childcontainer">
+                        <view style="color:#7a7a7a">
+                            <text>子任务</text>
+                        </view>
+                        <block wx:for="{{taskData.checkItems}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                            <view bindtap="isCompleted" bindlongpress="longpress" class="child-item" data-wpyiscompleted-a="{{item}}" data-wpyiscompleted-b="{{index}}" data-wpyiscompleted-c="{{isChecked[index]}}" data-wpylongpress-a="{{index}}">
+                                <checkbox value="{{item.name}}" checked="{{isChecked[index]}}" color="#5d73fa" wx:if="{{taskData.isCompleted!=='Y'&&taskData.isAccept=='Y'}}" style="margin-right:10rpx"/>
+                                <text style="text-decoration:{{isChecked[index]?'line-through':'none'}};color:{{isChecked[index]?'#7a7a7a':'#2a2a2a'}}">{{item.title}}</text>
+                            </view>
+                        </block>
+                        <view class="addChiled" bindtap="addChild" wx:if="{{taskData.isAccept=='Y'}}">
+                            <view class="addIcon">
+                                <text>+</text>
+                            </view>
+                            <view style="color:#5d73fa">
+                                <text>添加子任务</text>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+                <view class="accessory-container" wx:if="{{taskData.attachments.length>0}}">
+                    <view class="accessory-content">
+                        <view style="color:#7a7a7a">
+                            <text>附件</text>
+                        </view>
+                        <block wx:for="{{taskData.attachments}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                            <view class="accessory-item" bindtap="preView" data-wpypreview-a="{{item.id}}" data-wpypreview-b="{{item.extension}}" data-wpypreview-c="{{item.size}}">
+                                <icon class="iconfont {{fileIcon[index]}}" style="font-size:80rpx;color:{{fileColor[index]}};margin-right:14rpx;"/>
+                                <view class="accessory-right">
+                                    <text>{{item.name}}</text>
+                                    <text style="color:#7a7a7a">{{item.size||'0Kb'}}</text>
+                                </view>
+                            </view>
+                        </block>
+                    </view>
+                </view>
+                <view class="linkman-container" style="margin-bottom:{{showIsAccept?'100rpx;':'0'}}" wx:if="{{taskData.participants.length>0}}">
+                    <view class="linkman-content">
+                        <view style="color:#7a7a7a">
+                            <text>参与人</text>
+                        </view>
+                        <block wx:for="{{taskData.participants}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                            <view class="linkman-item">
+                                <image src="{{avatar[index]}}" mode="scaleToFill" lazy-load="false">
+                                </image>
+                                <view>
+                                    <view>
+                                        <view>
+                                            <text style="margin-right:14rpx">{{item.employeeName}}</text>
+                                            <text style="color:#7a7a7a" wx:if="{{item.isAssigner=='Y'}}">任务分配人</text>
+                                        </view>
+                                        <view>
+                                            <text style="color:{{item.priorityText=='普通'?'#009dff':item.priorityText=='紧急'?'#FF9900':'#E20000'}}">{{item.priorityText}}</text>
+                                        </view>
+                                    </view>
+                                    <view>
+                                        <view>
+                                            <text style="margin-right:14rpx;color:{{item.isAccept=='Y'?'#069400':item.isAccept=='R'?'#e20000':'#FF9900'}}">{{item.isAccept=='Y'?'已接受':item.isAccept=='R'?'已拒绝':'未接受'}}</text>
+                                            <text>{{item.remindTime+'h'||'未填写'}}</text>
+                                        </view>
+                                        <view wx:if="{{item.isAssigner=='Y'}}">
+                                            <text style="color:#ff9900">{{item.isCompleted=='Y'?'已完成':'未完成'}}</text>
+                                        </view>
+                                    </view>
+                                </view>
+                            </view>
+                        </block>
+                    </view>
+                </view>
+                <view class="isAccept" wx:if="{{showIsAccept}}">
+                    <view bindtap="noAccept">
+                        <text>拒绝任务</text>
+                    </view>
+                    <view bindtap="accept">
+                        <text>参与任务</text>
+                    </view>
+                </view>
+                <view class="Full-screen" catchtouchmove="true" wx:if="{{participateView}}">
+                    <view>
+                        <view>
+                            <text>?</text>
+                        </view>
+                        <view>
+                            <view>
+                                <text>拒绝参与</text>
+                            </view>
+                            <view>
+                                <textarea placeholder="备注原因" name="textarea" style="height:234rpx;width:440rpx;" maxlength="140" bindinput="bindinput" value="{{refuseRemark}}" bindblur="bindblur" fixed="{{true}}"/>
+                                <view wx:if="{{warning}}" style="color:#e20000">
+                                    <text>此字段是必填字段</text>
+                                </view>
+                            </view>
+                            <view>
+                                <view bindtap="cancelView">
+                                    <text>取消</text>
+                                </view>
+                                <view bindtap="comfirmParticipation">
+                                    <text>确定拒绝</text>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+                <view class="Full-screen2" catchtouchmove="true" wx:if="{{childView}}">
+                    <view>
+                        <!-- <view>
+                                    <text>?</text>
+                                </view> -->
+                        <view>
+                            <!-- <view> 
+                                        <text>不参与</text>
+                                    </view> -->
+                            <view>
+                                <textarea placeholder="请填写子任务名称" name="childName" style="height:254rpx;width:440rpx;" maxlength="200" fixed="true" value="{{childName}}" bindinput="childNameInput"/>
+                            </view>
+                            <view class="fixed-text-count">
+                                <text>200/{{TextCount}}</text>
+                            </view>
+                            <view>
+                                <view bindtap="childCancel">
+                                    <text>取消</text>
+                                </view>
+                                <view bindtap="submitChildName">
+                                    <text>确定</text>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view style="margin-top:170rpx;" hidden="{{currentTab==1?'':true}}">
+            <view class="chat-panel" style="padding-bottom:{{sendShow?'260rpx':'160rpx'}};">
+                <!-- <view class="reverseView"> -->
+                <block wx:for="{{fileInfo}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                    <view class="chat-right" wx:if="{{item.creatorUserId==userId}}">
+                        <view>
+                            <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false">
+                            </image>
+                        </view>
+                        <view style="background:{{item.message!==null?'#5d73fa':'#f4f4f4'}};border-radius:20rpx;max-width:76%">
+                            <view wx:if="{{item.message!==null}}" style="padding:20rpx;color:#fff">
+                                <text style="word-wrap:break-word;display:block">{{item.message}}</text>
+                                <text style="color:{{item.message!==null?'#dedede':'#7a7a7a'}}">{{item.creationTime}}</text>
+                            </view>
+                            <view wx:else="{{item.message!==null}}" bindtap="preView" data-wpypreview-a="{{fileInfo[index].id}}" data-wpypreview-b="{{fileInfo[index].extension}}" data-wpypreview-c="{{fileInfo[index].size}}" data-wpypreview-d="{{item.image}}">
+                                <view wx:if="{{item.extension=='.jpg'||item.extension=='.png'}}" style="padding: 20rpx" class=".right-image">
+                                    <view>
+                                        <image src="{{item.image}}" lazy-load="true" mode="aspectFix" style="margin:20rpx 10rpx;width:470rpx;">
+                                        </image>
+                                    </view>
+                                    <view>
+                                        <text style="color:{{item.message!==null?'#dedede':'#7a7a7a'}}">{{item.creationTime}}</text>
+                                    </view>
+                                </view>
+                                <view wx:else="{{item.extension=='.jpg'||item.extension=='.png'}}" style="padding: 20rpx;display:flex;align-items:center" class="rigth-doc">
+                                    <view>
+                                        <icon class="iconfont {{item.icon}}" style="color:{{item.color}};font-size:80rpx"/>
+                                    </view>
+                                    <view style="display:flex;flex-direction:column;margin-left:14rpx;color:#7a7a7a;width:80%">
+                                        <view style="display:flex ">
+                                            <view style="width:193px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                                <text style="font-size:34rpx;">{{item.name}}</text>
+                                            </view>
+                                        </view>
+                                        <view>
+                                            <text style="font-size:28rpx;margin-top:10rpx">{{item.size}}Kb</text>
+                                        </view>
+                                        <view>
+                                            <text style="color:{{item.message!==null?'#dedede':'#7a7a7a'}}">{{item.creationTime}}</text>
+                                        </view>
+                                    </view>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                    <view class="chat-left" wx:else="{{item.creatorUserId==userId}}">
+                        <view>
+                            <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false">
+                            </image>
+                        </view>
+                        <view style="width:72%">
+                            <view wx:if="{{item.message!==null}}" style="background:#f2f2f2;font-size:28rpx;  border-radius:20rpx;padding:20rpx;">
+                                <text style="word-wrap:break-word;display:block">{{item.message}}</text>
+                                <text style="color:#7a7a7a">{{item.creationTime}}</text>
+                            </view>
+                            <view wx:else="{{item.message!==null}}" bindtap="preView" data-wpypreview-a="{{fileInfo[index].id}}" data-wpypreview-b="{{fileInfo[index].extension}}" data-wpypreview-c="{{fileInfo[index].size}}">
+                                <view wx:if="{{item.extension=='.jpg'||item.extension=='.png'}}" class="left-image">
+                                    <view style="display:flex;flex-direction:column;padding:20rpx">
+                                        <image src="{{item.image}}" lazy-load="true" style="width:100%">
+                                        </image>
+                                        <text style="font-size:34rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display:block">{{item.name}}</text>
+                                        <text style="color:#7a7a7a">{{item.creationTime}}</text>
+                                    </view>
+                                </view>
+                                <view wx:else="{{item.extension=='.jpg'||item.extension=='.png'}}" class="left-doc">
+                                    <view style="display:flex;align-items:center;">
+                                        <icon class="iconfont {{fileInfo[index].icon}}" style="color:{{fileInfo[index].color}};font-size:80rpx"/>
+                                        <view style="display:flex;flex-direction:column;margin-left:20rpx;width:20%;">
+                                            <view style="display:flex ;width:360rpx;">
+                                                <text style="font-size:34rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;width:80%">{{fileInfo[index].name}}</text>
+                                            </view>
+                                            <view style="width:360rpx">
+                                                <text style="font-size:28rpx;">{{fileInfo[index].size}}Kb</text>
+                                            </view>
+                                        </view>
+                                    </view>
+                                    <view>
+                                        <text style="color:#7a7a7a">{{item.creationTime}}</text>
+                                    </view>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </block>
+                <view id="videoView" class="video-view" wx:if="{{showVideo}}"  capture-catch:tap="colseVideo" style="margin-top:{{showVideo?'0':'44rpx'}}">
+                    <view class="videoContent">
+                        <video id="myVideo" style="width:100%;" src="{{videoPath}}" danmu-list="{{danmuList}}" objectFit="fill" enable-danmu danmu-btn page-gesture="{{true}}" controls/>
+                    </view>
+                </view>
+                <!-- </view> -->
+                <view class="loadMore" wx:if="{{pageNumber <= totalCount / pageSize}}" bindtap="loadMore">
+                    <text style="color:#7a7a7a">查看更多讨论消息</text>
+                </view>
+                <view class="loadMore" wx:if="{{pageNumber > totalCount / pageSize}}">
+                    <text style="color:#b2b2b2">没有更多了</text>
+                </view>
+            </view>
+            <view class="chat-input" wx:if="{{taskData.isAccept=='Y'&&taskData.isParticipant=='Y'}}">
+                <view class="input-content">
+                    <!-- <view> -->
+                    <!-- <form bindreset="cleanInput"> -->
+                    <input value="{{msgData}}" type="text" placeholder="请输入您的内容" confirm-type="send" adjust-position="{{true}}" bindconfirm="sendMsg" bindfocus="bindfocus">
+                    </input>
+                    <icon class="iconfont icon-shangchuantianjia1" style="font-size:80rpx;color:#7a7a7a" bindtap="showSend"/>
+                </view>
+                <view class="chat-icon" wx:if="{{sendShow}}">
+                    <view style="">
+                        <icon class="iconfont icon-tupian-copy" style="color:#7a7a7a;font-size:80rpx;" bindtap="chooseImage"/>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-paizhaoshangchuan" style="color:#7a7a7a;font-size:80rpx;" bindtap="chooseVideo" data-wpychoosevideo-a="id"/>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>

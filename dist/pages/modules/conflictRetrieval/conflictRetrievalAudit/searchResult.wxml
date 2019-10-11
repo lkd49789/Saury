@@ -1,0 +1,74 @@
+
+    <view class="container">
+        <view class="pageTitle">
+            <view class="title">检索列表</view>
+            <view class="allChecked"  wx:if="{{caseCheckListFilterDatas.length>0}}">
+                <view class="checked" style="color:#7a7a7a">
+                        <checkbox value="allChecked" checked="{{isAllChecked}}" bindtap="isAllChecked" color="#5d73fa"/>全选
+                </view>
+                <picker bindchange="bindPickerChange" value="{{filterKeys.key_index}}" range="{{filterKeys.displayText}}">
+                    <view class="picker">
+                        <text style="font-size:28rpx;color:#5d73fa;margin-right:14rpx">{{filterKeys.displayText[filterKeys.key_index]}}</text>
+                        <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#7a7a7a"/>
+                    </view>
+                </picker>
+            </view>
+        </view>
+        <view class="main"  wx:if="{{caseCheckListFilterDatas.length>0}}">
+            <block wx:for="{{caseCheckListFilterDatas}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                <view class="main-title">
+                    <view class="groupChecked">
+                        <view class="checked" style="color:#7a7a7a;margin-right:14rpx">
+                            <checkbox value="groupChecked" checked="{{item.isGroupChecked}}" bindtap="isGroupChecked" color="#5d73fa" data-wpyisgroupchecked-a="{{index}}"/>
+                        </view>
+                        <text>{{filterKeys.displayText[filterKeys.key_index]}}：{{caseCheckListFilterDatas[index].title||'其他'}}</text>
+                    </view>
+                     <view bindtap="isFold" data-wpyisfold-a="{{index}}">
+                        <icon class="iconfont icon-jian" style="font-size:40rpx;color:#5d73fa;margin-right:14rpx" wx:if="{{!item.isFold}}"/>
+                        <icon class="iconfont icon-jia" style="font-size:40rpx;color:#5d73fa;margin-right:14rpx" wx:else/>
+                    </view>
+                </view>
+                <view wx:if="{{!item.isFold}}">
+                    <block wx:for="{{caseCheckListFilterDatas[index].items}}" wx:for-index="index_item" wx:for-item="item" wx:key="index_item">
+                        <view class="item">
+                            <view class="checked">
+                                <checkbox value="{{item}}" checked="{{item.isChecked}}" bindtap="isChecked" color="#5d73fa" data-wpyischecked-a="{{index}}" data-wpyischecked-b="{{index_item}}"/>
+                            </view>
+                            <view class="right-content">
+                                <view class="text-info">
+                                    <view>
+                                        <text>{{item.clientName||'未填写'}}</text>
+                                        <icon class="iconfont icon-gengduo" style="font-size:40rpx;" wx:if="{{item.litigantList.length>0}}" bindtap="isShowLitigantList" data-wpyisshowlitigantlist-a="{{index}}" data-wpyisshowlitigantlist-b="{{index_item}}"/>
+                                    </view>
+                                    <view>{{item.clientEnName||'未填写'}}</view>
+                                    <view>{{item.caseName||'未填写'}}</view>
+                                    <view>{{item.caseCategory||'未填写'}}</view>
+                                    <view>
+                                        <text>{{item.caseManager||'未填写'}}</text>
+                                        <view>
+                                            <text/>
+                                            <text>{{item.caseStatusText||'未填写'}}</text>
+                                        </view>
+                                    </view>
+                                </view>
+                                <view wx:if="{{item.isShowLitigantList}}" class="litigantList">
+                                    <block wx:for="{{caseCheckListFilterDatas[index].items[index_item].litigantList}}" wx:for-index="litigantList_index" wx:for-item="item" wx:key="litigantList_index">
+                                        <view class="litigantList-item">
+                                            <view>{{item.category}}</view>
+                                            <view>{{item.name}}</view>
+                                            <view>{{item.enName}}</view>
+                                        </view>
+                                    </block>
+                                </view>
+                            </view>
+                        </view>
+                    </block>
+                </view>
+            </block>
+        </view>
+        <view class="placeHolderImage" wx:else>
+            <image src="{{'../../../../images/noData.png'}}" mode="scaleToFill" lazy-load="false" style="width:580rpx;height:580rpx">
+            </image>
+        </view>
+        <image src="{{'../../../../images/next.png'}}" mode="scaleToFill" lazy-load="true" class="subBtn" bindtouchend="nextPage"/>
+    </view>

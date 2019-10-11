@@ -1,0 +1,60 @@
+
+    <view class="body">
+        <!-- <view class="top-title">
+                    <text>我的会议</text>
+                    <icon class="iconfont icon-sousuo1" style="font-size:60rpx;color:#5d73fa" bindtap="toSearch"></icon>
+                </view> -->
+        <view class="top-title">
+            <view class="flex">
+                <view style="margin-left:28rpx">
+                    <text>我的会议</text>
+                </view>
+                <view style="margin-right:28rpx">
+                    <icon class="iconfont icon-sousuo1 " style="font-size:60rpx;color:#5d73fa;margin-right:14rpx" bindtap="toSearch"/>
+                    <icon class="iconfont icon-shaixuan1" style="font-size:60rpx;color:#5d73fa" bindtap="ishowFilter"/>
+                </view>
+            </view>
+            <view class="filter animation"  wx:if="{{isShow}}">
+                <view catchtap="filter" data-wpyfilter-a="cteateTime">创建时间排序</view>
+                <view catchtap="filter" data-wpyfilter-a="id">客户编号排序</view>
+            </view>
+        </view>
+        <view class="main">
+            <block wx:for="{{MeetingsData}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                <view class="meeting-item" bindtap="toMeetingDetail" data-wpytomeetingdetail-a="{{item.id}}" data-wpytomeetingdetail-b="{{item.statusId}}">
+                    <view>
+                        <view>
+                            <text>{{item.title||'未填写'}}</text>
+                        </view>
+                        <view>
+                            <view style="width:25rpx;height:25rpx;border:1px solid {{item.statusColor}};border-radius:50%;margin-right:15rpx"/>
+                            <text>{{item.statusText||'未填写'}}</text>
+                        </view>
+                    </view>
+                    <view>
+                        <text>会议时间：</text><text>{{item.startTime}}</text>至<text>{{item.endTime}}</text>
+                    </view>
+                    <view>
+                        <text>{{item.subject||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <view style="width:65%">
+                            <view style="width:25rpx;height:25rpx;background:{{item.meetingRoomColor||'#7a7a7a'}};border-radius:50%;margin-right:14rpx"/>
+                            <text style="color:#7a7a7a;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{item.meetingRoomName||'未填写'}}</text>
+                        </view>
+                        <view style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-left:14rpx">
+                            <text style="color:#5d74fa">主持人：{{item.employeeName||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+            </block>
+        </view>
+        <image src="{{'../../../images/add.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;" bindtouchstart="touchStart" bindtouchend="touchEnd">
+        </image>
+        
+    <view  wx:if="{{$placeHolderImage$placeHolder.placeHolderShow}}" class="placeHolderImage" catchtouchmove="$placeHolderImage$true">
+                <image src="{{$placeHolderImage$placeHolderImage[$placeHolderImage$placeHolder.placeHolderImageIndex]}}" mode="scaleToFill" lazy-load="false" style="width:580rpx;height:580rpx">
+                </image>
+    </view>
+
+    </view>

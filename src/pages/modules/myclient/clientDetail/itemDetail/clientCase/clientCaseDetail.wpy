@@ -1,0 +1,278 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .placeHolderText {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7a7a7a;
+            font-size: 28rpx;
+        }
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .main {
+            margin: 149rpx 28rpx 0 28rpx;
+            font-size: 28rpx;
+            color: #2a2a2a;
+            >view {
+                box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                padding: 30rpx 22rpx;
+                margin-bottom: 44rpx;
+                >view:first-child {
+                    margin-bottom: 32rpx;
+                }
+                >view:not(:first-child):not(:last-child) {
+                    margin-bottom: 22rpx;
+                }
+            }
+            .case-detail {
+                >view:first-child {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: baseline;
+                    >text {
+                        width: 93%;
+                    }
+                }
+                >view:last-child {
+                    display: flex;
+                    align-items: center;
+                }
+            }
+            .case-abstract{
+                >view:first-child {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: baseline;
+                }
+                >view:last-child{
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: box;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                }
+            }
+            .case-avatar {
+                // position: relative;
+                >view:first-child {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: baseline;
+                }
+                >view:last-child {
+                    position: relative;
+                    height: 60rpx;
+                    .avatar {
+                        position: absolute;
+                        top: 0;
+                    }
+                }
+            }
+           .case-conflict{
+               color:#7a7a7a;
+               >view:first-child {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: baseline;
+                }
+                >view:last-child{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+           }
+           .case-contractInfo{
+               color:#7a7a7a;
+               >view:first-child {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: baseline;
+                }
+           }
+        }
+    }
+</style>
+<template>
+    <view class="body">
+        <view class="top-title">
+            <text>相关案件</text>
+        </view>
+        <view class='main'>
+            <view class="case-detail" @tap="toCaseBaseInfo">
+                <view>
+                    <text>{{caseDetailData.clientName||'未填写'}}</text>
+                    <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#7a7a7a"></icon>
+                </view>
+                <view>
+                    <text style="color:#7a7a7a">{{caseDetailData.clientId||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>{{caseDetailData.categoryText||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>{{caseDetailData.statusText||'未填写'}}</text>
+                </view>
+            </view>
+            <view class="case-abstract" @tap='toCaseAbstract' wx:if="{{caseDetailData.description}}">
+                <view>
+                    <text>案件简介</text>
+                    <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#7a7a7a"></icon>
+                </view>
+                <view>
+                    <text>{{caseDetailData.description||'未填写'}}</text>
+                </view>
+            </view>
+            <view class="placeHolderText" wx:else="{{caseDetailData.description}}">
+                <text>暂无案情简介</text>
+            </view>
+            <view class="case-avatar"  @tap="toCaseLinkman" wx:if="{{caseAvatar}}">
+                <view>
+                    <text style="color:#7a7a7a">案件人员信息</text>
+                    <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#7a7a7a"></icon>
+                </view>
+                <view>
+                    <repeat for="{{caseAvatar}}" key="index" index="index" item="item">
+                        <view class="avatar" style="z-index:{{index+1}};left:{{index*35}}rpx">
+                            <image src="{{item}}" mode="scaleToFill" lazy-load="false" style="height:60rpx;width:60rpx;border-radius: 50%;">
+                            </image>
+                        </view>
+                    </repeat>
+                </view>
+            </view>
+            <view class="placeHolderText" wx:else="{{caseAvatar}}">
+                <text>暂无案情简介</text>
+            </view>
+            <view class="case-conflict" @tap="toCaseConflict">
+                <view>
+                    <text style="color:#7a7a7a">利益冲突</text>
+                    <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#7a7a7a"></icon>
+                </view>
+                <view>
+                    <text style="color:#2a2a2a">公司名称</text>
+                </view>
+                <view>
+                    <text>相关利益在第三方</text>
+                    <text>共5条冲突信息</text>
+                </view>
+            </view>
+            <view class="case-contractInfo" @tap="toCaseContractInfo">
+                <view>
+                    <text style="color:#7a7a7a">合同信息</text>
+                    <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#7a7a7a"></icon>
+                </view>
+                <view>
+                    <text style="color:#2a2a2a">案件办案费用由：</text>
+                </view>
+                <view>
+                    <text>办案费限额：</text>
+                </view>
+                <view>
+                    <text>收费方式：</text>
+                </view>
+            </view>
+        </view>
+        <placeHolderImage :placeHolder.sync="placeHolder" />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../../../utils/cofig/ajax.js'
+    import mixins from '../../../../../../utils/cofig/mixin.js';
+    import placeHolderImage from '../../../../../../components/placeHolderImage';
+    export default class clientCaseDetail extends wepy.page {
+        components = {
+            placeHolderImage
+        };
+        data = {
+            caseId:0,
+            caseDetailData:{},
+            caseAvatar:[]
+        };
+        methods = {};
+        mixins = [mixins];
+        async GetCaseInfo() {
+           var id={
+               id:this.caseId
+           }
+           var caseInfoData=await ajax.getData(
+               '/api/services/web/case/GetCaseInfo',
+               'post',
+               id
+           )
+            switch (caseInfoData.statusCode) {
+                case 200:
+                    if (caseInfoData.data.result!== null) {
+                        this.caseDetailData=caseInfoData.data.result;
+                        var caseBaseInfo={
+                            caseBaseInfo:caseInfoData.data.result
+                        }
+                        wx.setStorageSync('caseDetailData', caseBaseInfo);
+                    } else {
+                        console.log('数据为空');
+                        this.placeHolder.placeHolderImageIndex = 0;
+                        this.placeHolder.placeHolderShow = true;
+                    }
+                    this.$apply();
+                    break;
+                case 403:
+                    console.log('您没有权限');
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    console.log('数据请求错误')
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                default:
+                    break;
+            }
+        }
+        // 获取案件人员头像
+        async GetCaseLawyersWithGroupData(){
+            var caseId = { caseId: this.caseId };
+            var lawyerGroupData = await ajax.getData(
+            '/api/services/web/caseLawyer/GetCaseLawyersWithGroup',
+            'post',
+            caseId
+            );
+            if(lawyerGroupData.statusCode==200&&lawyerGroupData.data.result.length!==0){
+                var lawyerGroupData=lawyerGroupData.data.result;
+                for(var index in lawyerGroupData ){
+                    var userId=lawyerGroupData[index].userId
+                    console.log(lawyerGroupData[index].userId);
+                    var http='/api/services/web/personal/GetEmployeePhoto?id='+userId
+                    var avatarData=await ajax.getUserAvatar(http); 
+                    this.caseAvatar[index]=avatarData.tempFilePath;
+                    lawyerGroupData[index]['avatar']=avatarData.tempFilePath;
+                }
+                var caseDetailData=wx.getStorageSync('caseDetailData');
+                caseDetailData['lawyerGroupData']=lawyerGroupData;
+                wx.setStorageSync('caseDetailData', caseDetailData);
+            }
+            this.$apply();
+        }
+        onLoad(options) {
+            this.caseId=options.id;
+            this.GetCaseInfo();
+            this.GetCaseLawyersWithGroupData();
+        }
+    }
+</script>

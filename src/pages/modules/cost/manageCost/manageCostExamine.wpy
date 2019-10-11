@@ -1,0 +1,141 @@
+<style lang="less">
+    .bill {
+        .bill_title {
+            height: 104rpx;
+            line-height: 104rpx;
+            padding-left: 28rpx;
+            font-size: 48rpx;
+            position: relative;
+            border-bottom: 1px solid #dedede;
+        }
+        .bill_content {
+            background: #ffffff;
+            margin: 0 auto;
+            padding: 44rpx 28rpx;
+            font-size: 28rpx;
+            overflow: auto;
+            .checked {
+                margin-bottom: 30rpx; //    padding-bottom: 20rpx;
+                >view:first-child {
+                    margin-bottom: 30rpx;
+                }
+            }
+            .input {
+                margin-bottom: 36rpx;
+                position: relative;
+                view:first-child {
+                    color: #2a2a2a;
+                }
+                .input-container {
+                    display: flex;
+                    align-items: center; // justify-content: center;
+                    width: 100%;
+                    padding: 28rpx 0;
+                    >input {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99999;
+        }
+        .warming {
+            color: #e20000;
+        }
+    }
+</style>
+
+<template>
+    <view class="bill">
+        <view class="bill_title">
+            <text class="title">财务审核</text>
+        </view>
+        <view class="bill_content">
+            <returnInvoice :input.sync="returnInvoice" :inputValue.sync='returnInvoiceValue' :twoWayTitle="returnInvoiceValue" />
+        </view>
+        <image src="{{'../../../../images/test.png'}}" style="opacity:{{addOpacity}}" mode="scaleToFill" lazy-load="true" class="addImage" @tap="submitData"></image>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import input1 from '../../../../components/picker/input'
+    export default class Index extends wepy.page {
+        components = {
+            returnInvoice: input1,
+        };
+        data = {
+            addOpacity: 1,
+            id: '',
+            creatorUserId: '',
+            billDataDetail: {},
+            returnInvoiceValue: '',
+            returnInvoice: {
+                title: '退回原因 ',
+                name: 'returnInvoice',
+                warning: true,
+                options:true
+            },
+        };
+         methods= {
+           submitData(){
+                if (this.returnInvoiceValue !== '') {
+                    this.auditing()
+                }else{
+                    this.returnInvoice.warning=true;
+                    this.$apply();
+                }
+           }
+        }
+        onLoad(e) {
+            this.id = e.id;
+            this.$apply()
+        };
+        async auditing() {
+            wx.showLoading({
+                title: '提交中，请稍等！', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: () => {
+                    this.addOpacity = 1;
+                    this.$apply();
+                }
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/financialCharge/ReturnCharge',
+                'post', {
+                    Id: this.id,
+                    Remark: this.returnInvoiceValue
+                }
+            );
+            switch (resData.statusCode) {
+                case 200:
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 3];
+                    prevPage.data.refresh = true;
+                    wx.navigateBack({
+                        delta: 2
+                    });
+                    this.$apply();
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+        }
+    }
+</script>

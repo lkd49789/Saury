@@ -1,0 +1,46 @@
+
+    <view class="bill">
+        <view class="page-title">
+            <text class="title">费用详情</text>
+        </view>
+        <view class="main" style="padding-bottom:{{costData.status=='Returned'? '128rpx':'30rpx'}}">
+            <view class="bill_content">
+                <view class="bill_box">
+                    <view class="bill_view bill_blue">{{costData.chargeCase.name||'未填写'}}</view>
+                    <view class="bill_view bill_gray">{{costData.chargeCase.serialId||'未填写'}}</view>
+                </view>
+                <view class="bill_box">
+                    <view class="bill_view bill_blue">{{costData.chargeCase.clientName||'未填写'}}</view>
+                    <view class="bill_view bill_gray">{{costData.chargeCase.clientId||'未填写'}}</view>
+                </view>
+            </view>
+            <view class="bill_content">
+                <view class="bill_view"><text> <text class="bill_gray">申请时间：</text> {{costData.creationTime||'未填写'}}</text><text class="bill_state {{costData.status=='WaitForApproved'?'bill_yellow':costData.status=='Returned'?'bill_gray':'bill_green'}}">{{costData.statusName||'未填写'}}</text></view>
+                <block wx:for="{{costData.chargeItems}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                    <view class="bill_box bill_b">
+                        <view class="bill_view bill_mar">
+                            <text>{{item.chargeDate||'未填写'}}</text>
+                            <text class="bill_state">{{item.chargeTypeName||'未填写'}}</text>
+                        </view>
+                        <view class="bill_view bill_mar">
+                            <text class="bill_gray bill_blue">{{item.chargeAmount}}({{item.chargeCurrency}})</text>
+                            <text class="bill_state">{{item.chargeRate||'未填写'}}</text>
+                        </view>
+                        <view class="bill_view bill_mar">{{item.remark||'未填写'}}</view>
+                    </view>
+                </block>
+            </view>
+            <view class="bill_content">
+                <view class="bill_box workflows" bindtap="toFOR">
+                    <view>财务操作记录</view>
+                    <view class="bill-del">
+                        共有<text>{{costData.workflows.length}}</text>条记录
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view class="bill_btns"  wx:if="{{costData.status=='WaitForApproved'}}">
+            <button class="bill_btn" catchtap="toAuditing" data-wpytoauditing-a="{{0}}">退回</button>
+            <button class="bill_btn" catchtap="toAuditing" data-wpytoauditing-a="{{1}}">批准</button>
+        </view>
+    </view>

@@ -1,0 +1,773 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        position: relative;
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99;
+        }
+        .warming {
+            color: #e20000;
+        }
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .main {
+            margin: 149rpx 28rpx 0 28rpx;
+            position: relative;
+            .input {
+                margin-bottom: 36rpx;
+                view:first-child {
+                    color: #2a2a2a;
+                }
+                .input-container {
+                    display: flex;
+                    align-items: center; // justify-content: center;
+                    width: 100%;
+                    padding: 28rpx 0;
+                    >input {
+                        width: 100%;
+                    }
+                }
+            }
+            .option {
+                margin-bottom: 36rpx;
+                picker {
+                    padding: 20rpx 0;
+                    border-bottom: 1px solid #dfdfdf;
+                    .picker {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        color: #7a7a7a;
+                        .part-item {
+                            position: relative;
+                            margin: 10rpx;
+                            border: 1px dotted #dedede;
+                            padding: 5rpx 20rpx;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            >icon {
+                                position: absolute;
+                                bottom: 27rpx;
+                                right: -21rpx;
+                            }
+                        }
+                    }
+                }
+            }
+            .option-image {
+                margin-bottom: 30rpx;
+                padding-bottom: 28rpx;
+                border-bottom: 1px solid #dfdfdf;
+                .picker {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    color: #7a7a7a;
+                    >view:last-child {
+                        display: flex;
+                        align-items: baseline;
+                    }
+                }
+            }
+            .showActionSheet {
+                margin-bottom: 30rpx;
+                padding-bottom: 28rpx;
+                border-bottom: 1px solid #dfdfdf;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: #7a7a7a;
+            }
+            .checked {
+                margin-bottom: 36rpx;
+                display: flex;
+                align-items: center;
+                border-bottom: 1px solid #dfdfdf;
+                padding-bottom: 28rpx;
+                >view {
+                    width: 50%;
+                }
+            }
+            .IsRemind {
+                display: flex;
+                align-items: center;
+                padding-bottom: 28rpx;
+                border-bottom: 1px solid #dfdfdf;
+                margin-bottom: 36rpx;
+                >view {
+                    width: 70%;
+                    margin-left: 48rpx;
+                }
+            }
+            .Tag {
+                margin-bottom: 36rpx;
+                position: relative;
+                color: #7a7a7a;
+                >view:last-child {
+                    padding: 28rpx 0;
+                    border-bottom: 1px solid #dfdfdf;
+                    .tagInput {
+                        display: flex;
+                        bottom: 0;
+                        left: 0;
+                        .tag-item {
+                            position: relative;
+                            margin: 12rpx;
+                            border: 1px dotted #dedede;
+                            padding: 5rpx 20rpx;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            >icon {
+                                position: absolute;
+                                bottom: 23rpx;
+                                right: -21rpx;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <text>创建日程</text>
+        </view>
+        <view class='main'>
+            <view class="input">
+                <view>
+                    <text>日程标题</text>
+                </view>
+                <view class="input-container" style="border-bottom:1px solid {{inputChecked[0]?'#5d73fa':'#dedede'}};color:#7a7a7a">
+                    <input id="Title" name="Title" bindfocus="bindfocus('{{0}}')" bindblur="bindblur('{{0}}')" placeholder="请输入日程标题" bindinput="bindinput" />
+                </view>
+                <view class="warming" wx:if="{{warning[0]}}">
+                    <text>日程标题字段是必需的</text>
+                </view>
+            </view>
+            <view class="option">
+                <view>
+                    <text>日程类型</text>
+                </view>
+                <picker @change="bindPickerChange('categoryCombobox')" value="{{categoryCombobox.index}}" range="{{categoryCombobox.displayText}}" name='Category'>
+                    <view class="picker">
+                        <view>
+                            <text>{{categoryCombobox.displayText[categoryCombobox.index]}}</text>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+                <view class="warming" wx:if="{{warning[1]}}">
+                    <text>日程类型字段是必需的</text>
+                </view>
+            </view>
+            <view class="option">
+                <view>
+                    <text>日程事件类型</text>
+                </view>
+                <picker @change="bindPickerChange('eventTypeCombobox')" value="{{eventTypeCombobox.index}}" range="{{eventTypeCombobox.displayText}}" name='Category'>
+                    <view class="picker">
+                        <view>
+                            <text>{{eventTypeCombobox.displayText[eventTypeCombobox.index]}}</text>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+            <view class="input">
+                <view>
+                    <text>日程描述</text>
+                </view>
+                <view class="input-container" style="border-bottom:1px solid {{inputChecked[1]?'#5d73fa':'#dedede'}};color:#7a7a7a">
+                    <textarea id="Describe" name="Describe" bindfocus="bindfocus('{{1}}')" bindblur="bindblur('{{1}}')" placeholder="请添加描述" bindinput="bindinput" auto-height/>
+                </view>
+                <view class="warming" wx:if="{{warning[2]}}">
+                    <text>日程描述字段是必需的</text>
+                </view>
+            </view>
+            <view class="input">
+                <view>
+                    <text>添加备注</text>
+                </view>
+                <view class="input-container" style="border-bottom:1px solid {{inputChecked[2]?'#5d73fa':'#dedede'}};color:#7a7a7a">
+                    <textarea id="Remark" name="Remark" bindfocus="bindfocus('{{2}}')" bindblur="bindblur('{{2}}')" placeholder="请添加备注" bindinput="bindinput" auto-height/>
+                </view>
+            </view>
+            <view class="option" wx:if="{{ifShowCustomer}}">
+                <view>
+                    <text>客户名称</text>
+                </view>
+                <picker @change="bindPickerChange('RelationId')" value="{{RelationId.index}}" range="{{RelationId.displayText}}" name='Category'>
+                    <view class="picker">
+                        <view>
+                            <text>{{RelationId.displayText[RelationId.index]}}</text>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+            <view class="option" wx:if="{{ifShowCustomer}}">
+                <view>
+                    <text>案件名称</text>
+                </view>
+                <picker @change="bindPickerChange('CaseId')" value="{{CaseId.index}}" range="{{CaseId.displayText}}" name='Category'>
+                    <view class="picker">
+                        <view>
+                            <text>{{CaseId.displayText[CaseId.index]}}</text>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+            <StartTime :timeObj.sync="dateOptions" :dateData.sync='StartTime' :twoWayTitle="StartTime" />
+            <EndTime :timeObj.sync="dateOptions1" :dateData.sync='EndTime' :twoWayTitle="EndTime" />
+            <view class="option">
+                <view>
+                    <text>情景</text>
+                </view>
+                <picker @change="bindPickerChange('situationCombobox')" value="{{situationCombobox.index}}" range="{{situationCombobox.displayText}}" name='Category'>
+                    <view class="picker">
+                        <view>
+                            <text>{{situationCombobox.displayText[situationCombobox.index]}}</text>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+            <view class="option">
+                <view>
+                    <text>优先级</text>
+                </view>
+                <picker @change="bindPickerChange('priorityCombobox')" value="{{priorityCombobox.index}}" range="{{priorityCombobox.displayText}}" name='Category'>
+                    <view class="picker">
+                        <view>
+                            <text>{{priorityCombobox.displayText[priorityCombobox.index]}}</text>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+            <view class="checked">
+                <view>
+                    <checkbox value="{{IsMarkPrivacy[0].checked}}" id="Privacy" checked="{{IsMarkPrivacy[0].checked}}" @tap="isChecked" color="#5d73fa" />{{IsMarkPrivacy[0].title}}
+                </view>
+                <view>
+                    <checkbox id="IsMark" value="{{IsMarkPrivacy[1].checked}}" checked="{{IsMarkPrivacy[1].checked}}" @tap="isChecked" color="#5d73fa" />{{IsMarkPrivacy[1].title}}
+                </view>
+            </view>
+            <view class="IsRemind" style="margin-top:{{isRemindTime?'0':'20rpx'}}">
+                <checkbox value="" checked="{{IsRemindChecked}}" @tap="IsRemind" color="#5d73fa" />是否提醒
+                <RemindTime :options.sync="RemindTime" :index.sync='RemindTimeIndex' :twoWayTitle="RemindTimeIndex" wx:if="{{isRemindTime}}" />
+            </view>
+            <view class="option">
+                <view>
+                    <text>隐私范围</text>
+                </view>
+                <picker @change="bindPickerChange('privacyCombobox')" value="{{privacyCombobox.index}}" range="{{privacyCombobox.displayText}}" name='Category'>
+                    <view class="picker">
+                        <view>
+                            <text>{{privacyCombobox.displayText[privacyCombobox.index]}}</text>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+            </view>
+            <view class="Tag">
+                <view>
+                    <text>日程标签</text>
+                </view>
+                <view>
+                    <view class="tagInput" style="display:flex;flex-wrap: wrap;align-items:center;">
+                        <repeat for="{{Tag.TagItem}}" key="index" index="index" item="item">
+                            <view class="tag-item">
+                                <text>{{item}}</text>
+                                <icon class="iconfont icon-zirenwushanchu1" style="font-size:48rpx" catchtap="deleteTagItem('{{index}}')"></icon>
+                            </view>
+                        </repeat>
+                        <input name="{{Tag.name}}" value="{{TagValue}}" bindconfirm="tagBindconfirm" bindinput='tagBindinput' />
+                    </view>
+                </view>
+            </view>
+            <image src="../../../images/test.png" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;" @touchstart="touchStart" @touchend="touchEnd"></image>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../utils/cofig/ajax.js';
+    import {
+        myDistinct
+    } from '../../../utils/cofig/api.js';
+    import StartTime from '../../../components/Date/nowDateTimePicker';
+    import EndTime from '../../../components/Date/endDateTimePicker';
+    import RemindTime from '../../../components/picker/option';
+    export default class clientDetail extends wepy.page {
+        components = {
+            StartTime,
+            EndTime,
+            RemindTime
+        };
+        data = {
+            addOpacity: 1,
+            submitData: {
+                Address: "",
+                AttachmentId: "",
+                CaseId: "",
+                Category: "",
+                Description: "",
+                EndTime: "",
+                EventType: "",
+                Id: "",
+                IsAllDay: "",
+                IsConverted: "",
+                IsInbox: "",
+                IsMark: "",
+                IsRemind: "",
+                Participant: "",
+                Priority: "",
+                Privacy: "",
+                RelationId: "",
+                Remark: "",
+                RemindTime: "",
+                Situation: "",
+                StartTime: "",
+                Tag: "",
+                Title: "",
+            },
+            inputChecked: [
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
+            warning: [
+                false,
+                false,
+                false,
+            ],
+            //日程类型
+            categoryCombobox: {
+                value: [],
+                displayText: [],
+                index: -1,
+            },
+            //日程事件类型
+            eventTypeCombobox: {
+                value: [],
+                displayText: [],
+                index: -1,
+            },
+            //关联客户名称
+            RelationId: {
+                value: [],
+                displayText: [],
+                index: -1,
+            },
+            //关联案件名称
+            CaseId: {
+                value: [],
+                displayText: [],
+                index: -1,
+            },
+            //时间选择器
+            dateOptions: {
+                title: '开始时间',
+                name: 'StartTime',
+                time: ''
+            },
+            StartTime: '',
+            dateOptions1: {
+                title: '结束时间',
+                name: 'EndTime',
+                time: ''
+            },
+            EndTime: '',
+            situationCombobox: {
+                value: [],
+                displayText: [],
+                index: -1,
+            },
+            priorityCombobox: {
+                value: [],
+                displayText: [],
+                index: -1,
+            },
+            //隐私范围
+            privacyCombobox: {
+                value: [],
+                displayText: [],
+                index: -1,
+            },
+            //隐私标记
+            IsMarkPrivacy: [{
+                    checked: false,
+                    title: '放入收集箱'
+                },
+                {
+                    checked: false,
+                    title: '是否标记'
+                }
+            ],
+            //会议提醒
+            RemindTime: {
+                // title:'',
+                value: [0, 5, 10, 15, 30, 45, 60, 90, 120, 150, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 1440, 2880, 4320, 5760, 10080, 20160],
+                displayText: ['无', '5分钟', '10分钟', '15分钟', '30分钟', '45分钟', '1小时', '1.5小时', '2小时', '2.5小时', '3小时', '4小时', '5小时', '6小时', '7小时', '8小时', '9小时', '10小时', '11小时', '0.5天', '1天', '2天', '3天', '4天', '1周', '2周'],
+            },
+            RemindTimeIndex: 0,
+            IsRemind: [{
+                    value: "Y",
+                    displayText: "是"
+                },
+                {
+                    value: "N",
+                    displayText: "否"
+                }
+            ],
+            IsRemindChecked: false,
+            isRemindTime: false,
+            //日程标签
+            Tag: {
+                title: '标签',
+                name: 'Tag',
+                options: false,
+                TagItem: []
+            },
+            TagValue: '',
+            //是否显示客户和案件
+            ifShowCustomer: false,
+        };
+        watch = {
+            StartTime(dateData) {
+                this.submitData.StartTime = dateData[0] + '/' + dateData[1] + '/' + dateData[2] + ' ' + dateData[3] + ':' + dateData[4] + ':' + dateData[5]
+                this.$apply();
+            },
+            EndTime(dateData) {
+                this.submitData.EndTime = dateData[0] + '/' + dateData[1] + '/' + dateData[2] + ' ' + dateData[3] + ':' + dateData[4] + ':' + dateData[5]
+                this.$apply();
+            },
+            RemindTimeIndex(index) {
+                this.submitData.RemindTime = this.RemindTime.value[index];
+                this.$apply();
+            }
+        };
+        methods = {
+            touchStart() {
+                this.addOpacity = 0.6;
+                this.$apply();
+            },
+            touchEnd() {
+                
+                if (this.submitData.Title && this.submitData.Description && this.submitData.Category) {
+                    console.log(1);
+                    
+                    this.CreateOrUpdatePlan();
+                } else {
+                    this.addOpacity = 1;
+                    if (!this.submitData.Title) {
+                        this.warning[0] = true
+                    }
+                    if (!this.submitData.Description) {
+                        this.warning[1] = true
+                    }
+                    if (!this.submitData.Category) {
+                        this.warning[2] = true;
+                    }
+                }
+                this.$apply();
+            },
+            bindinput(e) {
+                var inputData = e.detail.value;
+                console.log(e);
+                switch (e.target.id) {
+                    case 'Title':
+                        this.submitData.Title = e.detail.value;
+                        break;
+                    case 'Describe':
+                        this.submitData.Description = e.detail.value;
+                        break;
+                    default:
+                        break;
+                }
+            },
+            isChecked(e) {
+                if (e.target.id == 'IsMark') {
+                    this.IsMarkPrivacy[1].checked = !this.IsMarkPrivacy[1].checked;
+                    if (this.IsMarkPrivacy[1].checked) {
+                        this.submitData.IsMark = 'Y';
+                    } else {
+                        this.submitData.IsMark = 'N';
+                    }
+                } else if (e.target.id == 'Privacy') {
+                    this.IsMarkPrivacy[0].checked = !this.IsMarkPrivacy[0].checked;
+                    if (this.IsMarkPrivacy[0].checked) {
+                        this.submitData.Privacy = 'Y';
+                    } else {
+                        this.submitData.Privacy = 'N';
+                    }
+                }
+                this.$apply();
+            },
+            IsRemind() {
+                this.IsRemindChecked = !this.IsRemindChecked;
+                if (this.IsRemindChecked) {
+                    this.submitData.IsRemind = this.IsRemind[0].value;
+                    this.isRemindTime = true;
+                } else {
+                    this.submitData.IsRemind = this.IsRemind[1].value;
+                    this.isRemindTime = false;
+                    this.RemindTimeIndex = 0;
+                    this.submitData.RemindTime = 0;
+                }
+                this.$apply();
+            },
+            bindfocus(index) {
+                this.inputChecked[index] = !this.inputChecked[index];
+                this.$apply();
+            },
+            bindblur(index) {
+                this.inputChecked[index] = !this.inputChecked[index];
+                this.$apply();
+            },
+            bindPickerChange(res, e) {
+                console.log(res);
+                console.log(e);
+                switch (res) {
+                    case 'categoryCombobox':
+                        this.categoryCombobox.index = +e.detail.value;
+                        this.submitData.Category = this.categoryCombobox.value[this.categoryCombobox.index];
+                        console.log(e.detail.value);
+                        if (e.detail.value == "0") {
+                            this.ifShowCustomer = true
+                        } else {
+                            this.ifShowCustomer = false
+                        }
+                        break;
+                    case 'eventTypeCombobox':
+                        this.eventTypeCombobox.index = +e.detail.value;
+                        this.submitData.EventType = this.eventTypeCombobox.value[this.eventTypeCombobox.index];
+                        break;
+                    case 'situationCombobox':
+                        this.situationCombobox.index = +e.detail.value;
+                        this.submitData.Situation = this.situationCombobox.value[this.situationCombobox.index];
+                        break;
+                    case 'priorityCombobox':
+                        this.priorityCombobox.index = +e.detail.value;
+                        this.submitData.Priority = this.priorityCombobox.value[this.priorityCombobox.index];
+                        break;
+                    case 'privacyCombobox':
+                        this.privacyCombobox.index = +e.detail.value;
+                        this.submitData.Privacy = this.privacyCombobox.value[this.privacyCombobox.index];
+                    case 'RelationId':
+                        this.RelationId.index = +e.detail.value;
+                        this.submitData.RelationId = this.RelationId.value[this.RelationId.index];
+                        this.GetGeneralComboboxList('case', this.submitData.RelationId);
+                    case 'CaseId':
+                        this.CaseId.index = +e.detail.value;
+                        this.submitData.CaseId = this.CaseId.value[this.CaseId.index];
+                    default:
+                        break;
+                }
+                this.$apply();
+            },
+            deletePItem(index) {
+                this.Participant.index.splice(index, 1);
+                var Pvalue = this.submitData.Participant.split(',');
+                Pvalue.splice(index, 1)
+                Pvalue = Pvalue.toString();
+                this.submitData.Participant = Pvalue;
+                this.$apply();
+            },
+            tagBindconfirm() {
+                if (this.TagValue) {
+                    this.Tag.TagItem.push(this.TagValue);
+                    this.Tag.TagItem = myDistinct(this.Tag.TagItem);
+                    this.TagValue = '';
+                    this.submitData.Tag = this.Tag.TagItem.toString();
+                    this.$apply();
+                } else {
+                    return
+                }
+            },
+            tagBindinput(e) {
+                if (e.detail.value) {
+                    this.TagValue = e.detail.value;
+                }
+                this.$apply();
+            },
+            deleteTagItem(index) {
+                this.Tag.TagItem.splice(index, 1);
+                this.submitData.Tag = this.Tag.TagItem.toString();
+                this.$apply();
+            }
+        }
+        async GetPlanForEdit() {
+            var data = {};
+            var resData = await ajax.getData(
+                '/api/services/web/schedule/GetScheduleForEdit',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                var EditData = resData.data.result;
+                // wx.setStorageSync('meetingRoomData',EditData.meetingRoomCombobox);
+                //会议类型
+                this.submitData.Id = EditData.id;
+                var categoryCombobox = EditData.categoryCombobox
+                for (var index in categoryCombobox) {
+                    this.categoryCombobox.value[index] = categoryCombobox[index].value;
+                    this.categoryCombobox.displayText[index] = categoryCombobox[index].displayText;
+                }
+                var eventTypeCombobox = EditData.eventTypeCombobox
+                for (var index in eventTypeCombobox) {
+                    this.eventTypeCombobox.value[index] = eventTypeCombobox[index].value;
+                    this.eventTypeCombobox.displayText[index] = eventTypeCombobox[index].displayText;
+                }
+                var situationCombobox = EditData.situationCombobox
+                for (var index in situationCombobox) {
+                    this.situationCombobox.value[index] = situationCombobox[index].value;
+                    this.situationCombobox.displayText[index] = situationCombobox[index].displayText;
+                }
+                var priorityCombobox = EditData.priorityCombobox
+                for (var index in priorityCombobox) {
+                    this.priorityCombobox.value[index] = priorityCombobox[index].value;
+                    this.priorityCombobox.displayText[index] = priorityCombobox[index].displayText;
+                }
+                var privacyCombobox = EditData.privacyCombobox
+                for (var index in privacyCombobox) {
+                    this.privacyCombobox.value[index] = privacyCombobox[index].value;
+                    this.privacyCombobox.displayText[index] = privacyCombobox[index].displayText;
+                }
+            }
+            this.$apply();
+        }
+        // plan数据提交
+        async CreateOrUpdatePlan() {
+            wx.showLoading({
+                title: '提交中，请稍等！', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: () => {
+                    this.addOpacity = 1;
+                    this.$apply();
+                }
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/schedule/CreateOrUpdateSchedule',
+                'post',
+                this.submitData
+            )
+            if (resData.statusCode == 200) {
+                wx.navigateBack({
+                    delta: 2
+                });
+            } else {
+                wx.showToast({
+                    title: resData.data.error.message,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
+            }
+        }
+        //客户 案件创建数据
+        async GetGeneralComboboxList(keyWord, ...arg) {
+            console.log(arg);
+            switch (keyWord) {
+                case 'case':
+                    var data = {
+                        class: keyWord,
+                        parentId: arg[0]
+                    }
+                    var resData = await ajax.getData(
+                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
+                        'post',
+                        data
+                    )
+                    console.log(resData);
+                    if (resData.statusCode == 200) {
+                        console.log(resData.data.result.length !== 0)
+                        if (resData.data.result.length !== 0) {
+                            var ComboboxList = resData.data.result
+                            for (var index in ComboboxList) {
+                                var item = ComboboxList[index];
+                                this.CaseId.value[index] = item.value;
+                                this.CaseId.displayText[index] = item.displayText;
+                                this.CaseId.index = -1;
+                            }
+                        } else {
+                            this.CaseId.value = [];
+                            this.CaseId.displayText = [];
+                            this.submitData.CaseId = '';
+                            this.CaseId.index = -1;
+                        }
+                        this.$apply();
+                    }
+                    break;
+                case 'client':
+                    var data = {
+                        class: keyWord
+                    }
+                    var resData = await ajax.getData(
+                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
+                        'post',
+                        data
+                    )
+                    if (resData.statusCode == 200) {
+                        var ComboboxList = resData.data.result
+                        for (var index in ComboboxList) {
+                            var item = ComboboxList[index];
+                            this.RelationId.value[index] = item.value;
+                            this.RelationId.displayText[index] = item.displayText;
+                        }
+                    }
+                    this.$apply();
+                    break
+                case 'employee':
+                    var data = {
+                        class: keyWord,
+                        shortCode: arg[0]
+                    }
+                    var resData = await ajax.getData(
+                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
+                        'post',
+                        data
+                    )
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+        }
+        onLoad() {
+            this.GetPlanForEdit();
+            this.GetGeneralComboboxList('client');
+            // this.GetGeneralComboboxList('case');
+            var now = new Date();
+            this.dateOptions1.time = now;
+            this.dateOptions.time = now;
+        }
+    }
+</script>

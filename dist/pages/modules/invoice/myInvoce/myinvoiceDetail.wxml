@@ -1,0 +1,96 @@
+
+    <view class="bill">
+        <view class="bill_title">
+            <text class="title">发票详情</text>
+        </view>
+        <view class="bill_content">
+            <view class="bill_box">
+                <view class="bill_view bill_blue">{{invoiceDataDetail.invoiceCase.name||'未填写'}}</view>
+                <view class="bill_view bill_gray">{{invoiceDataDetail.invoiceCase.serialId||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_blue">{{invoiceDataDetail.invoiceCase.clientName||'未填写'}}</view>
+                <view class="bill_view bill_gray">{{invoiceDataDetail.invoiceCase.clientId||'未填写'}}</view>
+            </view>
+        </view>
+        <view class="bill_content">
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">{{invoiceDataDetail.creationTime||'未填写'}}</view>
+                    <view class="bill_view">{{invoiceDataDetail.invoiceTypeName||'未填写'}}</view>
+                </view>
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray right {{invoiceDataDetail.status=='UnHandled'?'bill_yellow':invoiceDataDetail.status=='Invoiced'?'bill_green':invoiceDataDetail.status=='Claimed'?'bill_blue':'bill_gray'}}">{{invoiceDataDetail.statusName||'未填写'}}</view>
+                    <view class="bill_view bill_blue right">{{invoiceDataDetail.invoiceAmount}}({{invoiceDataDetail.invoiceCurrency}})</view>
+                </view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_gray">发票抬头</view>
+                <view class="bill_view">{{invoiceDataDetail.invoiceHeader||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_gray">税号</view>
+                <view class="bill_view">{{invoiceDataDetail.taxNumber||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_gray">开户行及帐号</view>
+                <view class="bill_view">{{invoiceDataDetail.accountNumber||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_gray">电话</view>
+                <view class="bill_view">{{invoiceDataDetail.phone||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_gray">地址</view>
+                <view class="bill_view">{{invoiceDataDetail.address||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_gray">发票内容</view>
+                <view class="bill_view">{{invoiceDataDetail.invoiceContent||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_gray">备注</view>
+                <view class="bill_view ">{{invoiceDataDetail.remark||'未填写'}}</view>
+            </view>
+        </view>
+        <view class="bill_content"  wx:if="{{invoiceDataDetail.invoiceBillings.length>0}}">
+            <view class="bill_box">
+                <view class="bill_view bill_gray">关联账单信息</view>
+                <block wx:for="{{invoiceDataDetail.invoiceBillings}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                    <view style="margin:10px 0">
+                        <view class="bill_view">{{item.id}}</view>
+                        <view class="bill_view bill_blue">{{item.billingAmount}}({{item.currency}})</view>
+                        <view class="flex">
+                            <view class="bill_box2">
+                                <view class="bill_view">{{item.creatorUserName||'未填写'}}</view>
+                            </view>
+                            <view class="bill_box2">
+                                <view class="bill_view right">{{item.creationTime||'未填写'}}</view>
+                            </view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+        </view>
+        <view class="bill_content"  wx:if="{{invoiceDataDetail.workflows.length>0}}">
+            <view class="bill_box">
+                <view class="bill_view">财务操作记录</view>
+                <block wx:for="{{invoiceDataDetail.workflows}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                    <view style="margin:10px 0">
+                        <view class="flex">
+                            <view class="bill_box2" style="width:20%">
+                                <image src="{{avatar[index]}}" mode="scaleToFill" lazy-load="false" style="z-index:{{index}};background:#069400;left:{{index*30}}rpx"/>
+                                <view class="bill_view">{{item.creatorUserName||'未填写'}}</view>
+                            </view>
+                            <view class="bill_box2" style="width:80%">
+                                <view class="bill_view bill_gray left" style="margin-bottom:10rpx">{{item.operationTypeName||'未填写'}} <span style="float:right">{{item.creationTime||'未填写'}}</span> </view>
+                                <view class="bill_view bill_blue left">{{item.remark?item.remark:''}}</view>
+                            </view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+        </view>
+        <view style="height:{{invoiceDataDetail.status=='UnSubmitted' || invoiceDataDetail.status=='Returned'? '98rpx':'0'}}"/>
+        <button class="bill_btn" wx:if="{{invoiceDataDetail.status=='UnSubmitted' || invoiceDataDetail.status=='Returned'}}" catchtap="toAuditing" data-wpytoauditing-a="">提交</button>
+    </view>

@@ -1,0 +1,601 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        position: relative;
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99;
+        }
+        .warming{
+            color:#e20000;
+        }
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .main {
+            margin: 149rpx 28rpx 0 28rpx;
+            position: relative;
+            .input {
+                margin-bottom: 36rpx;
+                view:first-child {
+                    color: #2a2a2a;
+                }
+                .input-container {
+                    display: flex;
+                    align-items: center;
+                    // justify-content: center;
+                    width: 100%;
+                    padding: 28rpx 0;
+                    >input {
+                        width: 100%;
+                    }
+                }
+            }
+            .option {
+                margin-bottom: 36rpx;
+                picker {
+                    padding: 20rpx 0;
+                    border-bottom: 1px solid #dfdfdf;
+                    .picker {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        color: #7a7a7a;
+                        .part-item{
+                            position: relative;
+                            margin: 10rpx;
+                            border:1px dotted #dedede;
+                            padding:5rpx 20rpx;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            >icon{
+                                position: absolute;
+                                bottom:27rpx;
+                                right:-21rpx;
+                            }
+                        }
+                    }
+                }
+            }
+            .option-image{
+                margin-bottom: 30rpx;
+                padding-bottom:  28rpx ;
+                border-bottom: 1px solid #dfdfdf;
+                 .picker{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    color:#7a7a7a;
+                    >view:last-child{
+                        display: flex;
+                        align-items: baseline;
+                    }
+                }
+            }
+            .showActionSheet{
+                margin-bottom: 30rpx;
+                padding-bottom:  28rpx ;
+                border-bottom: 1px solid #dfdfdf;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color:#7a7a7a;
+            }
+            .checked{
+                margin-bottom: 36rpx;
+                display:flex;
+                align-items: center;
+                border-bottom: 1px solid #dfdfdf;
+                padding-bottom:  28rpx ;
+                >view{
+                    width: 50%;
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <text>创建会议</text>
+        </view>
+        <view class='main'>
+                <Title :input.sync="Title" :inputValue.sync='TitleValue' :twoWayTitle="TitleValue" />
+                <Category :options.sync="Category" :index.sync='CategoryIndex' :twoWayTitle="CategoryIndex" />
+                <Subject :input.sync="Subject" :inputValue.sync='SubjectValue' :twoWayTitle="SubjectValue" />
+                <ClientId :options.sync="ClientId" :index.sync='ClientIdIndex' :twoWayTitle="ClientIdIndex" />
+                <CaseId :options.sync="CaseId" :index.sync='CaseIdIndex' :twoWayTitle="CaseIdIndex" />
+                <StartTime :timeObj.sync="dateOptions" :dateData.sync='StartTime' :twoWayTitle="StartTime" />
+                <EndTime :timeObj.sync="dateOptions1" :dateData.sync='EndTime' :twoWayTitle="EndTime" />
+                <Moderator :options.sync="Moderator" :index.sync='ModeratorIndex' :twoWayTitle="ModeratorIndex" />
+                <Linker :options.sync="Linker" :index.sync='LinkerIndex' :twoWayTitle="LinkerIndex" />
+                <view class="option">
+                    <view>
+                        <text class="title">参与人</text>
+                    </view>
+                    <picker @change="bindPickerChange('Participant')" value="{{Participant.index[Participant.index.length-1]}}" range="{{Participant.displayText}}" name='Participant'>
+                        <view class="picker">
+                            <view style="display:flex;flex-wrap: wrap">
+                                <repeat for="{{Participant.index}}" key="index" index="index" item="item">
+                                    <view class="part-item">
+                                        <text>{{Participant.displayText[item]}}</text>
+                                        <icon class="iconfont icon-zirenwushanchu1" style="font-size:48rpx" catchtap="deletePItem('{{index}}')"></icon>
+                                    </view>
+                                </repeat>
+                            </view>
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                        </view>
+                       
+                    </picker>
+                     <view  wx:if="{{Participant.ParticipantWarning}}" style="color:#e20000">
+                            <text>此字段是必填字段</text>
+                    </view>
+                </view>
+                <Visitor :input.sync="Visitor" :inputValue.sync='VisitorValue' :twoWayTitle="VisitorValue" />
+                <view class="option-image">
+                    <picker @change="bindPickerChange('Level')" value="{{Level.index}}" range="{{Level.displayText}}" name='Level'>
+                        <view class="picker">
+                            <view>
+                            <icon class="iconfont icon-jibie1" style="color:#7a7a7a;font-size:40rpx"></icon>
+                        </view>
+                        <view>
+                            <view>
+                                <text>{{Level.index>=0?Level.displayText[Level.index]:Level.title}}</text>
+                            </view>
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2;margin-left:20rpx;"></icon>
+                        </view>
+                        </view>
+                    </picker>
+                </view>
+                <view class="option-image">
+                    <picker  @change="bindPickerChange('meetingRemind')" value="{{meetingRemind.index}}" range="{{meetingRemind.displayText}}" name='meetingRemind'>
+                        <view class="picker">
+                            <view>
+                            <icon class="iconfont icon-tixingkaiting" style="color:#7a7a7a;font-size:40rpx"></icon>
+                        </view>
+                        <view>
+                            <view>
+                                <text>{{meetingRemind.index>=0?meetingRemind.displayText[meetingRemind.index]:meetingRemind.title}}</text>
+                            </view>
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2;margin-left:20rpx;"></icon>
+                        </view>
+                        </view>
+                        
+                    </picker>
+                </view>
+                <view class="checked">
+                    <view>
+                        <checkbox   value="{{IsMarkPrivacy[0].checked}}" id="Privacy" checked="{{IsMarkPrivacy[0].checked}}" @tap="isChecked" color="#5d73fa"/>{{IsMarkPrivacy[0].title}}
+                    </view>
+                    <view>
+                        <checkbox id="IsMark" value="{{IsMarkPrivacy[1].checked}}"  checked="{{IsMarkPrivacy[1].checked}}" @tap="isChecked" color="#5d73fa"/>{{IsMarkPrivacy[1].title}}
+                    </view>
+                    
+                </view>
+                <Remark :input.sync="Remark" :inputValue.sync='RemarkValue' :twoWayTitle="RemarkValue" />
+                <Prepare :input.sync="Prepare" :inputValue.sync='PrepareValue' :twoWayTitle="PrepareValue" />
+                <image src="{{'../../../../images/next.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;"  @touchstart="touchStart" @touchend="touchEnd"/>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import {myDistinct} from '../../../../utils/cofig/api.js';
+    import StartTime from '../../../../components/Date/nowDateTimePicker';
+    import EndTime from '../../../../components/Date/endDateTimePicker';
+    import Title from '../../../../components/picker/input';
+    import Visitor from '../../../../components/picker/input';
+    import Remark from '../../../../components/picker/input';
+    import Prepare from '../../../../components/picker/input';
+    import Category from '../../../../components/picker/pickerOption';
+    import Subject from '../../../../components/picker/input';
+    import ClientId from '../../../../components/picker/pickerOption';
+    import CaseId from '../../../../components/picker/pickerOption';
+    import Moderator from '../../../../components/picker/pickerOption';
+    import Linker from '../../../../components/picker/pickerOption';
+    export default class clientDetail extends wepy.page {
+        components = {
+            StartTime,
+            EndTime,
+            Title,//会议名称
+            Category,//会议类型
+            Subject,//会议议题
+            ClientId,//客户编款号,
+            CaseId,//案件编号
+            Moderator,//会议主持人
+            Linker,//会议联系人
+            Visitor,
+            Remark,
+            Prepare,
+        };
+        data = {
+            addOpacity:1,
+            submitData:{
+            },
+            Title: {
+                title: '会议名称',
+                name: 'Title',
+                warning: true,
+            },
+            TitleValue: '',
+            Visitor: {
+                title: '嘉宾',
+                name: 'Visitor',
+                warning: false,
+            },
+            VisitorValue: '',
+            Remark: {
+                title: '备注',
+                name: 'Remark',
+                options:true,
+                warning: false,
+            },
+            RemarkValue: '',
+            Prepare: {
+                title: '会议准备',
+                name: 'Prepare',
+                options:true,
+                warning: false,
+            },
+            PrepareValue: '',
+            Category: {
+                title: '会议类型',
+                key: 'displayText',
+                name: 'Category',
+                data: [],
+                warning: false
+            },
+            CategoryIndex: -1,
+            Subject: {
+                title: '会议议题',
+                name: 'Subject',
+                warning: true,
+            },
+            SubjectValue: '',
+            ClientId: {
+                title: '关联客户编号',
+                key: 'displayText',
+                name: 'ClientId',
+                data: [],
+                warning: false
+            },
+            ClientIdIndex: -1,
+            CaseId: {
+                title: '关联案件编号',
+                key: 'displayText',
+                name: 'CaseId',
+                data: [],
+                warning: false
+            },
+            CaseIdIndex: -1,
+            //时间选择器
+            dateOptions: {
+                title: '开始时间',
+                name: 'StartTime',
+                tiem:''
+            },
+            StartTime: '',
+            dateOptions1: {
+                title: '结束时间',
+                name: 'EndTime',
+                time:''
+            },
+            EndTime: '',
+            Moderator: {
+                title: '会议主持人',
+                key: 'displayText',
+                name: 'Moderator',
+                data: [],
+                warning: true
+            },
+            ModeratorIndex: -1,
+            Linker: {
+                title: '会议联系人',
+                key: 'displayText',
+                name: 'Linker',
+                data: [],
+                warning: false
+            },
+            LinkerIndex: -1,
+            // 会议参与人
+            Participant:{
+                value: [],
+                displayText: [],
+                index: [],
+                ParticipantWarning:true
+            },
+            //会议级别
+            Level:{
+                title:'会议级别',
+                value: [],
+                displayText: [],
+                index: -1,
+            },
+            //会议提醒
+            meetingRemind:{
+                title:'会议提醒',
+                value: [0,5,10,15,30,45,60,90,120,150,180,240,300,360,420,480,540,600,660,720,1440,2880,4320,5760,10080,20160],
+                displayText: ['无','5分钟','10分钟','15分钟','30分钟','45分钟','1小时','1.5小时','2小时','2.5小时','3小时','4小时','5小时','6小时','7小时','8小时','9小时','10小时','11小时','0.5天','1天','2天','3天','4天','1周','2周'],
+                index: -1,
+            },
+            //隐私标记
+            IsMarkPrivacy:[
+                {checked:false,title:'是否隐私'},
+                {checked:false,title:'是否标记'}
+            ]
+        };
+        methods = {
+            touchStart(){
+                this.addOpacity = 0.6;
+                this.$apply();
+            },
+            touchEnd(){
+                if(this.submitData.Title&&this.submitData.Subject&&this.submitData.Moderator&&this.submitData.Participant){
+                    wx.setStorageSync('creatMeetingData', this.submitData);
+                   wx.navigateTo({
+                        url: './chooseMeetingRoom',
+                        success:()=>{
+                            this.addOpacity = 1;
+                            this.$apply();
+                        }
+                    });
+                }else{
+                    this.addOpacity=1;
+                    wx.showToast({
+                      title: '请填写必填项！', //提示的内容,
+                      icon: 'none', //图标,
+                      duration: 2000, //延迟时间,
+                      mask: true, //显示透明蒙层，防止触摸穿透,
+                      success: res => {}
+                    });
+                  }
+                this.$apply();
+            },
+            isChecked(e){
+                if(e.target.id=='IsMark'){
+                    this.IsMarkPrivacy[1].checked=!this.IsMarkPrivacy[1].checked;
+                    if(this.IsMarkPrivacy[1].checked){
+                        this.submitData.IsMark='Y';
+                    }else{
+                        this.submitData.IsMark='N';
+                    }
+                }else if(e.target.id=='Privacy'){
+                    this.IsMarkPrivacy[0].checked=!this.IsMarkPrivacy[0].checked;
+                    if(this.IsMarkPrivacy[0].checked){
+                        this.submitData.Privacy='Y';
+                    }else{
+                        this.submitData.Privacy='N';
+                    }
+                }
+                this.$apply();
+            },
+            bindPickerChange(res, e) {
+                switch (res) {
+                    case 'Participant':
+                         this.Participant.index.push(+e.detail.value) ;
+                            myDistinct(this.Participant.index);
+                            var Pindex=this.Participant.index;
+                            var Pvalue=[];
+                            for(var index in Pindex){
+                            Pvalue[index]=this.Participant.value[Pindex[index]];  
+                            }
+                            this.submitData.Participant=Pvalue.toString();
+                       
+                        break;
+                    case 'Level':
+                        this.Level.index = +e.detail.value;
+                        this.submitData.Level=this.Level.value[this.Level.index]
+                    break;
+                    case 'meetingRemind':
+                        this.meetingRemind.index= +e.detail.value;
+                        if(this.meetingRemind.index>=0){
+                           this.submitData.IsRemind="Y";
+                           this.submitData.RemindTime=this.meetingRemind.value[this.meetingRemind.index];
+                        }else{
+                            this.submitData.IsRemind="N";
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                this.$apply();
+            },
+            deletePItem(index){
+                this.Participant.index.splice(index,1);
+                var Pvalue=this.submitData.Participant.split(',');
+                Pvalue.splice(index,1)
+                Pvalue=Pvalue.toString();
+                this.submitData.Participant=Pvalue;
+                this.$apply();
+            }   
+        }
+        watch={
+            Participant(data){
+                if(data.index.length>0){
+                    this.Participant.ParticipantWarning=false;
+                }else{
+                    this.Participant.ParticipantWarning=true;
+                }
+                this.$apply();
+            },
+            StartTime(dateData){
+                this.submitData.StartTime=dateData[0]+'/'+dateData[1]+'/'+dateData[2]+' '+dateData[3]+':'+dateData[4]+':'+dateData[5]
+                this.$apply();
+            },
+            EndTime(dateData){
+                this.submitData.EndTime=dateData[0]+'/'+dateData[1]+'/'+dateData[2]+' '+dateData[3]+':'+dateData[4]+':'+dateData[5]
+                this.$apply();
+            },
+            TitleValue(value){
+                this.submitData.Title=value;
+                this.$apply();
+            },
+            VisitorValue(value){
+                this.submitData.Visitor=value;
+                this.$apply();
+            },
+            RemarkValue(value){
+                this.submitData.Remark=value;
+                this.$apply();
+            },
+            PrepareVlue(value){
+                this.submitData.Prepare=value;
+                this.$apply();
+            },
+            CategoryIndex(index){
+                this.submitData.Category=this.Category.data[index].value;
+                this.$apply();
+            },
+            SubjectValue(value){
+                this.submitData.Subject=value;
+                this.$apply();
+            },
+            ClientIdIndex(index){
+                this.submitData.ClientId=this.ClientId.data[index].value;
+                this.GetGeneralComboboxList('case',this.ClientId.data[index].value);
+                this.GetGeneralComboboxList('employee');
+                this.$apply();
+            },
+            CaseIdIndex(index){
+                this.ModeratorIndex=-1;
+                this.Participant.value=[];
+                this.Participant.displayText=[];
+                this.LinkerIndex=-1;
+                this.submitData.Participant=[];
+                this.Participant.index=[];
+                if(index!==-1){
+                    this.submitData.CaseId=this.CaseId.data[index].value;
+                    this.GetGeneralComboboxList('employee',this.CaseId.data[index].value)
+                }else{
+                    this.submitData.CaseId='';
+                    this.GetGeneralComboboxList('employee')
+                }
+                this.$apply();
+            },
+            ModeratorIndex(index){
+                this.submitData.Moderator=index!==-1?this.Moderator.data[index].value:'';
+                this.$apply();
+            },
+            LinkerIndex(index){
+                 this.submitData.Linker=index!==-1?this.Linker.data[index].value:'';
+                this.$apply();
+            },
+        };
+        
+        async GetMeetingForEdit() {
+            var data = {};
+            var resData = await ajax.getData(
+                '/api/services/web/meeting/GetMeetingForEdit',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                var EditData = resData.data.result;
+                wx.setStorageSync('meetingRoomData',EditData.meetingRoomCombobox);
+                console.log(EditData);
+                //会议类型
+                this.submitData.Id=EditData.id;
+                this.Category.data = EditData.categoryCombobox;
+                var levelCombobox=EditData.levelCombobox;
+                for(var index in levelCombobox){
+                    this.Level.value[index] = levelCombobox[index].value;
+                    this.Level.displayText[index] = levelCombobox[index].displayText;
+                }
+            }
+            this.$apply();
+        }
+        //客户 案件创建数据
+        async GetGeneralComboboxList(keyWord,...arg) {
+            switch (keyWord) {
+                case 'client':
+                    var data = {
+                        class: keyWord
+                    }
+                    var resData = await ajax.getData(
+                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
+                        'post',
+                        data
+                    )
+                    if (resData.statusCode == 200) {
+                        this.ClientId.data= resData.data.result;
+                        this.$apply();
+                    }
+                break;
+                case 'case':
+                    var data = {
+                        class: keyWord,
+                        parentId:arg[0]
+                    }
+                    var resData = await ajax.getData(
+                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
+                        'post',
+                        data
+                    )
+                    if (resData.statusCode == 200) {
+                        if (resData.data.result.length !== 0) {
+                            this.CaseId.data = resData.data.result
+                        } else {
+                            this.CaseId.data=[];
+                            this.submitData.CaseId='';
+                            this.CaseIdIndex=-1;
+                        }
+                        this.$apply();
+                    }
+                    break;
+               
+                case 'employee':
+                    var data = {
+                        class: keyWord,
+                        shortCode: arg[0]
+                    }
+                    var resData = await ajax.getData(
+                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
+                        'post',
+                        data
+                    )
+                    if (resData.statusCode == 200) {
+                        var ComboboxList = resData.data.result;
+                        this.Moderator.data=ComboboxList
+                        this.Linker.data=ComboboxList
+                        for (var index in ComboboxList) {
+                            var item = ComboboxList[index];
+                            this.Participant.value[index] = item.value;
+                            this.Participant.displayText[index] = item.displayText;
+                        }
+                    }
+                    this.$apply();
+                    break
+                    
+                default:
+                    break;
+            }
+        }
+        onLoad() {
+            this.GetMeetingForEdit();
+            this.GetGeneralComboboxList('client');
+            this.GetGeneralComboboxList('employee');
+            var now=new Date();
+            this.dateOptions1.time=now;
+            this.dateOptions.time=now;
+        }
+    }
+</script>

@@ -1,0 +1,55 @@
+
+    <view class="body">
+        <view class="top-title">
+            <text>选择会议室</text>
+        </view>
+        <view class="main">
+            <view class="option">
+                    <view>
+                        <text class="title">会议室编号</text>
+                    </view>
+                    <picker bindchange="bindPickerChange" value="{{meetingRoomCombobox.index}}" range="{{meetingRoomCombobox.displayText}}" name="MeetingRoomId">
+                        <view class="picker">
+                            <view>
+                                <text>{{meetingRoomCombobox.displayText[meetingRoomCombobox.index]}}</text>
+                            </view>
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+                        </view>
+                    </picker>
+                     <view class="warming"  wx:if="{{meetingRoomCombobox.isSelected}}" style="color:#e20000">
+                        <text>此字段是必需的</text>
+                    </view>
+            </view>
+            <view class="item">
+                <view>
+                    <view>
+                        <text>会议室级别</text>
+                        <text>{{meetingRoomData.levelText||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <text>会议室规模</text>
+                        <text>{{meetingRoomData.scaleText||'未填写'}}</text>
+                    </view>
+                </view>
+                <view>
+                    <text>会议室设备</text>
+                    <text>{{meetingRoomData.equipmentText||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>会议室风格</text>
+                    <text>{{meetingRoomData.styleText||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>会议室地址</text>
+                    <text>{{meetingRoomData.address}}</text>
+                </view>
+                <view>
+                    <text>会议室描述</text>
+                    <text>{{meetingRoomData.description}}</text>
+                </view>
+            </view>
+        
+        </view>
+         <image src="{{'../../../../images/test.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;" bindtouchstart="touchStart" bindtouchend="touchEnd">
+        </image>
+    </view>

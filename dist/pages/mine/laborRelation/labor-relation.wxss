@@ -1,0 +1,104 @@
+.body {
+  height: 100%;
+}
+.body .labor-title {
+  font-size: 48rpx;
+  color: #2a2a2a;
+  height: 104rpx;
+  line-height: 104rpx;
+  padding: 0 28rpx;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #dedede;
+}
+.body .middle-container {
+  padding: 44rpx 28rpx;
+  display: flex;
+  overflow: hidden;
+  flex-wrap: wrap;
+  font-size: 32rpx;
+}
+.body .middle-container .item1 {
+  width: 100%;
+  margin-bottom: 36rpx;
+}
+.body .middle-container .item1 .item1-title {
+  color: #2a2a2a;
+  margin-right: 10rpx;
+  font-size: 34rpx;
+}
+.body .middle-container .item1 .item1-content {
+  font-size: 26rpx;
+  color: #7a7a7a;
+}
+.body .middle-container .item2 {
+  width: 50%;
+}
+.body .middle-container .item3 {
+  width: 50%;
+}
+.body .middle-container .item4 {
+  width: 50%;
+}
+.body .middle-container .item5 {
+  width: 50%;
+}
+.body .middle-container .item6 {
+  width: 50%;
+}
+.body .middle-container .item7 {
+  width: 50%;
+}
+.body .middle-container .item8 {
+  width: 100%;
+}
+.body .middle-container .item9 {
+  width: 100%;
+}
+.body .middle-container .item10 {
+  width: 100%;
+}
+.body .middle-container view {
+  margin-bottom: 36rpx;
+}
+.body .middle-container view text:first-child {
+  font-size: 28rpx;
+  color: #7a7a7a;
+  margin-bottom: 10rpx;
+}
+.body .middle-container view text:last-child {
+  font-size: 28rpx;
+}
+.body .item-flex {
+  display: flex;
+  flex-direction: column;
+}
+.body .footer-container {
+  padding: 30rpx 28rpx;
+}
+.body .footer-container .footer-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.body .footer-container .footer-bar .text {
+  font-size: 32rpx;
+  color: #7a7a7a;
+}
+.body .footer-container .item-container {
+  display: flex;
+  align-items: center;
+  margin: 20rpx 0;
+  font-size: 28rpx;
+  border-bottom: 1px solid #bfbfbf;
+  padding-bottom: 40rpx;
+}
+.body .footer-container .item-container .icon-content {
+  margin-right: 20rpx;
+}
+.body .footer-container .item-container .right-item {
+  display: flex;
+  flex-direction: column;
+  padding: 20rpx 0;
+  width: 85%;
+}

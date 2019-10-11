@@ -1,0 +1,253 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            // padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top:0;
+            left:0;
+            width:100%;
+            background:#fff;
+            z-index:9999;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            >text{
+                margin-left:28rpx;
+            }
+            >icon{
+                margin-right: 28rpx;
+            }
+        }
+        .main{
+           margin:149rpx 28rpx 0 28rpx;
+            .item-content{
+                margin: 44rpx 0;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                padding:30rpx 28rpx;
+                >view{
+                    margin-bottom: 20rpx;
+                }
+              
+                >view:first-child{
+                    margin-bottom: 36rpx;
+                    display:flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                .wait{
+                    display:flex;
+                    align-items: center;
+                }
+                .ready{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    >view{
+                        display: flex;
+                        align-items: center;
+                    }
+                }
+            }
+            .memo{
+                color:#7a7a7a;
+                overflow: hidden; 
+                white-space: nowrap; 
+                text-overflow: ellipsis;
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+         <view class="top-title">
+            <text class="title">请假审核</text>
+            <icon wx:if="{{waitData.length!==0}}" class="iconfont icon-sousuo1 " style="font-size:60rpx;color:#5d73fa" @tap="toSearch"></icon>
+         </view>
+        <view class='main'>
+            <repeat for="{{waitData}}" key="index" index="index" item="item">
+                <view class="item-content" @tap="toApplyDetail('{{item.id}}')">
+                    <view>
+                        <view>
+                            <text>{{item.eName}} </text>
+                            <text style="color:#7a7a7a">| {{item.eDepartment}}</text>
+                        </view>
+                        <view style="color:#ff9900">
+                            <text>{{item.totalDay}}天</text>
+                        </view>
+                    </view>
+                    <view>
+                        <text>{{item.startDateText}}至{{item.endDateText}}</text>
+                    </view>
+                    <view class="memo">
+                        <text>{{item.memo||'未填写'}}</text>
+                    </view> 
+                    <view class="wait">
+                        <view style="background:#ff9900;border-radius:50%;height:30rpx;width:30rpx;margin-right:15rpx">
+                        </view>
+                        <text>{{item.vacationTypeText}}</text>
+                    </view>   
+                </view>
+            </repeat>
+            
+        </view>
+        <placeHolderImage :placeHolder.sync="placeHolder" :twoWayTitle="placeHolder"/>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import mixins from '../../../../utils/cofig/mixin.js';
+    import navbar from '../../../../components/navbar';
+    import placeHolderImage from '../../../../components/placeHolderImage';
+    export default class applyAuditList extends wepy.page {
+        config = {
+            enablePullDownRefresh: true,
+            backgroundTextStyle: 'dark',
+            backgroundColorTop: '#f4f4f4',
+            backgroundColorBottom: '#f4f4f4',
+        };
+        components = {
+            placeHolderImage,
+        };
+        data = {
+            queryStream:{},
+            refresh:false,
+            waitData:[],
+            totalCount:0,
+            pageNumber:1,
+        };
+        methods = {
+            toSearch(){
+                wx.navigateTo({ url: './search/searchApplyAudit' });
+            },
+            toApplyDetail(id,status){
+                wx.navigateTo({
+                    url: './applyAuditDetail?id='+id
+                });
+            }
+        };
+        mixins = [mixins ];
+        // 下拉刷新
+        onPullDownRefresh() {
+            this.waitData=[];
+            this.pageNumber=1;
+            this.queryStream={};
+            this.GetApplyPageList();
+            wx.hideNavigationBarLoading(); //完成停止加载
+            wx.stopPullDownRefresh(); //停止下拉刷新
+            this.$apply();
+        }
+        // 上拉加载
+        onReachBottom() {
+            if (this.totalCount/ 10 > this.pageNumber && this.$parent.global.netWorkString) {
+                        this.pageNumber+=1;
+                        this.GetApplyPageList();
+                        } else {
+                            if (this.$parent.global.netWorkString) {
+                                wx.showToast({
+                                    title: '我们是有底线的！',
+                                    icon: 'none',
+                                    duration: 1500,
+                                    mask: false,
+                                });
+                            } else {
+                                wx.showToast({
+                                    title: '网络连接失败！',
+                                    icon: 'none',
+                                    duration: 1500,
+                                    mask: false,
+                                });
+                            }
+                        }
+                        this.$apply();
+            
+        }
+        async GetApplyPageList(){
+                var Keyword =  this.queryStream.Keyword?this.queryStream.Keyword:'';
+                var EName =  this.queryStream.EName?this.queryStream.EName:'';
+                var DepartmentId =  this.queryStream.DepartmentId?this.queryStream.DepartmentId:'';
+                var VacationType =  this.queryStream.VacationType?this.queryStream.VacationType:'';
+                var data={
+                pageSize:10,
+                pageNumber:this.pageNumber,
+                Status:'W',
+                Keyword,
+                EName,
+                DepartmentId,
+                VacationType
+            }
+            var resData=await ajax.getData(
+                '/api/services/web/vacationManage/GetApplyPageList',
+                'post',
+                data
+            )
+            switch (resData.statusCode) {
+                case 200:
+                    if(resData.data.result.items.length!==0){
+                        var ApplyPageList=resData.data.result.items;
+                        this.totalCount= resData.data.result.totalCount;
+                        for(var index in ApplyPageList){
+                            ApplyPageList[index]['auditStatus']='W'
+                        }     
+                        this.waitData=this.waitData.concat(ApplyPageList)
+                        var  isRefresh={
+                             isRefresh:false
+                        }
+                        wx.setStorageSync('isRefresh', isRefresh);
+                    }else{
+                        this.placeHolder.placeHolderImageIndex=0;
+                        this.placeHolder.placeHolderShow=true;
+                    }
+                     this.$apply();
+                    break;
+                 case 403:
+                        console.log('您没有权限'); 
+                        this.placeHolder.placeHolderImageIndex=3;
+                        this.placeHolder.placeHolderShow=true;
+                         this.$apply();
+                    break;
+                case 500:
+                    console.log('数据请求错误')
+                    this.placeHolder.placeHolderImageIndex=1;
+                    this.placeHolder.placeHolderShow=true;
+                     this.$apply();
+                default:
+                    break;      
+            }
+            this.$apply()
+        }
+        onLoad() {
+            this.GetApplyPageList();
+        }
+        isRefresh(){
+            this.waitData=[];
+            this.pageNumber=1;
+            this.GetApplyPageList();
+            this.$apply();
+        }
+        onShow(){
+            var isRefresh= wx.getStorageSync('isRefresh');
+            var pages = getCurrentPages();
+            var prevPage = pages[pages.length - 1]; //上一个页面
+            this.queryStream=prevPage.data.queryStream;
+            var refresh=prevPage.data.refresh;
+            console.log(refresh,isRefresh.isRefresh);
+            if(refresh||isRefresh.isRefresh){
+                prevPage.data.refresh=false;
+                this.isRefresh();
+            }
+            
+        }
+    }
+</script>

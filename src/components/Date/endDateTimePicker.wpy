@@ -1,0 +1,81 @@
+<style lang="less">
+    .tui-picker-content {
+                margin-bottom: 36rpx;
+                picker {
+                    padding: 20rpx 0;
+                    border-bottom: 1px solid #dfdfdf;
+                    .tui-picker-detail {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        color: #7a7a7a;
+                    }
+                }
+            }
+</style>
+
+<template>
+    <view class="tui-picker-content">
+        <view>{{timeObj.title}}</view>
+        <picker mode="multiSelector" value="{{dateTime}}" bindchange="changeDateTime" range="{{dateTimeArray}}" name="{{timeObj.name}}" bindcolumnchange="changeDateTimeColumn">
+            <view class="tui-picker-detail">
+                  {{dateData[0]+'/'+dateData[1]+'/'+dateData[2]+' '+dateData[3]+':'+dateData[4]+':'+dateData[5]}}
+                 <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+            </view>
+        </picker>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    var dateTimePicker = require('../../utils/cofig/dateTimePicker.js');
+    import {formatTime} from '../../utils/cofig/api.js';
+    export default class test extends wepy.component {
+        props = {
+            timeObj: {
+                type: Object
+            },
+            dateData:{
+                type:String,
+                twoWay: true
+            }
+        };
+        data = {
+            dateTimeArray: null,
+            dateTime: null,
+        };
+        methods = {
+             changeDateTimeColumn(e){
+                var arr = this.dateTime, dateArr = this.dateTimeArray;
+                arr[e.detail.column] = e.detail.value;
+                dateArr[2] = dateTimePicker.getMonthDay(dateArr[0][arr[0]], dateArr[1][arr[1]]);
+                this.dateTimeArray=dateArr;
+                this.dateTime=arr;
+                this.$apply();
+                },
+            changeDateTime(e) {
+                this.dateTime = e.detail.value;
+                this.dateData=[this.dateTimeArray[0][this.dateTime[0]],this.dateTimeArray[1][this.dateTime[1]],this.dateTimeArray[2][this.dateTime[2]],this.dateTimeArray[3][this.dateTime[3]],this.dateTimeArray[4][this.dateTime[4]],this.dateTimeArray[5][this.dateTime[5]]];
+                this.$apply();
+            },
+        };
+        onLoad() {
+            // console.log(this.timeObj);
+            // 获取完整的年月日 时分秒，以及默认显示的数组
+           var nowDate=this.timeObj.time;
+            var date= formatTime(nowDate)
+            var obj = dateTimePicker.dateTimePicker(this.data.startYear, this.data.endYear,date);
+            if(!this.timeObj.date){
+                 if(obj.dateTime[3]<23){
+                    obj.dateTime[3]+=1
+                }else if(obj.dateTime[3]==23){
+                    obj.dateTime[3]=0
+                }
+            }
+            this.dateTime= obj.dateTime;
+            this.dateTimeArray = obj.dateTimeArray 
+            this.dateData=[this.dateTimeArray[0][this.dateTime[0]],this.dateTimeArray[1][this.dateTime[1]],this.dateTimeArray[2][this.dateTime[2]],this.dateTimeArray[3][this.dateTime[3]],this.dateTimeArray[4][this.dateTime[4]],this.dateTimeArray[5][this.dateTime[5]]];
+            this.$apply()
+        }
+    }
+</script>

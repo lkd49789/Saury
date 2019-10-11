@@ -1,0 +1,516 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .main {
+            margin: 149rpx 28rpx 0 28rpx;
+        }
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99;
+        }
+        .option {
+            margin-bottom: 36rpx;
+            picker {
+                padding: 20rpx 0;
+                border-bottom: 1px solid #dfdfdf;
+                .picker {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    color: #7a7a7a;
+                    .part-items {
+                        position: relative;
+                        margin: 12rpx;
+                        border: 1px dotted #dedede;
+                        padding: 5rpx 20rpx;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        >icon {
+                            position: absolute;
+                            bottom: 23rpx;
+                            right: -21rpx;
+                        }
+                    }
+                }
+            }
+        }
+        .childTask {
+            margin-bottom: 160rpx;
+            >view:first-child {
+                margin-bottom: 32rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            >view:nth-child(2) {
+                margin-bottom: 28rpx;
+                display: flex;
+                flex-direction: column;
+                >view {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 20rpx;
+                    .checkbox {
+                        margin-right: 20rpx;
+                    }
+                }
+                .throught {
+                    text-decoration: line-through
+                }
+            }
+            >view:last-child {
+                >input {
+                    border-bottom: 1px solid #dfdfdf;
+                }
+            }
+        }
+        .Tag {
+            margin-bottom: 36rpx;
+            position: relative;
+            color: #7a7a7a;
+            >view:last-child {
+                padding: 28rpx 0;
+                border-bottom: 1px solid #dfdfdf;
+                .tagInput {
+                    display: flex;
+                    bottom: 0;
+                    left: 0;
+                    .tag-item {
+                        position: relative;
+                        margin: 12rpx;
+                        border: 1px dotted #dedede;
+                        padding: 5rpx 20rpx;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        >icon {
+                            position: absolute;
+                            bottom: 23rpx;
+                            right: -21rpx;
+                        }
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body winHeight">
+        <view class="top-title">
+            <text>创建任务</text>
+        </view>
+        <view class='main'>
+            <Title :input.sync="Title" :inputValue.sync='TitleValue' :twoWayTitle="TitleValue" />
+            <Description :input.sync="Description" :inputValue.sync='DescriptionValue' :twoWayTitle="DescriptionValue" />
+            <view>
+                <EmployeeId :options.sync="EmployeeId" :index.sync='EmployeeIdIndex' :twoWayTitle="EmployeeIdIndex" />
+            </view>
+            <view class="option">
+                <view>
+                    <text class="title">参与人</text>
+                </view>
+                <picker @change="bindPickerChange" value="{{Participant.ParticipantArray[Participant.ParticipantArray.length-1]}}" range="{{Participant.displayText}}" name='Participant'>
+                    <view class="picker">
+                        <view style="display:flex;flex-wrap: wrap">
+                            <repeat for="{{Participant.ParticipantArray}}" key="index" index="index" item="item">
+                                <view class="part-items">
+                                    <text>{{Participant.displayText[item]}}</text>
+                                    <icon class="iconfont icon-zirenwushanchu1" style="font-size:48rpx" catchtap="deletePItem('{{index}}')"></icon>
+                                </view>
+                            </repeat>
+                        </view>
+                        <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                </picker>
+                <view class="warming" wx:if="{{Participant.warning}}" style="color:#e20000">
+                    <text>此字段是必需的</text>
+                </view>
+            </view>
+            <view class="Tag">
+                <view>
+                    <text>标签</text>
+                </view>
+                <view>
+                    <view class="tagInput" style="display:flex;flex-wrap: wrap;align-items:center;">
+                        <repeat for="{{Tag.TagItem}}" key="index" index="index" item="item">
+                            <view class="tag-item">
+                                <text>{{item}}</text>
+                                <icon class="iconfont icon-zirenwushanchu1" style="font-size:48rpx" catchtap="deleteTagItem('{{index}}')"></icon>
+                            </view>
+                        </repeat>
+                        <input name="{{Tag.name}}" value="{{TagValue}}" bindconfirm="tagBindconfirm" bindinput='tagBindinput' />
+                    </view>
+                </view>
+            </view>
+            <Address :input.sync="Address" :inputValue.sync='AddressValue' :twoWayTitle="AddressValue" />
+            <view class="childTask">
+                <view>
+                    <text>子任务</text>
+                    <icon class="iconfont icon-xinjianzhuye" style="color:#7a7a7a;font-size:40rpx" @tap="addChild"></icon>
+                </view>
+                <view>
+                    <repeat for="{{childTask}}" key="index" index="index" item="item">
+                        <view>
+                            <checkbox class="checkbox" value="{{item.title}}" checked="{{item.checked}}" color="#5d73fa" catchtap="isCompleted('{{index}}','{{item.checked}}')" />
+                            <text bindlongpress="deleteChild('{{index}}')" style="color:#7a7a7a" class="{{throught[index]?'throught':''}}">{{item.title}}</text>
+                        </view>
+                    </repeat>
+                </view>
+                <view wx:if="{{isShowChild}}">
+                    <input name="checkItems" value="" placeholder="请输入子任务名称" bindconfirm="childBindconfirm" bindinput='childBindinput' focus='true' />
+                </view>
+            </view>
+        </view>
+        <image src="{{'../../../../../images/next.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}};" @touchstart="touchStart" @touchend="touchEnd">
+        </image>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../../utils/cofig/ajax.js';
+    import {
+        myDistinct
+    } from '../../../../../utils/cofig/api.js';
+    import Title from '../../../../../components/picker/input';
+    import Description from '../../../../../components/picker/input';
+    import EmployeeId from '../../../../../components/picker/option';
+    import Address from '../../../../../components/picker/input';
+    export default class creatTask extends wepy.page {
+        components = {
+            Title,
+            Description,
+            EmployeeId,
+            Address,
+        };
+        data = {
+            addOpacity: 1,
+            category: '',
+            submitData: {
+                // StageId: "a36c8e32292b0016",
+                // Id: "temp_8254025ccc8eceb6"
+                // ProjectId: "59C85492-438E-E811-8884-F6126329C109"
+                // checkItems: [{id: "temp_1", title: "1zi", sort: 0, checked: false, isCompleted: "N"},…]
+            },
+            Title: {
+                title: '标题',
+                name: 'Title',
+                options: false,
+                warning: false,
+                // type:'digit',
+            },
+            TitleValue: '',
+            Description: {
+                title: '任务详情',
+                name: 'Description',
+                options: false,
+                warning: false,
+                // type:'digit',
+            },
+            DescriptionValue: '',
+            EmployeeId: {
+                title: '分配人',
+                name: 'EmployeeId',
+                value: [],
+                displayText: [],
+                warning: false
+            },
+            EmployeeIdIndex: -1,
+            Participant: {
+                value: [],
+                displayText: [],
+                warning: false,
+                ParticipantArray: []
+            },
+            ParticipantIndex: -1,
+            Tag: {
+                title: '标签',
+                name: 'Tag',
+                options: false,
+                TagItem: []
+            },
+            TagValue: '',
+            Address: {
+                title: '地址',
+                name: 'Address',
+                options: false,
+                warning: false,
+                // type:'digit',
+            },
+            AddressValue: '',
+            //添加子任务
+            isShowChild: false,
+            childTask: [],
+            childTitle: '',
+            throught: [],
+            //标签
+        };
+        methods = {
+            touchStart() {
+                this.addOpacity = 0.6;
+                this.$apply();
+            },
+            touchEnd() {
+                this.addOpacity = 1;
+                var condition1=this.JudgeIsTrue(this.submitData.Title && this.submitData.Description && this.submitData.Participant )
+                var condition2=this.JudgeIsTrue(this.submitData.Title  && this.submitData.Description && this.category == '2'&&this.submitData.Participant)
+                console.log(condition1,condition2)
+                if ( condition1||condition2) {
+                    wx.setStorageSync('taskNextPage', this.submitData);
+                    wx.navigateTo({
+                        url: './creatTaskAll'
+                    });
+                } else {
+                    if (!this.submitData.Title) {
+                        this.Title.warning = true;
+                    }
+                    if (!this.submitData.Description) {
+                        this.Description.warning = true;
+                    }
+                    if (!this.submitData.Participant) {
+                        this.Participant.warning = true;
+                    }
+                    if (!this.submitData.EmployeeId) {
+                        this.EmployeeId.warning = true;
+                    }
+                }
+            },
+            bindPickerChange(e) {
+                var chooseIndex = Number(e.detail.value);
+                this.Participant.warning = false;
+                this.Participant.ParticipantArray.push(chooseIndex);
+                myDistinct(this.Participant.ParticipantArray);
+                var Pvalue = [];
+                for (var index in this.Participant.ParticipantArray) {
+                    Pvalue[index] = this.Participant.value[this.Participant.ParticipantArray[index]];
+                }
+                this.submitData.Participant = Pvalue.toString();
+                this.$apply();
+            },
+            deletePItem(index) {
+                this.Participant.ParticipantArray.splice(index, 1);
+                var Pvalue = this.submitData.Participant.split(',');
+                Pvalue.splice(index, 1)
+                Pvalue = Pvalue.toString();
+                this.submitData.Participant = Pvalue;
+                this.$apply();
+            },
+            addChild() {
+                this.isShowChild = !this.isShowChild;
+                this.getScroll()
+                this.$apply();
+            },
+            childBindconfirm() {
+                if (this.childTitle) {
+                    var childData = {
+                        isCompleted: 'N',
+                        checked: false,
+                        id: 'temp_' + this.childTask.length,
+                        sort: this.childTask.length,
+                        title: this.childTitle,
+                    }
+                    this.childTitle = '';
+                    this.childTask.push(childData);
+                    this.throught.push(false);
+                    this.submitData.checkItems = this.childTask;
+                    this.isShowChild = !this.isShowChild;
+                    this.$apply();
+                } else {
+                    this.isShowChild = !this.isShowChild;
+                }
+            },
+            childBindinput(e) {
+                if (e.detail.value) {
+                    this.childTitle = e.detail.value;
+                }
+                this.$apply();
+            },
+            isCompleted(index, checked) {
+                console.log(checked);
+                if (checked) {
+                    this.childTask[index].isCompleted = 'N';
+                    this.childTask[index].checked = false;
+                    this.throught[index] = false;
+                } else {
+                    this.childTask[index].isCompleted = 'Y';
+                    this.childTask[index].checked = true;
+                    this.throught[index] = true;
+                }
+                this.submitData.checkItems = this.childTask;
+                this.$apply();
+            },
+            deleteChild(index) {
+                this.childTask.splice(index, 1);
+                this.submitData.checkItems = this.childTask;
+                this.$apply();
+            },
+            tagBindconfirm() {
+                if (this.TagValue) {
+                    this.Tag.TagItem.push(this.TagValue);
+                    this.Tag.TagItem = myDistinct(this.Tag.TagItem);
+                    this.TagValue = '';
+                    this.submitData.Tag = this.Tag.TagItem.toString();
+                    this.$apply();
+                } else {
+                    return
+                }
+            },
+            tagBindinput(e) {
+                if (e.detail.value) {
+                    this.TagValue = e.detail.value;
+                }
+                this.$apply();
+            },
+            deleteTagItem(index) {
+                this.Tag.TagItem.splice(index, 1);
+                this.submitData.Tag = this.Tag.TagItem.toString();
+                this.$apply();
+            }
+        };
+        watch = {
+            TitleValue(value) {
+                this.submitData.Title = value;
+                this.$apply();
+            },
+            DescriptionValue(value) {
+                this.submitData.Description = value;
+                this.$apply();
+            },
+            EmployeeIdIndex(index) {
+                this.submitData.EmployeeId = this.EmployeeId.value[index];
+                this.$apply();
+            },
+            AddressValue(value) {
+                this.submitData.Address = value;
+                this.$apply();
+            }
+        };
+        getScroll() {
+            var that = this;
+            //   if(that.scrollTop )
+            wx.createSelectorQuery()
+                .select('.winHeight')
+                .boundingClientRect(function(rect) {
+                    wx.pageScrollTo({
+                        scrollTop: rect.bottom,
+                        duration: 0
+                    });
+                })
+                .exec();
+        }
+        JudgeIsTrue(condition){
+            return condition?true:false;
+        }
+        async GetCaseLawyers(projectId) {
+            var data = {
+                caseId: projectId,
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/caseLawyer/GetCaseLawyers',
+                'post',
+                data
+            );
+            if (resData.statusCode == 200) {
+                var CaseLawyersData = resData.data.result;
+                if (CaseLawyersData.length > 0) {
+                    //律师/参与人
+                    for (var index in CaseLawyersData) {
+                        this.EmployeeId.displayText[index] = CaseLawyersData[index].employeeName;
+                        this.EmployeeId.value[index] = CaseLawyersData[index].userId;
+                        this.Participant.displayText[index] = CaseLawyersData[index].employeeName;
+                        this.Participant.value[index] = CaseLawyersData[index].userId;
+                    }
+                    // console.log()
+                    // this.submitData.EmployeeId = this.EmployeeId.value[0];
+                    myDistinct(this.EmployeeId.displayText);
+                    myDistinct(this.EmployeeId.value);
+                    myDistinct(this.Participant.displayText);
+                    myDistinct(this.Participant.value);
+                    for (var index in this.EmployeeId.value) {
+                        if (this.EmployeeId.value[index] == this.$parent.global.userInfo.id) {
+                            this.EmployeeIdIndex = index;
+                        }
+                    }
+                    this.$apply();
+                } else {
+                    this.GetGeneralComboboxList();
+                }
+            } else {
+                wx.showToast({
+                    title: resData.data.error.message,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
+            }
+        }
+        async GetGeneralComboboxList() {
+            var resData = await ajax.getData(
+                '/api/services/web/common/GetGeneralComboboxList',
+                'post', {
+                    name: "",
+                    class: "employee",
+                    parentId: "",
+                    shortCode: ''
+                }
+            )
+            if (resData.statusCode == 200) {
+                var CaseLawyersData = resData.data.result;
+                //律师/参与人
+                for (var index in CaseLawyersData) {
+                    this.EmployeeId.displayText[index] = CaseLawyersData[index].displayText;
+                    this.EmployeeId.value[index] = CaseLawyersData[index].value;
+                    this.Participant.displayText[index] = CaseLawyersData[index].displayText;
+                    this.Participant.value[index] = CaseLawyersData[index].value;
+                }
+                for (var index in this.EmployeeId.value) {
+                    if (this.EmployeeId.value[index] == this.$parent.global.userInfo.id) {
+                        this.EmployeeIdIndex = index;
+                    }
+                }
+                // console.log()
+                // this.submitData.EmployeeId = this.EmployeeId.value[0];
+                this.$apply();
+            } else {
+                wx.showToast({
+                    title: resData.data.error.message, //提示的内容,
+                    icon: 'none', //图标,
+                    duration: 2000, //延迟时间,
+                    mask: true, //显示透明蒙层，防止触摸穿透,
+                    success: res => {}
+                });
+            }
+        }
+        onLoad(options) {
+            console.log(options)
+            var projectId = options.projectId;
+            this.submitData.ProjectId = options.projectId;
+            this.submitData.currentStage = options.currentStage;
+            this.category = options.category
+            var time = new Date().getTime();
+            this.submitData.Id = 'temp_' + time; //生成Id
+            this.GetCaseLawyers(projectId);
+            this.$apply();
+        }
+    }
+</script>

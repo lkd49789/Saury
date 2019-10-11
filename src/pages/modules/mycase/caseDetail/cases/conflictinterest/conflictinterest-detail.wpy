@@ -1,0 +1,124 @@
+<!--  -->
+<style lang="less">
+.body {
+  height: 100%;
+  .container-title {
+    height: 104rpx;
+    font-size: 48rpx;
+    padding: 28rpx;
+    color: #2a2a2a;
+    line-height: 104rpx;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #dedede;
+  }
+  .box-content {
+    padding: 44rpx 0;
+    font-size: 28rpx;
+    .content-top {
+      padding: 0 28rpx;
+      display: flex;
+      flex-direction: column;
+      > text:nth-child(2n + 1) {
+        color: #7a7a7a;
+        margin-bottom: 20rpx;
+      }
+      > text:nth-child(2n) {
+        color: #2a2a2a;
+        margin-bottom: 36rpx;
+      }
+    }
+    .content-bottom {
+      padding: 44rpx 28rpx;
+      display: flex;
+      flex-wrap: wrap;
+      color: #2a2a2a;
+      > view {
+        display: flex;
+        flex-direction: column;
+        > text:first-child {
+          margin-bottom: 20rpx;
+          color: #7a7a7a;
+        }
+      }
+      > view:not(last-child) {
+        margin-bottom: 36rpx;
+      }
+    }
+  }
+}
+</style>
+
+<template>
+    <!-- <view></view> -->
+    <!-- <text></text> -->
+    <view class="body">
+        <view class="container-title">
+            <text class="title-text">利益冲突信息</text>
+            <!-- <icon class="iconfont icon-bianji" style="font-size:60rpx;color:#5d73fa"></icon> -->
+        </view>
+        <view class="box-content">
+            <view class="content-top">
+                <text>类别</text>
+                <text>{{caseClientRelationList.category||'未填写'}}</text>
+                <text>名称（中）</text>
+                <text>{{caseClientRelationList.name||'未填写'}}</text>
+                <text>名称（英文）</text>
+                <text>{{caseClientRelationList.enName||'未填写'}}</text>
+            </view>
+            <view style="height:14rpx;background:#f4f4f4">
+            </view>
+            <view class="content-bottom">
+                    <view style="width:50%">
+                        <text>联系人</text>
+                        <text>{{caseClientRelationList.linker||'未填写'}}</text>
+                    </view>
+                    <view style="width:50%">
+                        <text>职务</text>
+                        <text>{{caseClientRelationList.legalType||'未填写'}}</text>
+                    </view>
+                    <view style="width:50%">
+                        <text>电话</text>
+                        <text>{{caseClientRelationList.phone||'未填写'}}</text>
+                    </view>
+                    <view style="width:50%">
+                        <text>邮箱地址</text>
+                        <text>{{caseClientRelationList.email||'未填写'}}</text>
+                    </view>
+                <view style="width:100%">
+                    <text>身份证</text>
+                    <text>{{caseClientRelationList.cardId||'未填写'}}</text>
+                </view>
+                <view style="width:100%">
+                    <text>地址</text>
+                    <text>{{caseClientRelationList.address||'未填写'}}</text>
+                </view>
+                <view style="width:100%">
+                    <text>备注</text>
+                    <text>{{caseClientRelationList.remark||'未填写'}}</text>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class conflictinterest extends wepy.page {
+  data = {
+    caseClientRelationList: {}
+  };
+  methods = {};
+  onLoad(option) {
+    wx.getStorage({
+      key: 'caseDetailData',
+      success: res => {
+        // console.log(res.data.caseData);
+        this.caseClientRelationList =
+          res.data.caseData.caseClientRelationList[option.index];
+      }
+    });
+    this.$apply();
+  }
+}
+</script>

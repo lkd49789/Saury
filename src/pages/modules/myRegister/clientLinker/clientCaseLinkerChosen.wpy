@@ -1,0 +1,265 @@
+<!--  -->
+
+<style lang='scss'>
+    .container {
+        .pageTitle {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .listBox {
+            margin: 149rpx 28rpx;
+            .clientItem {
+                position: relative;
+                box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                padding: 30rpx 22rpx;
+                margin-bottom: 44rpx;
+                display: flex;
+                .avatar {
+                    margin-right: 20rpx;
+                    >image {
+                        height: 80rpx;
+                        width: 80rpx;
+                        border-radius: 50%;
+                    }
+                }
+            }
+            .name-workPhone{
+                display:flex;
+                flex-direction: column;
+            }
+            .Operator {
+                position: absolute;
+                top: 10rpx;
+                right: 10rpx;
+                >icon {
+                    font-size: 40rpx;
+                    color: #bfbfbf;
+                }
+            }
+        }
+        .chooseFixedBtn {
+            position: fixed;
+            height: 98rpx;
+            width: 100%;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            background: #5d73fa;
+            color: #fff;
+            z-index: 9999;
+            >view {
+                width: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 34rpx;
+                height: 100%;
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="pageTitle">
+            客户方本案联系人
+        </view>
+        <view class="listBox">
+            <repeat for="{{clientListData}}" key="index" index="index" item="item">
+                <view class="clientItem" @tap="toclientLinkerDetail('{{item.id}}')">
+                    <view class="avatar">
+                        <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false" />
+                    </view>
+                    <view class="name-workPhone">
+                        <text>{{item.name}} | <text style="color:#7a7a7a;">{{item.dutyText||'未填写'}}</text></text>
+                        <text style="color:#7a7a7a;">{{item.workPhone||'未填写'}}</text>
+                    </view>
+                    <view class="Operator" catchtap="operator('{{index}}','{{item.id}}')">
+                        <icon class="iconfont icon-gengduo"></icon>
+                    </view>
+                </view>
+            </repeat>
+        </view>
+        <view class="chooseFixedBtn">
+            <view wx:if="{{isClientCount}}" style="border-right: 1px solid #fff;" @tap="toClientCaseLinkerList">
+                <text>关联已有联系人</text>
+            </view>
+            <view @tap="toCreateClientLinker" style="width:{{isClientCount?'50%':'100%'}};">
+                <text>新建联系人</text>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import myDistinct from '../../../../utils/cofig/api.js'
+    export default class clientCaseLinkerChosen extends wepy.page {
+        data = {
+            subCaseInfoData:{},
+            ClientId: '',
+            clientListData: [],
+            isClientCount: false,
+        };
+        components = {};
+        methods = {
+            toClientCaseLinkerList() {
+                wx.navigateTo({
+                    url: './clientCaseLinkerList?id=' + this.ClientId
+                });
+            },
+            toclientLinkerDetail(id) {
+                wx.navigateTo({
+                    url: '../../myclient/clientDetail/itemDetail/clientLinkmanDetail/clientLinkmanDetail?id=' + id
+                });
+            },
+            operator(index,id) {
+                wx.showActionSheet({
+                    itemList: ['编辑', '删除'],
+                    success: (res) => {
+                        console.log(res.tapIndex)
+                        switch (res.tapIndex) {
+                            case 0:
+                                wx.navigateTo({
+                                    url: './createClientLinker?index=' + index
+                                });
+                                break;
+                            case 1:
+                                this.clientListData.splice(index, 1);
+                                 this.subCaseInfoData.CaseContactsList=this.subCaseInfoData.CaseContactsList.filter((item)=>{
+                                   return item!==id
+                                })
+                                wx.setStorageSync('CREATE_CLIENTLINKERLIST_DATA', this.clientListData);
+                                break;
+                            default:
+                                break;
+                        }
+                        this.$apply();
+                    },
+                    fail: (res) => {
+                        console.log(res.errMsg)
+                    }
+                })
+            },
+            toCreateClientLinker() {
+                wx.navigateTo({
+                    url: './createClientLinker?id=' + this.ClientId
+                });
+            }
+        };
+        events = {};
+       watch = {
+            clientListData(data){
+                var CaseContactsList=[]
+                for(var index in data){
+                    CaseContactsList[index]=data[index].id;
+                }
+                this.subCaseInfoData.CaseContactsList=CaseContactsList;
+            }
+        };
+         //案件基本信息提交
+        async CreateOrUpdateCaseGeneralInfo() {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/case/CreateOrUpdateCaseGeneralInfo',
+                'post',
+                this.subCaseInfoData
+            )
+            if (resData.statusCode == 200) {
+                wx.setStorageSync('CREATE_CASEINFO_DATA',this.subCaseInfoData);
+            }else{
+                 wx.showToast({
+                    title: resData.data.error.message,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
+            }
+        }
+        // 获取客户头像
+        async getClientAavatar() {
+            for (var i in this.clientListData) {
+                var id = this.clientListData[i].id;
+                var http =
+                    '/api/services/web/clientContacts/GetClientContactAvatar?id=' + id;
+                var linkerPhotoData = await ajax.getAavatar(http);
+                 this.clientListData[i].avatar = linkerPhotoData;
+            }
+            wx.setStorage({
+                key: 'CREATE_CLIENTLINKERLIST_DATA',
+                data: this.clientListData
+            });
+            this.$apply();
+        }
+        //获取客户联系人数量
+        async GetClientContactsCount() {
+            var data = {
+                CaseId: "",
+                ClientId: this.ClientId,
+                pageNumber: 1,
+                pageSize: 10,
+                sorting: "",
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/common/GetClientContacts',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                this.isClientCount = resData.data.result.totalCount !== 0 ? true : false;
+                this.$apply();
+            }
+        }
+        // 获取判断缓存数据
+        getClientCacheData() {
+            var clientLinkerCacheDatas = wx.getStorageSync('CREATE_CLIENTLINKERLIST_DATA');
+            if (clientLinkerCacheDatas.length !== 0) {
+                this.clientListData = clientLinkerCacheDatas;
+            }
+            this.$apply();
+        }
+        //获取客户方本案联系人
+        async GetCaseClientContacts(id){
+            var resData=await ajax.getData(
+                '/api/services/web/case/GetCaseClientContacts',
+                'post',
+                {
+                    id
+                }
+            )
+            if(resData.statusCode==200){
+                this.clientListData=resData.data.result;
+                this.getClientAavatar()
+                this.$apply();
+            }
+        }
+        onLoad(options) {
+            this.ClientId = options.id || "";
+            var create_caseinfo_data=wx.getStorageSync('CREATE_CASEINFO_DATA');
+            this.subCaseInfoData=create_caseinfo_data;
+            this.GetCaseClientContacts(create_caseinfo_data.Id)
+            this.GetClientContactsCount();
+        };
+        onShow() {
+            this.getClientCacheData();
+        };
+        onUnload(){
+            this.CreateOrUpdateCaseGeneralInfo();
+        }
+    }
+</script>

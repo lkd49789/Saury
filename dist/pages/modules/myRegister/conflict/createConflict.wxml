@@ -1,0 +1,270 @@
+
+    <view class="container">
+        <view class="pageTitle">
+            <text>创建利益冲突</text>
+        </view>
+        <view class="auditContent">
+            
+<view>
+     <view class="textarea"  wx:if="{{$name$isShow}}">
+        <view>
+            <text>{{$name$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$name$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$name$input.name}}" bindfocus="$name$bindfocus" bindblur="$name$bindblur" placeholder="请输入{{$name$input.title}}" bindinput="$name$bindinput" maxlength="-1" value="{{$name$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$name$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$name$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$name$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$name$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$name$input.name}}" bindfocus="$name$bindfocus" bindblur="$name$bindblur" placeholder="请输入{{$name$input.title}}" bindinput="$name$bindinput" disabled="{{$name$input.disabled}}" value="{{$name$inputValue}}" type="{{$name$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$name$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+            
+<view>
+     <view class="textarea"  wx:if="{{$enName$isShow}}">
+        <view>
+            <text>{{$enName$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$enName$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$enName$input.name}}" bindfocus="$enName$bindfocus" bindblur="$enName$bindblur" placeholder="请输入{{$enName$input.title}}" bindinput="$enName$bindinput" maxlength="-1" value="{{$enName$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$enName$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$enName$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$enName$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$enName$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$enName$input.name}}" bindfocus="$enName$bindfocus" bindblur="$enName$bindblur" placeholder="请输入{{$enName$input.title}}" bindinput="$enName$bindinput" disabled="{{$enName$input.disabled}}" value="{{$enName$inputValue}}" type="{{$enName$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$enName$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+            
+    <view class="option">
+        <view>
+            <text class="title">{{$category$options.title}}</text>
+        </view>
+        <picker bindchange="$category$bindPickerChange" value="{{$category$index}}" range="{{$category$options.displayText}}" name="{{$category$options.name}}">
+            <view class="picker">
+                <view>
+                    <text>{{$category$options.displayText[$category$index]||'请选择'}}</text>
+                </view>
+                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+        </picker>
+         <view  wx:if="{{$category$options.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+
+            
+<view>
+     <view class="textarea"  wx:if="{{$linker$isShow}}">
+        <view>
+            <text>{{$linker$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$linker$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$linker$input.name}}" bindfocus="$linker$bindfocus" bindblur="$linker$bindblur" placeholder="请输入{{$linker$input.title}}" bindinput="$linker$bindinput" maxlength="-1" value="{{$linker$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$linker$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$linker$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$linker$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$linker$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$linker$input.name}}" bindfocus="$linker$bindfocus" bindblur="$linker$bindblur" placeholder="请输入{{$linker$input.title}}" bindinput="$linker$bindinput" disabled="{{$linker$input.disabled}}" value="{{$linker$inputValue}}" type="{{$linker$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$linker$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+            
+    <view class="option">
+        <view>
+            <text class="title">{{$legalType$options.title}}</text>
+        </view>
+        <picker bindchange="$legalType$bindPickerChange" value="{{$legalType$index}}" range="{{$legalType$options.displayText}}" name="{{$legalType$options.name}}">
+            <view class="picker">
+                <view>
+                    <text>{{$legalType$options.displayText[$legalType$index]||'请选择'}}</text>
+                </view>
+                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+        </picker>
+         <view  wx:if="{{$legalType$options.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+
+            
+<view>
+     <view class="textarea"  wx:if="{{$phone$isShow}}">
+        <view>
+            <text>{{$phone$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$phone$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$phone$input.name}}" bindfocus="$phone$bindfocus" bindblur="$phone$bindblur" placeholder="请输入{{$phone$input.title}}" bindinput="$phone$bindinput" maxlength="-1" value="{{$phone$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$phone$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$phone$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$phone$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$phone$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$phone$input.name}}" bindfocus="$phone$bindfocus" bindblur="$phone$bindblur" placeholder="请输入{{$phone$input.title}}" bindinput="$phone$bindinput" disabled="{{$phone$input.disabled}}" value="{{$phone$inputValue}}" type="{{$phone$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$phone$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+            
+<view>
+     <view class="textarea"  wx:if="{{$email$isShow}}">
+        <view>
+            <text>{{$email$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$email$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$email$input.name}}" bindfocus="$email$bindfocus" bindblur="$email$bindblur" placeholder="请输入{{$email$input.title}}" bindinput="$email$bindinput" maxlength="-1" value="{{$email$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$email$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$email$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$email$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$email$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$email$input.name}}" bindfocus="$email$bindfocus" bindblur="$email$bindblur" placeholder="请输入{{$email$input.title}}" bindinput="$email$bindinput" disabled="{{$email$input.disabled}}" value="{{$email$inputValue}}" type="{{$email$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$email$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+            
+<view>
+     <view class="textarea"  wx:if="{{$cardId$isShow}}">
+        <view>
+            <text>{{$cardId$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$cardId$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$cardId$input.name}}" bindfocus="$cardId$bindfocus" bindblur="$cardId$bindblur" placeholder="请输入{{$cardId$input.title}}" bindinput="$cardId$bindinput" maxlength="-1" value="{{$cardId$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$cardId$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$cardId$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$cardId$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$cardId$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$cardId$input.name}}" bindfocus="$cardId$bindfocus" bindblur="$cardId$bindblur" placeholder="请输入{{$cardId$input.title}}" bindinput="$cardId$bindinput" disabled="{{$cardId$input.disabled}}" value="{{$cardId$inputValue}}" type="{{$cardId$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$cardId$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+            
+<view>
+     <view class="textarea"  wx:if="{{$address$isShow}}">
+        <view>
+            <text>{{$address$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$address$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$address$input.name}}" bindfocus="$address$bindfocus" bindblur="$address$bindblur" placeholder="请输入{{$address$input.title}}" bindinput="$address$bindinput" maxlength="-1" value="{{$address$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$address$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$address$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$address$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$address$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$address$input.name}}" bindfocus="$address$bindfocus" bindblur="$address$bindblur" placeholder="请输入{{$address$input.title}}" bindinput="$address$bindinput" disabled="{{$address$input.disabled}}" value="{{$address$inputValue}}" type="{{$address$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$address$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+            
+<view>
+     <view class="textarea"  wx:if="{{$remark$isShow}}">
+        <view>
+            <text>{{$remark$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$remark$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$remark$input.name}}" bindfocus="$remark$bindfocus" bindblur="$remark$bindblur" placeholder="请输入{{$remark$input.title}}" bindinput="$remark$bindinput" maxlength="-1" value="{{$remark$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$remark$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$remark$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$remark$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$remark$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$remark$input.name}}" bindfocus="$remark$bindfocus" bindblur="$remark$bindblur" placeholder="请输入{{$remark$input.title}}" bindinput="$remark$bindinput" disabled="{{$remark$input.disabled}}" value="{{$remark$inputValue}}" type="{{$remark$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$remark$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+        </view>
+        <image src="{{'../../../../images/test.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;" bindtouchstart="touchStart" bindtouchend="touchEnd">
+        </image>
+    </view>

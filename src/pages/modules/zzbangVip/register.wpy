@@ -1,0 +1,405 @@
+<!--  -->
+<style lang='scss'>
+    .container {
+        .block::after {
+            content: '';
+            height: 20rpx;
+            background: #f4f4f4;
+            display: block;
+        }
+        .block-item {
+            >view {
+                padding: 30rpx 28rpx;
+            }
+        }
+        .block-title {
+            margin-bottom: 20rpx;
+            display: flex;
+            align-items: center;
+            >view:nth-child(1) {
+                position: relative;
+                >view:first-child {
+                    padding-right: 16rpx;
+                }
+                >view:last-child {
+                    position: absolute;
+                    top: -10rpx;
+                    right: 0;
+                    color: #e20000;
+                }
+            }
+            >view:nth-child(2) {
+                color: #7a7a7a;
+            }
+        }
+        .block-image {
+            display: flex;
+            align-items: center;
+            >view {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        .main {
+            margin-top: 105rpx;
+            color: #2a2a2a;
+            .takeCaseWarning {
+                background: #f4f4f4;
+                padding: 10rpx 28rpx;
+            }
+            .readPact {
+                display: flex;
+                align-items: center;
+                >view:last-child {
+                    color: #5d73fa
+                }
+            }
+            >view:last-child{
+                padding-bottom: 142rpx;
+            }
+        }
+        .tui-picker-content {
+            margin-bottom: 36rpx;
+            picker {
+                padding: 20rpx 0;
+                border-bottom: 1px solid #dfdfdf;
+                .tui-picker-detail {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    color: #7a7a7a;
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class='page-title'>身份确认</view>
+        <view class="main">
+            <view class="takeCaseWarning">接案需要您提供相应的身份证明</view>
+            <view class="block block-item">
+                <view>
+                    <view class="block-title">
+                        <view>
+                            <view>身份证照片</view>
+                            <view>*</view>
+                        </view>
+                        <view>
+                            （请上传身份证正反面照片）
+                        </view>
+                    </view>
+                    <view class="block-image">
+                        <view>
+                            <image id="IdCardUpPicture" src="{{IdCardUpImage||'../../../images/idCardFacade.png'}}" mode="aspectFit" lazy-load="false" style="height:250rpx;width:90%;" @tap="addImage" />
+                        </view>
+                        <view>
+                            <image id="IdCardDownPicture" src="{{IdCardDownImage||'../../../images/idCardObverse.png'}}" mode="aspectFit" lazy-load="false" style="height:250rpx;width:90%;" @tap="addImage" />
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="block block-item">
+                <view>
+                    <view class="block-title">
+                        <view>
+                            <view>职业照内页</view>
+                            <view>*</view>
+                        </view>
+                        <view>
+                            （请上传职业照内页以及年检页）
+                        </view>
+                    </view>
+                    <view class="block-image">
+                        <view>
+                            <image id="CertificatePicture" src="{{CertificatePictureImage||'../../../images/docPhoto.png'}}" mode="aspectFit" lazy-load="false" style="height:300rpx;width:90%;" @tap="addImage" />
+                        </view>
+                        <view>
+                            <image id="InspectionPicture" src="{{InspectionPictureImage||'../../../images/annualInspectionPage.png'}}" mode="aspectFit" lazy-load="false" style="height:300rpx;width:90%;" @tap="addImage" />
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="block block-item">
+                <view>
+                    <view class="block-title">
+                        <view>
+                            <view>基本信息</view>
+                            <view>*</view>
+                        </view>
+                    </view>
+                    <view>
+                        <Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
+                        <IdCardNo :input.sync="IdCardNo" :inputValue.sync='IdCardNoValue' :twoWayTitle="IdCardNoValue" />
+                        <CertificateNo :input.sync="CertificateNo" :inputValue.sync='CertificateNoValue' :twoWayTitle="CertificateNoValue" />
+                        <view class="tui-picker-content">
+                            <view>地区</view>
+                            <picker mode="region" value="{{region}}" bindchange="changePickerData" name="region" bindcolumnchange="changePickerDataColumn" custom-item="{{customItem}}">
+                                <view class="tui-picker-detail">
+                                    {{region.length!==0?region[0]+'/'+region[1]+'/'+region[2]:'请选择'}}
+                                    <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                                </view>
+                            </picker>
+                        </view>
+                        <Address :input.sync="Address" :inputValue.sync='AddressValue' :twoWayTitle="AddressValue" />
+                        <PhoneNo :input.sync="PhoneNo" :inputValue.sync='PhoneNoValue' :twoWayTitle="PhoneNoValue" />
+                        <Email :input.sync="Email" :inputValue.sync='EmailValue' :twoWayTitle="EmailValue" />
+                    </view>
+                </view>
+            </view>
+            <view class=" block-item">
+                <view>
+                    <view class="block-title">
+                        <view>
+                            <view>其他信息</view>
+                            <view></view>
+                        </view>
+                    </view>
+                    <view>
+                        <LawFirm :input.sync="LawFirm" :inputValue.sync='LawFirmValue' :twoWayTitle="LawFirmValue" />
+                        <Introduce :input.sync="Introduce" :inputValue.sync='IntroduceValue' :twoWayTitle="IntroduceValue" />
+                    </view>
+                    <view class="readPact">
+                        <view catchtap="isAgree">
+                            <checkbox checked="{{isAgree}}" color="#5d73fa" name="isAgree" />
+                        </view>
+                        <view @tap="readyPact">阅读并同意《律师注册协议》</view>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view class="chooseFixedBtn-one" catchtap="subRegisterInfo">
+            <view>
+                提交信息
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../utils/cofig/thirdParty_ajax.js';
+    import Name from '../../../components/picker/input';
+    import PhoneNo from '../../../components/picker/input';
+    import Email from '../../../components/picker/input';
+    import CertificateNo from '../../../components/picker/input';
+    import Address from '../../../components/picker/input';
+    import IdCardNo from '../../../components/picker/input';
+    //其他
+    import LawFirm from '../../../components/picker/input';
+    import Introduce from '../../../components/picker/input';
+    export default class register extends wepy.page {
+        components = {
+            Name,
+            PhoneNo,
+            Email,
+            CertificateNo,
+            Address,
+            IdCardNo,
+            LawFirm,
+            Introduce
+        };
+        data = {
+            subRegisterInfo: {},
+            IdCardUpImage: '',
+            IdCardDownImage: '',
+            CertificatePictureImage: '',
+            InspectionPictureImage: '',
+            Name: {
+                title: '姓名',
+                name: 'Name',
+                warning: false,
+            },
+            NameValue: '',
+            IdCardNo: {
+                title: '身份证号',
+                name: 'IdCardNo',
+                warning: false,
+            },
+            IdCardNoValue: '',
+            Address: {
+                title: '详细地址',
+                name: 'Address',
+                warning: false,
+            },
+            AddressValue: '',
+            PhoneNo: {
+                title: '电话',
+                name: 'PhoneNo',
+                warning: false,
+            },
+            PhoneNoValue: '',
+            Email: {
+                title: '邮箱',
+                name: 'Email',
+                warning: false,
+            },
+            EmailValue: '',
+            CertificateNo: {
+                title: '职业证号',
+                name: 'CertificateNo',
+                warning: false,
+            },
+            CertificateNoValue: '',
+            //地区
+            region: [],
+            LawFirm: {
+                title: '律所',
+                name: 'LawFirm',
+                warning: false,
+            },
+            LawFirmValue: '',
+            Introduce: {
+                title: '简介',
+                name: 'Introduce',
+                warning: false,
+                options: true,
+            },
+            IntroduceValue: '',
+            isAgree: false,
+        };
+        methods = {
+            subRegisterInfo() {
+                if (Object.keys(this.subRegisterInfo).length >= 14 && this.isAgree) {
+                    this.subRegisterInfo.LawFirm = this.LawFirmValue || '';
+                    this.subRegisterInfo.Introduce = this.IntroduceValue || '';
+                    this.$apply();
+                    this.RegisterLawyer();
+                } else {
+                    wx.showToast({
+                        title: '请输入必填项！', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: false, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                }
+            },
+            addImage(e) {
+                wx.chooseImage({
+                    count: '1', //最多可以选择的图片张数,
+                    sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                    success: res => {
+                        var filePath = res.tempFilePaths[0];
+                        switch (e.currentTarget.id) {
+                            case "IdCardUpPicture":
+                                this.IdCardUpImage = filePath;
+                                this.subRegisterInfo.IdCardUp = filePath;
+                                break;
+                            case "IdCardDownPicture":
+                                this.IdCardDownImage = filePath;
+                                this.subRegisterInfo.IdCardDown = filePath;
+                                break;
+                            case "CertificatePicture":
+                                this.CertificatePictureImage = filePath;
+                                this.subRegisterInfo.CertificatePicture = filePath;
+                                break;
+                            case "InspectionPicture":
+                                this.InspectionPictureImage = filePath;
+                                this.subRegisterInfo.InspectionPicture = filePath;
+                                break;
+                            default:
+                                break;
+                        }
+                        this.$apply();
+                    },
+                    fail: () => {},
+                    complete: () => {}
+                });
+            },
+            changePickerData(e) {
+                var region = e.detail.value
+                this.region = region;
+                this.subRegisterInfo.Province = region[0];
+                this.subRegisterInfo.City = region[1];
+                this.subRegisterInfo.Area = region[2];
+                this.$apply();
+            },
+            readyPact() {
+                wx.navigateTo({
+                    url: './pactDoc'
+                });
+            },
+            isAgree() {
+                this.isAgree = !this.isAgree;
+                this.$apply();
+            },
+        };
+        events = {};
+        watch = {
+            NameValue(value) {
+                this.subRegisterInfo.Name = value;
+                this.$apply()
+            },
+            IdCardNoValue(value) {
+                this.subRegisterInfo.IdCardNo = value;
+                this.$apply()
+            },
+            AddressValue(value) {
+                this.subRegisterInfo.Address = value;
+                this.$apply()
+            },
+            PhoneNoValue(value) {
+                this.subRegisterInfo.PhoneNo = value;
+                this.$apply()
+            },
+            EmailValue(value) {
+                this.subRegisterInfo.Email = value;
+                this.$apply()
+            },
+            CertificateNoValue(value) {
+                this.subRegisterInfo.CertificateNo = value;
+                this.$apply()
+            }
+        };
+        computed = {};
+        async RegisterLawyer() {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {
+                }
+            });
+            var resData = await ajax.getData(
+                '/Register/RegisterLawyer',
+                'POST',
+                this.subRegisterInfo
+            )
+            if (resData.data.data.status) {
+                var pages = getCurrentPages();
+                    var currPage = pages[pages.length - 1]; // 当前页
+                    var prevPage = pages[pages.length - 2]; // 上一个页面
+                    // 如果存在上一页
+                    if (prevPage) {
+                        // 可以调用上一页的函数
+                        prevPage.isRefresh(true,this.subRegisterInfo.PlatformMemberId);
+                        wx.navigateBack({
+                            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                        });
+                    }
+            } else {
+                wx.showToast({
+                    title: resData.data.data.msg, //提示的内容,
+                    icon: 'success', //图标,
+                    duration: 2000, //延迟时间,
+                    mask: true, //显示透明蒙层，防止触摸穿透,
+                    success: res => {}
+                });
+            }
+        }
+        changeIsAgree(isAgree) {
+            this.isAgree = isAgree;
+            this.$apply();
+        };
+        onLoad() {
+            if(this.$parent.global.userInfo.id&&this.$parent.global.tenant.id){
+                this.subRegisterInfo.PlatformMemberId =this.$parent.global.tenant.id.toString() + this.$parent.global.userInfo.id.toString();
+            }
+        };
+        onShow() {};
+    }
+</script>

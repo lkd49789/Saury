@@ -1,0 +1,202 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .main {
+            margin: 149rpx 28rpx 0 28rpx;
+            .mange-item {
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                padding: 30rpx 24rpx;
+                font-size: 28rpx;
+                color: #2a2a2a;
+                margin-bottom: 44rpx;
+                >view:not(:last-child) {
+                    margin-bottom: 20rpx;
+                }
+                >view:first-child {
+                    margin-bottom: 36rpx;
+                }
+                >view:last-child {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    .item-status {
+                        display: flex;
+                        align-items: center;
+                        width: 75%;
+                        >text {
+                            width: 90%;
+                            overflow: hidden;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                        }
+                    }
+                    >text {
+                        width: 25%;
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <text>关联项目</text>
+        </view>
+        <view class='main'>
+            <repeat for="{{clientCaseMangeData}}" key="index" index="index" item="item">
+                <view class="mange-item" @tap="toCaseDetail('{{item.id}}') ">
+                    <view>
+                        <text>{{item.name}}</text>
+                    </view>
+                    <view>
+                        <text>{{item.clientName}}</text>
+                    </view>
+                    <view>
+                        <text>{{item.categoryText}}</text>
+                    </view>
+                    <view>
+                        <view class="item-status">
+                            <view style="height:20rpx;width:20rpx;border-radius:50%;border:1px solid {{item.statusColor}};margin-right:15rpx;">
+                            </view>
+                            <text style="color:#7a7a7a;">{{item.processStatusText}}</text>
+                        </view>
+                        <text>{{item.acceptDateText}}</text>
+                    </view>
+                </view>
+            </repeat>
+        </view>
+        <placeHolderImage :placeHolder.sync="placeHolder" />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../../utils/cofig/ajax.js';
+    import mixins from '../../../../../utils/cofig/mixin.js';
+    import placeHolderImage from '../../../../../components/placeHolderImage';
+    export default class clientCaseMange extends wepy.page {
+            config = {
+                enablePullDownRefresh: true,
+                backgroundTextStyle: 'dark',
+                backgroundColorTop: '#f4f4f4',
+                backgroundColorBottom: '#f4f4f4',
+            }
+            components = {
+                placeHolderImage
+            };
+            data = {
+                clientId: '',
+                clientCaseMangeData: [],
+                clientCaseMangeTotalCount: 0,
+                pageNumber: 1,
+            };
+            methods = {
+                toCaseDetail(id) {
+                    wx.navigateTo({
+                        url: '../../../mycase/caseDetail/casedetail?id='+id+'&clientId='+this.clientId
+                    })
+                }
+            };
+            mixins = [mixins];
+            // 下拉刷新
+            onPullDownRefresh() {
+                this.clientCaseMangeData = [],
+                    this.clientCaseMangeTotalCount = 0;
+                this.getStorageData();
+                wx.hideNavigationBarLoading(); //完成停止加载
+                wx.stopPullDownRefresh(); //停止下拉刷新
+                this.$apply();
+            };
+            //上拉加载
+            onReachBottom() {
+                if (this.clientCaseMangeTotalCount / 10 > this.pageNumber && this.$parent.global.netWorkString) {
+                    this.pageNumber += 1;
+                    this.getManageData();
+                } else {
+                    if (this.$parent.global.netWorkString) {
+                        wx.showToast({
+                            title: '我们是有底线的！',
+                            icon: 'none',
+                            duration: 1500,
+                            mask: false,
+                        });
+                    } else {
+                        wx.showToast({
+                            title: '网络连接失败！',
+                            icon: 'none',
+                            duration: 1500,
+                            mask: false,
+                        });
+                    }
+                }
+            }
+                // 获取本地缓存数据 
+            getStorageData() {
+                var clientCaseMangeData = wx.getStorageSync('clientDatas').CaseManageData.items;
+                this.formatData(clientCaseMangeData);
+                this.clientCaseMangeTotalCount = wx.getStorageSync('clientDatas').CaseManageData.totalCount;
+            }
+                // 获取网络数据
+        async  getManageData() {
+                    var data = {
+                        ClientId: this.clientId,
+                        pageNumber: this.pageNumber,
+                        pageSize:10
+                    }
+                    var manageDatas=await ajax.getData(
+                        '/api/services/web/caseManage/GetCaseManage',
+                        'post',
+                        data
+                        );
+                    if(manageDatas.statusCode==200&&manageDatas.data.result.items.length!==0){
+                        var manageData=manageDatas.data.result.items;
+                        this.formatData(manageData);
+                    }
+                }
+        //格式化数据
+        formatData(data) {
+            for (var index in data) {
+                switch (data[index].status) {
+                    case 'N':
+                        data[index]['statusColor'] = '#ff9900'
+                        break;
+                    case 'A':
+                        data[index]['statusColor'] = '#5d73fa'
+                        break;
+                    case 'C':
+                        data[index]['statusColor'] = '#069400'
+                        break;
+                    default:
+                        break;
+                }
+                data[index].acceptDateText = data[index].acceptDateText.replace(/-/g, '/');
+            }
+            this.clientCaseMangeData = this.clientCaseMangeData.concat(data);
+            var CaseManageData= wx.getStorageSync('clientDatas');
+            CaseManageData.CaseManageData.items=this.clientCaseMangeData
+            wx.setStorageSync('clientDatas', CaseManageData);
+            this.$apply();
+        }
+        onLoad(options) {
+            this.clientId = options.id;
+            this.getStorageData();
+        }
+    }
+</script>

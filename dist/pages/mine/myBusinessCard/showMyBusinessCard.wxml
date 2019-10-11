@@ -1,0 +1,59 @@
+
+    <view class="container">
+        <view class="lawyerAvatar" style="width:100vw;height:{{viewSize*0.7}}px">
+            <image class="avatar" style="width:100vw;height:{{viewSize*0.7}}px" src="{{baseData.currentAvatar}}" lazy-load="false"/>
+            <view class="avatar-btn">
+                <view catchtap="dial">
+                    <icon class="iconfont icon-dianhua"/>
+                </view>
+                <view catchtap="map">
+                    <icon class="iconfont icon-dizhi"/>
+                </view>
+                <view>
+                    <icon class="iconfont icon-youxiang"/>
+                </view>
+            </view>
+        </view>
+        <view class="lawyerInfo">
+            <view class="info-top">
+                <view class="info-name">
+                    <text>{{baseData.name||'未填写'}}</text>
+                    <text>律师</text>
+                </view>
+                <view class="info-originalFirm">
+                    {{baseData.originalFirm||'未填写'}}
+                </view>
+                <view class="info-goodBusiness">
+                    {{baseData.goodBusiness||'未填写'}}
+                </view>
+            </view>
+            <view class="info-bottom">
+                <view>
+                    <icon class="iconfont icon-dianhua"/>
+                    <text>{{baseData.phone||'未填写'}}</text>
+                </view>
+                <view>
+                    <icon class="iconfont icon-youxiang"/>
+                    <text>{{baseData.perEmail||'未填写'}}</text>
+                </view>
+                <view>
+                    <icon class="iconfont icon-dizhi"/>
+                    <text>{{baseData.homeAddress||'未填写'}}</text>
+                </view>
+            </view>
+            <view class="info-btn">
+                <view>
+                    <button class="share-btn" bindtap="contactNow">
+                                            <icon class="iconfont icon-dianhua"/>
+                                            <text>立即联系</text>
+                            </button>
+                </view>
+                <view>
+                    <button class="share-btn" open-type="share">
+                                                <icon class="iconfont icon-fenxiang"/>
+                                                <text>分享</text>
+                                            </button>
+                </view>
+            </view>
+        </view>
+    </view>

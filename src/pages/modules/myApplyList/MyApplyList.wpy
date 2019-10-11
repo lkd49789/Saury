@@ -1,0 +1,317 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .top-title {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 9999;
+            .flex {
+                height: 104rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 48rpx;
+                border-bottom: 1px solid #dedede;
+            }
+            .filter {
+                left: 0;
+                width: 100%;
+                background: #fff;
+                z-index: 99999;
+                padding: 20rpx 28rpx 0 28rpx;
+                >view {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 10rpx 0;
+                }
+            }
+        }
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99999;
+        }
+        .text-hidden-online {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .main {
+            margin: 149rpx 28rpx 0 28rpx;
+            font-size: 28rpx;
+            color: #2a2a2a;
+            .item-container {
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                padding: 30rpx 24rpx;
+                margin-bottom: 44rpx;
+                >view:first-child {
+                    margin-bottom: 20rpx;
+                    display: flex;
+                    justify-content: space-between;
+                }
+                >view:nth-child(2) {
+                    margin-bottom: 20rpx;
+                    color: #7a7a7a;
+                }
+                >view:last-child {
+                    margin-bottom: 20rpx;
+                    display: flex;
+                    justify-content: space-between;
+                    >view {
+                        display: flex;
+                        align-items: center;
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <view class="flex">
+                <view style="margin-left:28rpx">
+                    <text>我的请假</text>
+                </view>
+                <view style="margin-right:28rpx">
+                    <icon class="iconfont icon-sousuo1 " style="font-size:60rpx;color:#5d73fa;margin-right:14rpx" @tap="toSearch"></icon>
+                    <icon class="iconfont icon-shaixuan1" style="font-size:60rpx;color:#5d73fa" @tap="ishowFilter"></icon>
+                </view>
+            </view>
+            <view class="filter animation" wx:if="{{isShow}}">
+                <view catchtap="filter('cteateTime')">创建时间排序</view>
+                <view catchtap="filter('id')">客户编号排序</view>
+            </view>
+        </view>
+        <view class='main'>
+            <repeat for="{{MyApplyListData}}" key="index" index="index" item="item">
+                <view class="item-container" @tap="toMyApplyList('{{item.id}}')">
+                    <view>
+                        <text>{{item.startDateText}}至{{item.endDateText}}</text>
+                        <text style="color:#ff9900">{{item.totalDay}}天</text>
+                    </view>
+                    <view class="text-hidden-online">
+                        <text>{{item.memo||'请假原因未填写'}}</text>
+                    </view>
+                    <view>
+                        <view>
+                            <view style="height:25rpx;width:25rpx;border-radius:50%;margin-right:10rpx;border:1px solid #5d73fa;">
+                            </view>
+                            <text>{{item.vacationTypeText}}</text>
+                        </view>
+                        <view>
+                            <view style="height:25rpx;width:25rpx;background:{{item.statusColor}};margin-right:10rpx;border-radius:50%;">
+                            </view>
+                            <text>{{item.statusText}}</text>
+                        </view>
+                    </view>
+                </view>
+            </repeat>
+        </view>
+        <image src="{{'../../../images/add.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;" @touchstart="touchStart" @touchend="touchEnd">
+        </image>
+        <placeHolderImage :placeHolder.sync="placeHolder" :twoWayTitle="placeHolder" />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../utils/cofig/ajax.js'
+    import mixins from '../../../utils/cofig/mixin.js';
+    import placeHolderImage from '../../../components/placeHolderImage';
+    export default class myApplyList extends wepy.page {
+        config = {
+            enablePullDownRefresh: true,
+            backgroundTextStyle: 'dark',
+            backgroundColorTop: '#f4f4f4',
+            backgroundColorBottom: '#f4f4f4',
+        };
+        components = {
+            placeHolderImage
+        };
+        data = {
+            queryStream: {},
+            refresh: false,
+            addOpacity: 1,
+            pageNumber: 1,
+            totalCount: 0,
+            MyApplyListData: [],
+            isShow: false,
+            sorting: ''
+        };
+        methods = {
+            toSearch() {
+                wx.navigateTo({
+                    url: './search/searchMyApply'
+                });
+            },
+            touchStart() {
+                this.addOpacity = 0.6;
+                this.$apply();
+            },
+            touchEnd() {
+                wx.navigateTo({
+                    url: './createApply/createApply',
+                    success: () => {
+                        this.addOpacity = 1;
+                        this.$apply();
+                    }
+                });
+            },
+            toMyApplyList(id) {
+                wx.navigateTo({
+                    url: './myApplyDetail/myApplyDetail?id=' + id
+                });
+            },
+            ishowFilter() {
+                this.isShow = !this.isShow
+                this.$apply();
+            },
+            filter(name) {
+                this.MyApplyListData = [];
+                this.pageNumber = 1;
+                switch (name) {
+                    case 'cteateTime':
+                        this.GetMyApplyList('CreationTime desc')
+                        break;
+                    case 'id':
+                        this.GetMyApplyList('Id desc')
+                        break;
+                    default:
+                        break;
+                }
+            },
+        };
+        mixins = [mixins];
+        // 下拉刷新
+        onPullDownRefresh() {
+            this.MyApplyListData = [];
+            this.pageNumber = 1;
+            this.queryStream = {};
+            this.GetMyApplyList();
+            wx.hideNavigationBarLoading(); //完成停止加载
+            wx.stopPullDownRefresh(); //停止下拉刷新
+            this.$apply();
+        }
+        // 上拉加载
+        onReachBottom() {
+            if (this.totalCount / 10 > this.pageNumber && this.$parent.global.netWorkString) {
+                this.pageNumber += 1;
+                this.GetMyApplyList();
+            } else {
+                if (this.$parent.global.netWorkString) {
+                    wx.showToast({
+                        title: '我们是有底线的！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                } else {
+                    wx.showToast({
+                        title: '网络连接失败！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            }
+            this.$apply();
+        }
+        async GetMyApplyList(sort) {
+            this.sorting = sort ? sort : this.sorting;
+            var Keyword = this.queryStream.Keyword ? this.queryStream.Keyword : '';
+            var Status = this.queryStream.Status ? this.queryStream.Status : '';
+            var VacationType = this.queryStream.Keyword ? this.queryStream.VacationType : '';
+            var creationTimeRange = this.queryStream.creationTimeRange ? this.queryStream.creationTimeRange : '';
+            wx.showLoading({
+                title: '加载中，请稍等！',
+                mask: true,
+            });
+            var data = {
+                pageNumber: this.pageNumber,
+                pageSize: 10,
+                sorting: this.sorting,
+                Keyword,
+                Status,
+                VacationType,
+                creationTimeRange,
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/myVacation/GetMyApplyList',
+                'post',
+                data
+            )
+            switch (resData.statusCode) {
+                case 200:
+                    if (resData.data.result.items.length !== 0) {
+                        this.totalCount = resData.data.result.totalCount;
+                        var MyApplyListData = resData.data.result.items;
+                        for (var index in MyApplyListData) {
+                            switch (MyApplyListData[index].status) {
+                                case 'A':
+                                    MyApplyListData[index]['statusColor'] = '#069400'
+                                    break;
+                                case 'W':
+                                    MyApplyListData[index]['statusColor'] = '#ff9900'
+                                    break;
+                                case 'R':
+                                    MyApplyListData[index]['statusColor'] = '#e20000'
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        this.MyApplyListData = this.MyApplyListData.concat(MyApplyListData);
+                        var isRefresh = {
+                            isRefresh: false
+                        }
+                        wx.setStorageSync('isRefresh', isRefresh);
+                    } else {
+                        console.log('数据为空');
+                        this.placeHolder.placeHolderImageIndex = 0;
+                        this.placeHolder.placeHolderShow = true;
+                    }
+                    this.$apply();
+                    break;
+                case 403:
+                    console.log('您没有权限');
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    console.log('数据请求错误')
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                default:
+                    break;
+            }
+            this.$apply();
+        }
+        onLoad() {
+            this.GetMyApplyList();
+        }
+        onShow() {
+            var isRefresh = wx.getStorageSync('isRefresh');
+            var pages = getCurrentPages();
+            var prevPage = pages[pages.length - 1]; //上一个页面
+            this.queryStream = prevPage.data.queryStream;
+            if (prevPage.data.refresh || isRefresh.isRefresh) {
+                prevPage.data.refresh = false;
+                this.MyApplyListData = [];
+                this.pageNumber = 1;
+                this.GetMyApplyList();
+            }
+        }
+    }
+</script>

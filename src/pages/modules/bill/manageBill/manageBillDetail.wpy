@@ -1,0 +1,355 @@
+<style lang="less">
+    .bill {
+        .bill_title {
+            height: 104rpx;
+            line-height: 104rpx;
+            padding-left: 28rpx;
+            font-size: 48rpx;
+            position: relative;
+            border-bottom: 1px solid #dedede;
+        }
+        .bill_content {
+            background: #ffffff;
+            margin: 0 auto;
+            padding: 44rpx 28rpx 34rpx 28rpx;
+            font-size: 28rpx;
+            overflow: auto;
+            border-bottom: 20rpx solid #f2f2f2;
+            &:last-child {
+                border-bottom: 0
+            }
+            .caseConflictBorder_radius {
+                border: 1px solid;
+                width: 15rpx;
+                height: 15rpx;
+                line-height: 28rpx;
+                border-radius: 15rpx;
+                margin-right: 10rpx;
+                display: inline-block;
+            }
+            .bill_box {
+                margin: 20rpx 0;
+                .bill_view {
+                    line-height: 42rpx;
+                }
+            }
+            .bill_box2 {
+                line-height: 42rpx;
+                width: 50%;
+            }
+            .bill_x {
+                padding: 24rpx 28rpx 24rpx 28rpx;
+                background: #f2f2f2;
+                margin: 15rpx 0;
+                border-radius: 20rpx;
+            }
+            .bill_gray {
+                color: #7a7a7a;
+                border-color: #7a7a7a
+            }
+            .bill_blue {
+                color: #009dff;
+                border-color: #009dff
+            }
+            .bill_red {
+                color: #e20000;
+                border-color: #e20000
+            }
+            .bill_yellow {
+                color: #ff9900;
+                border-color: #ff9900
+            }
+            .bill_green {
+                color: #069400;
+                border-color: #069400
+            }
+            .bill_state {
+                float: right;
+                position: relative;
+            }
+        }
+        .bill_btn{border-radius: 0;width: 100%;position: fixed;bottom: 0;height: 98rpx;background: #5d73fa;color: #fff;line-height: 98rpx;text-align: center;font-size: 32rpx}
+        .flex {
+            display: flex;
+            margin-bottom: 15rpx;
+        }
+    }
+</style>
+
+<template>
+    <view class="bill">
+        <view class="bill_title">
+            <text class="title">账单详情</text>
+        </view>
+        <view class="bill_content">
+            <view class="bill_view">
+                <span class="bill_gray"> 账单编号: </span>{{billDataDetail.id||'未填写'}}
+                <view class="bill_state {{billDataDetail.processStatus=='Y'?'bill_blue':billDataDetail.processStatus=='N'?'bill_yellow':billDataDetail.processStatus=='A'?'bill_green':'bill_red'}}">{{billDataDetail.processStatusText||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_blue">{{billDataDetail.caseName||'未填写'}}</view>
+                <view class="bill_view bill_gray">{{billDataDetail.serialId||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_blue">{{billDataDetail.clientName||'未填写'}}</view>
+                <view class="bill_view bill_gray">{{billDataDetail.clientId||'未填写'}}</view>
+            </view>
+        </view>
+        <view class="bill_content">
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">日志区间</view>
+                    <view class="bill_view">{{billDataDetail.logStartDateText}}至{{billDataDetail.logEndDateText}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">账单日期</view>
+                    <view class="bill_view">{{billDataDetail.billingDateText||'未填写'}}</view>
+                </view>
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">预估到账日期</view>
+                    <view class="bill_view">{{billDataDetail.arrivedDateText||'未填写'}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">律师费</view>
+                    <view class="bill_view">{{billDataDetail.lawyerAmount}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">律师费折扣率</view>
+                    <view class="bill_view">{{billDataDetail.discountRate}}</view>
+                </view>
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">金额</view>
+                    <view class="bill_view">{{billDataDetail.disMoney}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">律师费税率</view>
+                    <view class="bill_view">{{billDataDetail.lawyerRatio}}</view>
+                </view>
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">金额</view>
+                    <view class="bill_view">{{billDataDetail.lawyerMoney}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">办案费</view>
+                    <view class="bill_view">{{billDataDetail.caseAmount}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">办案费税率</view>
+                    <view class="bill_view">{{billDataDetail.caseRatio}}</view>
+                </view>
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">金额</view>
+                    <view class="bill_view">{{billDataDetail.caseMoney}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">账单金额</view>
+                    <view class="bill_view">{{billDataDetail.billingAmount}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">货币类型</view>
+                    <view class="bill_view">{{billDataDetail.currencyText||'未填写'}}</view>
+                </view>
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">汇率</view>
+                    <view class="bill_view">{{billDataDetail.currencyRate||'未填写'}}</view>
+                </view>
+            </view>
+        </view>
+        <view class="bill_content" style="padding-bottom:{{billDataDetail.processStatusText=='审核通过'?'0':'98rpx'}}">
+            <view class="bill_view bill_gray">
+                <view>关联账单信息</view>
+            </view>
+            <view class="bill_x" @tap="into(1)">
+                <span>合同信息</span><span style="float:right">总计｜ <span style="color:#009dff">{{contractMoney||'未填写'}}</span></span>
+            </view>
+            <view class="bill_x" @tap="into(2)">
+                <span>日志清单</span><span style="float:right">总计｜ <span style="color:#009dff">{{journalAllMoney||'未填写'}}</span></span>
+            </view>
+            <view class="bill_x" @tap="into(3)">
+                <span>费用清单</span><span style="float:right">总计｜ <span style="color:#009dff">{{costAllMoney||'未填写'}}</span></span>
+            </view>
+        </view>
+        <view class="bill_btn" wx:if="{{false||billDataDetail.processStatus=='N'}}" catchtap="auditing()" >审核</view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    export default class Index extends wepy.page {
+        components = {};
+        data = {
+            billDataDetail: {},
+            billDetailId: '',
+            billDetailNum: 1,
+            contractMoney:0,
+            journalAllMoney: 0,
+            costAllMoney: 0,
+        };
+        methods = {
+            into(type) {
+                wepy.navigateTo({
+                    url: './manageBillDetails?id=' + this.billDataDetail.id + '&caseId=' + this.billDataDetail.caseId + '&type=' + type
+                });
+            },
+            auditing() {
+                wepy.navigateTo({
+                    url: './manageBillExamine?id=' + this.billDataDetail.id
+                })
+            }
+        };
+        onLoad(options) {
+            this.billDetailId = options.id;
+            this.getbill();
+            this.$apply();
+        };
+        // onShow() {
+            
+        // }
+        //获取账单
+        async getbill() {
+            var resData = await ajax.getData(
+                '/api/services/web/financialBilling/GetBillInfoForEdit',
+                'post', {
+                    id: this.billDetailId
+                }
+            );
+            switch (resData.statusCode) {
+                case 200:
+                    this.billDataDetail = resData.data.result;
+                    this.billDataDetail.caseRatio=this.percentage(this.billDataDetail.caseRatio);
+                    this.billDataDetail.lawyerRatio=this.percentage(this.billDataDetail.lawyerRatio);
+                    this.billDataDetail.discountRate=this.percentage(this.billDataDetail.discountRate);
+                    // this.billDataDetail=billDataDetail;
+                    this.$apply();
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    break
+                default:
+                    break;
+            }
+            this.billDetailNum++;
+            this.$apply();
+            this.charge()
+            this.journal()
+            this.cost()
+        }
+        //转化百分比
+        percentage(data){
+            if(data!==0){
+               data=(Number(data).toFixed(2))+'%'
+            }
+            return data
+        }
+        //合同信息
+        async charge() { 
+            var resData = await ajax.getData(
+                '/api/services/web/financialBilling/GetCasePaySummary',
+                'post', {
+                    billingId: this.billDataDetail.id,
+                    id: this.billDataDetail.caseId
+                }
+            );
+            switch (resData.statusCode) {
+                case 200:
+                    console.log(resData);
+                    this.contractMoney = resData.data.result.amount
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+            this.$apply();
+        }
+        //日志清单
+        async journal(num) {
+            var resData = await ajax.getData(
+                '/api/services/web/financialBilling/GetBillinglogSummary',
+                'post', {
+                    billingId: this.billDataDetail.id,
+                    caseId: this.billDataDetail.caseId,
+                }
+            );
+            switch (resData.statusCode) {
+                case 200:
+                    console.log(resData);
+                    this.journalAllMoney = resData.data.result.amount
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+            this.$apply();
+        }
+        //费用清单
+        async cost(num) {
+            var resData = await ajax.getData(
+                '/api/services/web/financialBilling/GetChargeSummary',
+                'post', {
+                    billingId: this.billDataDetail.id,
+                    caseId: this.billDataDetail.caseId,
+                    pageNumber: 1,
+                    pageSize: 10
+                }
+            );
+            switch (resData.statusCode) {
+                case 200:
+                    console.log(resData);
+                     this.costAllMoney = resData.data.result.amount
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+            this.$apply();
+        }
+    }
+</script>

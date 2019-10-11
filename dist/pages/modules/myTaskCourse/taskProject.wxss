@@ -1,0 +1,103 @@
+@import "./../../../components/navbar.wxss";
+page {
+  position: relative;
+}
+page .placeHolderImage {
+  position: fixed;
+  top: 187rpx;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  background: #fff;
+}
+.body {
+  height: 100%;
+}
+.body .top-title {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 10000;
+}
+.body .top-title .flex {
+  height: 104rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 48rpx;
+}
+.body .top-title .filter {
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 99999;
+  padding: 20rpx 28rpx 0 28rpx;
+}
+.body .top-title .filter > view {
+  display: flex;
+  flex-direction: column;
+  padding: 10rpx 0;
+}
+.body .main {
+  margin: 230rpx 28rpx 0 28rpx;
+}
+.body .main > view {
+  display: flex;
+  margin-bottom: 44rpx;
+}
+.body .main > view view:first-child {
+  margin-right: 28rpx;
+}
+.body .main > view view:first-child > image {
+  background-image: url(https://img02.mockplus.cn/image/2018-12-06/8cac87e0-f92a-11e8-bbaa-c9a354c6b5ef.png!thumb400);
+  width: 150rpx;
+  height: 130rpx;
+  border-radius: 10rpx;
+}
+.body .main > view > view:last-child {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 75%;
+}
+.body .main > view > view:last-child > view:first-child {
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.body .main > view > view:last-child > view:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.body .main > view > view:last-child > view:last-child > view:first-child {
+  display: flex;
+  align-items: center;
+}
+.body .main > view > view:last-child > view:last-child > view:first-child > view:first-child {
+  height: 20rpx;
+  width: 20rpx;
+  border-radius: 50%;
+  margin-right: 14rpx;
+}
+.body .main > view > view:last-child > view:last-child > view:last-child {
+  display: flex;
+}
+.body .main > view > view:last-child > view:last-child > view:last-child > view > icon {
+  margin-right: 10rpx;
+}
+.body .addBtn {
+  width: 160rpx;
+  height: 160rpx;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 99999;
+}

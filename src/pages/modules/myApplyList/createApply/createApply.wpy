@@ -1,0 +1,276 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 999999;
+        }
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .main {
+            margin: 149rpx 28rpx 0 28rpx;
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <text>请假申请</text>
+        </view>
+        <view class='main'>
+            <StartTime :timeObj.sync="StartDate" :dateData.sync='StartTime' :twoWayTitle="StartTime" />
+            <EndTime :timeObj.sync="EndDate" :dateData.sync='EndTime' :twoWayTitle="EndTime" />
+            <VacationType :options.sync="VacationType" :index.sync='VacationTypeIndex' :twoWayTitle="VacationTypeIndex" />
+            <VacationDay :input.sync="VacationDay" :inputValue.sync='VacationDayValue' :twoWayTitle="VacationDayValue" />
+            <TotalDay :input.sync="TotalDay" :inputValue.sync='TotalDayValue' :twoWayTitle="TotalDayValue" />
+            <view wx:if="{{annualVacationShow}}" style="margin-top:-20rpx;margin-bottom:20rpx;color:#e20000">
+                <text>当前剩余年假{{annualVacation}}天</text>
+            </view>
+            <Memo :input.sync="Memo" :inputValue.sync='MemoValue' :twoWayTitle="MemoValue" />
+        </view>
+        <image src="{{'../../../../images/test.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;" @touchstart="touchStart" @touchend="touchEnd">
+        </image>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import StartTime from '../../../../components/Date/DateTimePicker';
+    import EndTime from '../../../../components/Date/DateTimePicker';
+    import input1 from '../../../../components/picker/input';
+    import input2 from '../../../../components/picker/input';
+    import input3 from '../../../../components/picker/input';
+    import option from '../../../../components/picker/option';
+    export default class clientDetail extends wepy.page {
+        components = {
+            StartTime,
+            EndTime,
+            VacationDay: input1,
+            TotalDay: input2,
+            Memo: input3,
+            VacationType: option
+        };
+        data = {
+            // 按钮透明度
+            addOpacity: 1,
+            // 年假
+            annualVacation: 0,
+            annualVacationShow: false,
+            //时间选择器
+            submitData: {
+                // EndDate: "2018-10-31 14:50",
+                // Id: "e20a1e0e-143a-4b93-b277-f90f4eec90bf",
+                // Memo: "备注",
+                // StartDate: "2018-10-26 17:50",
+                // TotalDay: "5",
+                // VacationDay: "10",
+                // VacationType: "04",
+            },
+            StartDate: {
+                title: '开始时间',
+                name: 'StartTime',
+                isChecked: false,
+                time: '',
+                date: true
+            },
+            StartTime: '',
+            EndDate: {
+                title: '结束时间',
+                name: 'endTime',
+                isChecked: false,
+                time: '',
+                date: false
+            },
+            EndTime: '',
+            VacationDay: {
+                title: '请假期间节假日天数',
+                name: 'VacationDay',
+                warning: false,
+                type: 'digit',
+            },
+            VacationDayValue: '',
+            TotalDay: {
+                title: '请假天数',
+                name: 'TotalDay',
+                warning: false,
+                type: 'digit',
+            },
+            TotalDayValue: '',
+            Memo: {
+                title: '请假原由',
+                name: 'VacationDay',
+                options: true,
+                warning: false,
+            },
+            MemoValue: '',
+            VacationType: {
+                title: '请假类型',
+                name: 'VacationType',
+                value: [],
+                displayText: [],
+                warning: false
+            },
+            VacationTypeIndex: 0,
+        }
+        methods = {
+            touchStart() {
+                this.addOpacity = 0.6;
+                this.$apply();
+            },
+            touchEnd() {
+                if (this.submitData.VacationType && this.submitData.TotalDay) {
+                    switch (this.submitData.VacationType) {
+                        case '03':
+                            if (Number(+this.annualVacation) > Number(+this.submitData.TotalDay)) {
+                                this.CreateOrEditEmployeeVacationApply(this.submitData);
+                            } else {
+                                 this.addOpacity = 1;
+                                wx.showToast({
+                                    title: '年假剩余不足！', //提示的内容,
+                                    icon: 'none', //图标,
+                                    duration: 2000, //延迟时间,
+                                    mask: false, //显示透明蒙层，防止触摸穿透,
+                                    success: res => {}
+                                });
+                            }
+                            break;
+                        default:
+                            this.CreateOrEditEmployeeVacationApply(this.submitData);
+                            break;
+                    }
+                } else {
+                    this.addOpacity = 1;
+                    if (!this.submitData.VacationType) {
+                        this.VacationType.warning = true;
+                    }
+                    if (!this.submitData.TotalDay) {
+                        this.TotalDay.warning = true;
+                    }
+                    this.$apply();
+                }
+            }
+        }
+        watch = {
+            StartTime(dateData) {
+                this.submitData.StartDate = dateData[0] + '/' + dateData[1] + '/' + dateData[2] + ' ' + dateData[3] + ':' + dateData[4] + ':' + dateData[5];
+                this.$apply();
+            },
+            EndTime(dateData) {
+                this.submitData.EndDate = dateData[0] + '/' + dateData[1] + '/' + dateData[2] + ' ' + dateData[3] + ':' + dateData[4] + ':' + dateData[5];
+                this.$apply();
+            },
+            VacationTypeIndex(index) {
+                this.submitData.VacationType = this.VacationType.value[index];
+                if (this.submitData.VacationType == '03') {
+                    this.annualVacationShow = true;
+                } else {
+                    this.annualVacationShow = false;
+                }
+                this.$apply();
+            },
+            MemoValue(value) {
+                this.submitData.Memo = value;
+                this.$apply();
+            },
+            TotalDayValue(value) {
+                this.submitData.TotalDay = value;
+                this.$apply();
+            },
+            VacationDayValue(value) {
+                this.submitData.VacationDay = value;
+                this.$apply();
+            }
+        };
+        async GetGeneralCodeCombobox() {
+            var data = {
+                class: 'QJ'
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/generalCodeComboService/GetGeneralCodeCombobox',
+                'post',
+                data
+            )
+            console.log(resData);
+            if (resData.statusCode == 200) {
+                var GeneralCodeComboboxData = resData.data.result;
+                for (var index in GeneralCodeComboboxData) {
+                    this.VacationType.value[index] = GeneralCodeComboboxData[index].value;
+                    this.VacationType.displayText[index] = GeneralCodeComboboxData[index].displayText;
+                }
+            }
+            this.$apply();
+        }
+        // 提交数据
+        async CreateOrEditEmployeeVacationApply(data) {
+            wx.showLoading({
+                title: '提交中，请稍等！', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: () => {
+                    this.addOpacity = 1;
+                    this.$apply();
+                }
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/employeeVacation/CreateOrEditEmployeeVacationApply',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                var isRefresh = wx.getStorageSync('isRefresh');
+                isRefresh.isRefresh = 'true'
+                wx.setStorageSync('isRefresh', isRefresh);
+                wx.navigateBack({
+                    delta: 1
+                });
+            } else {
+                wx.showToast({
+                    title: '提交失败！请检查必填项！',
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
+            }
+        }
+        //获取年假
+        async GetVacationDays() {
+            var data = {
+                id: this.$parent.global.userInfo.id
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/employeeVacation/GetVacationDays',
+                'POST',
+                data
+            )
+            if (resData.success) {
+                this.annualVacation = resData.result;
+                this.$apply();
+            }
+        }
+        onLoad() {
+            var now = new Date();
+            this.EndDate.time = now;
+            this.StartDate.time = now;
+            this.submitData.Id = '';
+            this.GetGeneralCodeCombobox();
+            this.GetVacationDays();
+        }
+    }
+</script>

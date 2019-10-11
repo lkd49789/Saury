@@ -1,0 +1,110 @@
+<style lang="less">
+.body {
+  height: 100%;
+  .container-title {
+    height: 104rpx;
+    font-size: 48rpx;
+    padding-left: 28rpx;
+    color: #2a2a2a;
+    line-height: 104rpx;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #dedede;
+  }
+  .personnel-container {
+    padding: 0 28rpx;
+    font-size: 28rpx;
+    .personnel-item {
+      display: flex;
+      align-items: center;
+      .personnel-content {
+        border-bottom: 1px solid #f4f4f4;
+        width: 100%;
+        padding: 44rpx 0;
+        display: flex;
+        color: #7a7a7a;
+        > view:first-child {
+          font-weight: bold;
+          color: #2a2a2a;
+        }
+      }
+    }
+  }
+}
+</style>
+
+<template>
+  <!-- <view></view> -->
+  <!-- <text></text> -->
+  <view class="body">
+    <view class="container-title">
+      <text class="title-text">案件律师信息</text>
+      <!-- <icon class="iconfont icon-bianji" style="font-size:60rpx;color:#5d73fa"></icon> -->
+    </view>
+      <view class="personnel-container">
+        <repeat for="{{lawyerGroupData}}" key="index" index="index" item="item">
+        <view class="personnel-item" @tap="topersonal">
+            <view style='width:20%'>
+              <image src="{{userPhoto[index]}}" mode="scaleToFill"
+                lazy-load="false"  style="height:80rpx;width:80rpx;border-radius:50%;">
+              </image>
+            </view>
+               <view class="personnel-content">
+                 <view style="width:25%">
+                  <text>{{item.employeeName}}</text>
+                 </view>
+                 <view  style="width:75%">
+                  <text >{{item.lawyerRoleText}}</text>
+                 </view>
+              </view>
+        </view>
+        </repeat>
+      </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import ajax from '../../../../../utils/cofig/ajax.js';
+export default class casepersonnelinformaition extends wepy.page {
+  data = {
+    lawyerGroupData: {},
+    userPhoto: [],
+    lawyerRoleText: []
+  };
+  methods = {
+  };
+  async getLawyerGroup() {
+    var lawyerGroupData = await ajax.getData(
+      '/api/services/web/caseLawyer/GetCaseLawyersWithGroup',
+      'post',
+      { caseId: this.caseId }
+    );
+    if(lawyerGroupData.statusCode==200){
+        var lawyerGroupData=lawyerGroupData.data.result;
+        // 获取图片
+        for (var index in lawyerGroupData) {
+          var http = '/api/services/web/personal/GetEmployeePhoto?id=' + lawyerGroupData[index].userId;
+          var avatarData = await ajax.getAavatar(http);
+          this.userPhoto[index]=avatarData;
+          // 处理字符串
+          lawyerGroupData[index].lawyerRoleText=lawyerGroupData[index].lawyerRoleText.replace(/、/g, '/');
+        }
+        this.lawyerGroupData=lawyerGroupData;
+        this.$apply();
+    }else{
+      wx.showToast({
+          title: '网络故障！',
+          icon: 'none',
+          duration: 1500,
+          mask: false
+        });
+    }
+  }
+  onLoad(options) {
+    this.caseId=options.id;
+    this.getLawyerGroup();
+  }
+
+}
+</script>

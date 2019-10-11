@@ -1,0 +1,327 @@
+<style lang="less">
+    .bill {
+        .top-title {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 10000;
+            .flex {
+                height: 104rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 48rpx;
+            }
+            .filter {
+                left: 0;
+                width: 100%;
+                background: #fff;
+                z-index: 99999;
+                padding: 20rpx 28rpx 0 28rpx;
+                >view {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 10rpx 0;
+                }
+            }
+        }
+        .bill_content {
+            background: #ffffff;
+            margin: 0 auto;
+            box-shadow: 0rpx 8rpx 30rpx 0rpx rgba(65, 98, 213, 0.25);
+            border-radius: 20rpx;
+            padding: 30rpx 24rpx;
+            margin: 44rpx 28rpx;
+            font-size: 28rpx;
+            overflow: auto;
+            .caseConflictBorder_radius {
+                border: 1px solid;
+                width: 15rpx;
+                height: 15rpx;
+                line-height: 28rpx;
+                border-radius: 15rpx;
+                margin-right: 10rpx;
+                display: inline-block;
+            }
+            .bill_view {
+                line-height: 50rpx;
+            }
+            .bill_gray {
+                color: #7a7a7a;
+                border-color: #7a7a7a
+            }
+            .bill_blue {
+                color: #009dff;
+                border-color: #009dff
+            }
+            .bill_red {
+                color: #e20000;
+                border-color: #e20000
+            }
+            .bill_yellow {
+                color: #ff9900;
+                border-color: #ff9900
+            }
+            .bill_green {
+                color: #069400;
+                border-color: #069400
+            }
+            .bill_state {
+                float: right;
+                position: relative;
+            }
+        }
+    }
+</style>
+<template>
+    <view class="bill">
+        <!-- <view style="height:200rpx"></view>
+        <view class="bill_title">
+            <view class="bill_t">
+                <text class="title">发票管理</text>
+                <icon class="iconfont icon-sousuo1" style="font-size:60rpx;color:#5d73fa" @tap="toSearch"></icon>
+            </view>
+            
+        </view> -->
+        <view class="top-title">
+            <view class="flex">
+                <view style="margin-left:28rpx">
+                    <text>发票管理</text>
+                </view>
+                <view style="margin-right:28rpx">
+                    <icon class="iconfont icon-sousuo1 " style="font-size:60rpx;color:#5d73fa;margin-right:14rpx" @tap="toSearch"></icon>
+                    <icon class="iconfont icon-shaixuan1" style="font-size:60rpx;color:#5d73fa" @tap="isshowFilter"></icon>
+                </view>
+            </view>
+            <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" />
+            <view class="filter animation" wx:if="{{isShow}}">
+                <view catchtap="filter('cteateTime')">创建时间排序</view>
+                <view catchtap="filter('case')">案件排序</view>
+            </view>
+        </view>
+        <view style="margin-top:230rpx">
+            <repeat for="{{myinvoice}}" key="index" index="index" item="item">
+            <view class="bill_content" @tap="into('{{item}}')">
+                <view class="bill_view">{{item.clientName||'未填写'}}</view>
+                <view class="bill_view bill_gray">开票金额｜<text class="bill_blue">{{item.invoiceAmount}} ({{item.invoiceCurrency}})</text></view>
+                <view class="bill_view bill_gray ">{{item.creationTime||'未填写'}}
+                    <view class="bill_state  {{item.status=='UnHandled'?'bill_yellow':item.status=='Invoiced'?'bill_green':item.status=='Claimed'?'bill_blue':'bill_gray'}}">
+                        <view class="caseConflictBorder_radius"></view>{{item.statusName||'未填写'}}</view>
+                </view>
+            </view>
+        </repeat>
+        </view>
+        
+        <placeHolderImage :placeHolder.sync="placeHolder" :twoWayTitle="placeHolder" />
+    </view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import placeHolderImage from '../../../../components/placeHolderImage';
+    import mixins from '../../../../utils/cofig/mixin.js';
+    import navbar from '../../../../components/navbar';
+    import {
+        formatTime
+    } from '../../../../utils/cofig/api.js';
+    export default class manageInvoice extends wepy.page {
+        config = {
+            enablePullDownRefresh: true,
+            backgroundTextStyle: 'dark',
+            backgroundColorTop: '#f4f4f4',
+            backgroundColorBottom: '#f4f4f4',
+        };
+        components = {
+            placeHolderImage,
+            navbar
+        };
+        mixins = [mixins]
+        watch = {
+            currentTab(newValue, oldValue) {
+                wx.pageScrollTo({
+                  scrollTop: 0, //滚动到页面的目标位置（单位px）,
+                  duration: 0 //滚动动画的时长，默认300ms，单位 ms,
+                });
+                switch (newValue) {
+                    case 0:
+                        this.getbill("UnHandled");
+                        break;
+                    case 1:
+                        this.getbill("Invoiced");
+                        break;
+                    case 2:
+                        this.getbill("Claimed");
+                        break;
+                    case 3:
+                        this.getbill("Canceled");
+                        break;
+                    case 4:
+                        this.getbill("Returned");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        data = {
+            myinvoice: [],
+            pageNumber: 1,
+            totalCount: 0,
+            navbars: ['待处理', '已开票', '已领取', '已作废', '已退回'],
+            currentTab: 0,
+            state: "UnHandled",
+            queryStream: {},
+            isShow: false,
+            sorting: ''
+        };
+        methods = {
+            toSearch() {
+                wx.navigateTo({
+                    url: '../search/searchManageNoice'
+                });
+            },
+            into(item) {
+                this.$apply()
+                wepy.navigateTo({
+                    url: './manageInvoiceDetail?id=' + item.id
+                });
+            },
+            filter(name) {
+                this.myinvoice = [];
+                this.pageNumber = 1;
+                switch (name) {
+                    case 'cteateTime':
+                        this.getbill(this.state,'CreationTime desc')
+                        break;
+                    case 'case':
+                        this.getbill(this.state,'CaseName desc')
+                        break;
+                    default:
+                        break;
+                }
+            },
+            isshowFilter() {
+                this.isShow = !this.isShow
+                this.$apply();
+            },
+        };
+        onReachBottom() {
+            if (this.totalCount / 10 > this.pageNumber && this.$parent.global.netWorkString) {
+                this.pageNumber += 1;
+                this.getbill(this.state);
+            } else {
+                if (this.$parent.global.netWorkString) {
+                    wx.showToast({
+                        title: '我们是有底线的！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                } else {
+                    wx.showToast({
+                        title: '网络连接失败！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            }
+            this.$apply();
+        };
+        onPullDownRefresh() {
+            this.myinvoice = [];
+            this.pageNumber = 1;
+            this.getbill(this.state);
+            wx.hideNavigationBarLoading(); //完成停止加载
+            wx.stopPullDownRefresh(); //停止下拉刷新
+            this.$apply();
+        }
+        //获取发票
+        async getbill(state,sort) {
+            if (this.state !== state) {
+                this.pageNumber = 1
+            }
+             this.sorting = sort ? sort : this.sorting;
+            var filter = this.queryStream.filter ? this.queryStream.filter : '';
+            var creationTimeRange = this.queryStream.creationTimeRange ? this.queryStream.creationTimeRange : '';
+            var resData = await ajax.getData(
+                '/api/services/web/financialInvoice/GetInvoices',
+                'post', {
+                    pageNumber: this.pageNumber,
+                    pageSize: 10,
+                    status: state,
+                    creationTimeRange,
+                    filter,
+                    sorting: this.sorting,
+                    creatorUserName:this.queryStream.creatorUserName
+                }
+            );
+            switch (resData.statusCode) {
+                case 200:
+                    if (this.state == state) {
+                        if (resData.data.result.items.length !== 0) {
+                            this.myinvoice = this.myinvoice.concat(resData.data.result.items);
+                            this.totalCount = resData.data.result.totalCount;
+                            for (var index in this.myinvoice) {
+                                this.myinvoice[index].creationTime = this.myinvoice[index].creationTime.split('T')[0]
+                            }
+                            this.placeHolder.placeHolderShow = false;
+                            this.$apply();
+                        } else {
+                            console.log('数据为空');
+                            this.myinvoice = []
+                            this.placeHolder.placeHolderImageIndex = 0;
+                            this.placeHolder.placeHolderShow = true;
+                        }
+                    } else {
+                        if (resData.data.result.items.length !== 0) {
+                            this.myinvoice = resData.data.result.items;
+                            for (var index in this.myinvoice) {
+                                this.myinvoice[index].creationTime = this.myinvoice[index].creationTime.split('T')[0]
+                            }
+                            this.state = state
+                            this.totalCount = resData.data.result.totalCount;
+                            this.placeHolder.placeHolderShow = false;
+                            this.$apply();
+                        } else {
+                            console.log('数据为空');
+                            this.billData = []
+                            this.placeHolder.placeHolderImageIndex = 0;
+                            this.placeHolder.placeHolderShow = true;
+                        }
+                    }
+                    this.$apply();
+                    break;
+                case 403:
+                    console.log('您没有权限');
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    console.log('数据请求错误')
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                default:
+                    break;
+            }
+        }
+        onLoad() {
+            this.getbill(this.state)
+        };
+        onShow() {
+            let pages = getCurrentPages();
+            let { data } = pages[pages.length - 1]; //上一个页面
+            this.queryStream = data.queryStream;
+            if (data.refresh) {
+                data.refresh = false;
+                this.myinvoice = [];
+                this.pageNumber = 1;
+                this.getbill(this.state);
+            }
+        };
+    }
+</script>

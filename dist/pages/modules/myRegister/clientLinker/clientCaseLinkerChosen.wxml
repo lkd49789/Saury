@@ -1,0 +1,30 @@
+
+    <view class="container">
+        <view class="pageTitle">
+            客户方本案联系人
+        </view>
+        <view class="listBox">
+            <block wx:for="{{clientListData}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                <view class="clientItem" bindtap="toclientLinkerDetail" data-wpytoclientlinkerdetail-a="{{item.id}}">
+                    <view class="avatar">
+                        <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false"/>
+                    </view>
+                    <view class="name-workPhone">
+                        <text>{{item.name}} | <text style="color:#7a7a7a;">{{item.dutyText||'未填写'}}</text></text>
+                        <text style="color:#7a7a7a;">{{item.workPhone||'未填写'}}</text>
+                    </view>
+                    <view class="Operator" catchtap="operator" data-wpyoperator-a="{{index}}" data-wpyoperator-b="{{item.id}}">
+                        <icon class="iconfont icon-gengduo"/>
+                    </view>
+                </view>
+            </block>
+        </view>
+        <view class="chooseFixedBtn">
+            <view  wx:if="{{isClientCount}}" style="border-right: 1px solid #fff;" bindtap="toClientCaseLinkerList">
+                <text>关联已有联系人</text>
+            </view>
+            <view bindtap="toCreateClientLinker" style="width:{{isClientCount?'50%':'100%'}};">
+                <text>新建联系人</text>
+            </view>
+        </view>
+    </view>

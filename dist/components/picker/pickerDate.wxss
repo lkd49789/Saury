@@ -1,0 +1,21 @@
+.picker-date {
+  margin-bottom: 36rpx;
+}
+.picker-date picker {
+  padding: 20rpx 0;
+  border-bottom: 1px solid #dfdfdf;
+}
+.picker-date picker .tui-picker-detail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #7a7a7a;
+}
+.picker-date .checkbox {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.picker-date .checkbox .checkboxItem {
+  margin: 20rpx 20rpx 0 0;
+}

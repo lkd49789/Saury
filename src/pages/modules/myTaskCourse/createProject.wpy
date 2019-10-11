@@ -1,0 +1,661 @@
+<style lang='scss'>
+  .container {
+    .main {
+      margin: 149rpx 28rpx 44rpx 28rpx;
+      .checkedBox {
+        // padding: 0 28rpx 22rpx 28rpx;
+        margin-bottom: 36rpx;
+        border-bottom: 1px solid #dedede;
+        .radio-group {
+          height: 106rpx;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-wrap: nowrap;
+          width: 100%;
+          .label {
+            align-items: center;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+          }
+        }
+        .warning {
+          margin-bottom: 10rpx;
+          color: #e20000;
+        }
+      }
+      .inputSearch {
+        margin-bottom: 36rpx;
+        .title {
+          color: #2a2a2a;
+        }
+        .input-container {
+          border-bottom: 1px solid #dedede;
+          color: #7a7a7a;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          padding: 20rpx 0;
+          >input {
+            width: 100%;
+          }
+          >text {
+            font-size: 32rpx;
+          }
+        }
+        .warning{
+          margin-top:20rpx;
+        }
+      }
+      .upLoadImage {
+        margin-bottom: 36rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        flex-direction: column;
+        .upLoadImage-contianer {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 250rpx;
+          width: 80%;
+          background: #dedede;
+          >icon {
+            font-size: 100rpx;
+            color: #7a7a7a;
+          }
+          >image {
+            height: 100%;
+            width: 100%;
+          }
+        }
+        .title {
+          margin-top: 15rpx;
+          color: #7a7a7a;
+        }
+      }
+      .multiSelector {
+        padding: 20rpx 0;
+        border-bottom: 1px solid #dedede;
+        margin-bottom: 36rpx;
+        .picker {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          color: #7a7a7a;
+        }
+      }
+      .checkedBox-appStage {
+        margin-bottom: 22rpx;
+        .title{
+          margin-bottom: 20rpx;
+        }
+        .checkbox-group {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-wrap: wrap;
+          width: 100%;
+          .label {
+            align-items: center;
+            display: flex;
+             width: 100%;
+            justify-content: space-between;
+            margin-bottom: 14rpx;
+            >view:last-child {
+              color: #ffffff;
+              height: 30rpx;
+              width: 30rpx;
+              font-size: 24rpx;
+              background: #e20000;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class='container' id="container">
+    <view class="page-title">
+      创建项目
+    </view>
+    <view class="main">
+      <view class="checkedBox">
+        <view class="title">
+          项目类别
+        </view>
+        <radio-group class="radio-group" @change="radioChange">
+          <label wx:for="{{Category}}" wx:key="index" index="index" item="item " class="label">
+                          <radio value="{{item.id}}"  name="id"  color="#5d73fa"/> {{item.name}}
+                      </label>
+        </radio-group>
+        <view class="warning" wx:if="{{!subData.Category}}">
+          此字段为必填字段！
+        </view>
+      </view>
+      <view class="inputSearch" wx:if="{{subData.Category=='0'||subData.Category=='1'}}">
+        <view class="title">
+          客户名称
+        </view>
+        <view class="input-container" @tap="chooseClientName">
+          <input value="{{ClientIdValue}}" type="text" disabled="true" maxlength="140" />
+          <text wx:if="{{ClientIdValue}}" catchtap="deleteValue('ClientIdValue')">x</text>
+        </view>
+        <view class="warning" wx:if="{{subData.Category=='1'&&!ClientIdValue}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+      </view>
+      <view class="inputSearch" wx:if="{{subData.Category=='0'}}">
+        <view class="title">
+          案件名称
+        </view>
+        <view class="input-container" @tap="chooseCaseIdName">
+          <input value="{{CaseIdValue}}" type="text" disabled="true" maxlength="140" />
+          <text wx:if="{{CaseIdValue}}" catchtap="deleteValue('CaseIdValue')">x</text>
+        </view>
+      </view>
+      <view wx:if="{{subData.Category=='2'}}">
+        <Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
+      </view>
+      <view class="upLoadImage">
+        <view class="upLoadImage-contianer" @tap="upLoadImage">
+          <image src="{{CoverImage}}" mode="aspectFill" lazy-load="false" wx:if="{{CoverImage}}" />
+          <icon class="iconfont icon-xinjianzhuye" wx:else></icon>
+        </view>
+        <view class="title">
+          上传新封面
+        </view>
+      </view>
+      <Description :input.sync="Description" :inputValue.sync='DescriptionValue' :twoWayTitle="DescriptionValue" />
+      <view class="checkedBox" style="border:0">
+        <radio-group class="radio-group" @change="radioChangeTemplate">
+          <label wx:for="{{inputTemplate}}" wx:key="index" index="index" item="item " class="label">
+                          <radio value="{{item.value}}" checked="{{item.checked}}"  name="id"  color="#5d73fa"/> {{item.displayText}}
+                      </label>
+        </radio-group>
+      </view>
+      <Privacy :options.sync="Privacy" :index.sync='PrivacyIndex' :twoWayTitle="PrivacyIndex" />
+      <view class="multiSelector" wx:if="{{subData.inputTemplate=='1'}}">
+        <picker mode="multiSelector" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" value="{{TemplateIdArrayIndex}}" range="{{TemplateIdArray}}">
+          <view class="picker">
+            <text>{{TemplateIdText||'请选择'}}</text>
+            <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing"></icon>
+          </view>
+        </picker>
+      </view>
+      <view wx:if="{{subData.inputTemplate=='0'}}">
+        <TemplateId :options.sync="TemplateId" :index.sync='TemplateIdIndex' :twoWayTitle="TemplateIdIndex" />
+      </view>
+      <view class="checkedBox-appStage" wx:if="{{applicationStages.length>0}}">
+        <view class="title">
+          模板阶段
+        </view>
+        <checkbox-group @change="checkboxChange" class="checkbox-group">
+          <label wx:for="{{applicationStages}}" wx:key="index" index="index" item="item " class="label">
+                <view><checkbox value="{{item.id}}" checked="{{item.checked}}" name="id"  color="#5d73fa"/> {{item.name}}</view>
+                <view>{{item.itemsCount}}</view>
+          </label>
+        </checkbox-group>
+      </view>
+    </view>
+    <image class="btn-sub" src="../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="SubmitData" />
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import ajax from '../../../utils/cofig/ajax.js';
+  import Name from '../../../components/picker/input';
+  import Description from '../../../components/picker/input';
+  import Privacy from '../../../components/picker/pickerOption';
+  import TemplateId from '../../../components/picker/pickerOption';
+  export default class createProject extends wepy.page {
+    components = {
+      Name,
+      Description,
+      Privacy,
+      TemplateId
+    };
+    data = {
+      subData: {
+        CaseId: "",
+        Category: "",
+        ClientId: "",
+        Cover: "",
+        CreationTime: "",
+        Description: "",
+        Id: "",
+        Name: "",
+        Privacy: "",
+        TemplateId: "",
+        inputTemplate: "",
+        StageIds:'',
+        checkbox:'',
+      },
+      Category: [],
+      ClientIdValue: '',
+      CaseIdValue: '',
+      CoverImage:'',
+      Name: {
+        title: '项目名称',
+        name: 'Name',
+        warning: true,
+      },
+      NameValue: '',
+      Description: {
+        title: '项目描述',
+        name: 'Description',
+        warning: false,
+        isShow: true
+      },
+      DescriptionValue: '',
+      inputTemplate: [{
+          displayText: '自定义数据',
+          value: '-1',
+          checked: true
+        },
+        {
+          displayText: '个人模板',
+          value:'0'
+        },
+        {
+          displayText: '系统模板',
+          value: '1'
+        },
+      ],
+      Privacy: {
+        title: '项目隐私性',
+        name: 'Privacy',
+        data: [
+          {
+            displayText: '私有项目',
+            value: '1'
+          },
+          {
+            displayText: '公开项目',
+            value: '0'
+          },
+          
+        ],
+        key: 'displayText',
+        warning: false
+      },
+      PrivacyIndex: 0,
+      TemplateId: {
+        name: 'TemplateId',
+        data: [],
+        key: 'name',
+        warning: false
+      },
+      TemplateIdIndex: -1,
+      TemplateIdArrayIndex: [0, 0],
+      TemplateIdArray: [],
+      TemplateIdDataArray: [],
+      TemplateIdText: '请选择',
+      //模板阶段
+      applicationStages: []
+    };
+    methods = {
+      deleteValue(keywords){
+        switch (keywords) {
+          case 'ClientIdValue':
+            this.ClientIdValue='';
+            this.subData.ClientId='';
+            break;
+          case 'CaseIdValue':
+            this.CaseIdValue='';
+            this.subData.CaseId='';
+            break;
+        
+          default:
+            break;
+        }
+        this.$apply();
+      },
+      SubmitData(){
+        if(this.subData.Category!=='2'&&this.subData.Category){
+          this.CreateOrUpdateTaskProject();
+        }else if(this.subData.Category=='2'&&this.subData.Name){
+          this.CreateOrUpdateTaskProject();
+        }else{
+          wx.showToast({
+            title: '请填写必填项！', //提示的内容,
+            icon: 'none', //图标,
+            duration: 2000, //延迟时间,
+            mask: false, //显示透明蒙层，防止触摸穿透,
+            success: res => {}
+          });
+        }
+      },
+      checkboxChange(e){
+        console.log(e.detail.value)
+        this.subData.checkbox=e.detail.value[e.detail.value.length-1];
+        this.subData.StageIds=e.detail.value.toString();
+        this.$apply();
+      },
+      bindMultiPickerChange(e) {
+        var value = e.detail.value;
+        this.TemplateIdArrayIndex = value;
+        if (this.TemplateIdArray[1][value[1]]) {
+          this.TemplateIdText = this.TemplateIdArray[0][value[0]] + '/' + this.TemplateIdArray[1][value[1]]
+          this.subData.TemplateId = this.TemplateIdDataArray[value[0]].templates[value[1]].id;
+          this.GetApplicationStages(this.subData.TemplateId);
+        } else {
+          this.TemplateIdText = this.TemplateIdArray[0][value[0]];
+          this.applicationStages=[];
+          this.subData.checkbox='';
+          this.subData.StageIds=[];
+        }
+        this.$apply();
+      },
+      bindMultiPickerColumnChange(e) {
+        if (e.detail.column == 0) {
+          this.TemplateIdArrayIndex[1] = 0;
+          this.TemplateIdArray[1] = [];
+          this.GetApplicationTemplatesWithGroup(e.detail.value);
+        }
+        this.$apply();
+      },
+      radioChangeTemplate(e) {
+        this.subData.inputTemplate = e.detail.value;
+        this.TemplateId.data = [];
+        this.subData.TemplateId = '';
+        this.applicationStages=[];
+        this.subData.checkbox='';
+        this.subData.StageIds='';
+        switch (e.detail.value) {
+          case '0':
+            this.TemplateIdIndex = -1;
+            this.GetTemplatesWithGroup();
+            break;
+          case '1':
+            this.TemplateIdArrayIndex = [0, 0];
+            this.TemplateIdText = '';
+            this.TemplateIdArray = [
+              [],
+              []
+            ]
+            this.GetApplicationTemplatesWithGroup(0);
+            break;
+          default:
+            this.TemplateIdIndex = -1;
+            break;
+        }
+        this.$apply();
+      },
+      upLoadImage() {
+        wx.chooseImage({
+          count: 1,
+          sizeType: ['original', 'compressed'],
+          sourceType: ['album', 'camera'],
+          success: (res) => {
+            const tempFilePaths = res.tempFilePaths
+           this.UploadProjectCover(tempFilePaths[0]);
+          }
+        })
+      },
+      radioChange(e) {
+        this.NameValue = '';
+        this.subData.Name = '';
+        this.ClientIdValue = '';
+        this.subData.ClientId = '';
+        this.CaseIdValue = '';
+        this.subData.CaseId = '';
+        this.subData.Category = e.detail.value;
+        this.$apply();
+      },
+      chooseClientName() {
+        wx.navigateTo({
+          url: './caseClientSearch/searchCaseClient?class=client'
+        });
+      },
+      chooseCaseIdName() {
+        if (this.subData.ClientId) {
+          wx.navigateTo({
+            url: './caseClientSearch/searchCaseClient?class=case' + '&parentId=' + this.subData.ClientId
+          });
+        } else {
+          wx.navigateTo({
+            url: './caseClientSearch/searchCaseClient?class=case'
+          });
+        }
+      }
+    };
+    watch = {
+      TemplateIdIndex(index) {
+        if (this.subData.inputTemplate == '0' && this.TemplateId.data.length > 0) {
+          this.subData.TemplateId = this.TemplateId.data[index].id;
+          this.GetStages(this.subData.TemplateId);
+        }
+        this.$apply();
+      },
+      NameValue(value) {
+        this.subData.Name = value;
+        this.$apply();
+      },
+      DescriptionValue(value) {
+        this.subData.Description = value;
+        this.$apply();
+      },
+      PrivacyIndex(index) {
+        this.subData.Privacy = this.Privacy.data[index].value;
+        this.$apply();
+      }
+    };
+    computed = {};
+    async GetGeneralCodeComboOutput() {
+      var resData = await ajax.getData(
+        '/api/services/web/common/GetGeneralCodeComboOutput',
+        'post', {
+          class: "TPCT",
+        }
+      )
+      if (resData.statusCode == 200) {
+        this.Category = resData.data.result;
+        this.$apply();
+      } else {
+        wx.showToast({
+          title: '网络错误！', //提示的内容,
+          icon: 'none', //图标,
+          duration: 2000, //延迟时间,
+          mask: false, //显示透明蒙层，防止触摸穿透,
+          success: res => {}
+        });
+      }
+    }
+    async GetTemplatesWithGroup() {
+      var resData = await ajax.getData(
+        '/api/services/web/taskTemplate/GetTemplatesWithGroup',
+        'post', {}
+      )
+      if (resData.statusCode == 200) {
+        this.TemplateId.data = resData.data.result.items[0].templates;
+        this.$apply();
+      }
+    }
+    async GetApplicationTemplatesWithGroup(index) {
+      var resData = await ajax.getData(
+        '/api/services/web/taskTemplate/GetApplicationTemplatesWithGroup',
+        'post', {}
+      )
+      if (resData.statusCode == 200) {
+        var TemplateIdData = resData.data.result.items;
+        this.TemplateIdDataArray = TemplateIdData;
+        if (!index) {
+          for (var i = 0; i < TemplateIdData.length; i++) {
+            this.TemplateIdArray[0].push(TemplateIdData[i].name);
+          }
+          for (var j = 0; j < TemplateIdData[0].templates.length; j++) {
+            this.TemplateIdArray[1][j] = TemplateIdData[0].templates[j].name;
+          }
+        } else {
+          if (TemplateIdData[index].templates) {
+            for (var j = 0; j < TemplateIdData[index].templates.length; j++) {
+              this.TemplateIdArray[1][j] = TemplateIdData[index].templates[j].name;
+            }
+          }
+        }
+      }
+      this.$apply();
+    }
+    async GetApplicationStages(templateId) {
+      var resData = await ajax.getData(
+        '/api/services/web/taskTemplate/GetApplicationStages',
+        'post', {
+          templateId
+        }
+      )
+      if (resData.statusCode == 200) {
+        var applicationStages = resData.data.result.items;
+        applicationStages.map((item)=>{
+             item.checked=true;
+             return item
+        })
+        var Stages=applicationStages.map((item,index)=>{
+            return item.id
+        })
+        this.subData.StageIds=Stages.toString();
+        this.subData.checkbox=Stages[Stages.length-1];
+        this.applicationStages = applicationStages;
+        if(this.applicationStages.length>0){
+          this.pageScrollToBottom();
+        }
+        this.$apply()
+      }
+    }
+    async GetStages(templateId){
+      var resData=await ajax.getData(
+        '/api/services/web/taskTemplate/GetStages',
+        'post',
+        {
+          templateId
+        }
+      )
+      if(resData.statusCode==200){
+        var applicationStages = resData.data.result.items;
+        applicationStages.map((item)=>{
+             item.checked=true;
+             return item
+        })
+        var Stages=applicationStages.map((item,index)=>{
+            return item.id
+        })
+        this.subData.StageIds=Stages.toString();
+        this.subData.checkbox=Stages[Stages.length-1];
+        this.applicationStages = applicationStages;
+        if(this.applicationStages.length>0){
+          this.pageScrollToBottom();
+        }
+        this.$apply();
+      }
+    }
+    //提交数据
+    async CreateOrUpdateTaskProject(){
+      var resData=await ajax.getData(
+        '/api/services/web/taskProject/CreateOrUpdateTaskProject',
+        'post',
+        this.subData
+      )
+      console.log(resData);
+      if(resData.statusCode==200){
+        wx.showLoading({
+          title: 'Loading...', //提示的内容,
+          mask: true, //显示透明蒙层，防止触摸穿透,
+          success: res => {
+            var pages = getCurrentPages();
+                var prevPage = pages[pages.length - 2]; //上一个页面
+                if (prevPage) {
+                    prevPage.isRefresh();
+                    wx.navigateBack({
+                            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                    });
+              }
+          }
+        });
+      }else{
+        wx.showToast({
+          title: resData.data.error.message, //提示的内容,
+          icon: 'none', //图标,
+          duration: 2000, //延迟时间,
+          mask: false, //显示透明蒙层，防止触摸穿透,
+          success: res => {}
+        });
+      }
+    }
+    //上传图片
+    async UploadProjectCover(image){
+      wx.showLoading({
+        title: 'Loading...', //提示的内容,
+        mask: true, //显示透明蒙层，防止触摸穿透,
+        success: res => {}
+      });
+      var resData=await ajax.uploadFile(
+        '/api/services/web/taskProject/UploadProjectCover',
+        image,
+        {
+          Id:this.subData.Id
+        }
+      )
+      var result=JSON.parse(resData.data);
+      if(resData.statusCode==200){
+        this.subData.Cover=result.result; 
+        this.CoverImage=image;        
+      }else{
+        wx.showToast({
+          title:result.error.message , //提示的内容,
+          icon: 'none', //图标,
+          duration: 2000, //延迟时间,
+          mask: false, //显示透明蒙层，防止触摸穿透,
+          success: res => {}
+        });
+      }
+      this.$apply();
+    }
+    isRefresh(item) {
+      console.log(item)
+      if (item.class == "client") {
+        if(this.subData.Category=='1'){
+          this.ClientIdValue = item.displayText;
+          this.subData.ClientId = item.value;
+          this.subData.Name=item.displayText;
+        }else{
+          this.ClientIdValue = item.displayText;
+          this.subData.ClientId = item.value;
+        }
+      } else if (item.class == "case") {
+        this.CaseIdValue = item.displayText;
+        this.subData.CaseId = item.value;
+        this.subData.Name = item.displayText;
+      }else 
+      this.$apply();
+    }
+    pageScrollToBottom(){
+      wx.createSelectorQuery().select('#container').boundingClientRect((rect)=>{
+          // 使页面滚动到底部
+          wx.pageScrollTo({
+            scrollTop: rect.bottom
+          })
+        }).exec()
+    }
+    //随机数
+    random(lower, upper) {
+      return Math.floor(Math.random() * (upper - lower + 1)) + lower;
+    }
+    onLoad() {
+      this.subData.Id = 'temp_' + this.random(0, 100000000000);
+      this.subData.inputTemplate = this.inputTemplate[0].value;
+      this.subData.Privacy=this.Privacy.data[0].value;
+      this.GetGeneralCodeComboOutput();
+      this.GetTemplatesWithGroup();
+    };
+  }
+</script>

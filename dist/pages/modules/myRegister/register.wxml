@@ -1,0 +1,94 @@
+
+  <view class="container">
+    <view class="title">
+      <text>立案申请</text>
+    </view>
+    <view class="stageIdent">
+      <block wx:for="{{stageIdentColor}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+        <text style="background:{{item.color}}"  wx:if="{{!item.isShow}}"/>
+      </block>
+    </view>
+    <view class="scroll-y">
+      <view class="chooseClientInfo box" style="border-left-color:{{stageIdentColor[0].color}}">
+        <view class="chooseRight"  wx:if="{{clientId==''}}">
+          <text class="clientTitle">客户信息<text style="color:#7a7a7a;font-weight: normal">（创建客户或者选择已有客户）</text></text>
+          <view class="chooseBtn">
+            <view>
+              <text bindtap="toClientList">选择已有客户</text>
+            </view>
+            <view>
+              <text bindtap="toCreateClient">创建新客户</text>
+            </view>
+          </view>
+        </view>
+        <view class="FillData" wx:else bindtap="toClientDetail">
+          <text class="titleBlod">{{clientData.name}}</text>
+          <text>{{clientData.clientTypeText}}</text>
+          <text>{{clientData.categoryText||'未填写'}}</text>
+          <icon class="iconfont icon-gengduo fixedIcon" catchtap="deleteClientInfo"/>
+        </view>
+      </view>
+      <view class=" box" style="border-left-color:{{stageIdentColor[1].color}}" wx:if="{{stageIdentColor[1].isShow}}">
+        <view class="FillData" wx:if="{{!isCaseInfoData}}" bindtap="toCreateCaseBaseInfo">
+          <text class="titleBlod">案件信息</text>
+          <text style="margin-top:20rpx">请填写案件信息</text>
+        </view>
+        <view class="FillData" wx:else bindtap="toCreateCaseBaseInfo">
+          <text>{{caseInfoData.Name}}</text>
+          <text>{{caseInfoData.CategoryText}}</text>
+          <text>收案日期：{{caseInfoData.AcceptDateText}}</text>
+        </view>
+      </view>
+      <view class=" box" style="border-left-color:{{stageIdentColor[2].color}}" wx:if="{{stageIdentColor[2].isShow}}">
+        <view class="FillData" wx:if="{{conflictInfoData.length==0}}" bindtap="toCreateConflict">
+          <text>利益冲突信息</text>
+          <text>添加利益冲突信息</text>
+        </view>
+        <view class="FillData" wx:else bindtap="toCreateConflict">
+          <!-- <text>{{}}</text> -->
+          <view>
+            <text style="color:#2a2a2a">利益冲突信息</text>
+            <text>共{{conflictInfoData.length}}条冲突</text>
+          </view>
+        </view>
+      </view>
+      <view class=" box" style="border-left-color:{{stageIdentColor[3].color}}" wx:if="{{stageIdentColor[3].isShow}}">
+        <view class="FillData" wx:if="{{clientLinkerData.length==0}}" bindtap="toCreateClientCaseLinker">
+          <text>客户方本案联系人</text>
+          <text>填写或选择客户信息</text>
+        </view>
+        <view class="FillData" wx:else bindtap="toCreateClientCaseLinker">
+          <view>
+            <text style="color:#2a2a2a">客户方本案联系人</text>
+            <text>共<text>{{clientLinkerData.length}}</text>位联系人</text>
+          </view>
+        </view>
+      </view>
+      <view class=" box" style="border-left-color:{{stageIdentColor[4].color}}" wx:if="{{stageIdentColor[4].isShow}}">
+        <view class="FillData" wx:if="{{!isCaseLayerLinkerListData}}" bindtap="toCaseLawyerLinker">
+          <text>案件律师信息</text>
+          <text>请选择相关律师人员</text>
+        </view>
+        <view class="FillData" wx:else bindtap="toCaseLawyerLinker">
+          <text>案件律师信息</text>
+          <text>{{caseLayerLinkerListData.name}}</text>
+          <view>
+            <text>{{caseLayerLinkerListData.categoryName}}</text>
+            <text><text>{{caseLayerLinkerListData.count-1}}</text>位其他律师</text>
+          </view>
+        </view>
+      </view>
+      <view class=" box" style="border-left-color:{{stageIdentColor[5].color}}" wx:if="{{stageIdentColor[5].isShow}}" bindtap="toLawyerChargeInfo">
+        <view class="FillData" wx:if="{{!isCaseLayerChargeInfoData}}">
+          <text>收费与合同信息</text>
+          <text>请填写合同相关信息</text>
+        </view>
+        <view class="FillData" wx:else>
+          <text>案件项下的办案费用支出由：{{caseLayerChargeInfoData.paidPartyText||'未填写'}}</text>
+          <text>办案费限额：{{caseLayerChargeInfoData.chargeLimit||'未填写'}}</text>
+          <text>收费方式：{{caseLayerChargeInfoData.payStyleText||'未填写'}}</text>
+        </view>
+      </view>
+    </view>
+    <image src="{{'../../../images/test.png'}}" wx:if="{{isShowNextIcon}}" mode="scaleToFill" lazy-load="true" class="addImage" bindtouchend="subCaseInfoData"/>
+  </view>

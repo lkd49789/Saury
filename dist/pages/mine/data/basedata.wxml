@@ -1,0 +1,123 @@
+
+  <view class="body">
+    <view class="bd">
+      <text class="bd-title">基本资料</text>
+    </view>
+    
+    <view class="navbar">
+        <scroll-view scroll-x>
+            <block wx:for="{{$navbar$navbars}}" wx:for-index="$navbar$index" wx:for-item="$navbar$item" wx:key="$navbar$index">
+                <view class="item {{$navbar$currentTab == $navbar$index ? 'active' : ''}} " bindtap="$navbar$navbarTap" data-wpynavbartap-a="{{$navbar$index}}">
+                    <text>{{$navbar$item}}</text>
+                    <view  wx:if="{{$navbar$currentTab == $navbar$index}}" class="navbar_box"/>
+                </view>
+            </block>
+        </scroll-view>
+    </view>
+
+    <!-- 第一个页面 -->
+    <view class="personal-information" hidden="{{currentTab==0?'':true}}">
+      <view class="personal-container">
+        <!-- 第一部分 -->
+        <view class="base">
+          <text class="cname">{{baseData.name||'未填写'}} </text>
+          <text class="partner">{{baseData.category||'未填写'}}</text>
+          <text class="prefssion">{{baseData.duty||'未填写'}}</text>
+        </view>
+        <view class="ename-gender">
+          <text class="name">{{baseData.enName||'未填写'}}</text>
+          <icon class="gender-icon iconfont icon-nan" style="font-size:30rpx;color:#5d73fa"  wx:if="{{baseData.gender=='男'}}"/>
+          <icon class="gender-icon iconfont icon-nv" style="font-size:30rpx;color:#ff4367"  wx:else/>
+        </view>
+        <view class="company-substation">
+          <text class="company">{{baseData.originalFirm||'未填写'}}</text>
+          <text class="substation">{{baseData.organizationUnit||'未填写'}}</text>
+        </view>
+        <view class="reputation-address">
+          <text class="reputation">{{baseData.nation||'未填写'}}</text>
+          <text class="address">{{baseData.homeTown||'未填写'}}</text>
+        </view>
+      </view>
+      <!-- 第二部分 -->
+      <view class="background">
+        <view class="society">
+          <text class="society-name">社会保险号</text>
+          <text class="society-number">{{laborRelationData.socialSecurityNo||'未填写'}}</text>
+        </view>
+        <view class="social-insurance">
+          <text class="social-number">社会保险基数</text>
+          <text>{{laborRelationData.socialSecurityRate||'未填写'}}</text>
+        </view>
+        <view class="politics-status" style="width:50%;display:inline-block">
+          <text class="politics">政治面貌</text>
+          <text class="status">{{baseData.political||'未填写'}}</text>
+        </view>
+        <view class="education-background" style="width:50%;display:inline-block">
+          <text class="education">最高学历</text>
+          <text class="official">{{baseData.highestEducation||'未填写'}}</text>
+        </view>
+        <view class="school-graduation">
+          <text class="graduation">毕业学校</text>
+          <text class="school">{{baseData.graduatedSchool||'未填写'}}</text>
+        </view>
+        <view class="major-container">
+          <text class="major">所学专业</text>
+          <text class="major-name">{{baseData.specialty||'未填写'}}</text>
+        </view>
+      </view>
+      <!-- 第三部分 -->
+    </view>
+    <!-- 第二个页面 -->
+    <view class="contact-information" hidden="{{currentTab==1?'':true}}">
+      <view class="communication">
+        <view class="mp" style="width:50%;display:inline-block">
+          <text class="mobile">移动电话</text>
+          <text class="mobile-number">{{baseData.phone||'未填写'}}</text>
+        </view>
+        <view class="wp" style="width:50%;display:inline-block">
+          <text class="work-phone">工作电话</text>
+          <text class="work-number">{{baseData.workPhone||'未填写'}}</text>
+        </view>
+        <view class="fp" style="width:50%;display:inline-block">
+          <text class="fixed-phone">座机</text>
+          <text class="fixed-number">{{baseData.landline||'未填写'}}</text>
+        </view>
+        <view class="fc" style="width:50%;display:inline-block">
+          <text class="faxes">传真</text>
+          <text class="faxes-number">{{baseData.fax||'未填写'}}</text>
+        </view>
+        <view class="ec">
+          <text class="email">邮箱</text>
+          <text class="email-number">{{baseData.email||'未填写'}}</text>
+        </view>
+        <view class="ec">
+          <text class="pmail">个人邮箱</text>
+          <text class="pmail-number">{{baseData.perEmail||'未填写'}}</text>
+        </view>
+        <view class="ad">
+          <text class="address">地址</text>
+          <text class="address-detail">{{baseData.homeAddress||'未填写'}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="service-information" hidden="{{currentTab==2?'':true}}">
+      <view class="service">
+        <view class="external" style="width:50%;display:inline-block">
+          <text class="external-title">外部费率</text>
+          <text class="external-rate">{{baseData.foreignRate||'未填写'}}</text>
+        </view>
+        <view class="interior" style="width:50%;display:inline-block">
+          <text class="interior-title">内部费率</text>
+          <text class="interior-rate">{{baseData.internalRate||'未填写'}}</text>
+        </view>
+        <view class="language">
+          <text class="language-title">擅长语言</text>
+          <text class="language-content">{{baseData.language||'未填写'}}</text>
+        </view>
+        <view class="specialty">
+          <text class="specialty-title">擅长专业</text>
+          <text class="specialty-content">{{baseData.goodBusiness||'未填写'}}</text>
+        </view>
+      </view>
+    </view>
+  </view>

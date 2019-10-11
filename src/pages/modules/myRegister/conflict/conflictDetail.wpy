@@ -1,0 +1,158 @@
+<!--  -->
+
+<style lang='scss'>
+    .container {
+        .pageTitle {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+            display: flex;
+            justify-content: space-between;
+            >view:first-child{
+                margin-left:28rpx;
+            }
+            >view:last-child{
+                margin-right:28rpx;
+            }
+        }
+        .firstPart{
+            margin: 149rpx 28rpx 20rpx 28rpx;
+            >view{
+                >text:first-child{
+                    color:#7a7a7a;
+                    margin-bottom: 14rpx;
+                }
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 20rpx;
+            }
+        }
+        .flex{
+             >text:first-child{
+                    color:#7a7a7a;
+                    margin-bottom: 14rpx;
+                }
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 20rpx;
+        }
+        .twoPart{
+            margin:24rpx 28rpx;
+            >view{
+                margin-bottom: 20rpx;
+                 >view{
+                    >text:first-child{
+                            color:#7a7a7a;
+                            margin-bottom: 14rpx;
+                        }
+                        display: flex;
+                        flex-direction: column;
+                        margin-bottom: 20rpx;
+                    }
+            }
+            .flex-x{
+                display: flex;
+                align-items: center;
+                >view{
+                    width:50%;
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="pageTitle">
+            <view>
+                <text>利益冲突详情</text>
+            </view>
+            <view>
+                <icon class="iconfont icon-bianji" style="font-size:60rpx;color:#5d73fa" @tap="toAuditPage"></icon>
+            </view>
+        </view>
+        <view class="firstPart">
+            <view>
+                 <text>类别</text>
+                <text>{{conflictInfo.category||'未填写'}}</text>
+            </view>
+            <view>
+                <text>名称（中）</text>
+                <text>{{conflictInfo.name||'未填写'}}</text>
+            </view>
+            <view>
+                <text>名称（英）</text>
+                <text>{{conflictInfo.enName||'未填写'}}</text>
+            </view>
+        </view>
+        <view style="width:100%;height:20rpx;background:#f4f4f4"></view>
+        <view class="twoPart">
+            <view class="flex-x">
+                <view>
+                    <text>联系人</text>
+                    <text>{{conflictInfo.linker||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>职务</text>
+                    <text>{{conflictInfo.legalTypeText||'未填写'}}</text>
+                </view>
+            </view>
+            <view class="flex-x">
+                <view>
+                    <text>电话</text>
+                    <text>{{conflictInfo.phone||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>邮箱地址</text>
+                    <text>{{conflictInfo.email||'未填写'}}</text>
+                </view>
+            </view>
+            <view class="flex">
+                    <text>身份证</text>
+                    <text>{{conflictInfo.cardId||'未填写'}}</text>
+            </view>
+            <view class="flex">
+                    <text>地址</text>
+                    <text>{{conflictInfo.address||'未填写'}}</text>
+            </view>
+            <view class="flex">
+                    <text>备注</text>
+                    <text>{{conflictInfo.remark||'未填写'}}</text>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    export default class conflictDetail extends wepy.page {
+        data = {
+            id:0,
+            conflictInfo:{}
+        };
+        components = {};
+        methods = {
+            toAuditPage(){
+                wx.navigateTo({ url: './createConflict?id='+this.id});
+            }
+        };
+        events = {};
+        watch = {};
+        computed = {};
+        onLoad(options) {
+            this.id=+options.id;
+            this.$apply();
+        };
+        onShow(){
+             var conflictInfoData=wx.getStorageSync('CREATE_CONFLICTLIST_DATA');
+            this.conflictInfo=conflictInfoData[this.id];
+        }
+    }
+</script>

@@ -1,0 +1,246 @@
+<!--  -->
+<style lang='scss'>
+  .container {
+    height: 100%;
+    .main {
+      margin: 149rpx 28rpx 44rpx 28rpx;
+      .checkbooxs {
+        padding-bottom: 20rpx;
+        border-bottom: 1px solid #dedede;
+        .radio-group {
+          display: flex;
+          flex-wrap: wrap;
+          flex: 1;
+          .radio {
+            margin: 14rpx;
+          }
+        }
+        .limitStatus {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          >input {
+            margin:0 10rpx;
+            color:#5d73fa;
+            width: 20%;
+            border-bottom: 1px solid #dedede;
+          }
+        }
+      }
+      .lawyerChargeList {
+        margin-top: 20rpx;
+        .rateItems {
+          display: flex;
+          align-items: center;
+          margin-bottom: 20rpx;
+          .lawyerInfo {
+            display: flex;
+            align-items: center;
+            width: 60%;
+            >image {
+              height: 70rpx;
+              width: 70rpx;
+              border-radius: 50%;
+              margin-right: 14rpx;
+            }
+            >text {
+              flex: 1;
+              margin-right: 14rpx;
+            }
+          }
+          .rightInput {
+            width: 40%;
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            >input {
+              text-align: right;
+              border-bottom: 1px solid #dedede;
+              color:#5d73fa;
+            }
+          }
+        }
+      }
+    }
+     .subBtn {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 999999;
+        }
+  }
+</style>
+
+<template>
+  <view class='container'>
+    <view class="page-title">费用分配信息</view>
+    <view class="main">
+      <view class="checkbooxs">
+        <view>分配模式</view>
+        <radio-group class="radio-group" bindchange="radioChange">
+          <label class="radio" wx:for="{{allocStyleListData}}" wx:key="index" wx:index="index" wx:item="item">
+                      <radio color="#5d73fa" value="{{item.value}}" checked="{{item.isSelected}}"/>{{item.displayText}}
+                  </label>
+        </radio-group>
+        <view class="limitStatus" wx:if="{{AllocStyle=='4'}}">
+          <view>限额按比例分配 分配额度标准</view><input type="number" value="{{AllocBaseAmount}}" @blur="AllocBaseAmount"/>元以内
+          <view>按比例分账，超出部分不再分账.</view>
+        </view>
+      </view>
+      <view class="lawyerChargeList">
+        <repeat for="{{lawyerChargeList}}" key="index" index="index" item="item">
+          <view class="rateItems">
+            <view class="lawyerInfo">
+              <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false" />
+              <text>{{item.employeeName}}</text>
+              <text style="color:#7a7a7a">{{item.lawyerRoleText}}</text>
+            </view>
+            <view class="rightInput">
+              <view style="color:#7a7a7a">{{AllocStyle=='2'?'CNY':''}}</view>
+              <input value="{{item.allocRatio}}" type="number" placeholder-class="placeholder" maxlength="12" @blur="UpdateLawyerCharge('{{item}}','{{index}}')" /><view style="color:#7a7a7a">{{AllocStyle==3?'CNY/H':AllocStyle==2?'':'%'}}</view>
+            </view>
+          </view>
+        </repeat>
+      </view>
+    </view>
+    <image src="{{'../../../../images/test.png'}}" mode="scaleToFill" lazy-load="true" class="subBtn" @touchend="submitData" />
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import ajax from '../../../../utils/cofig/ajax.js'
+  export default class distributionInformation extends wepy.page {
+    data = {
+      submitData:{},
+      caseId: '',
+      allocStyleListData: {},
+      lawyerChargeList: [],
+      AllocBaseAmount:'',
+      AllocStyle:''
+    };
+    components = {};
+    methods = {
+      submitData(){
+        this.submitData.AllocBaseAmount=this.AllocBaseAmount;
+        this.submitData.AllocStyle=this.AllocStyle;
+        this.CreateOrUpdateCaseCharge();
+      },
+      UpdateLawyerCharge(item,index,e){
+        var value=+e.detail.value;
+        var subData=item;
+        if(value!==subData.allocRatio){
+          subData.allocRatio=value;
+          delete subData.avatar;
+          this.UpdateCaseLawyerCharge(subData,index);
+        }
+      },
+      AllocBaseAmount(e){
+        this.AllocBaseAmount=e.detail.value;
+        this.$apply();
+      },
+      radioChange(e) {
+        this.AllocStyle=e.detail.value;
+        this.$apply();
+      }
+    };
+    async GetCaseChargeAndContractForEdit(caseId) {
+      var resData = await ajax.getData(
+        '/api/services/web/case/GetCaseChargeAndContractForEdit',
+        'post', {
+          Id: this.caseId
+        }
+      )
+      if (resData.statusCode == 200) {
+        this.allocStyleListData = resData.data.result.allocStyleList;
+        for(var index in this.allocStyleListData){
+          if( this.allocStyleListData[index].value==this.submitData.AllocStyle){
+            this.allocStyleListData[index].isSelected=true;
+            this.AllocStyle=this.allocStyleListData[index].value;
+            this.AllocBaseAmount=this.submitData.AllocBaseAmount;
+          }
+        }
+        this.$apply();
+      }
+    }
+    async GetCaseChargeList() {
+      var resData = await ajax.getData(
+        '/api/services/web/case/GetCaseChargeList',
+        'post', {
+          id: this.caseId
+        }
+      )
+      if (resData.statusCode == 200) {
+        this.lawyerChargeList = resData.data.result.lawyerChargeList;
+        this.GetAvatar(resData.data.result.lawyerChargeList)
+        this.$apply();
+      }
+    }
+    async GetAvatar(data) {
+      for (var index in data) {
+        var http = '/api/services/web/personal/GetEmployeePhoto?id=' + data[index].userId;
+        this.lawyerChargeList[index].avatar = await ajax.getAavatar(http);
+      }
+      this.$apply();
+    }
+    async UpdateCaseLawyerCharge(subData,index){
+      wx.showLoading({
+        title: 'Loading...', //提示的内容,
+        mask: true, //显示透明蒙层，防止触摸穿透,
+        success: res => {}
+      });
+      var resData=await ajax.getData(
+        '/api/services/web/caseLawyer/UpdateCaseLawyerCharge',
+        'post',
+        subData
+      )
+      if(resData.statusCode==200){
+        this.lawyerChargeList[index].allocRatio=subData.allocRatio;
+        this.$apply();
+      }else{
+        wx.showToast({
+          title: resData.data.error.message, //提示的内容,
+          icon: 'none', //图标,
+          duration: 2000, //延迟时间,
+          mask: false, //显示透明蒙层，防止触摸穿透,
+          success: res => {}
+        });
+      }
+    }
+     //提交数据
+    async CreateOrUpdateCaseCharge() {
+      wx.showLoading({
+          title: 'Loading...', //提示的内容,
+          mask: true, //显示透明蒙层，防止触摸穿透,
+          success: res => {
+              
+          }
+      });
+      var resData = await ajax.getData(
+          '/api/services/web/case/CreateOrUpdateCaseCharge',
+          'post',
+          this.submitData
+      )
+        if (resData.statusCode == 200) {
+            wx.setStorage({
+              key: 'CREATE_LAWYERCHARGE_DATA',
+              data: this.submitData,
+              success: () => {
+                  wx.navigateBack({
+                    delta: 3 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                  });
+              },
+          });
+        }
+    }
+    onLoad(options) {
+      this.caseId = options.caseId||'EB97EE3D-EE60-E911-AC1B-B0D9BF31DAD7';
+      this.submitData = wx.getStorageSync('CREATE_LAWYERCHARGE_DATA');
+      this.GetCaseChargeAndContractForEdit();
+      this.GetCaseChargeList();
+    };
+    onShow() {};
+  }
+</script>

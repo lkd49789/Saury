@@ -1,0 +1,64 @@
+
+  <view style="height:100%;width:100%;">
+    <view class="body">
+      <view class="header">
+        <view class="circle">
+          <image class="avatar" src="{{tempFilePaths}}" mode="aspectFill"/>
+        </view>
+        <view class="msg">
+          <text class="name">{{meData.name}} <text class="partner">{{meData.category||'未填写'}}</text></text>
+          <text class="phone">{{meData.phone||'未填写'}}</text>
+        </view>
+        <!-- 增加一个空白的区域用于点击使用 -->
+        <view class="empty" bindtap="tobasedata"/>
+        <icon class="toright iconfont icon-chakanjiantou" style="font-size:40rpx;color:#b2b2b2"/>
+      </view>
+      <view class="nav-content">
+        <view class="case-nav" bindtap="toCase">
+          <text class="case-count bot">{{personAnnualCounts[0]||0}}</text>
+          <text class="case">案件</text>
+        </view>
+        <view class="line"/>
+        <view class="clientele-nav" bindtap="toClient">
+          <text class="clientele-count bot">{{personAnnualCounts[1]||0}}</text>
+          <text class="clientele">客户</text>
+        </view>
+        <view class="line"/>
+        <view class="hour-nav" bindtap="toLog">
+          <text class="hour-count bot">{{personAnnualCounts[2]||0}}</text>
+          <text class="hour">小时</text>
+        </view>
+        <view class="line"/>
+        <view class="money-nav" bindtap="toBill">
+          <text class="money-count bot">{{personAnnualCounts[3]||0}}</text>
+          <text class="money">金额</text>
+        </view>
+      </view>
+      <view class="middle">
+        <view class="inline" bindtap="torecord">
+          <icon class="icon left-icon iconfont icon-gerenlvli" style="font-size:40rpx; color:#2a2a2a"/>
+          <view class="record">我的履历</view>
+        </view>
+        <view class="inline" bindtap="toBusinessCard">
+          <icon class="icon left-icon iconfont icon-laodongguanxi" style="font-size:40rpx; color:#2a2a2a"/>
+          <view class="relation">我的名片</view>
+        </view>
+        <view class="inline" bindtap="tolaborRelation">
+          <icon class="icon left-icon iconfont icon-laodongguanxi" style="font-size:40rpx; color:#2a2a2a"/>
+          <view class="relation">劳动关系</view>
+        </view>
+      </view>
+      <view class="footer">
+        <view class="inline">
+          <button open-type="share" class="share">
+                <icon class="icon left-icon iconfont icon-fenxiang" style="font-size:38rpx; color:#2a2a2a"/>
+                分享
+                </button>
+        </view>
+        <view class="inline" bindtap="totools">
+          <icon class="icon left-icon iconfont icon-shezhi" style="font-size:40rpx; color:#2a2a2a"/>
+          <view class="tools">设置</view>
+        </view>
+      </view>
+    </view>
+  </view>

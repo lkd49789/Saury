@@ -1,0 +1,374 @@
+<!--  -->
+
+<style lang='scss'>
+    .container {
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx; // padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            >text {
+                padding-left: 28rpx;
+            }
+            >icon {
+                padding-right: 28rpx;
+            }
+        }
+        .main {
+            margin: 149rpx 28rpx 0 28rpx;
+            .regist-item {
+                padding: 30rpx 20rpx;
+                margin-bottom: 44rpx;
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                position: relative;
+                >view:not(:last-child) {
+                    margin-bottom: 14rpx;
+                }
+                >view:nth-child(2) {
+                    color: #7a7a7a;
+                }
+                >view:nth-child(3) {
+                    color: #7a7a7a;
+                }
+                >view {
+                    display: flex;
+                    justify-content: space-between;
+                    >view {
+                        width: 75%;
+                        display: flex;
+                        align-items: center;
+                        >text:nth-child(1) {
+                            height: 30rpx;
+                            width: 30rpx;
+                            border-radius: 50%;
+                            margin-right: 14rpx;
+                        }
+                        >text:nth-child(2) {
+                            width: 90%;
+                        }
+                    }
+                    >text {
+                        width: 27%;
+                        margin-left: 14rpx;
+                        color: #7a7a7a;
+                    }
+                }
+                >icon {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    padding: 10rpx 10rpx 0 0;
+                }
+            }
+        }
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 9999;
+        }
+    }
+</style>
+<template>
+    <view class='container'>
+        <view class="top-title">
+            <text>我的立案</text>
+            <icon class="iconfont icon-sousuo1" style="font-size:60rpx;color:#5d73fa" @tap="toSearch"></icon>
+        </view>
+        <view class="main">
+            <repeat for="{{CaseRecordListDatas}}" key="index" index="index" item="item">
+                <view class="regist-item" @tap="toRegistDetail('{{item.id}}','{{item.clientId}}')">
+                    <view>{{item.name}}</view>
+                    <view>{{item.clientName||'未填写'}}</view>
+                    <view>{{item.categoryText||'未填写'}}</view>
+                    <view>
+                        <view>
+                            <text style="border:1px solid #ff9900"></text>
+                            <text>{{item.processStatusText}}</text>
+                        </view>
+                        <text>{{item.acceptDateText}}</text>
+                    </view>
+                    <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#b2b2b2" catchtap="operations('{{item}}')"></icon>
+                </view>
+            </repeat>
+        </view>
+        <image src="{{'../../../images/add.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" @touchend="touchEnd" />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '@/utils/cofig/ajax.js';
+    export default class myRegisterList extends wepy.page {
+        config = {
+            enablePullDownRefresh: true,
+            backgroundTextStyle: 'dark',
+            backgroundColorTop: '#f4f4f4',
+            backgroundColorBottom: '#f4f4f4',
+        };
+        data = {
+            queryStream: {},
+            pageNumber: 1,
+            pageSize: 10,
+            totalCount: 0,
+            CaseRecordListDatas: [],
+        };
+        methods = {
+            toSearch() {
+                wx.navigateTo({
+                    url: './search/search_register'
+                });
+            },
+            operations(item) {
+                var opition = item.operations.map((item) => item.text)
+                wx.showActionSheet({
+                    itemList: opition, //按钮的文字数组，数组长度最大为6个,
+                    //   itemColor: '#000000', //按钮的文字颜色,
+                    success: res => {
+                        var className=item.operations[res.tapIndex].className;
+                        switch (className) {
+                            case 'Info':
+                                wx.navigateTo({
+                                    url: '../mycase/caseDetail/casedetail?id=' + item.id + '&clientId=' + item.clientId
+                                });
+                                break;
+                            case 'OrderInfo':
+                                wx.navigateTo({
+                                    url: '../conflictRetrieval/auditedResults/auditedResults?id=' + item.orderItemId + '&caseId=' + item.id
+                                });
+                                // wx.showToast({
+                                //   title: '此功能暂未开放！', //提示的内容,
+                                //   icon: 'none', //图标,
+                                //   duration: 2000, //延迟时间,
+                                //   mask: false, //显示透明蒙层，防止触摸穿透,
+                                //   success: res => {}
+                                // });
+                                break;
+                            case 'EditCaseApply':
+                                if(item.processStatus=='NK'){
+                                    console.log(item);
+                                    wx.navigateTo({
+                                        url: './caseChargeAndContract/lawyerChargeInfo?id=' + item.id
+                                    });
+                                    // wx.showActionSheet({
+                                    //     itemList:['相册或相机拍照','本地文件'],
+                                    //     success : re =>{
+                                    //         if(re.tapIndex === 0){
+                                    //             wx.chooseImage({
+                                    //                 count: 1,
+                                    //                 sizeType: ['original', 'compressed'],
+                                    //                 sourceType: ['album', 'camera'],
+                                    //                 success : res =>{
+                                    //                     // tempFilePath可以作为img标签的src属性显示图片
+                                    //                     const tempFilePaths = res.tempFilePaths
+                                    //                     console.log(tempFilePaths);
+                                    //                     this.uploadFile(tempFilePaths[0],item.id)
+                                    //                 }
+                                    //             })
+                                    //         }else{
+                                    //             wx.chooseMessageFile({
+                                    //                 count: 1,
+                                    //                 type: 'file',
+                                    //                 success : res =>{
+                                    //                     // tempFilePath可以作为img标签的src属性显示图片
+                                    //                     const tempFilePaths = res.tempFilePaths
+                                    //                     console.log(tempFilePaths);
+                                    //                     this.uploadFile(tempFilePaths[0],item.id)
+                                                        
+                                    //                 }
+                                    //             })
+                                    //         }
+                                    //     },
+                                    //     fail (res) {
+                                    //         console.log(res.errMsg)
+                                    //     }
+                                    // })
+                                    return false;
+                                    wx.showModal({
+                                            title: '提示', //提示的标题,
+                                            content: '此功能需要打开APP或者登录网页版进行操作', //提示的内容,
+                                            showCancel: true, //是否显示取消按钮,
+                                            cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
+                                            cancelColor: '#000000', //取消按钮的文字颜色,
+                                            confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
+                                            confirmColor: '#5d73fa', //确定按钮的文字颜色,
+                                            success: res => {
+                                                if (res.confirm) {
+                                                    console.log('用户点击确定')
+                                                } else if (res.cancel) {
+                                                    console.log('用户点击取消')
+                                                }
+                                            }
+                                        });
+                                }else{
+                                    wx.navigateTo({
+                                            url: './register?id=' + item.id
+                                    });
+                                }
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                });
+            },
+            toRegistDetail(id, clientId) {
+                wx.navigateTo({
+                    url: '../mycase/caseDetail/casedetail?id=' + id + '&clientId=' + clientId
+                });
+            },
+            touchEnd() {
+                wx.navigateTo({
+                    url: '../myRegister/register',
+                });
+            },
+        };
+        events = {};
+        watch = {};
+        computed = {};
+    //   // 上传合同附件
+    //     async uploadFile(file,caseid){
+    //         wx.showLoading({
+    //             title: '上传中', //提示的内容,
+    //             mask: true, //显示透明蒙层，防止触摸穿透,
+    //             success: res => {}
+    //         });
+    //          let resData = await ajax.uploadFile('/api/services/web/document/uploadCaseContract',
+    //          file,
+    //          {caseid},
+    //          'file'
+    //          )
+    //          wx.hideLoading()
+    //          if(resData.statusCode==200){
+    //             wx.showToast({
+    //                 title: '成功',
+    //                 icon: 'success',
+    //                 duration: 2000
+    //             }) 
+    //          }else{
+    //              wx.showToast({
+    //                  title:result.error.message , //提示的内容,
+    //                  icon: 'none', //图标,
+    //                  duration: 2000, //延迟时间,
+    //                  mask: false, //显示透明蒙层，防止触摸穿透,
+    //                  success: res => {}
+    //              });
+    //          }
+    //         } 
+        async GetCaseRecordList() {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: false, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var data = {
+                AcceptDate: {
+                    StartDate: "",
+                    EndDate: ""
+                },
+                CaseId: "",
+                Category: "",
+                ClientId: "",
+                ClientName: "",
+                CreationTime: {
+                    StartDate: "",
+                    EndDate: ""
+                },
+                Id: "",
+                KeyWord: "",
+                Lawyer: "",
+                LawyerName: "",
+                LawyerRole: "",
+                Name: "",
+                ProcessStatus: "",
+                Status: "",
+                pageNumber: this.pageNumber,
+                pageSize: this.pageSize,
+                sorting: "",
+            }
+            if (Object.keys(this.queryStream).length !== 0) {
+                data.KeyWord = this.queryStream.KeyWord || '';
+                data.AcceptDate.StartDate = this.queryStream.hasOwnProperty('AcceptDate') ? this.queryStream.AcceptDate.StartDate : '';
+                data.AcceptDate.EndDate = this.queryStream.hasOwnProperty('AcceptDate') ? this.queryStream.AcceptDate.EndDate : '';
+                data.CreationTime.EndDate = this.queryStream.hasOwnProperty('CreationTime') ? this.queryStream.CreationTime.EndDate : '';
+                data.CreationTime.StartDate = this.queryStream.hasOwnProperty('CreationTime') ? this.queryStream.CreationTime.StartDate : '';
+                data.Status = this.queryStream.Status || '';
+                data.ProcessStatus = this.queryStream.ProcessStatus || '';
+                data.Category = this.queryStream.Category || '';
+                data.Name = this.queryStream.Name || '';
+                data.ClientName = this.queryStream.ClientName || '';
+                data.LawyerRole = this.queryStream.LawyerRole || '';
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/caseApplication/GetCaseRecordList',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                var CaseRecordListDatas = resData.data.result;
+                this.totalCount = CaseRecordListDatas.totalCount;
+                // for (var index in CaseRecordListDatas.items) {
+                //     if (CaseRecordListDatas.items[index].processStatus == 'NI' || CaseRecordListDatas.items[index].processStatus == 'NK') {
+                //         CaseRecordListDatas.items[index].operations.push({
+                //             text: '编辑',
+                //             className:'Aduit'
+                //         })
+                //     }
+                // }
+                this.CaseRecordListDatas.push(...CaseRecordListDatas.items);
+            }
+            this.$apply();
+        }
+        // 下拉刷新
+        onPullDownRefresh() {
+            this.queryStream = {};
+            this.CaseRecordListDatas = [],
+                this.pageNumber = 1;
+            this.GetCaseRecordList();
+            wx.hideNavigationBarLoading(); //完成停止加载
+            wx.stopPullDownRefresh(); //停止下拉刷新
+        }
+        onReachBottom() {
+            if (this.totalCount / 10 > this.pageNumber) {
+                this.pageNumber += 1;
+                this.GetCaseRecordList();
+            }
+            this.$apply();
+        }
+        onLoad() {
+            this.GetCaseRecordList();
+        };
+        isRefresh(searchData){
+            if(searchData){
+                 this.queryStream=searchData;
+            }
+            this.CaseRecordListDatas = [];
+            this.pageNumber = 1;
+            this.GetCaseRecordList();
+        }
+        // onShow() {
+        //     var pages = getCurrentPages();
+        //     var prevPage = pages[pages.length - 1];
+        //     if (prevPage.data.refresh) {
+        //         this.queryStream = prevPage.data.queryStream;
+        //         prevPage.data.refresh = false;
+        //         this.CaseRecordListDatas = [];
+        //         this.pageNumber = 1;
+        //         this.GetCaseRecordList();
+        //     }
+        // };
+    }
+</script>

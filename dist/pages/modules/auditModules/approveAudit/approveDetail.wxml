@@ -1,0 +1,90 @@
+
+    <view class="container">
+        <view class="top-title">
+            <text>文书详情</text>
+        </view>
+        <view class="main">
+            <view class="one-chunk">
+                <view class="manyLines-hidden caseName">
+                    <text>{{CaseFileStampOutputData.caseName}}</text>
+                </view>
+                <view class="ellipsis serialId">
+                    <text>{{CaseFileStampOutputData.serialId||'未填写'}}</text>
+                </view>
+                <view class="ellipsis clientName">
+                    <text>{{CaseFileStampOutputData.clientName}}</text>
+                </view>
+                <view class="ellipsis clientId">
+                    <text>{{CaseFileStampOutputData.clientId||'未填写'}}</text>
+                </view>
+                <view class=" caseCategoryText-statusText">
+                    <text class="ellipsis">{{CaseFileStampOutputData.caseCategoryText||'未填写'}}</text>
+                    <text class="ellipsis">{{CaseFileStampOutputData.statusText||'未填写'}}</text>
+                </view>
+            </view>
+            <view class="parting-line"/>
+            <view class="two-chunk">
+                <view>
+                    <text>盖章份数</text>
+                    <text>{{CaseFileStampOutputData.stampNumber||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>盖章类型</text>
+                    <text>{{CaseFileStampOutputData.stampTypeText||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>报审人</text>
+                    <text>{{CaseFileStampOutputData.creationUserText||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>报审时间</text>
+                    <text>{{CaseFileStampOutputData.creationTimeText||'未填写'}}</text>
+                </view>
+                <view class="document"  wx:if="{{CaseFileStampOutputData.status=='A'||CaseFileStampOutputData.status=='R'}}">
+                    <text>报审文件</text>
+                    <view bindtap="previewFile" data-wpypreviewfile-a="{{CaseFileStampOutputData.documentId}}" data-wpypreviewfile-b="{{CaseFileStampOutputData.fileExtension}}">
+                        <icon class="iconfont  {{CaseFileStampOutputData.fileIcon}}" style="color:{{CaseFileStampOutputData.fileColor}};font-size:80rpx;margin-right:14rpx"/>
+                        <view>
+                            <text class="ellipsis">{{CaseFileStampOutputData.title||'未填写'}}</text>
+                            <text style="color:#7a7a7a;">{{CaseFileStampOutputData.fileSize||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="parting-line"/>
+            <view class="through-review"  wx:if="{{CaseFileStampOutputData.status=='A'||CaseFileStampOutputData.status=='R'}}">
+                <view class="approve-title">
+                    <text>审核信息</text>
+                </view>
+                <view class="approve-content">
+                    <view class="approve-left">
+                        <image src="{{CaseFileStampOutputData.Avatar}}" mode="scaleToFill" lazy-load="false"/>
+                        <text>{{CaseFileStampOutputData.approveUserText||'未填写'}}</text>
+                    </view>
+                    <view class="approve-right"> 
+                         <view class="statusText-approveTimeText">
+                             <text style="color:{{CaseFileStampOutputData.status=='R'?'#e20000':'#069400'}}">{{CaseFileStampOutputData.statusText||'未填写'}}</text>
+                             <text>{{CaseFileStampOutputData.approveTimeText||'未填写'}}</text>
+                         </view>
+                         <view class="approveMemo">
+                             <text>{{CaseFileStampOutputData.approveMemo||'未填写'}}</text>
+                         </view>
+                    </view>
+                   
+                </view>
+            </view>
+            <view wx:else class="document" style="padding:30rpx 28rpx">
+                    <text>报审文件</text>
+                    <view bindtap="previewFile" style="margin-right:30rpx" data-wpypreviewfile-a="{{CaseFileStampOutputData.documentId}}" data-wpypreviewfile-b="{{CaseFileStampOutputData.fileExtension}}">
+                        <icon class="iconfont {{CaseFileStampOutputData.fileIcon}}" style="color:{{CaseFileStampOutputData.fileColor}};font-size:80rpx;margin-right:14rpx"/>
+                        <view>
+                            <text class="ellipsis">{{CaseFileStampOutputData.title}}</text>
+                            <text style="color:#7a7a7a;">{{CaseFileStampOutputData.fileSize}}</text>
+                        </view>
+                    </view>
+            </view>
+            <view class="auditBtn" wx:if="{{CaseFileStampOutputData.status=='W'}}" bindtap="toAuditPage" data-wpytoauditpage-a="{{CaseFileStampOutputData.id}}">
+                <text>审核</text>
+            </view>
+        </view>
+    </view>

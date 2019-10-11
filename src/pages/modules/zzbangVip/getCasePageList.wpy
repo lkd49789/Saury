@@ -1,0 +1,331 @@
+<!--  -->
+<style lang='scss'>
+  .container {
+    .top-title {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      z-index: 999;
+      .flex {
+        height: 104rpx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 48rpx;
+      }
+    }
+    .main {
+      margin: 230rpx 28rpx 0 28rpx;
+      font-size: 28rpx;
+      color: #7a7a7a;
+      .caseItem {
+        box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+        border-radius: 20rpx;
+        padding: 30rpx 24rpx;
+        margin-bottom: 44rpx;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        >view {
+          flex: 1;
+        }
+        >view:nth-child(1) {
+          color: #2a2a2a;
+          margin-bottom: 20rpx;
+        }
+        >view:nth-child(2) {
+          display: flex;
+          align-items: center;
+          margin-bottom: 14rpx;
+          >view:first-child {
+            width: 65%;
+            display: flex;
+            align-items: center;
+            >view {
+              flex: 1;
+              display: flex;
+              align-items: center;
+              flex-direction: column;
+            }
+            >view:first-child {
+              border-right: 1px solid #7a7a7a;
+              >view:last-child {
+                color: #5d73fa;
+              }
+            }
+          }
+          >view:last-child {
+            width: 35%;
+            background: #5d73fa;
+            text-align: center;
+            color: #fff;
+            border-radius: 5rpx;
+            padding: 10rpx 0;
+          }
+        }
+        >view:nth-child(3) {
+          display: flex;
+          align-items: center;
+          margin-bottom: 14rpx;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class='container'>
+    <view class="top-title">
+      <view class="flex">
+        <view style="margin-left:28rpx">
+          接案平台
+        </view>
+      </view>
+      <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" />
+    </view>
+    <view class="main">
+      <view wx:if="{{casePageListDatas.length>0}}">
+        <repeat for="{{casePageListDatas}}" key="index" index="index" item="item">
+          <view class="caseItem" @tap="toCaseDetail('{{item.CaseId}}')">
+            <view>
+              {{item.Title||'未填写'}}
+            </view>
+            <view>
+              <view>
+                <view>
+                  <view>{{item.month>0?item.month+'月':''}}{{item.days>0?item.days+'天':''}}{{item.hous>0?item.hous+'小时':''}}</view>
+                  <view>{{item.CaseLevel||'未填写'}}</view>
+                </view>
+                <view>
+                  <view>{{item.TypeName||'未填写'}}</view>
+                  <view>逾期{{item.OverdueMonth||'未填写'}}月</view>
+                </view>
+              </view>
+              <view>
+                <view>{{item.Fee||'未填写'}}(预估)</view>
+                <view>律师费用</view>
+              </view>
+            </view>
+            <view>
+              <icon class="iconfont icon-dizhi1" style="font-size:44rpx;color:#dedede;margin-right:14rpx"></icon>
+              <text>{{item.CityName||'未填写'}}</text>
+            </view>
+            <view>*律师费仅为预估价格，佣金以最后成交为准。</view>
+          </view>
+        </repeat>
+      </view>
+      <view wx:else>
+        <view class="placeHolderImage" style="display:flex; flex-direction:column;align-itemscenter" wx:if="{{!isRegister}}">
+          <image src="{{'../../../images/noRegister.png'}}" mode="scaleToFill" lazy-load="false" style="width:580rpx;height:580rpx" />
+          <view style="background:#5373fa;color:#ffffff;padding:10rpx 20rpx;" @tap="toRegisterPage">用户注册并登陆</view>
+        </view>
+        <view class="placeHolderImage" wx:else>
+          <image src="{{'../../../images/noData.png'}}" mode="scaleToFill" lazy-load="false" style="width:580rpx;height:580rpx" />
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import navbar from '../../../components/navbar';
+  import ajax from '../../../utils/cofig/thirdParty_ajax.js';
+  import {
+    tranNumber
+  } from '../../../utils/cofig/api.js';
+  export default class getCasePageList extends wepy.page {
+    config = {
+      enablePullDownRefresh: true,
+      backgroundTextStyle: 'dark',
+      backgroundColorTop: '#f4f4f4',
+      backgroundColorBottom: '#f4f4f4',
+    };
+    components = {
+      navbar
+    };
+    data = {
+      userId: '',
+      tenantId: '',
+      currentTab: 0,
+      navbars: ['案件列表', '抢单中', '进行中', '已完成'],
+      totalCount: 0,
+      Page: 1,
+      casePageListDatas: [],
+      CaseType: 1,
+      isRegister: false,
+      PlatformMemberId: '',
+    };
+    methods = {
+      toCaseDetail(CaseId) {
+        wx.navigateTo({
+          url: './caseDetailPage?CaseId=' + CaseId + '&CaseType=' + this.CaseType + '&PlatformMemberId=' + this.PlatformMemberId
+        });
+      },
+      toRegisterPage() {
+        wx.navigateTo({
+          url: './register'
+        });
+      }
+    };
+    events = {};
+    watch = {
+      currentTab(cur) {
+        this.totalCount = 0;
+        this.Page = 1;
+        this.casePageListDatas = [];
+        switch (cur) {
+          case 0:
+            this.CaseType = 1;
+            break;
+          case 1:
+            this.CaseType = 2;
+            break;
+          case 2:
+            this.CaseType = 3;
+            break;
+          case 3:
+            this.CaseType = 4;
+            break;
+          default:
+            break;
+        }
+        this.GetCasePageList();
+      },
+    };
+    computed = {};
+    // 下拉刷新
+    onPullDownRefresh() {
+      this.casePageListDatas = [];
+      this.Page = 1;
+      this.GetCasePageList();
+      wx.hideNavigationBarLoading(); //完成停止加载
+      wx.stopPullDownRefresh(); //停止下拉刷新
+    }
+    // 上拉加载
+    onReachBottom() {
+      if (this.totalCount / 10 > this.Page && this.$parent.global.netWorkString) {
+        this.Page += 1;
+        this.GetCasePageList();
+      } else {
+        if (this.$parent.global.netWorkString) {
+          wx.showToast({
+            title: '我们是有底线的！',
+            icon: 'none',
+            duration: 1500,
+            mask: false,
+          });
+        } else {
+          wx.showToast({
+            title: '网络连接失败！',
+            icon: 'none',
+            duration: 1500,
+            mask: false,
+          });
+        }
+      }
+    }
+    //接案列表
+    async GetCasePageList() {
+      wx.showLoading({
+        title: 'Loading...', //提示的内容,
+        mask: true, //显示透明蒙层，防止触摸穿透,
+        success: res => {}
+      });
+      var data = {
+        Page: this.Page,
+        Limit: 10,
+        CaseType: this.CaseType,
+        PlatformMemberId: this.PlatformMemberId
+      }
+      var resData = await ajax.getData(
+        '/Cases/GetCasePageList',
+        'POST',
+        data
+      )
+      if (resData.data.state == 200) {
+        this.totalCount = resData.data.data.totalCount;
+        var casePageListDatas = resData.data.data.caseData;
+        for (var index in casePageListDatas) {
+          casePageListDatas[index].Fee = tranNumber(casePageListDatas[index].Fee, 0);
+          switch (casePageListDatas[index].CaseLevel) {
+            case 1:
+              casePageListDatas[index].CaseLevel = 'A+级'
+              break;
+            case 2:
+              casePageListDatas[index].CaseLevel = 'A级'
+              break;
+            case 3:
+              casePageListDatas[index].CaseLevel = 'A-级'
+              break;
+            case 4:
+              casePageListDatas[index].CaseLevel = 'B+级'
+              break;
+            case 5:
+              casePageListDatas[index].CaseLevel = 'B级'
+              break;
+            case 6:
+              casePageListDatas[index].CaseLevel = 'B-级'
+              break;
+            case 7:
+              casePageListDatas[index].CaseLevel = 'C级'
+              break;
+            default:
+              break;
+          }
+        }
+        this.casePageListDatas.push(...casePageListDatas);
+      } else {
+        wx.showToast({
+          title: resData.data.data.msg, //提示的内容,
+          icon: 'none', //图标,
+          duration: 2000, //延迟时间,
+          mask: true, //显示透明蒙层，防止触摸穿透,
+          success: res => {}
+        });
+      }
+      this.$apply();
+    }
+    //判断是否登录
+    async MemberRegisterState() {
+      wx.showLoading({
+        title: 'Loading...', //提示的内容,
+        mask: true, //显示透明蒙层，防止触摸穿透,
+        success: res => {}
+      });
+      var resData = await ajax.getData(
+        '/Register/MemberRegisterState',
+        'GET', {
+          PlatformMemberId: this.tenantId + this.userId
+        }
+      )
+      if (resData.data.data.status) {
+        this.isRegister = true;
+        this.PlatformMemberId = this.tenantId + this.userId;
+      } else {
+        this.isRegister = false;
+        this.PlatformMemberId = '';
+      }
+      this.GetCasePageList()
+      this.$apply();
+    }
+    isRefresh(refresh, PlatformMemberId) {
+      if (refresh) {
+        this.totalCount = 0;
+        this.Page = 1;
+        this.currentTab = 0;
+        this.casePageListDatas = [];
+        this.MemberRegisterState()
+      }
+    }
+    onLoad() {
+      if (this.$parent.global.userInfo.id && this.$parent.global.tenant.id) {
+        this.userId = this.$parent.global.userInfo.id.toString();
+        this.tenantId = this.$parent.global.tenant.id.toString();
+      }
+      this.MemberRegisterState()
+    };
+  }
+</script>

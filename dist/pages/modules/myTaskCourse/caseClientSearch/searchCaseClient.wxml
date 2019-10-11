@@ -1,0 +1,24 @@
+
+    <view class="bill">
+        <view>
+            <view style="height:160rpx"/>
+            <view class="bill_title">
+                <text class="title">{{text}}</text>
+                <view class="search_top">
+                    <view class="search_input">
+                        <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"/>
+                        <input value="{{searchValue}}" type="text" confirm-type="search" placeholder="搜索关键字" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
+                        </input>
+                    </view>
+                </view>
+            </view>
+            <block wx:for="{{myinvoice}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                <view class="bill_content" bindtap="into" data-wpyinto-a="{{item}}">
+                    <view class="bill_box">
+                        <view class="bill_view bill_blue">{{item.displayText}}</view>
+                        <view class="bill_view bill_gray"  wx:if="{{class!=='case'}}">{{item.value}}</view>
+                    </view>
+                </view>
+            </block>
+        </view>
+    </view>

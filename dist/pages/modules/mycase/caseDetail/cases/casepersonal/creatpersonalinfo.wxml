@@ -1,0 +1,10 @@
+
+    <view class="body">
+        <view class="container-title">
+            <text class="title-text">客户方本案联系人</text>
+            <!-- <icon class="iconfont icon-bianji" style="font-size:60rpx;color:#5d73fa"></icon> -->
+        </view>
+        <view class="linkman-container">
+            
+        </view>
+    </view>

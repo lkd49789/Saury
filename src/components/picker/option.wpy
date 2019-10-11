@@ -1,0 +1,78 @@
+<!--  -->
+<style lang="less">
+    .option {
+        margin-bottom: 36rpx;
+        picker {
+            padding: 20rpx 0;
+            border-bottom: 1px solid #dfdfdf;
+            .picker {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                color: #7a7a7a;
+                .part-item {
+                    position: relative;
+                    margin: 10rpx;
+                    background: #dfdfdf;
+                    padding: 5rpx 20rpx;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    >icon {
+                        position: absolute;
+                        bottom: 31rpx;
+                        right: -12rpx;
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="option">
+        <view>
+            <text class="title">{{options.title}}</text>
+        </view>
+        <picker @change="bindPickerChange"  value="{{index}}" range="{{options.displayText}}"  name='{{options.name}}' >
+            <view class="picker">
+                <view>
+                    <text>{{options.displayText[index]||'请选择'}}</text>
+                </view>
+                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+            </view>
+        </picker>
+         <view  wx:if="{{options.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    export default class options extends wepy.component {
+         props = {
+            options: {
+                type: Object
+            },
+            index: {
+                type: Number,
+                twoWay: true
+            }
+        };
+        data = {
+            isWarning:false,
+        };   
+        methods = {
+            bindPickerChange(e){
+                if(e.detail.value!==0){
+                    this.index=e.detail.value;
+                    this.options.warning=false;
+                }
+                this.$apply();
+            },
+        };
+        onLoad() {
+        }
+    }
+</script>

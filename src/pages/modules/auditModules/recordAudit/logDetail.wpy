@@ -1,0 +1,536 @@
+
+<style lang="less">
+// wx.navigateTo({ url: '../logDoc/document?id='+this.id });
+  .body {
+    height: 100%;
+    position: relative;
+    .container-title {
+      height: 104rpx;
+      font-size: 48rpx; // padding-left: 28rpx;
+      color: #2a2a2a;
+      line-height: 104rpx;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #dedede;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      z-index: 9999;
+      >text {
+        margin-left: 28rpx;
+      }
+      icon {
+        margin-right: 28rpx;
+      }
+    }
+    .logDetail-container {
+      font-size: 28rpx;
+      color: #2a2a2a;
+      .bold::after {
+        content: '';
+        display: block;
+        height: 14rpx;
+        background: #f4f4f4;
+      }
+      .bold-line {
+        height: 7px;
+        background: #f4f4f4;
+      }
+      .log-chunck1 {
+        padding: 149rpx 28rpx 0 28rpx;
+        display: flex;
+        flex-wrap: wrap;
+        >view {
+          width: 50%;
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 32rpx;
+          >text:first-child {
+            color: #7a7a7a;
+            margin-bottom: 22rpx
+          }
+        }
+      }
+      .log-chunck2 {
+        padding: 44rpx 28rpx 0 28rpx;
+        >view {
+          margin-bottom: 32rpx;
+          >text {
+            margin-bottom: 22rpx;
+            display: flex;
+            flex-direction: column;
+          }
+          >text:first-child {
+            color: #7a7a7a
+          }
+        }
+      }
+      .log-chunck3 {
+        padding: 44rpx 28rpx 0 28rpx;
+        display: flex;
+        flex-wrap: wrap;
+        >view {
+          width: 50%;
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 32rpx;
+          >text:first-child {
+            color: #7a7a7a;
+            margin-bottom: 22rpx
+          }
+        }
+      }
+      .log-chunck4 {
+        padding: 44rpx 28rpx 0 28rpx;
+        >view:first-child {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 32rpx;
+        }
+        >view:last-child {
+          display: flex;
+          align-items: center;
+          margin-bottom: 32rpx;
+        }
+      }
+      .log-chunck5 {
+        padding: 44rpx 28rpx 0 28rpx;
+        >view:nth-child(1) {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 32rpx;
+        }
+        >view:nth-child(2) {
+          display: flex;
+          position: relative;
+          margin-bottom: 32rpx;
+          height: 78rpx;
+          >image {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 80rpx;
+            height: 80rpx;
+            border-radius: 50%;
+          }
+        }
+      }
+      .log-chunck6 {
+        padding: 44rpx 28rpx 44rpx 28rpx;
+        color: #7a7a7a;
+        >view:first-child {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 32rpx;
+        }
+        >view:last-child {
+          display: flex;
+          flex-direction: column;
+          >view:nth-child(2){
+            margin-top:22rpx;
+          }
+          >view:last-child {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 22rpx;
+          }
+        }
+      }
+    }
+    .chooseMe {
+      position: fixed;
+      height: 98rpx;
+      width: 100%;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      background: #5d73fa;
+      color: #fff;
+      z-index: 9999;
+      >view {
+        width: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 34rpx;
+        height: 100%;
+      }
+      >view:first-child {
+        border-right: 1px solid #fff;
+      }
+    }
+    .auditBtn {
+      position: fixed;
+      z-index: 999;
+      bottom: 0;
+      height: 98rpx;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #5d73fa;
+      font-size: 36rpx; // border-top: 1px solid #f4f4f4;
+      color: #fff;
+    }
+  }
+</style>
+
+<template>
+  <view class="body">
+    <view class="container-title">
+      <text class="title-text">日志详情</text>
+      <icon class="iconfont icon-bianji" style="font-size:60rpx;color:#5d73fa" @tap="toCompileRecord" wx:if="{{(workLogData.processStatus=='N'||workLogData.processStatus=='R')&&!toAudit&&!chooseMe}}"></icon>
+    </view>
+    <view class="logDetail-container" style="margin-bottom:{{chooseMe||toAudit?'98rpx':'0'}}">
+      <view class="log-chunck1 bold">
+        <view>
+          <text>日志类别</text>
+          <text>{{workLogData.categoryText||'未填写'}}</text>
+        </view>
+        <view>
+          <text>工作类别</text>
+          <text>{{workLogData.workTypeText||'未填写'}}</text>
+        </view>
+        <view style="width:100%;">
+          <text>工作时间</text>
+          <view>
+            <text>{{workLogData.startTime.Y}} </text>
+            <text> {{workLogData.startTime.M}}至</text>
+            <text wx:if="{{workLogData.startTime.Y!==workLogData.endTime.Y}}">{{workLogData.endTime.Y}} </text>
+            <text>{{workLogData.endTime.M}}</text>
+          </view>
+        </view>
+        <view style="width:100%;">
+          <text>日志所属人</text>
+          <text>{{workLogData.employeeName||'未填写'}}</text>
+        </view>
+      </view>
+      <view class="bold-line">
+      </view>
+      <view class="log-chunck2">
+        <view>
+          <text>日志内容</text>
+          <text>{{workLogData.description||'未填写'}}</text>
+        </view>
+        <view>
+          <text>备注内容</text>
+          <text>{{workLogData.remark||'未填写'}}</text>
+        </view>
+      </view>
+      <view class="bold-line">
+      </view>
+      <view class="log-chunck3">
+        <view>
+          <text>自报时长</text>
+          <text>{{workLogData.selfDuration}}h</text>
+        </view>
+        <view>
+          <text>业务时长</text>
+          <text>{{workLogData.businessDuration}}h</text>
+        </view>
+        <view>
+          <text>账单时长</text>
+          <text>{{workLogData.billDuration}}h</text>
+        </view>
+      </view>
+      <view class="bold-line">
+      </view>
+      <view class="log-chunck4" wx:if="{{workLogData.attachmentList!==null}}">
+        <view>
+          <text>日志文档</text>
+          <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#dedede"></icon>
+        </view>
+        <view  @tap="toDocument">
+          <icon class="iconfont icon-wendang" style="font-size:80rpx;color:#ff9900;margin-right:20rpx"></icon>
+          <text>已上传{{workLogData.attachmentList.length}}个文档</text>
+        </view>
+      </view>
+      <!-- <view class="bold-line">
+        </view> -->
+      <view class="log-chunck5" wx:if="{{avatar.length!==0}}">
+        <view>
+          <text>参与人</text>
+          <!-- <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#dedede"></icon> -->
+        </view>
+        <!-- <repeat for="{{workLogData.approvalList}}" key="index" index="index" item="item"> -->
+        <view>
+          <repeat for="{{avatar}}" key="index" index="index" item="item">
+            <image src="{{item}}" mode="scaleToFill" lazy-load="false" style="z-index:{{index}};background:#069400;left:{{index*30}}rpx">
+            </image>
+          </repeat>
+        </view>
+        <!-- </repeat> -->
+      </view>
+      <view class="bold-line">
+      </view>
+      <view class="log-chunck6" @tap="toauditResultsDetail">
+        <view>
+          <text>审核结果</text>
+          <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#dedede"></icon>
+        </view>
+        <view>
+          <view style="color:{{workLogData.processStatus=='R'?'#e20000':workLogData.processStatus=='N'?'#FF9900':'#069400'}}">
+            <text>{{workLogData.processStatusText||'未填写'}}</text>
+          </view>
+          <view wx:if="{{workLogData.processStatus=='R'}}">
+            备注：{{workLogData.remark||'未填写'}}
+          </view>
+          <view>
+            <text>通过{{workLogData.approvalList.length}}位审核人审核</text>
+            <text>{{workLogData.approvalList[0].approvalDateText}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="chooseMe" wx:if='{{chooseMe}}'>
+      <view @tap="deselect">
+        <text>取消提示</text>
+      </view>
+      <view @tap="chooseMe">
+        <text>转为我的</text>
+      </view>
+    </view>
+    <view class="auditBtn" wx:if="{{toAudit}}" style="opacity:{{addOpacity}} ;" @touchstart="touchStart" @touchend="touchEnd">
+      <text>审核</text>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import ajax from '../../../../utils/cofig/ajax.js';
+  import {
+    formatDate,formatTime
+  } from '../../../../utils/cofig/api.js';
+  export default class logdetail extends wepy.page {
+    components = {};
+    data = {
+      addOpacity: 1,
+      chooseMe: false,
+      id: 0,
+      workLogData: {},
+      passCount: 0,
+      avatar: [],
+      toAudit: false,
+    };
+    methods = {
+       toauditResultsDetail(){
+         if(this.workLogData.approvalList.length>0){
+           var approvalList=JSON.stringify(this.workLogData.approvalList)
+           wx.navigateTo({ url: '../../myRecord/myLogdetail/auditResultsDetail?approvalList='+approvalList});
+         }
+      },
+      toDocument(){
+        wx.navigateTo({ url: '../../myRecord/logDoc/document?id='+this.id });
+      },
+      touchStart() {
+        this.addOpacity = 0.6;
+        this.$apply();
+      },
+      touchEnd() {
+        this.addOpacity = 1;
+        var data = {
+          id: this.id,
+          selfDuration: this.workLogData.selfDuration,
+          billDuration: this.workLogData.billDuration,
+          businessDuration: this.workLogData.businessDuration
+        }
+        data = JSON.stringify(data);
+        console.log(data)
+        wx.navigateTo({
+          url: '../../auditModules/recordAudit/recordAudit?data=' + data
+        });
+        this.$apply();
+      },
+      deselect() {
+        wx.showModal({
+          title: '你确定吗？', //提示的标题,
+          content: '是否确认不再显示该参与日志？取消后将无法再转化为自己的日志', //提示的内容,
+          showCancel: true, //是否显示取消按钮,
+          cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
+          cancelColor: '#5d73fa', //取消按钮的文字颜色,
+          confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
+          confirmColor: '#5d73fa', //确定按钮的文字颜色,
+          success: res => {
+            if (res.confirm) {
+              this.CancelMyParticipantWorklog();
+            }
+          }
+        });
+      },
+      chooseMe() {
+        var data = {
+          isData: true,
+          startTime: this.workLogData.startTime,
+          endTime: this.workLogData.endTime,
+          id: this.workLogData.id,
+          clientId: this.workLogData.clientId,
+          caseId: this.workLogData.caseId,
+        }
+        data = JSON.stringify(data);
+        wx.navigateTo({
+          url: '../creatWorkRecord/creatWorkRecord?data=' + data
+        });
+      },
+      toCompileRecord() {
+        var data = {
+          // isData:true,
+          startTime: this.workLogData.startTime,
+          endTime: this.workLogData.endTime,
+          id: this.workLogData.id,
+          clientId: this.workLogData.clientId,
+          caseId: this.workLogData.caseId,
+        }
+        data = JSON.stringify(data);
+        wx.navigateTo({
+          url: '../compileRecord/compileRecord?data=' + data
+        });
+      }
+    };
+    async GetWorklog() {
+      wx.showLoading({
+        title: '加载中！请稍等！', //提示的内容,
+        mask: true, //显示透明蒙层，防止触摸穿透,
+        success: res => {}
+      });
+      var id = {
+        id: this.id
+      };
+      var workLogData = await ajax.getData(
+        '/api/services/web/worklog/GetWorklog',
+        'post',
+        id
+      )
+      if (workLogData.statusCode == 200) {
+        var workLogData = workLogData.data.result;
+        if(workLogData.processStatus=='N'){
+          this.toAudit = true
+        }else{
+          this.toAudit = false
+        }
+        if (this.chooseMe) {
+          wx.setStorageSync('myParticipantWorkLoags', workLogData);
+        }
+        // 日志时间
+        var sT = formatDate(workLogData.startTime);
+        var eT = formatDate(workLogData.endTime)
+        workLogData.startTime = {
+          Y: sT[0] + '/' + sT[1] + '/' + sT[2],
+          M: sT[3] + ':' + sT[4]
+        }
+        workLogData.endTime = {
+          Y: eT[0] + '/' + eT[1] + '/' + eT[2],
+          M: eT[3] + ':' + eT[4]
+        }
+        workLogData.selfDuration=workLogData.selfDuration.toFixed(1);
+        workLogData.businessDuration=workLogData.businessDuration.toFixed(1);
+        workLogData.billDuration=workLogData.billDuration.toFixed(1);
+        
+        //参与人头像
+        if (workLogData.participantList.length !== 0) {
+          var participantList = workLogData.participantList;
+          for (var index in participantList) {
+            var employeeId = participantList[index].employeeId
+            var http = '/api/services/web/personal/GetEmployeePhoto?id=' + employeeId;
+            var avatar = await ajax.getAavatar(http);
+            this.avatar[index] = avatar;
+            this.$apply();
+          }
+        }
+        //通过人数
+        if (workLogData.approvalList.length !== 0) {
+          var approvalList = workLogData.approvalList;
+          approvalList[0].approvalDateText=formatTime(approvalList[0].approvalDate)
+        }
+        this.workLogData = workLogData
+        var isRefresh = {
+          isRefresh: false
+        }
+        wx.setStorageSync('isRefresh', isRefresh);
+        //缓存日志基本信息
+        this.$apply();
+      }else{
+        wx.showToast({
+          title: '网络出错！', //提示的内容,
+          icon: 'none', //图标,
+          duration: 2000, //延迟时间,
+          mask: true, //显示透明蒙层，防止触摸穿透,
+          success: res => {}
+        });
+      }
+    }
+    // 获取日志提醒参与信息
+    async GetMyParticipantWorklogs() {
+      wx.showLoading({
+        title: '提交中，请稍等！', //提示的内容,
+        mask: true, //显示透明蒙层，防止触摸穿透,
+      });
+      var GetMyParticipantWorklogs = await ajax.getData(
+        '/api/services/web/worklog/GetMyParticipantWorklogs',
+        'post'
+      )
+      var MyParticipantWorklogsCount = GetMyParticipantWorklogs.data.result.length;
+      if (MyParticipantWorklogsCount) {
+        wx.navigateBack({
+          delta: 1
+        });
+      } else {
+        wx.navigateBack({
+          delta: 2
+        });
+      }
+    }
+    //取消参与提醒
+    async CancelMyParticipantWorklog() {
+      wx.showLoading({
+        title: '提交中，请稍等！', //提示的内容,
+        mask: true, //显示透明蒙层，防止触摸穿透,
+        success: () => {
+          this.GetMyParticipantWorklogs();
+        }
+      });
+      var data = {
+        id: this.id
+      }
+      var CancelData = await ajax.getData(
+        '/api/services/web/worklog/CancelMyParticipantWorklog',
+        'post',
+        data
+      )
+      if (CancelData.statusCode == 200) {
+        var isRefresh = wx.getStorageSync('isRefresh');
+        isRefresh.isRefresh = true;
+        wx.setStorageSync('isRefresh', isRefresh);
+      } else {
+        wx.showToast({
+          title: error.data.restult.message,
+          icon: 'none',
+          duration: 1500,
+          mask: false,
+        });
+      }
+    }
+    // 转化为我的
+    onLoad(options) {
+      this.id = options.id;
+      this.chooseMe = options.chooseMe || false;
+      this.GetWorklog();
+      this.$apply();
+    }
+    onShow() {
+      var isRefresh = wx.getStorageSync('isRefresh');
+      if (isRefresh.isRefresh) {
+        this.workLogData = {};
+        this.passCount = 0,
+          this.avatar = [],
+          this.GetWorklog();
+      }
+    }
+  }
+</script>

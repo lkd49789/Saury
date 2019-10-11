@@ -1,0 +1,269 @@
+<style lang="less">
+    .bill {
+        .bill_title {
+            height: 104rpx;
+            line-height: 104rpx;
+            padding-left: 28rpx;
+            font-size: 48rpx;
+            position: relative;
+            border-bottom: 1px solid #dedede;
+        }
+        .bill_content {
+            background: #ffffff;
+            margin: 0 auto;
+            padding: 44rpx 28rpx 34rpx 28rpx;
+            font-size: 28rpx;
+            overflow: auto;
+            border-bottom: 20rpx solid #f2f2f2;
+            &:last-child {
+                border-bottom: 0
+            }
+            .caseConflictBorder_radius {
+                border: 1px solid;
+                width: 15rpx;
+                height: 15rpx;
+                line-height: 28rpx;
+                border-radius: 15rpx;
+                margin-right: 10rpx;
+                display: inline-block;
+            }
+            .bill_box {
+                margin: 20rpx 0;
+                .bill_view {
+                    line-height: 42rpx;
+                }
+            }
+            .bill_box2 {
+                line-height: 42rpx;
+                width: 50%;
+            }
+            .bill_x {
+                padding: 24rpx 28rpx 24rpx 28rpx;
+                background: #f2f2f2;
+                margin: 15rpx 0;
+                border-radius: 20rpx;
+            }
+            .bill_gray {
+                color: #7a7a7a;
+                border-color: #7a7a7a
+            }
+            .bill_blue {
+                color: #009dff;
+                border-color: #009dff
+            }
+            .bill_red {
+                color: #e20000;
+                border-color: #e20000
+            }
+            .bill_yellow {
+                color: #ff9900;
+                border-color: #ff9900
+            }
+            .bill_green {
+                color: #069400;
+                border-color: #069400
+            }
+            .bill_state {
+                float: right;
+                position: relative;
+            }
+        }
+        .flex {
+            display: flex;
+            margin-bottom: 15rpx;
+        }
+        .right {
+            text-align: right;
+        }
+        .bill_btns {
+            height: 98rpx;
+            width: 100%;
+            display: flex;
+            position: fixed;
+            bottom: 0;
+        }
+        .bill_btn {
+            border-radius: 0;
+            width: 50%;
+            text-align: center;
+            background: #5d73fa;
+            color: #fff;
+            line-height: 98rpx;
+            font-size: 32rpx
+        }
+    }
+</style>
+
+<template>
+    <view class="bill" style="margin-bottom:{{invoiceDataDetail.status=='UnHandled'||invoiceDataDetail.status=='Invoiced'?'64rpx':'0'}}">
+        <view class="bill_title">
+            <text class="title">发票详情</text>
+        </view>
+        <view class="bill_content" >
+            <view class="bill_box">
+                <view class="bill_view bill_blue">{{invoiceDataDetail.invoiceCase.name||'未填写'}}</view>
+                <view class="bill_view bill_gray">{{invoiceDataDetail.invoiceCase.serialId||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_blue">{{invoiceDataDetail.invoiceCase.clientName||'未填写'}}</view>
+                <view class="bill_view bill_gray">{{invoiceDataDetail.invoiceCase.clientId||'未填写'}}</view>
+            </view>
+        </view>
+        <view class="bill_content">
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">{{invoiceDataDetail.creationTime||'未填写'}}</view>
+                    <view class="bill_view">{{invoiceDataDetail.invoiceTypeName||'未填写'}}</view>
+                </view>
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray right {{invoiceDataDetail.status=='UnHandled'?'bill_yellow':invoiceDataDetail.status=='Invoiced'?'bill_green':invoiceDataDetail.status=='Claimed'?'bill_blue':'bill_gray'}}">{{invoiceDataDetail.statusName||'未填写'}}</view>
+                    <view class="bill_view bill_blue right">{{invoiceDataDetail.invoiceAmount}}({{invoiceDataDetail.invoiceCurrency}})</view>
+                </view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_gray">发票抬头</view>
+                <view class="bill_view">{{invoiceDataDetail.invoiceHeader||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_gray">税号</view>
+                <view class="bill_view">{{invoiceDataDetail.taxNumber||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_gray">开户行及帐号</view>
+                <view class="bill_view">{{invoiceDataDetail.accountNumber||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_gray">电话</view>
+                <view class="bill_view">{{invoiceDataDetail.phone||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_gray">地址</view>
+                <view class="bill_view">{{invoiceDataDetail.address||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_gray">发票内容</view>
+                <view class="bill_view">{{invoiceDataDetail.invoiceContent||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_gray">备注</view>
+                <view class="bill_view ">{{invoiceDataDetail.remark||'未填写'}}</view>
+            </view>
+        </view>
+        <view class="bill_content" wx:if="{{invoiceDataDetail.invoiceBillings.length>0}}">
+            <view class="bill_box">
+                <view class="bill_view bill_gray">关联账单信息</view>
+                <repeat for="{{invoiceDataDetail.invoiceBillings}}" key="index" index="index" item="item">
+                    <view style="margin:10px 0">
+                        <view class="bill_view">{{item.id}}</view>
+                        <view class="bill_view bill_blue">{{item.billingAmount}}({{item.currency}})</view>
+                        <view class="flex">
+                            <view class="bill_box2">
+                                <view class="bill_view">{{item.creatorUserName||'未填写'}}</view>
+                            </view>
+                            <view class="bill_box2">
+                                <view class="bill_view right">{{item.creationTime||'未填写'}}</view>
+                            </view>
+                        </view>
+                    </view>
+                </repeat>
+            </view>
+        </view>
+        <view class="bill_content" wx:if="{{invoiceDataDetail.invoiceOperations.length>0}}">
+            <view class="bill_box">
+                <view class="bill_view">财务操作记录</view>
+                <repeat for="{{invoiceDataDetail.invoiceOperations}}" key="index" index="index" item="item">
+                    <view style="margin:10px 0">
+                        <view class="flex">
+                            <view class="bill_box2">
+                                <view class="bill_view">{{item.operationTypeName||'未填写'}}</view>
+                            </view>
+                            <view class="bill_box2">
+                                <view class="bill_view bill_gray right">{{item.creationTime||'未填写'}}</view>
+                            </view>
+                        </view>
+                        <view class="bill_view">{{item.creatorUserName||'未填写'}}</view>
+                        <view class="bill_view bill_blue">{{item.remark||'未填写'}}</view>
+                    </view>
+                </repeat>
+            </view>
+        </view>
+        <view class="bill_btns" wx:if="{{invoiceDataDetail.status=='UnHandled'}}">
+            <button class="bill_btn" catchtap="toAuditing('{{0}}')">退回</button>
+            <button class="bill_btn" catchtap="toAuditing('{{1}}')">开票</button>
+        </view>
+        <view class="bill_btns" wx:if="{{invoiceDataDetail.status=='Invoiced'}}">
+            <button class="bill_btn" catchtap="toAuditing('{{2}}')">作废</button>
+            <button class="bill_btn" catchtap="toAuditing('{{3}}')">认领</button>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import {
+        formatDate
+    } from '../../../../utils/cofig/api.js';
+    export default class Index extends wepy.page {
+        components = {};
+        data = {
+            invoiceDataDetail: {},
+            invoiceDetailId: '',
+        };
+        methods = {
+            toAuditing(type) {
+                wepy.navigateTo({
+                    url: './manageInvoiceExamine?id=' + this.invoiceDataDetail.id +'&type=' + type
+                });
+            }
+        };
+        onLoad(options) {
+            this.invoiceDetailId = options.id;
+            this.$apply();
+        };
+        onShow() {
+            this.getbill();
+        }
+        //获取账单
+        async getbill(num) {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/financialInvoice/GetInvoice',
+                'post', {
+                    id: this.invoiceDetailId
+                }
+            );
+            switch (resData.statusCode) {
+                case 200:
+                    this.invoiceDataDetail = resData.data.result;
+                    var creationTime = formatDate(this.invoiceDataDetail.creationTime)
+                    this.invoiceDataDetail.creationTime =creationTime[0]+'-'+creationTime[1]+'-'+creationTime[2]+' '+creationTime[3]+':'+creationTime[4]+':'+creationTime[5]
+                    for (var index in this.invoiceDataDetail.invoiceBillings) {
+                        var billingsCreationTime = formatDate(this.invoiceDataDetail.invoiceBillings[index].creationTime)
+                         this.invoiceDataDetail.invoiceBillings[index].creationTime=billingsCreationTime[0]+'-'+billingsCreationTime[1]+'-'+billingsCreationTime[2]+' '+billingsCreationTime[3]+':'+billingsCreationTime[4]+':'+billingsCreationTime[5]
+                    }
+                    for (var index in this.invoiceDataDetail.invoiceOperations) {
+                       var operationsCreationTime= formatDate(this.invoiceDataDetail.invoiceOperations[index].creationTime);
+                        this.invoiceDataDetail.invoiceOperations[index].creationTime=operationsCreationTime[0]+'-'+operationsCreationTime[1]+'-'+operationsCreationTime[2]+' '+operationsCreationTime[3]+':'+operationsCreationTime[4]+':'+operationsCreationTime[5]
+                    }
+                    this.$apply();
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+        }
+    }
+</script>

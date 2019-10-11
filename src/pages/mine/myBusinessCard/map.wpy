@@ -1,0 +1,44 @@
+<!--  -->
+<style lang='scss'>
+</style>
+<template>
+  <view class='container'>
+      <map id="myMap" show-location  style="width: 100%; height: {{viewSize}}px"/>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  export default class map extends wepy.page {
+    config = {
+      navigationBarTitleText: "",
+    };
+
+    data = {
+        mapCtx:null,
+        viewSize:0,
+    };
+
+    components = {};
+
+    methods = {};
+
+    events = {};
+
+    watch = {};
+
+    computed = {};
+
+    onLoad() { 
+        this.mapCtx = wx.createMapContext('myMap')
+        this.viewSize = wx.getSystemInfo({
+                success: res => {
+                    this.viewSize = res.windowHeight;
+                    this.$apply();
+                }
+            });
+    };
+
+    onShow() { };
+  }
+</script>

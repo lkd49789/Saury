@@ -1,0 +1,60 @@
+
+    <view class="body">
+        <view class="top-title">
+            <view class="flex">
+                <view style="margin-left:28rpx">
+                    <text>工作日志</text>
+                </view>
+                <view style="margin-right:28rpx">
+                    <icon class="iconfont icon-sousuo1 " style="font-size:60rpx;color:#5d73fa;margin-right:14rpx" bindtap="toSearch"/>
+                    <icon class="iconfont icon-shaixuan1" style="font-size:60rpx;color:#5d73fa" bindtap="ishowFilter"/>
+                </view>
+            </view>
+            <view class="filter animation"  wx:if="{{isShow}}">
+                <view catchtap="filter" data-wpyfilter-a="cteateTime">创建时间排序</view>
+                <view catchtap="filter" data-wpyfilter-a="recordTime">日志时间排序</view>
+                <view catchtap="filter" data-wpyfilter-a="case">案件排序</view>
+            </view>
+        </view>
+        <view class="main">
+            <view class="records-remind"  wx:if="{{MyParticipantWorklogsCount}}" bindtap="toMPworkLogsDetail">
+                <icon class="iconfont icon-xuanxiang" style="font-size:30rpx;color:#5d73fa;margin-right:10rpx"/>
+                <text>您好！最近有{{MyParticipantWorklogsCount}}条工作日志将您设为了参与人</text>
+            </view>
+            <view style="margin-top:{{MyParticipantWorklogsCount?'300rpx':'0'}}">
+                <block wx:for="{{MyWorklogsData}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                    <view class="records-item" bindtap="toLogDetail" data-wpytologdetail-a="{{item.id}}">
+                        <view class="item-onLine">
+                            <view>
+                                <text>{{item.sTime.Y}} {{item.sTime.M}}-</text>
+                                <text><text wx:if="{{item.sTime.Y!==item.eTime.Y}}">{{item.eTime.Y}} </text>{{item.eTime.M}}</text>
+                            </view>
+                            <text style="color:#5d73fa">{{item.selfDuration||'未填写'}}h</text>
+                        </view>
+                        <view class="item-twoLine" style="color:#7a7a7a">
+                            <text>{{item.description||'未填写'}}</text>
+                        </view>
+                        <view class="item-threeLine">
+                            <view>
+                                <icon class="iconfont icon-xiaotouxiang" style="font-size:40rpx;color:#5d73fa;margin-right:10rpx;margin-right:20rpx"/>
+                                <text>{{item.employeeName||'未填写'}}</text>
+                            </view>
+                            <view>
+                                <view style="height:20rpx;width:20rpx;border-radius:50%;border:1px solid {{item.statusColor}};margin-right:20rpx">
+                                </view>
+                                <text>{{item.processStatusText||'未填写'}}</text>
+                            </view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+        </view>
+        <image src="{{'../../../images/add.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;" bindtouchstart="touchStart" bindtouchend="touchEnd">
+        </image>
+        
+    <view  wx:if="{{$placeHolderImage$placeHolder.placeHolderShow}}" class="placeHolderImage" catchtouchmove="$placeHolderImage$true">
+                <image src="{{$placeHolderImage$placeHolderImage[$placeHolderImage$placeHolder.placeHolderImageIndex]}}" mode="scaleToFill" lazy-load="false" style="width:580rpx;height:580rpx">
+                </image>
+    </view>
+
+    </view>

@@ -1,0 +1,235 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+         .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99;
+        }
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top:0;
+            left:0;
+            width:100%;
+            background:#fff;
+            z-index:99;
+        }
+        .main{
+            margin:149rpx 28rpx 0 28rpx;
+            .option {
+                margin-bottom: 36rpx;
+                picker {
+                    padding: 20rpx 0;
+                    border-bottom: 1px solid #dfdfdf;
+                    .picker {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        color: #7a7a7a;
+                        .part-item{
+                            position: relative;
+                            margin: 10rpx;
+                            background: #dfdfdf;
+                            padding:5rpx 20rpx;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            >icon{
+                                position: absolute;
+                                bottom:31rpx;
+                                right:-12rpx;
+                            }
+                        }
+                    }
+                }
+            }
+            .item{
+                margin-top:44rpx;
+                >view:not(:last-child){
+                    margin-bottom: 30rpx;
+                }
+                >view:first-child{
+                    display: flex;
+                    >view{
+                        width:50%;
+                        display: flex;
+                        flex-direction: column;
+                        >text:first-child{
+                            margin-bottom: 20rpx;
+                            color:#7a7a7a;
+                        }
+                    }
+                }
+                >view:not(:first-child){
+                    display: flex;
+                     flex-direction: column;
+                    >text:first-child{
+                        margin-bottom: 20rpx;
+                        color:#7a7a7a;
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <text>选择会议室</text>
+        </view>
+        <view class='main'>
+            <view class="option">
+                    <view>
+                        <text class="title">会议室编号</text>
+                    </view>
+                    <picker @change="bindPickerChange" value="{{meetingRoomCombobox.index}}" range="{{meetingRoomCombobox.displayText}}" name='MeetingRoomId'>
+                        <view class="picker">
+                            <view>
+                                <text>{{meetingRoomCombobox.displayText[meetingRoomCombobox.index]}}</text>
+                            </view>
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                        </view>
+                    </picker>
+                     <view class="warming" wx:if="{{meetingRoomCombobox.isSelected}}" style="color:#e20000">
+                        <text>此字段是必需的</text>
+                    </view>
+            </view>
+            <view class="item">
+                <view>
+                    <view>
+                        <text>会议室级别</text>
+                        <text>{{meetingRoomData.levelText||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <text>会议室规模</text>
+                        <text>{{meetingRoomData.scaleText||'未填写'}}</text>
+                    </view>
+                </view>
+                <view>
+                    <text>会议室设备</text>
+                    <text>{{meetingRoomData.equipmentText||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>会议室风格</text>
+                    <text>{{meetingRoomData.styleText||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>会议室地址</text>
+                    <text>{{meetingRoomData.address}}</text>
+                </view>
+                <view>
+                    <text>会议室描述</text>
+                    <text>{{meetingRoomData.description}}</text>
+                </view>
+            </view>
+        
+        </view>
+         <image src="{{'../../../../images/test.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;"  @touchstart="touchStart" @touchend="touchEnd">
+        </image>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    export default class clientDetail extends wepy.page {
+        components = {
+        };
+        data = {
+            submitData:{},
+            addOpacity:1,
+            meetingRoomCombobox:{
+                value: [],
+                displayText: [],
+                index: -1,
+                isSelected:false
+            },
+            meetingRoomData:{}
+        };
+        methods = {
+            touchStart(){
+                this.addOpacity = 0.6;
+                this.$apply();
+            },
+            touchEnd(){
+                if(this.submitData.MeetingRoomId){
+                    this.CreateOrUpdateMeeting(this.submitData);
+                }else{
+                    this.addOpacity=1;
+                    this.meetingRoomCombobox.isSelected=true
+                }
+            },
+            bindPickerChange(e){
+                this.meetingRoomCombobox.isSelected=false;
+                this.meetingRoomCombobox.index=+e.detail.value;
+                this.submitData.MeetingRoomId=this.meetingRoomCombobox.value[this.meetingRoomCombobox.index];
+                this.GetMeetingRoom(this.meetingRoomCombobox.value[this.meetingRoomCombobox.index]);
+                this.$apply();
+            }
+        };
+        async CreateOrUpdateMeeting(data){
+            wx.showLoading({
+                title: '提交中，请稍等！', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success:()=>{
+                    this.addOpacity = 1;
+                    this.$apply();
+                }
+            });
+            var resData=await ajax.getData(
+                '/api/services/web/meeting/CreateOrUpdateMeeting',
+                'post',
+                data
+            )
+            if(resData.statusCode==200){
+               var isRefresh=wx.getStorageSync('isRefresh');
+                isRefresh.isRefresh=true;
+                wx.setStorageSync('isRefresh',isRefresh);
+                wx.navigateBack({
+                    delta: 2
+                });
+            }else{
+                wx.showToast({
+                    title: '该会议室正在使用中！',
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
+            }
+        }
+        async GetMeetingRoom(id){
+            var roomId={
+                id:id
+            }
+            var resData=await ajax.getData(
+                '/api/services/web/meetingRoom/GetMeetingRoom',
+                'post',
+                roomId
+            )
+            if(resData.statusCode==200){
+                this.meetingRoomData=resData.data.result;
+            }
+            this.$apply();
+        }
+        onLoad() {
+            var meetingRoomData=wx.getStorageSync('meetingRoomData');
+            this.submitData=wx.getStorageSync('creatMeetingData');
+            for(var index in meetingRoomData){
+                this.meetingRoomCombobox.value[index]=meetingRoomData[index].value;
+                this.meetingRoomCombobox.displayText[index]=meetingRoomData[index].displayText;
+            }
+            this.$apply();
+        }
+
+    }
+</script>

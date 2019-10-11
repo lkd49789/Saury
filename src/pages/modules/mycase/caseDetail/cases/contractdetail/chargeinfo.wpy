@@ -1,0 +1,400 @@
+<!--  -->
+<style lang="less">
+  .body {
+    // height: 100%;
+    .graycolor {
+      color: #7a7a7a;
+    }
+    .scroll-view {
+      margin-top: 22rpx;
+      width: 100%; // margin-bottom: 44rpx;
+      .charge-item {
+        // border: 1px solid #000;
+        height: 300rpx;
+        font-size: 28rpx; // height: 100%;
+        display: flex;
+        flex-direction: column; // justify-content: center;
+        align-items: center;
+        box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+        margin: 24rpx 28rpx;
+        border-radius: 20rpx;
+        justify-content: center;
+      }
+    }
+    .charge-title-container {
+      padding: 0 28rpx 0 28rpx;
+      font-size: 28rpx;
+      color: #2a2a2a;
+      .title-content-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 44rpx;
+        .content-left {
+          width: 85%;
+          >text:first-child {
+            margin-right: 20rpx;
+            color: #7a7a7a;
+          }
+        }
+        .content-right {
+          color: #5d73fa;
+        }
+      }
+      .title-content-bottom {
+        >text:first-child {
+          margin-right: 20rpx;
+          color: #7a7a7a;
+        }
+      }
+    }
+    .charge-item-container {
+      padding: 0 28rpx;
+      font-size: 28rpx;
+      color: #2a2a2a;
+      .charge-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20rpx;
+        .charge-item-left {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          >image {
+            width: 70rpx;
+            height: 70rpx;
+            border-radius: 50%;
+          }
+        }
+        .charge-item-right {
+          width: 85%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 30rpx 0;
+          border-bottom: 1px solid #dedede;
+          >view{
+            >text:last-child{
+              margin-left:20rpx;
+              color:#7a7a7a;
+            }
+          }
+        }
+      }
+    }
+    .charge-item1-container {
+      font-size: 28rpx;
+      color: #2a2a2a;
+      .charge-item-content1 {
+        padding: 44rpx 28rpx;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        >view:not(:nth-child(3)) {
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+          margin-bottom: 20rpx;
+          align-items: center;
+          .radius {
+            height: 20rpx;
+            width: 20rpx;
+            margin-right: 20rpx;
+            border-radius: 50%;
+          }
+        }
+        >view:nth-child(3) {
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+          margin-bottom: 20rpx;
+          >text:last-child {
+            margin-left: 14rpx;
+            width: 89%;
+          }
+        }
+        >view:first-child {
+          justify-content: space-between;
+        }
+      }
+    }
+    .charge-item2-container {
+      font-size: 28rpx;
+      color: #2a2a2a;
+      .charge-item-content2 {
+        padding: 44rpx 28rpx;
+        >view:not(:last-child) {
+          margin-bottom: 20rpx;
+          >text:first-child {
+            color: #7a7a7a;
+            margin-right: 14rpx;
+          }
+        }
+        .last-line {
+          display: flex;
+          align-items: center;
+          >view {
+            display: flex;
+            align-items: center;
+          }
+          >view:first-child {
+            margin-right: 60rpx;
+            >view {
+              height: 20rpx;
+              width: 20rpx;
+              border-radius: 50%;
+              margin-right: 14rpx;
+            }
+          }
+          >view:last-child {
+            >view {
+              height: 20rpx;
+              width: 20rpx;
+              border-radius: 50%;
+              margin-right: 14rpx;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <!-- <view></view> -->
+  <!-- <text></text> -->
+  <view class="body">
+    <view class="scroll-view">
+      <swiper duration="{{duration}}" circular="{{circular}}" style=" height:410rpx ; width:100%" previous-margin="40rpx" next-margin="40rpx" bindchange="bindchange">
+        <swiper-item>
+          <view class="charge-item">
+            <view style="display:flex;flex-direction:column">
+              <view style="margin-bottom: 30rpx;display:flex;">
+                <view>
+                  <text>正常收费-</text>
+                </view>
+                <view>
+                  <text>{{contractForEditData.payDetailQuotaText}}</text>
+                </view>
+              </view>
+              <text style="font-size:48rpx;color:#5d73fa;margin-bottom:10rpx">{{contractForEditData.currency}}{{normalPayAmount}}</text>
+              <text style="color:#7a7a7a">收费总金额</text>
+            </view>
+          </view>
+        </swiper-item>
+        <swiper-item>
+          <view class="charge-item">
+            <view style="display:flex;flex-direction:column">
+              <view style="margin-bottom: 30rpx;display:flex;">
+                <view>
+                  <text>风险收费-</text>
+                </view>
+                <view>
+                  <text>{{contractForEditData.payDetailRiskText}}</text>
+                </view>
+              </view>
+              <text style="font-size:48rpx;color:#5d73fa;margin-bottom:10rpx">{{contractForEditData.currency}}{{riskPayAmount}}</text>
+              <text style="color:#7a7a7a">收费总金额</text>
+            </view>
+          </view>
+        </swiper-item>
+        <swiper-item>
+          <view class="charge-item">
+            <view style="display:flex;flex-direction:column">
+              <view style="margin-bottom: 30rpx;display:flex;">
+                <view>
+                  <text>小时收费-</text>
+                </view>
+                <view>
+                  <text>{{contractForEditData.payDetailHourlyText}}</text>
+                </view>
+              </view>
+              <text style="font-size:48rpx;color:#5d73fa;margin-bottom:10rpx">{{contractForEditData.currency}}{{contractForEditData.limitFee}}</text>
+              <text style="color:#7a7a7a">账单金额</text>
+            </view>
+          </view>
+        </swiper-item>
+      </swiper>
+    </view>
+    <view wx:if="{{current==0}}">
+      <view class="charge-item1-container">
+        <repeat for="{{normalChargeListData}}" key="index" index="index" item="item">
+          <view class="charge-item-content1">
+            <view>
+              <view>
+                <text class="graycolor ">付款金额</text>
+                <text style="margin-left:14rpx">{{contractForEditData.currency}}{{item.payAmount||'未填写'}}</text>
+              </view>
+              <view>
+                <text class="graycolor">{{item.payDate}}</text>
+              </view>
+            </view>
+            <view>
+              <view class="radius" style="background:{{item.useBill=='Y'?'#5d73fa':'#7a7a7a'}}">
+              </view>
+              <text style="margin-left:14rpx">{{item.useBill=='Y'?'使用账单':'不使用账单'}}</text>
+            </view>
+            <view>
+              <text class="graycolor">描述</text>
+              <text>{{item.remark||'未填写'}}</text>
+            </view>
+          </view>
+          <view style="content: '';display: block;height: 14rpx;background: #f4f4f4;"></view>
+        </repeat>
+      </view>
+    </view>
+    <view wx:if="{{current==1}}">
+      <view class="charge-item2-container">
+        <repeat for="{{riskChargeListData}}" key="index" index="index" item="item">
+          <view class="charge-item-content2">
+            <view>
+              <text>风险金额</text>
+              <text>{{contractForEditData.currency}}{{item.payAmount||'未填写'}}</text>
+            </view>
+            <view>
+              <text>基本金额</text>
+              <text>{{contractForEditData.currency}}{{item.riskBasicAmount||'未填写'}}</text>
+            </view>
+            <view>
+              <text>风险达成条件：</text>
+              <text>{{item.remark||'未填写'}}</text>
+            </view>
+            <view class="last-line">
+              <view>
+                <view style="background:{{item.useBill=='Y'?'#5d73fa':'#7a7a7a'}}"></view>
+                <text>{{item.useBill=='Y'?'使用账单':'不使用账单'}}</text>
+              </view>
+              <view>
+                <view style="background:{{item.isAcceptable=='Y'?'#5d73fa':'#7a7a7a'}}"></view>
+                <text>{{item.isAcceptable=='Y'?'可收款':'不可收款'}}</text>
+              </view>
+            </view>
+          </view>
+          <view style="content: '';display: block;height: 14rpx;background: #f4f4f4;margin:0"></view>
+        </repeat>
+      </view>
+    </view>
+    <view wx:if="{{current==2}}" style="padding:0;margin:0">
+      <view class="charge-title-container">
+        <view class="title-content-top">
+          <view class="title-content-bottom">
+            <text>账单周期</text>
+            <text>{{contractForEditData.payPeriod||'未填写'}}</text>
+          </view>
+          <view class="content-right">
+            <text>{{contractForEditData.limitHour+'H'||'未填写'}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="charge-item-container">
+        <repeat for="{{lawyerChargeData}}" key="index" index="index" item="item">
+          <view class="charge-item">
+            <view class="charge-item-left">
+              <image src="{{userPhoto[index]}}" mode="scaleToFill" lazy-load="false" />
+            </view>
+            <view class="charge-item-right">
+              <view>
+               <text>{{item.employeeName}}</text>
+               <text>{{item.lawyerRoleText}}</text>
+              </view>
+              <text>{{item.chargeRatio}}(元/小时)</text>
+            </view>
+          </view>
+        </repeat>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import ajax from '../../../../../../utils/cofig/ajax.js'
+  export default class chargeinfo extends wepy.page {
+    components = {};
+    data = {
+      indicatorDots: true,
+      duration: 300,
+      circular: true,
+      current: 0,
+      contractForEditData: {},
+      lawyerChargeData: {},
+      normalChargeListData: {},
+      riskChargeListData: {},
+      userId: [],
+      userPhoto: [],
+      normalPayAmount: 0,
+      riskPayAmount: 0,
+    };
+    methods = {
+      bindchange(e) {
+        this.current = e.detail.current;
+        this.$apply();
+      }
+    };
+    watch = {
+    }
+    getContractData(payStyle) {
+      wx.getStorage({
+        key: 'caseDetailData',
+        success: res => {
+          this.contractForEditData = res.data.contractForEditData;
+          for (var index in payStyle) {
+            switch (payStyle[index]) {
+              case '1':
+                // 正常收费
+                this.normalChargeListData =
+                  res.data.contractForEditData.caseCharges.normalChargeList;
+                //1.判断是否使用账单
+                for (var index in this.normalChargeListData) {
+                  //2.计算总额
+                  this.normalPayAmount += this.normalChargeListData[index].payAmount;
+                  //3.处理日期
+                  this.normalChargeListData[index].payDate = this.normalChargeListData[index].payDate.split('T')[0]
+                }
+                break;
+              case '2':
+                //风险收费
+                this.riskChargeListData =
+                  res.data.contractForEditData.caseCharges.riskChargeList;
+                //计算总额
+                var sum= this.riskChargeListData.reduce((pre,cur,index)=>{
+                  if( this.riskChargeListData[index].payAmount !== '' ||
+                    this.riskChargeListData[index].riskBasicAmount !== ''){
+                      return(cur.payAmount+cur.riskBasicAmount+pre);
+                    }
+                },0)
+                this.riskPayAmount=sum;
+                break;
+              case '3':
+                //按小时收费
+                var lawyerChargeData = res.data.contractForEditData.caseCharges.lawyerChargeList;
+                for(var index in lawyerChargeData){
+                  lawyerChargeData[index].chargeRatio= (Number(lawyerChargeData[index].chargeRatio)*100).toFixed()+'%';
+                }
+                this.getUserPhoto(lawyerChargeData);
+                this.lawyerChargeData =lawyerChargeData;
+                break;
+              default:
+                break;
+            }
+          }
+          this.$apply();
+        }
+      });
+    }
+    async getUserPhoto(lawyerChargeData) {
+      for (var index in lawyerChargeData) {
+        var http = '/api/services/web/personal/GetEmployeePhoto?id=' + lawyerChargeData[index].userId;
+        var avatarData = await ajax.getAavatar(http);
+        this.userPhoto[index] = avatarData;
+      }
+      this.$apply();
+    }
+    onLoad(options) {
+      var payStyle = options.payStyle.split(',');
+      this.getContractData(payStyle);
+    }
+  }
+</script>

@@ -1,0 +1,36 @@
+
+    <view class="body">
+        <view class="top-title">
+            <text>待转化参与日志</text>
+        </view>
+        <view class="main">
+            <block wx:for="{{MPWorklogsDetailData}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                <view class="items-container" bindtap="toLogDetail" data-wpytologdetail-a="{{item.id}}">
+                    <view>
+                        <view>
+                            <text>{{item.startTime.Y}} </text>
+                            <text>{{item.startTime.M}}-</text>
+                            <text  wx:if="{{item.startTime.Y!==item.endTime.Y}}">{{item.endTime.Y}} </text>
+                            <text>{{item.endTime.M}}</text>
+                        </view>
+                        <text style="color:#5d73fa">{{item.selfDuration}}.0h</text>
+                    </view>
+                    <view>
+                        <text>{{item.description}}</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-xiaotouxiang" style="font-size:40rpx;color:#5d73fa;margin-right:20rpx"/>
+                        <text>{{item.employeeName||'未填写'}}</text>
+                    </view>
+                </view>
+            </block>
+            
+            
+        </view>
+        
+    <view  wx:if="{{$placeHolderImage$placeHolder.placeHolderShow}}" class="placeHolderImage" catchtouchmove="$placeHolderImage$true">
+                <image src="{{$placeHolderImage$placeHolderImage[$placeHolderImage$placeHolder.placeHolderImageIndex]}}" mode="scaleToFill" lazy-load="false" style="width:580rpx;height:580rpx">
+                </image>
+    </view>
+
+    </view>

@@ -1,0 +1,345 @@
+<!--  -->
+<style lang='scss'>
+    .container {
+        color: #2a2a2a;
+        .top-title {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 9999;
+            .flex {
+                border-bottom: 1px solid #dedede;
+                height: 104rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 48rpx;
+            }
+            .filter {
+                left: 0;
+                width: 100%;
+                background: #fff;
+                z-index: 99999;
+                padding: 20rpx 28rpx 0 28rpx;
+                >view {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 10rpx 0;
+                }
+            }
+        }
+        .main {
+            margin: 149rpx 28rpx 44rpx 28rpx;
+            .caseItem {
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                padding: 30rpx 24rpx;
+                margin-bottom: 44rpx;
+                >view:first-child {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+                >view {
+                    margin-bottom: 20rpx;
+                }
+                .textColor {
+                    color: #7a7a7a;
+                }
+                .whitespace {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+                >view:last-child {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    >view:first-child {
+                        width: 73%;
+                        display: flex;
+                        align-items: center;
+                        >text:first-child {
+                            height: 20rpx;
+                            width: 20rpx;
+                            border-radius: 50%;
+                            margin-right: 14rpx;
+                            border: 1px solid #ff9900;
+                        }
+                        >text:last-child {
+                            width: 90%;
+                        }
+                    }
+                }
+                .caseLawyer {
+                    position: relative;
+                    height: 100%;
+                    padding: 30rpx 0;
+                    display: flex;
+                    align-items: center;
+                    >image {
+                        height: 60rpx;
+                        width: 60rpx; // background: #ff9900;
+                        border-radius: 50%;
+                        position: absolute; //   top: 50%;
+                        border: 1px solid #fff;
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="top-title">
+            <view class="flex">
+                <view style="margin-left:28rpx">
+                    <text>案件管理</text>
+                </view>
+                <view style="margin-right:28rpx">
+                    <icon class="iconfont icon-sousuo1 " style="font-size:60rpx;color:#5d73fa;margin-right:14rpx" @tap="toSearchPage"></icon>
+                    <icon class="iconfont icon-shaixuan1" style="font-size:60rpx;color:#5d73fa" @tap="ishowFilter"></icon>
+                </view>
+            </view>
+            <view class="filter animation" wx:if="{{false}}">
+                <view catchtap="filter('cteateTime')">创建时间排序</view>
+                <!-- <view catchtap="filter('processStatusList')">状态排序</view>
+                                    <view catchtap="filter('categoryList')">类别排序</view> -->
+            </view>
+        </view>
+        <view class="main">
+            <repeat for="{{caseManageData}}" key="index_1" index="index_1" item="item">
+                <view class="caseItem" @tap="toCaseDetail('{{item}}')">
+                    <view>
+                        <view class="whitespace">{{item.name}}</view>
+                        <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#b2b2b2" catchtap="operations('{{item}}','{{index_1}}')"></icon>
+                    </view>
+                    <view class="textColor whitespace">
+                        {{item.clientName||'未填写'}}
+                    </view>
+                    <view class="textColor whitespace">
+                        {{item.categoryText||'未填写'}}
+                    </view>
+                    <view class="caseLawyer" wx:if="{{avatarList[index_1].length>0}}">
+                        <repeat for="{{avatarList[index_1]}}" key="index_2" index="index_2" item="item_2">
+                            <image class="avator" style="z-index:{{index_2}};left:{{index_2*70}}rpx" src="{{avatarList[index_1][index_2]}}" mode="scaleToFill" lazy-load="false"></image>
+                        </repeat>
+                    </view>
+                    <view>
+                        <view>
+                            <text></text>
+                            <text class="whitespace">{{item.processStatusText||'未填写'}}</text>
+                        </view>
+                        <view class="textColor">{{item.acceptDateText}}</view>
+                    </view>
+                </view>
+            </repeat>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../utils/cofig/ajax.js'
+    export default class caseManagement extends wepy.page {
+        config = {
+            enablePullDownRefresh: true,
+            backgroundTextStyle: 'dark',
+            backgroundColorTop: '#f4f4f4',
+            backgroundColorBottom: '#f4f4f4'
+        };
+        data = {
+            searchData:{},
+            pageNumber: 1,
+            totalCount: 0,
+            caseManageData: [],
+            avatarList: []
+        };
+        components = {};
+        methods = {
+            toSearchPage(){
+                wx.navigateTo({ url: './search/search_caseManagement' });
+            },
+            toCaseDetail(item){
+                 wx.navigateTo({
+                        url: '../mycase/caseDetail/casedetail?id=' + item.id + '&clientId=' + item.clientId
+                    });
+            },
+            operations(items, index) {
+                var operations = items.operations.map((item) => {
+                    return item.text
+                })
+                wx.showActionSheet({
+                    itemList: operations, //按钮的文字数组，数组长度最大为6个,
+                    //   itemColor: '#000000', //按钮的文字颜色,
+                    success: res => {
+                        var className = items.operations[res.tapIndex].className;
+                        switch (className) {
+                            case 'Info':
+                                wx.navigateTo({
+                                    url: '../mycase/caseDetail/casedetail?id=' + items.id + '&clientId=' + items.clientId
+                                });
+                                break;
+                            case "EditCaseApply":
+                                wx.navigateTo({
+                                    url: '../myRegister/register?id=' + items.id
+                                });
+                                break;
+                            case "delete":
+                                wx.showModal({
+                                    title: '你确定吗？', //提示的标题,
+                                    content: '是否确认删除信息？', //提示的内容,
+                                    showCancel: true, //是否显示取消按钮,
+                                    cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
+                                    cancelColor: '#000000', //取消按钮的文字颜色,
+                                    confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
+                                    confirmColor: '#5d73fa', //确定按钮的文字颜色,
+                                    success: res => {
+                                        if (res.confirm) {
+                                            this.DeleteCase(items.id, index);
+                                        } else if (res.cancel) {
+                                            console.log('用户点击取消')
+                                        }
+                                    }
+                                });
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+            }
+        };
+        events = {};
+        watch = {};
+        computed = {};
+        // 下拉刷新
+        onPullDownRefresh() {
+            this.caseManageData = [];
+            this.pageNumber = 1;
+            this.searchData={};
+            this.GetCaseManage();
+            wx.hideNavigationBarLoading(); //完成停止加载
+            wx.stopPullDownRefresh(); //停止下拉刷新
+        }
+        // 上拉加载
+        onReachBottom() {
+            if (this.totalCount / 10 > this.pageNumber && this.$parent.global.netWorkString) {
+                this.pageNumber += 1;
+                this.GetCaseManage();
+            } else {
+                if (this.$parent.global.netWorkString) {
+                    wx.showToast({
+                        title: '我们是有底线的！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                } else {
+                    wx.showToast({
+                        title: '网络连接失败！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            }
+        }
+        async GetCaseManage() {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var subData={
+                    sorting: "",
+                    pageNumber: this.pageNumber,
+                    pageSize: 10,
+            }
+            if(Object.keys(this.searchData).length>0){
+                subData = Object.assign(subData, this.searchData);
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/caseManage/GetCaseManage',
+                'post', 
+                subData
+            )
+            if (resData.statusCode == 200) {
+                this.totalCount = resData.data.result.totalCount;
+                var caseManageData = resData.data.result.items;
+                this.getAavatar(caseManageData)
+                this.caseManageData.push(...caseManageData);
+            }
+            this.$apply();
+        }
+        async getAavatar(caseManageData) {
+            var avatarList = []
+            for (var index_1 in caseManageData) {
+                var lawyerList = caseManageData[index_1].lawyerList;
+                var lawyerListData = [];
+                for (var index_2 = 0; index_2 < lawyerList.length; index_2++) {
+                    if (index_2 < 6) {
+                        var http = '/api/services/web/personal/GetEmployeePhoto?id=' + lawyerList[index_2].userId;
+                        lawyerListData[index_2] = await ajax.getAavatar(http);
+                    } else {
+                        break;
+                    }
+                }
+                avatarList[index_1] = lawyerListData;
+            }
+            this.avatarList.push(...avatarList);
+            this.$apply();
+        }
+        // 删除案件
+        async DeleteCase(id, index) {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/case/DeleteCase',
+                'post', {
+                    id: id
+                }
+            )
+            if (resData.statusCode == 200) {
+                this.caseManageData.splice(index, 1);
+                this.avatarList.splice(index, 1);
+                wx.showToast({
+                    title: '删除成功！', //提示的内容,
+                    icon: 'success', //图标,
+                    duration: 2000, //延迟时间,
+                    mask: false, //显示透明蒙层，防止触摸穿透,
+                    success: res => {}
+                });
+            } else {
+                console.log(resData)
+                wx.showToast({
+                    title: resData.data.error.message, //提示的内容,
+                    icon: 'none', //图标,
+                    duration: 2000, //延迟时间,
+                    mask: false, //显示透明蒙层，防止触摸穿透,
+                    success: res => {}
+                });
+            }
+            this.$apply();
+        }
+        isRefresh(searchData){
+            if(searchData){
+                this.searchData=searchData;
+            }
+            this.searchData={};
+            this.caseManageData = [];
+            this.pageNumber = 1;
+            this.GetCaseManage();  
+        }
+        onLoad() {
+            this.GetCaseManage()
+        };
+        onShow() {};
+    }
+</script>

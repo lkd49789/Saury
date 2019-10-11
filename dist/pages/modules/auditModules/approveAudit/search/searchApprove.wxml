@@ -1,0 +1,141 @@
+
+    <view class="container">
+        <view class="keyword-search"  wx:if="{{showPage}}">
+            <view class="search_top">
+                <view class="search_input">
+                    <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"/>
+                    <input value="{{searchClentValue}}" type="text" confirm-type="search" placeholder="案件编号/案件名称/文件名称" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
+                    </input>
+                </view>
+                <view class="top_right_btn">
+                    <icon class="iconfont icon-gaojisousuo" style="color:#5d73fa;font-size:35px;" bindtap="showPage"/>
+                </view>
+            </view>
+            <view class="search_history">
+                <view class="history_title">
+                    <text>历史搜索</text>
+                    <icon class="iconfont icon-shanchu2" style="color:#7a7a7a;font-size:35rpx;" catchtap="deletItemAll" wx:if="{{history_keyWord_case.length!==0}}"/>
+                </view>
+                <view class="history_content">
+                    <block wx:for="{{history_keyWord_case}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                        <view bindtap="history" bindlongpress="longTap" data-wpyhistory-a="{{item}}" data-wpylongtap-a="{{index}}">
+                            <text>{{item}}</text>
+                            <icon class="iconfont icon-zirenwushanchu" style="color:#dfdfdf;font-size:30rpx;" wx:if="{{isShowArray[index]}}" catchtap="deletItem" data-wpydeletitem-a="{{index}}"/>
+                        </view>
+                    </block>
+                </view>
+            </view>
+        </view>
+        <view class="advanced-search-input-panel"  wx:else="{{showPage}}">
+            <view class="advanced-search-title">
+                <text>高级搜索</text>
+                <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" bindtap="showPage"/>
+            </view>
+            <view class="advanced-search-content">
+                 <view class="tui-picker-content">
+                    <view>开始时间</view>
+                    <picker mode="date" value="{{startDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChangeStart">
+                        <view class="tui-picker-detail">
+                            {{startDate||'请选择'}}
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+                        </view>
+                    </picker>
+                </view>
+                <view class="tui-picker-content">
+                    <view>结束时间</view>
+                    <picker mode="date" value="{{endDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChangeEnd">
+                        <view class="tui-picker-detail">
+                            {{endDate||'请选择'}}
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+                        </view>
+                    </picker>
+                </view>
+                
+<view>
+     <view class="textarea"  wx:if="{{$serialId$isShow}}">
+        <view>
+            <text>{{$serialId$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$serialId$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$serialId$input.name}}" bindfocus="$serialId$bindfocus" bindblur="$serialId$bindblur" placeholder="请输入{{$serialId$input.title}}" bindinput="$serialId$bindinput" maxlength="-1" value="{{$serialId$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$serialId$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$serialId$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$serialId$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$serialId$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$serialId$input.name}}" bindfocus="$serialId$bindfocus" bindblur="$serialId$bindblur" placeholder="请输入{{$serialId$input.title}}" bindinput="$serialId$bindinput" disabled="{{$serialId$input.disabled}}" value="{{$serialId$inputValue}}" type="{{$serialId$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$serialId$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+                
+<view>
+     <view class="textarea"  wx:if="{{$caseName$isShow}}">
+        <view>
+            <text>{{$caseName$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$caseName$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$caseName$input.name}}" bindfocus="$caseName$bindfocus" bindblur="$caseName$bindblur" placeholder="请输入{{$caseName$input.title}}" bindinput="$caseName$bindinput" maxlength="-1" value="{{$caseName$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$caseName$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$caseName$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$caseName$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$caseName$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$caseName$input.name}}" bindfocus="$caseName$bindfocus" bindblur="$caseName$bindblur" placeholder="请输入{{$caseName$input.title}}" bindinput="$caseName$bindinput" disabled="{{$caseName$input.disabled}}" value="{{$caseName$inputValue}}" type="{{$caseName$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$caseName$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+                
+<view>
+     <view class="textarea"  wx:if="{{$clientUser$isShow}}">
+        <view>
+            <text>{{$clientUser$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$clientUser$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$clientUser$input.name}}" bindfocus="$clientUser$bindfocus" bindblur="$clientUser$bindblur" placeholder="请输入{{$clientUser$input.title}}" bindinput="$clientUser$bindinput" maxlength="-1" value="{{$clientUser$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$clientUser$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$clientUser$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$clientUser$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$clientUser$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$clientUser$input.name}}" bindfocus="$clientUser$bindfocus" bindblur="$clientUser$bindblur" placeholder="请输入{{$clientUser$input.title}}" bindinput="$clientUser$bindinput" disabled="{{$clientUser$input.disabled}}" value="{{$clientUser$inputValue}}" type="{{$clientUser$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$clientUser$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+                <!-- <Status v-bind:options.sync="Status" v-bind:index.sync='StatusIndex' v-bind:twoWayTitle.once="StatusIndex" /> -->
+                <image class="btn-sub" src="../../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearchSubmit"/>
+            </view>
+        </view>
+    </view>

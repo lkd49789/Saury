@@ -1,0 +1,76 @@
+<!--  -->
+<style lang='scss'>
+    .container {
+        .main{
+            padding: 30rpx 28rpx 128rpx 28rpx ;
+        }
+    }
+</style>
+
+<template>
+    <view class="container">
+        <view class="main">  
+              <rich-text nodes="{{nodes}}" space="nbsp"></rich-text>
+        </view>
+        <view class="chooseFixedBtn-one" catchtap="backPage" wx:if="{{isShowBtn}}">
+            <view>
+                阅读完毕
+            </view>
+        </view>
+    </view>
+</template>
+
+
+<script>
+    import wepy from 'wepy';
+    import {
+        text
+    } from '../../../utils/cofig/pactDoc.js';
+    export default class pactDoc extends wepy.page {
+        data = {
+            nodes: '',
+            height: 0,
+            viewHeight: 0,
+            isShowBtn: false,
+        };
+        components = {};
+        methods = {
+            backPage() {
+                var pages = getCurrentPages();
+                var currPage = pages[pages.length - 1]; // 当前页
+                var prevPage = pages[pages.length - 2]; // 上一个页面
+                // 如果存在上一页
+                if (prevPage) {
+                    // 可以调用上一页的函数
+                    prevPage.changeIsAgree(true);
+                    wx.navigateBack({
+                        delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                    });
+                }
+            }
+        };
+        watch = {};
+        computed = {};
+        onPageScroll(e) {
+            if (e.scrollTop >= this.height - this.viewHeight) {
+                this.isShowBtn = true;
+                this.$apply();
+            }
+        };
+        onLoad() {
+            wx.getSystemInfo({
+                success: res => {
+                    this.viewHeight = res.screenHeight;
+                }
+            });
+            this.nodes = text;
+        };
+        onReady() {
+            wx.createSelectorQuery().select('.container').boundingClientRect((rect) => {
+                this.height = rect.height;
+                this.$apply();
+            }).exec();
+        }
+        onShow() {};
+    }
+</script>

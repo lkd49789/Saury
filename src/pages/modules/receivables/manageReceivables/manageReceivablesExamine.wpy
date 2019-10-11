@@ -1,0 +1,408 @@
+<style lang="less">
+    .bill {
+        margin: 44rpx 28rpx;
+        .bill_title {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 9999;
+            .title {
+                height: 104rpx;
+                line-height: 104rpx;
+                padding: 0 28rpx;
+                font-size: 48rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        .search_top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10rpx 28rpx;
+            .search_input {
+                width: 100%; // border:1px solid #dfdfdf;
+                padding: 10rpx 20rpx;
+                border-radius: 100rpx;
+                background: #f4f4f4;
+                display: flex;
+                align-items: center;
+                margin-right: 14rpx;
+                >icon {
+                    margin-right: 14rpx;
+                }
+                >input {
+                    width: 100%;
+                }
+            }
+            .top_right_btn {
+                // width: 15%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        .bill_content {
+            background: #ffffff;
+            margin: 0 auto;
+            box-shadow: 0rpx 8rpx 30rpx 0rpx rgba(65, 98, 213, 0.25);
+            border-radius: 20rpx;
+            padding: 30rpx 24rpx;
+            margin: 44rpx 28rpx;
+            font-size: 28rpx;
+            overflow: auto;
+            .bill_box {
+                margin: 20rpx 0;
+                .bill_view {
+                    line-height: 42rpx;
+                }
+            }
+            .bill_view {
+                line-height: 50rpx;
+            }
+            .bill_gray {
+                color: #7a7a7a;
+                border-color: #7a7a7a
+            }
+            .bill_blue {
+                color: #009dff;
+                border-color: #009dff
+            }
+            .bill_red {
+                color: #e20000;
+                border-color: #e20000
+            }
+            .bill_yellow {
+                color: #ff9900;
+                border-color: #ff9900
+            }
+            .bill_green {
+                color: #069400;
+                border-color: #069400
+            }
+            .bill_state {
+                float: right;
+                position: relative;
+            }
+            .warming {
+                color: #e20000;
+            }
+        }
+        .advanced-search-input-panel {
+            .advanced-search-title {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                >text {
+                    font-size: 40rpx;
+                }
+                >icon {
+                    font-size: 40rpx;
+                    color: #7a7a7a;
+                }
+            }
+            .advanced-search-content {
+                margin: 30rpx 0 40rpx 0;
+            }
+            .btn-sub {
+                width: 160rpx;
+                height: 160rpx;
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                z-index: 99;
+            }
+        }
+    }
+</style>
+<template>
+    <view class="bill">
+        <view wx:if="{{!isShowPage}}">
+            <view style="height:160rpx"></view>
+            <view class="bill_title">
+                <text class="title">请选择关联案件</text>
+                <view class="search_top">
+                    <view class="search_input">
+                        <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"></icon>
+                        <input value="{{searchClentValue}}" type="text" confirm-type="search" placeholder="搜索关键字" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
+                        </input>
+                    </view>
+                    <view class="top_right_btn">
+                        <icon @tap="isShowPage" class="iconfont icon-gaojisousuo" style="color:#5d73fa;font-size:35px;"></icon>
+                    </view>
+                </view>
+            </view>
+            <repeat for="{{myinvoice}}" key="index" index="index" item="item">
+                <view class="bill_content" @tap="into('{{item}}')">
+                    <view class="bill_box">
+                        <view class="bill_view bill_blue">{{item.name}}</view>
+                        <view class="bill_view bill_gray">{{item.serialId}}</view>
+                    </view>
+                    <view class="bill_box">
+                        <view class="bill_view bill_blue">{{item.clientName}}</view>
+                        <view class="bill_view bill_gray">{{item.clientId}}</view>
+                    </view>
+                </view>
+            </repeat>
+            <placeHolderImage :placeHolder.sync="placeHolder" :twoWayTitle="placeHolder" />
+        </view>
+        <view class="advanced-search-input-panel" wx:else>
+            <view class="advanced-search-title">
+                <text>高级搜索</text>
+                <icon class="iconfont icon-zirenwushanchu" @tap="isShowPage"></icon>
+            </view>
+            <view class="advanced-search-content">
+                  <organizationUnitId :options.sync="organizationUnitId" :index.sync='organizationUnitIdIndex' :twoWayTitle="organizationUnitIdIndex" />
+                  <acceptDateRange :pickerData="acceptDateRange" :twoWayTitle="acceptDateRange" />
+                <category :options.sync="category" :index.sync='categoryIndex' :twoWayTitle="categoryIndex" />
+            </view>
+            <image class="btn-sub" src="../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="submitData" />
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import placeHolderImage from '../../../../components/placeHolderImage';
+    import mixins from '../../../../utils/cofig/mixin.js';
+    import {
+        formatTime
+    } from '../../../../utils/cofig/api.js';
+    import acceptDateRange from '../../../../components/picker/pickerDate'
+    import organizationUnitId from '../../../../components/picker/pickerOption'
+    import category from '../../../../components/picker/pickerOption'
+    export default class manageReceivablesExamine extends wepy.page {
+        config = {
+            enablePullDownRefresh: true,
+            backgroundTextStyle: 'dark',
+            backgroundColorTop: '#f4f4f4',
+            backgroundColorBottom: '#f4f4f4',
+        };
+        components = {
+            placeHolderImage,
+            acceptDateRange,
+            organizationUnitId,
+            category
+        };
+        mixins = [mixins]
+        data = {
+            acceptDateRange: {
+                title: '收案时间',
+                startDateData: '',
+                endDateData: ''
+            },
+             organizationUnitId: {
+                title: '组织结构',
+                key: 'displayName',
+                name: 'organizationUnitId',
+                data: [],
+                warning: false
+            },
+            organizationUnitIdIndex: -1,
+             category: {
+                title: '案件类别',
+                key: 'displayText',
+                name: 'category',
+                data: [],
+                warning: false
+            },
+            categoryIndex: -1,
+            searchData: {},
+            myinvoice: [],
+            pageNumber: 1,
+            totalCount: 0,
+            currentTab: 0,
+            searchClentValue: '',
+            isShowPage: false
+        };
+        methods = {
+            submitData(){
+                this.myinvoice=[];
+                this.pageNumber=1;
+                this.getbill();
+            },
+            isShowPage() {
+                this.isShowPage = !this.isShowPage;
+                this.$apply();
+            },
+            submitSearch(e) {
+                this.pageNumber = 1;
+                this.myinvoice = [];
+                var searchKeys = e.detail.value;
+                this.searchClentValue = searchKeys;
+                this.getbill(searchKeys);
+                this.$apply();
+            },
+            into(item) {
+                var pages = getCurrentPages();
+                var prevPage = pages[pages.length - 2]; //上一个页面
+                // this.searchData.keyWord = value;
+                if (prevPage) {
+                    prevPage.isRefresh(item)
+                }
+                wx.navigateBack({
+                    delta: 1
+                });
+            }
+        };
+        watch = {
+            acceptDateRange(data) {
+                if (!this.searchData.acceptDateRange) {
+                    this.searchData.acceptDateRange = {};
+                }
+                this.searchData.acceptDateRange.startDate = data.startDateData;
+                this.searchData.acceptDateRange.endDate = data.endDateData;
+                this.$apply();
+            },
+            organizationUnitIdIndex(index){
+                this.searchData.organizationUnitId=this.organizationUnitId.data[index].id;
+                this.$apply();
+            },
+            categoryIndex(index){
+                this.searchData.category=this.category.data[index].value;
+                this.$apply();
+            }
+        }
+        onReachBottom() {
+            if (this.totalCount / 10 > this.pageNumber && this.$parent.global.netWorkString) {
+                this.pageNumber += 1;
+                this.getbill(this.state);
+            } else {
+                if (this.$parent.global.netWorkString) {
+                    wx.showToast({
+                        title: '我们是有底线的！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                } else {
+                    wx.showToast({
+                        title: '网络连接失败！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            }
+            this.$apply();
+        };
+        onPullDownRefresh() {
+            this.myinvoice = [];
+            this.searchClentValue = '';
+            this.pageNumber = 1;
+            this.getbill();
+            wx.hideNavigationBarLoading(); //完成停止加载
+            wx.stopPullDownRefresh(); //停止下拉刷新
+            this.$apply();
+        }
+        //获取数据
+        async getbill(filter) {
+            wx.showLoading({
+              title: 'Loading...', //提示的内容,
+              mask: true, //显示透明蒙层，防止触摸穿透,
+              success: res => {
+                  this.isShowPage=false;
+                  this.searchData={};
+                  this.$apply();
+              }
+            });
+            var filters = filter || this.searchClentValue;
+            var argData={
+                category: null,
+                filter: filters,
+                hasClosingCase: false,
+                isCurrentUser: true,
+                organizationUnitId: null,
+                pageNumber: this.pageNumber,
+                pageSize: 10,
+                status: "A",
+                acceptDateRange:null
+            };
+            if(Object.keys(this.searchData).length>0){
+                argData.category=this.searchData.category||'';
+                argData.organizationUnitId=this.searchData.organizationUnitId||'';
+                argData.acceptDateRange=this.searchData.acceptDateRange||'';
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/common/GetCases',
+                'post',argData
+            );
+            switch (resData.statusCode) {
+                case 200:
+                    if (resData.data.result.items.length !== 0) {
+                        this.myinvoice = this.myinvoice.concat(resData.data.result.items);
+                        this.totalCount = resData.data.result.totalCount;
+                        this.placeHolder.placeHolderShow = false;
+                        this.$apply();
+                    } else {
+                        console.log('数据为空');
+                        this.myinvoice = []
+                        this.placeHolder.placeHolderImageIndex = 0;
+                        this.placeHolder.placeHolderShow = true;
+                    }
+                    this.$apply();
+                    break;
+                case 403:
+                    console.log('您没有权限');
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    console.log('数据请求错误')
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                default:
+                    break;
+            }
+        }
+        async GetOrganizations(){
+            var resData=await ajax.getData(
+                '/api/services/web/common/GetOrganizations',
+                'post',
+                {}
+            )
+            console.log(resData);
+            if(resData.statusCode==200){
+                this.organizationUnitId.data=resData.data.result;
+                this.$apply();
+            }else{
+                wx.showToast({
+                  title: '网络出现问题！', //提示的内容,
+                  icon: 'none', //图标,
+                  duration: 2000, //延迟时间,
+                  mask: false, //显示透明蒙层，防止触摸穿透,
+                  success: res => {}
+                });
+            }
+        }
+        async GetCaseCategoryComboboxItems(){
+            var resData=await ajax.getData(
+                '/api/services/web/common/GetCaseCategoryComboboxItems',
+                'post',
+                {}
+            )
+            if(resData.statusCode==200){
+                this.category.data=resData.data.result;
+                this.$apply();
+            }else{
+                wx.showToast({
+                  title: '网络出现问题！', //提示的内容,
+                  icon: 'none', //图标,
+                  duration: 2000, //延迟时间,
+                  mask: false, //显示透明蒙层，防止触摸穿透,
+                  success: res => {}
+                });
+            }
+        }
+        onLoad() {
+            this.getbill();
+            this.GetOrganizations();
+            this.GetCaseCategoryComboboxItems();
+        };
+    }
+</script>

@@ -1,0 +1,176 @@
+
+    <view class="bill">
+        <view class="bill_title">
+            <text class="title">收款认领</text>
+        </view>
+        <view  wx:if="{{costData.status=='UnClaimed'}}">
+            <view class="bill_content">
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_blue" bindtap="toChange" data-wpytochange-a="">请选择关联案件</view>
+                        <view class="warning" wx:if="{{warning[0]}}">
+                            <text>请选择关联案件</text>
+                        </view>
+                    </view>
+                </view>
+                <view wx:if="{{getcase.isCaseData}}">
+                    <view class="bill_box">
+                        <view class="bill_view bill_blue">{{getcase.name||'未填写'}}</view>
+                        <view class="bill_view bill_gray">{{getcase.serialId||'未填写'}}</view>
+                    </view>
+                    <view class="bill_box">
+                        <view class="bill_view bill_blue">{{getcase.clientName||'未填写'}}</view>
+                        <view class="bill_view bill_gray">{{getcase.clientId||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box">
+                        <view class="bill_view bill_gray">支 付 方</view>
+                        <view class="bill_view">{{costData.payer||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">支票编号</view>
+                        <view class="bill_view">{{costData.checkNo||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">收款金额</view>
+                        <view class="bill_view">{{costData.payAmount||'未填写'}}</view>
+                    </view>
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">收款方式</view>
+                        <view class="bill_view">{{costData.payModeName||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">收款日期</view>
+                        <view class="bill_view">{{costData.receiptDate||'未填写'}}</view>
+                    </view>
+                </view>
+            </view>
+            <view class="bill_content">
+                
+<view>
+     <view class="textarea"  wx:if="{{$lawyerFee$isShow}}">
+        <view>
+            <text>{{$lawyerFee$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$lawyerFee$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$lawyerFee$input.name}}" bindfocus="$lawyerFee$bindfocus" bindblur="$lawyerFee$bindblur" placeholder="请输入{{$lawyerFee$input.title}}" bindinput="$lawyerFee$bindinput" maxlength="-1" value="{{$lawyerFee$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$lawyerFee$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$lawyerFee$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$lawyerFee$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$lawyerFee$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$lawyerFee$input.name}}" bindfocus="$lawyerFee$bindfocus" bindblur="$lawyerFee$bindblur" placeholder="请输入{{$lawyerFee$input.title}}" bindinput="$lawyerFee$bindinput" disabled="{{$lawyerFee$input.disabled}}" value="{{$lawyerFee$inputValue}}" type="{{$lawyerFee$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$lawyerFee$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+                
+<view>
+     <view class="textarea"  wx:if="{{$caseFee$isShow}}">
+        <view>
+            <text>{{$caseFee$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$caseFee$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$caseFee$input.name}}" bindfocus="$caseFee$bindfocus" bindblur="$caseFee$bindblur" placeholder="请输入{{$caseFee$input.title}}" bindinput="$caseFee$bindinput" maxlength="-1" value="{{$caseFee$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$caseFee$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$caseFee$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$caseFee$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$caseFee$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$caseFee$input.name}}" bindfocus="$caseFee$bindfocus" bindblur="$caseFee$bindblur" placeholder="请输入{{$caseFee$input.title}}" bindinput="$caseFee$bindinput" disabled="{{$caseFee$input.disabled}}" value="{{$caseFee$inputValue}}" type="{{$caseFee$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$caseFee$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+            </view>
+        </view>
+        <view wx:if="{{costData .status=='Claimed'||costData .status=='WaitForAssigned'||costData .status=='WaitForConfirmed'}}">
+            <view class="bill_content">
+                <view class="bill_box">
+                    <view class="bill_view bill_blue">{{costData.receiptCase.name||'未填写'}}</view>
+                    <view class="bill_view bill_gray">{{costData.receiptCase.serialId||'未填写'}}</view>
+                </view>
+                <view class="bill_box">
+                    <view class="bill_view bill_blue">{{costData.receiptCase.clientName||'未填写'}}</view>
+                    <view class="bill_view bill_gray">{{costData.receiptCase.clientId||'未填写'}}</view>
+                </view>
+            </view>
+            <view class="bill_content">
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">支票编号</view>
+                        <view class="bill_view">{{costData.checkNo||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box">
+                        <view class="bill_view bill_gray">支 付 方</view>
+                        <view class="bill_view">{{costData.payer||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">收款方式</view>
+                        <view class="bill_view">{{costData.payModeName||'未填写'}}</view>
+                    </view>
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">收款日期</view>
+                        <view class="bill_view">{{costData.receiptDate||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">付款总额</view>
+                        <view class="bill_view">{{costData.payAmount||'未填写'}}</view>
+                    </view>
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">支付币种</view>
+                        <view class="bill_view">{{costData.payCurrencyName||'未填写'}}</view>
+                    </view>
+                </view>
+                <view class="flex">
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">律师费用</view>
+                        <view class="bill_view">{{costData.lawyerFee||'未填写'}}</view>
+                    </view>
+                    <view class="bill_box2">
+                        <view class="bill_view bill_gray">办 案 费</view>
+                        <view class="bill_view">{{costData.caseFee||'未填写'}}</view>
+                    </view>
+                </view>
+            </view>
+            <view claim="bill_content">
+            </view>
+        </view>
+        <!-- <view style="height:{{costData.status=='Claimed'? '200rpx':'0'}}"></view>
+        <view style="height:{{costData.status=='UnClaimed'? '200rpx':'0'}}"></view> -->
+        <button class="bill_btn" wx:if="{{costData.status=='UnClaimed'}}" catchtap="toAuditing" data-wpytoauditing-a="{{0}}">认领</button>
+        <button class="bill_btn" wx:if="{{costData.status=='Claimed'}}" catchtap="toAuditing" data-wpytoauditing-a="{{1}}">发送合伙人</button>
+    </view>

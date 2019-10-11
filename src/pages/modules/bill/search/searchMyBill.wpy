@@ -1,0 +1,380 @@
+<!--  -->
+<style lang='less'>
+    .container {
+        margin: 44rpx 28rpx;
+        .keyword-search {
+            .search_top {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .search_input {
+                    width: 100%; // border:1px solid #dfdfdf;
+                    padding: 10rpx 20rpx;
+                    border-radius: 100rpx;
+                    background: #f4f4f4;
+                    display: flex;
+                    align-items: center;
+                    margin-right: 14rpx;
+                    >icon {
+                        margin-right: 14rpx;
+                    }
+                    >input {
+                        width: 100%;
+                    }
+                }
+                .top_right_btn {
+                    // width: 15%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+            .search_history {
+                margin-top: 28rpx;
+                .history_title {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+                .history_content {
+                    margin-top: 10rpx;
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    >view {
+                        background: #f4f4f4;
+                        padding: 10rpx 20rpx;
+                        border-radius: 50rpx;
+                        color: #7a7a7a;
+                        margin: 14rpx;
+                        position: relative;
+                        >icon {
+                            // animation: item_delet_icon 1s linear;
+                            position: absolute;
+                            top: -30rpx;
+                            right: -10rpx;
+                        }
+                    }
+                }
+            }
+        }
+        .advanced-search-input-panel {
+            .advanced-search-title {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                >text {
+                    font-size: 40rpx;
+                }
+            }
+            .advanced-search-content {
+                margin: 30rpx 0;
+            }
+        }
+        .tui-picker-content {
+            margin-bottom: 36rpx;
+            picker {
+                padding: 20rpx 0;
+                border-bottom: 1px solid #dfdfdf;
+                .tui-picker-detail {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    color: #7a7a7a;
+                }
+            }
+            .checkbox {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                .checkboxItem {
+                    margin: 20rpx 20rpx 0 0;
+                }
+            }
+        }
+        .btn-sub {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99;
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="keyword-search" wx:if="{{showPage}}">
+            <view class="search_top">
+                <view class="search_input">
+                    <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"></icon>
+                    <input value="{{searchClentValue}}" type="text" confirm-type="search" placeholder="案件编号/案件名称/客户编号/客户名称" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
+                    </input>
+                </view>
+                <view class="top_right_btn">
+                    <icon class="iconfont icon-gaojisousuo" style="color:#5d73fa;font-size:35px;" @tap="showPage"></icon>
+                </view>
+            </view>
+            <view class="search_history">
+                <view class="history_title">
+                    <text>历史搜索</text>
+                    <icon class="iconfont icon-shanchu2" style="color:#7a7a7a;font-size:35rpx;" catchtap="deletItemAll" wx:if="{{history_keyWord_case.length!==0}}"></icon>
+                </view>
+                <view class="history_content">
+                    <repeat for="{{history_keyWord_case}}" key="index" index="index" item="item">
+                        <view @tap="history('{{item}}')" bindlongpress="longTap('{{index}}')">
+                            <text>{{item}}</text>
+                            <icon class="iconfont icon-zirenwushanchu" style="color:#dfdfdf;font-size:30rpx;" wx:if="{{isShowArray[index]}}" catchtap="deletItem('{{index}}')"></icon>
+                        </view>
+                    </repeat>
+                </view>
+            </view>
+        </view>
+        <view class="advanced-search-input-panel" wx:else="{{showPage}}">
+            <view class="advanced-search-title">
+                <text>高级搜索</text>
+                <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
+            </view>
+            <view class="advanced-search-content">
+                <view class="tui-picker-content">
+                    <view>账单日期</view>
+                    <view style="display:flex;align-items:center;">
+                        <picker id="startBillDate" mode="date" value="{{searchData.billDate.startDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
+                            <view class="tui-picker-detail">
+                                {{searchData.billDate.startDate||'请选择'}}
+                                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                            </view>
+                        </picker>
+                        <text style="margin:0 20rpx">至</text>
+                        <picker id="endBillDate" mode="date" value="{{searchData.billDate.endDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
+                            <view class="tui-picker-detail">
+                                {{searchData.billDate.endDate||'请选择'}}
+                                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <CaseName :input.sync="CaseName" :inputValue.sync='CaseNameValue' :twoWayTitle="CaseNameValue" />
+                <ClientName :input.sync="ClientName" :inputValue.sync='ClientNameValue' :twoWayTitle="ClientNameValue" />
+                <Currency :options.sync="Currency" :index.sync='CurrencyIndex' :twoWayTitle="CurrencyIndex" />
+                <image class="btn-sub" src="../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearchSubmit" />
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import {
+        myDistinct
+    } from '../../../../utils/cofig/api.js';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import {
+        formatDate
+    } from '../../../../utils/cofig/api.js';
+    import CaseName from '../../../../components/picker/input';
+    import ClientName from '../../../../components/picker/input';
+    import Currency from '../../../../components/picker/option';
+    export default class searchMyBill extends wepy.page {
+        components = {
+            CaseName,
+            ClientName,
+            Currency
+        }
+        data = {
+            searchData: {},
+            //姓名
+            CaseName: {
+                title: '案件名称',
+                name: 'CaseName',
+                warning: false,
+            },
+            CaseNameValue: '',
+            ClientName: {
+                title: '客户名称',
+                name: 'ClientName',
+                warning: false,
+            },
+            ClientNameValue: '',
+            // 请假类型
+            Currency: {
+                title: '货币类型',
+                name: 'Currency',
+                value: [],
+                displayText: [
+                    '请选择'
+                ],
+                warning: false
+            },
+            CurrencyIndex: 0,
+            history_keyWord_case: [],
+            searchClentValue: '',
+            showPage: true,
+            isShowArray: [],
+        };
+        methods = {
+            bindDateChange(e) {
+                var date = e.detail.value;
+                if (!this.searchData.billDate) {
+                    this.searchData['billDate'] = {};
+                }
+                switch (e.target.id) {
+                    case 'startBillDate':
+                        this.searchData.billDate.startDate = date;
+                        break;
+                    case 'endBillDate':
+                        this.searchData.billDate.endDate = date;
+                        break;
+                }
+                this.$apply();
+            },
+            advancedSearchSubmit() {
+                console.log(this.searchData);
+                if (Object.keys(this.searchData).length !== 0) {
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2]; //上一个页面
+                    prevPage.data.queryStream = this.searchData;
+                    prevPage.data.refresh = true;
+                    wx.navigateBack({
+                        delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                    });
+                } else {
+                    wx.showToast({
+                        title: '没有搜索内容！', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: false, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                }
+            },
+            showPage() {
+                this.showPage = !this.showPage;
+                this.$apply();
+            },
+            deletItemAll() {
+                wx.showModal({
+                    title: '确认是否删除！', //提示的标题,
+                    content: '全部历史记录', //提示的内容,
+                    showCancel: true, //是否显示取消按钮,
+                    cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
+                    cancelColor: '#7a7a7a', //取消按钮的文字颜色,
+                    confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
+                    confirmColor: '#5d73fa', //确定按钮的文字颜色,
+                    success: res => {
+                        if (res.confirm) {
+                            this.history_keyWord_case = [];
+                            var history = wx.getStorageSync('HISTORY_KEYWORD_MYBILL');
+                            history = [];
+                            wx.setStorageSync('HISTORY_KEYWORD_MYBILL', history);
+                            this.$apply();
+                        }
+                    }
+                });
+            },
+            deletItem(index) {
+                this.history_keyWord_case.splice(index, 1);
+                var history = wx.getStorageSync('HISTORY_KEYWORD_MYBILL');
+                history.splice(index, 1);
+                wx.setStorageSync('HISTORY_KEYWORD_MYBILL', history);
+            },
+            longTap(index) {
+                this.isShowArray = this.isShowArray.map(item => {
+                    item = false;
+                    return item
+                })
+                this.isShowArray[index] = true;
+                this.$apply();
+            },
+            history(item) {
+                this.searchClentValue = item;
+                this.$apply();
+            },
+            submitSearch(e) {
+                var value = e.detail.value.replace(/(^\s*)|(\s*$)/g, "");
+                if (value) {
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2]; //上一个页面
+                    prevPage.data.queryStream.KeyWord = e.detail.value;
+                    prevPage.data.refresh = true;
+                    wx.navigateBack({
+                        delta: 1, //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                        success: () => {
+                            var History_KeyWord_MyBill = wx.getStorageSync('HISTORY_KEYWORD_MYBILL');
+                            if (History_KeyWord_MyBill.length >= 20) {
+                                History_KeyWord_MyBill.splice(History_KeyWord_MyBill.length - 1, 1);
+                            }
+                            History_KeyWord_MyBill.unshift(value);
+                            History_KeyWord_MyBill = myDistinct(History_KeyWord_MyBill);
+                            wx.setStorageSync('HISTORY_KEYWORD_MYBILL', History_KeyWord_MyBill)
+                        }
+                    });
+                    this.$apply();
+                } else {
+                    wx.showToast({
+                        title: '搜索为空,请重试！', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                }
+            }
+        };
+        watch = {
+            CaseNameValue(value) {
+                this.searchData.CaseName = value;
+                this.$apply();
+            },
+            ClientNameValue(value) {
+                this.searchData.ClientName = value;
+                this.$apply();
+            },
+            CurrencyIndex(index) {
+                this.searchData.Currency = this.Currency.value[index - 1];
+                this.$apply();
+            },
+        };
+        // 判断初始化历史数据
+        isHistory() {
+            var pages = getCurrentPages();
+            var prevPage = pages[pages.length - 2]; //上一个页面
+            prevPage.data.queryStream = {};
+            prevPage.data.refresh = false;
+            var History_KeyWord_MyBill = wx.getStorageSync('HISTORY_KEYWORD_MYBILL');
+            if (!History_KeyWord_MyBill) {
+                History_KeyWord_MyBill = [];
+                wx.setStorageSync('HISTORY_KEYWORD_MYBILL', History_KeyWord_MyBill)
+            } else {
+                this.history_keyWord_case = History_KeyWord_MyBill;
+                for (var index in this.history_keyWord_case) {
+                    this.isShowArray[index] = false;
+                }
+            }
+            this.$apply();
+        }
+        async GetGeneralCodeComboboxItems() {
+            var resData = await ajax.getData(
+                '/api/services/web/common/GetGeneralCodeComboboxItems',
+                'POST', {
+                    id: "CURRENCY"
+                }
+            )
+            if (resData.statusCode == 200) {
+                var GetGeneralCodeComboboxItems = resData.data.result;
+                for (var index in GetGeneralCodeComboboxItems) {
+                    this.Currency.value.push(GetGeneralCodeComboboxItems[index].value)
+                    this.Currency.displayText.push(GetGeneralCodeComboboxItems[index].displayText)
+                }
+                this.$apply();
+            }
+        }
+        onLoad() {
+            this.isHistory();
+            this.GetGeneralCodeComboboxItems()
+        };
+        onShow() {};
+    }
+</script>
+

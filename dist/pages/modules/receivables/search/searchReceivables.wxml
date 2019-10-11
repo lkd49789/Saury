@@ -1,0 +1,26 @@
+
+    <view class="container">
+        <view class="keyword-search">
+            <view class="search_top">
+                <view class="search_input">
+                    <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"/>
+                    <input value="{{searchClentValue}}" type="text" confirm-type="search" placeholder="案件编号/案件名称/客户编号/客户名称" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
+                    </input>
+                </view>
+            </view>
+            <view class="search_history">
+                <view class="history_title">
+                    <text>历史搜索</text>
+                    <icon class="iconfont icon-shanchu2" style="color:#7a7a7a;font-size:35rpx;" catchtap="deletItemAll"  wx:if="{{History_KeyWord_Receivables.length!==0}}"/>
+                </view>
+                <view class="history_content">
+                    <block wx:for="{{History_KeyWord_Receivables}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                        <view bindtap="history" bindlongpress="longTap" data-wpyhistory-a="{{item}}" data-wpylongtap-a="{{index}}">
+                            <text>{{item}}</text>
+                            <icon class="iconfont icon-zirenwushanchu" style="color:#dfdfdf;font-size:30rpx;"  wx:if="{{isShowArray[index]}}" catchtap="deletItem" data-wpydeletitem-a="{{index}}"/>
+                        </view>
+                    </block>
+                </view>
+            </view>
+        </view>
+    </view>

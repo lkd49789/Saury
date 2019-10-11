@@ -1,0 +1,20 @@
+<!--  -->
+<style lang="less">
+
+</style>
+
+<template>
+    <web-view src="{{src}}" @message="message">
+    </web-view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    export default class webView extends wepy.page {
+        data = {
+            src: 'https://www.ailinkedlaw.com'
+        };
+        methods = {};
+        onLoad() {}
+    }
+</script>

@@ -1,0 +1,147 @@
+<!--  -->
+<style lang="less">
+.body {
+  height: 100%;
+  font-size: 28rpx;
+  color: #2a2a2a;
+  .linkman-header {
+    padding-top: 44rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    // width: 100%;
+    .linkman-avatar {
+      height: 160rpx;
+      width: 160rpx;
+      border-radius: 50%;
+      margin-bottom: 34rpx;
+    }
+    .linkman-name {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 34rpx;
+      > text:first-child {
+        font-size: 48rpx;
+        margin-bottom: 14rpx;
+      }
+      > text:last-child {
+        color: #7a7a7a;
+      }
+    }
+    .linkman-mode {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      border-top: 1px solid #bfbfbf;
+      border-bottom: 1px solid #bfbfbf;
+      padding: 30rpx 0;
+      > view {
+        width: 33%;
+        display: flex;
+        justify-content: center;
+      }
+      > view:nth-child(2) {
+        border-left: 1px solid #bfbfbf;
+        border-right: 1px solid #bfbfbf;
+      }
+    }
+  }
+  .linkman-info {
+    padding: 44rpx 28rpx;
+    .info-username {
+      display: flex;
+      padding-bottom: 30rpx;
+      align-items: baseline;
+      border-bottom: 1px solid #f4f4f4;
+      > text {
+        margin-right: 20rpx;
+      }
+    }
+    > view:not(:first-child) {
+      margin-top: 20rpx;
+      > text {
+        margin-left: 20rpx;
+      }
+      .icon {
+        font-size: 34rpx;
+        color: #ff9900;
+      }
+    }
+  }
+}
+</style>
+
+<template>
+    <!-- <view></view> -->
+    <!-- <text></text> -->
+    <view class="body">
+      <view class="linkman-header">
+          <!-- <image src="{{avatar}}" mode="aspectFill"><image> -->
+            <image class="linkman-avatar"  src="{{linker.avatar}}" mode="aspectFill" ></image>
+        <view class="linkman-name">
+          <text>{{linker.name}}</text>
+          <text>{{linker.dutyText||'未填写'}}</text>
+        </view>
+        <view class="linkman-mode">
+          <view>
+            <icon class="iconfont icon-dianhuaxiantiao" style="font-size:60rpx;color:#7a7a7a"></icon>
+          </view>
+          <view>
+            <icon class="iconfont icon-youxiang2" style="font-size:50rpx;color:#7a7a7a"></icon>
+          </view>
+          <view>
+            <icon class="iconfont icon-xinxi" style="font-size:50rpx;color:#7a7a7a"></icon>
+          </view>
+        </view>
+      </view>
+        <view class="linkman-info">
+          <view class="info-username">
+            <text>{{linker.enName||"未填写"}}</text>
+            <icon class="iconfont icon-nv" style="color:#ff4367;font-size:34rpx" wx:if="{{linker.sexText=='女'}}"></icon>
+            <icon class="iconfont icon-nan" style="color:#009dff;font-size:34rpx" wx:else="{{linker.setText=='男'}}"></icon>
+          </view>
+          <view>
+            <icon class="iconfont icon-dianhua icon"></icon>
+            <text>{{linker.workPhone||linker.workPhone2||linker.personPhone||linker.personPhone2||'未填写'}}</text>
+          </view>
+          <view>
+            <icon class="iconfont icon-dianhuazuoji1 icon"></icon>
+            <text>{{linker.landline||'未填写'}}</text>
+          </view>
+          <view>
+            <icon class="iconfont icon-chuanzhen1 icon"></icon>
+            <text>{{linker.fax||'未填写'}}</text>
+          </view>
+          <view>
+            <icon class="iconfont icon-youxiang1 icon" ></icon>
+            <text>{{linker.workEmail||linker.perEmail||'未填写'}}</text>
+          </view>
+          <view>
+            <icon class="iconfont icon-gongsi icon" ></icon>
+            <text>{{linker.company}}</text>
+          </view>
+          <view>
+            <icon class="iconfont icon-dizhi1 icon"></icon>
+            <text>{{linker.address||'未填写'}}</text>
+          </view>
+        </view>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+// import navbar from '../../../components/navbar';
+export default class clientlinkmandetail extends wepy.page {
+  data = {
+    linker: []
+  };
+  methods = {};
+  onLoad(options) {
+    var index = Number(options.index);
+    this.linker=wx.getStorageSync('clientData').ContactsListData[index];
+  }
+}
+</script>

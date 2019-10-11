@@ -1,0 +1,399 @@
+<!--  -->
+
+<style lang='scss'>
+    .container {
+        .title {
+            height: 104rpx;
+            line-height: 104rpx;
+            padding: 0 28rpx;
+            font-size: 48rpx;
+            border: 1px solid #dedede;
+        }
+        page {
+            height: 100%;
+        }
+        .content {
+            padding-bottom: 20rpx;
+            box-sizing: border-box;
+            height: 100%;
+            position: fixed
+        }
+        .location {
+            width: 100%;
+        }
+        .location_top {
+            height: 76rpx;
+            line-height: 76rpx;
+            background: #f4f4f4;
+            color: #606660;
+            font-size: 28rpx;
+            padding: 0 20rpx;
+        }
+        .location_bottom {
+            height: 140rpx;
+            line-height: 140rpx;
+            color: #d91f16;
+            font-size: 28rpx;
+            border-top: 2rpx #ebebeb solid;
+            border-bottom: 2rpx #ebebeb solid;
+            padding: 0 20rpx;
+            align-items: center;
+            display: -webkit-flex;
+        }
+        .address_top {
+            height: 56rpx;
+            line-height: 56rpx;
+            background: #EBEBEB;
+            color: #999999;
+            font-size: 28rpx;
+            padding: 0 20rpx;
+        }
+        .address_bottom {
+            background: #fff;
+            color: #2a2a2a;
+            font-size: 28rpx;
+            padding: 20rpx;
+            border-bottom: 2rpx #ebebeb solid;
+            margin-left: 15rpx;
+            display: flex;
+            flex-direction: column;
+            >text:last-child {
+                color: #7a7a7a;
+                margin-top: 14rpx;
+            }
+        }
+        .location_img {
+            width: 48rpx;
+            height: 48rpx;
+            position: absolute;
+            right: 20rpx;
+            top: 125rpx;
+        }
+        .add_city {
+            width: 228rpx;
+            height: 60rpx;
+            line-height: 60rpx;
+            text-align: center;
+            border: 2rpx solid #ebebeb;
+            color: #000000;
+            margin-right: 20rpx;
+        }
+        .add_citying {
+            width: 228rpx;
+            height: 60rpx;
+            line-height: 60rpx;
+            text-align: center;
+            border: 2rpx solid #09bb07;
+            color: #09bb07;
+            margin-right: 20rpx;
+        }
+        .orientation {
+            white-space: normal;
+            display: inline-block;
+            width: 45rpx;
+            height: 50rpx;
+            font-size: 28rpx;
+            font-weight: bold;
+            color: rgb(88, 87, 87);
+            text-align: center;
+        }
+        .orientation_region {
+            padding: 5px 0px;
+            width: 45rpx;
+            font-size: 20rpx;
+            position: fixed;
+            top: 50%;
+            right: 6rpx;
+            transform: translate(0, -50%);
+            background: rgb(199, 198, 198);
+            border-radius: 10px;
+            margin-left: 60rpx;
+        }
+        .orientation_city {
+            height: 40rpx;
+            line-height: 40rpx;
+            color: #000;
+            text-align: center;
+        }
+        .active {
+            color: #2cc1d1;
+        }
+        .list-fixed {
+            position: fixed;
+            width: 100%;
+            z-index: 999;
+            height: 56rpx;
+            line-height: 56rpx;
+            background: #EBEBEB;
+            color: #999999;
+            font-size: 28rpx;
+            padding: 0 20rpx;
+            z-index: 9999;
+        }
+        .fixed-title {
+            color: #2cc1d1
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <!-- <view class="title">
+            <text>我的客户</text>
+        </view> -->
+        <!-- 左侧列表内容部分 -->
+        <scroll-view class="content" enable-back-to-top scroll-into-view="{{toView}}" scroll-y="true" scroll-with-animation="true" bindscroll="onPageScroll">
+            <repeat for="{{clientData}}" key="{{item}}" index="index" item="item">
+                <view wx:if="{{item.items.length}}" data-id="{{item.id}}" id="{{'inToView' + item.id}}">
+                    <view class="address_top">{{item.region}}</view>
+                    <view class="address_bottom" wx:for="{{item.items}}" wx:for-item="item" wx:key="{{item.id}}" @tap="addClient('{{item}}')">
+                        <text>{{item.name}}</text>
+                        <text>{{item.clientTypeText}}</text>
+                    </view>
+                </view>
+            </repeat>
+        </scroll-view>
+        <!-- 顶部固定分类 -->
+        <view class="list-fixed {{fixedTitle=='' ? 'hide':''}}">
+            <view class="fixed-title">
+                {{fixedTitle}}
+            </view>
+        </view>
+        <!-- 右侧字母导航 -->
+        <view class="orientation_region" wx:if="{{clientData[0].items.length!==0}}">
+            <repeat for="{{clientData}}" wx:if="{{item.items.length}}">
+                <view class="orientation_city {{isActive==item.id?'active':''}}" bindtap="scrollToViewFn" data-id="{{item.id}}">
+                    {{item.region}}
+                </view>
+            </repeat>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import Pinyin from '../../../../utils/cofig/pinyin.js';
+    export default class directory extends wepy.page {
+        props = {};
+        data = {
+            clientData: [{
+                id: 1,
+                region: '#',
+                items: [],
+            }, {
+                id: 2,
+                region: 'A',
+                items: [],
+            }, {
+                id: 3,
+                region: 'B',
+                items: [],
+            }, {
+                id: 4,
+                region: 'C',
+                items: [],
+            }, {
+                id: 5,
+                region: 'D',
+                items: [],
+            }, {
+                id: 6,
+                region: 'E',
+                items: [],
+            }, {
+                id: 7,
+                region: 'F',
+                items: [],
+            }, {
+                id: 8,
+                region: 'G',
+                items: [],
+            }, {
+                id: 9,
+                region: 'H',
+                items: [],
+            }, {
+                id: 10,
+                region: 'I',
+                items: [],
+            }, {
+                id: 11,
+                region: 'J',
+                items: [],
+            }, {
+                id: 12,
+                region: 'K',
+                items: [],
+            }, {
+                id: 13,
+                region: 'L',
+                items: [],
+            }, {
+                id: 14,
+                region: 'M',
+                items: [],
+            }, {
+                id: 15,
+                region: 'N',
+                items: [],
+            }, {
+                id: 16,
+                region: 'O',
+                items: [],
+            }, {
+                id: 17,
+                region: 'P',
+                items: [],
+            }, {
+                id: 18,
+                region: 'Q',
+                items: [],
+            }, {
+                id: 19,
+                region: 'R',
+                items: [],
+            }, {
+                id: 20,
+                region: 'S',
+                items: [],
+            }, {
+                id: 21,
+                region: 'T',
+                items: [],
+            }, {
+                id: 22,
+                region: 'U',
+                items: [],
+            }, {
+                id: 23,
+                region: 'V',
+                items: [],
+            }, {
+                id: 24,
+                region: 'W',
+                items: [],
+            }, {
+                id: 25,
+                region: 'X',
+                items: [],
+            }, {
+                id: 26,
+                region: 'Y',
+                items: [],
+            }, {
+                id: 27,
+                region: 'Z',
+                items: [],
+            }, ],
+            isActive: null,
+            fixedTitle: "#",
+            toView: 'inToView0',
+            oHeight: [],
+            scroolHeight: 0
+        };
+        components = {};
+        methods = {
+            addClient(item){
+                wx.setStorage({
+                  key: 'CREATE_CLIENTINFO_DATA',
+                  data: item,
+                  success:()=>{
+                      wx.navigateBack({
+                        delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                      });
+                  }
+                });
+            },
+            onPageScroll(e) {
+                this.scroolHeight = e.detail.scrollTop
+                for (var i in this.oHeight) {
+                    if (e.detail.scrollTop < this.oHeight[i].height) {
+                        this.isActive = this.oHeight[i].key;
+                        this.fixedTitle = this.oHeight[i].name
+                        return false    
+                    }
+                }
+                // this.$apply()
+            },
+            scrollToViewFn: function(e) {
+                var _id = e.target.dataset.id;
+                for (var i in this.clientData) {
+                    if (this.clientData[i].id === _id) {
+                        this.isActive = _id
+                        this.toView= 'inToView' + _id
+                        this.$apply()
+                        break
+                    }
+                }
+            }
+        }
+        events = {};
+        watch = {};
+        computed = {};
+        async GetClients() {
+            var data = {
+                Id: "",
+                IsAll: true,
+                Name: "",
+                pageNumber: 1,
+                pageSize: 1000,
+                sorting: ""
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/common/GetClients',
+                'post',
+                data
+            )
+            switch (resData.statusCode) {
+                case 200:
+                    var getData = []
+                    for (var i in resData.data.result.items) {
+                        var obj = {}
+                        obj = resData.data.result.items[i]
+                        if (new RegExp("[\u4E00-\u9FA5]+").test(resData.data.result.items[i].name)) {
+                            obj.region = Pinyin.ConvertPinyin(resData.data.result.items[i].name).substr(0, 1)
+                        } else {
+                            obj.region = "#"
+                        }
+                        getData.push(obj)
+                    }
+                    console.log(getData)
+                    for (var i in getData) {
+                        for (var j in this.clientData) {
+                            if (this.clientData[j].region == getData[i].region) {
+                                this.clientData[j].items.push(getData[i])
+                            }
+                        }
+                    }
+                    this.$apply()
+                    var that = this;
+                    var number = 0;
+                    for (let i = 0; i < that.clientData.length; ++i) {
+                        wx.createSelectorQuery().select('#inToView' + that.clientData[i].id).boundingClientRect(function(rect) {
+                            // console.log(rect);
+                            if (rect) {
+                                number = rect.height + number;
+                                var newArry = [{
+                                    'height': number,
+                                    'key': rect.dataset.id,
+                                    "name": that.clientData[i].region
+                                }]
+                                that.oHeight = that.oHeight.concat(newArry)
+                                that.$apply()
+                            }
+                        }).exec();
+                    }
+                    this.$apply()
+                    break;
+                default:
+                    break;
+            }
+        }
+        async pinyinUtil() {}
+        onLoad() {
+            this.GetClients();
+        };
+        onShow() {};
+    }
+</script>

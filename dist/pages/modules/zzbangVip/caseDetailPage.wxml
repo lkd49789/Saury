@@ -1,0 +1,151 @@
+
+    <view class="container">
+        <view class="page-title">案件详情</view>
+        <view class="main">
+            <view class="block">
+                <view class="baseInfo">
+                    <view>{{caseDetailData.Name}}</view>
+                    <view class="space-between">
+                        <view>{{caseDetailData.CaseNum}}</view>
+                        <view style="color:#5d73fa">{{caseDetailData.CaseLevel}}级</view>
+                    </view>
+                    <view>{{caseDetailData.Type}}</view>
+                    <view style="color:#ff9900">逾期{{caseDetailData.OverdueMonth}}月</view>
+                    <view class="space-between">
+                        <view class="diplay-flex">
+                            <icon class="iconfont icon-dizhi1" style="font-size:44rpx;color:#5d73fa;margin-right:14rpx"/>
+                            <text>{{caseDetailData.City||'未填写'}}</text>
+                        </view>
+                        <!-- <view style="color:#069400">已审核</view> -->
+                    </view>
+                </view>
+            </view>
+            <view class="block block-item">
+                <view class="debtorInfo">
+                    <view>债务人信息</view>
+                    <view  wx:if="{{PlatformMemberId.length!==0}}">
+                        <view class="diplay-flex">
+                            <view class="flex-column-1">
+                                <view>企业名称</view>
+                                <view>{{caseDetailData.CorporationName||'未填写'}}</view>
+                            </view>
+                            <view class="flex-column-1">
+                                <view>负责人</view>
+                                <view>{{caseDetailData.Name||'未填写'}}</view>
+                            </view>
+                        </view>
+                        <view class="diplay-flex">
+                            <view class="flex-column-1">
+                                <view>手机号</view>
+                                <view>{{caseDetailData.PhoneNumber||'未填写'}}</view>
+                            </view>
+                            <view class="flex-column-1">
+                                <view>邮箱</view>
+                                <view>{{caseDetailData.EMaill||'未填写'}}</view>
+                            </view>
+                        </view>
+                    </view>
+                    <view style="margin-top:20rpx;color:#5d73fa"  wx:else>
+                        仅供办案律师查看
+                    </view>
+                </view>
+            </view>
+            <view class="block block-item ">
+                <view class="debtDetail">
+                    <view>债务详情</view>
+                    <view class="diplay-flex">
+                        <view class="flex-column-1">
+                            <view>债务本金</view>
+                            <view>{{caseDetailData.DebtAmount}}元</view>
+                        </view>
+                        <view class="flex-column-1">
+                            <view>债务违约金</view>
+                            <view>{{caseDetailData.LateFee}}</view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="{{isShowCaseQR?'block':''}} ">
+                <view class="debtEvaluation">
+                    <view>债务评估</view>
+                    <view class="diplay-flex">
+                        <view class="flex-column-1">
+                            <view>诉讼执行地区</view>
+                            <view>{{caseDetailData.ExecuteArea||'未填写'}}</view>
+                        </view>
+                        <view class="flex-column-1">
+                            <view>利息</view>
+                            <view>{{caseDetailData.Interest}}</view>
+                        </view>
+                    </view>
+                    <view class="diplay-flex">
+                        <view class="flex-column-1">
+                            <view>是否有争议</view>
+                            <view>{{caseDetailData.IsArgue==0?'否':'是'}}</view>
+                        </view>
+                        <view class="flex-column-1">
+                            <view>债务人确认方式</view>
+                            <view>{{caseDetailData.DebtorConfirm}}</view>
+                        </view>
+                    </view>
+                    <view class="diplay-flex">
+                        <view class="flex-column-1">
+                            <view>债务人确认时间</view>
+                            <view>{{caseDetailData.ConfirmDate}}</view>
+                        </view>
+                        <view class="flex-column-1">
+                            <view>债务人企业类型</view>
+                            <view>{{caseDetailData.CompanyType}}</view>
+                        </view>
+                    </view>
+                    <view class="diplay-flex">
+                        <view class="flex-column-1">
+                            <view>债务人企业规模</view>
+                            <view>{{caseDetailData.CompanyScale||'无'}}</view>
+                        </view>
+                        <view class="flex-column-1">
+                            <view>债务人状态</view>
+                            <view>{{caseDetailData.DebtorState}}</view>
+                        </view>
+                    </view>
+                    <view class="flex-column">
+                        <view>债务人资产</view>
+                        <view>{{caseDetailData.DebtorProperty}}</view>
+                    </view>
+                    <view class="flex-column">
+                        <view>债务人资产详情</view>
+                        <view>{{caseDetailData.PropertyDetail}}</view>
+                    </view>
+                    <view class="flex-column">
+                        <view>欠款证据</view>
+                        <view>{{caseDetailData.Evidence}}</view>
+                    </view>
+                    <view class="diplay-flex">
+                        <view class="flex-column-1">
+                            <view>债务人信用</view>
+                            <view>{{caseDetailData.DebtorCredit}}</view>
+                        </view>
+                        <view class="flex-column-1">
+                            <view>平台管理费</view>
+                            <view>{{caseDetailData.DebtorConfirm}}</view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="block-item" wx:if="{{isShowCaseQR}}">
+                <view class="QRCode">
+                    <view>
+                        <image src="{{caseQRCodeUrl}}" mode="scaleToFill" lazy-load="false" style="width:250rpx;height:250rpx;" bindtap="PreviewQRcode"/>
+                    </view>
+                    <view>
+                        <text>后续案件流程，</text><text style="color:#5d73fa">请扫描二维码</text>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view class="chooseFixedBtn-one" wx:if="{{CaseType=='1'}}" catchtap="taskCase">
+            <view>
+                立即接案
+            </view>
+        </view>
+    </view>

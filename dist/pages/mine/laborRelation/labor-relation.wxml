@@ -1,0 +1,83 @@
+
+  <!-- <view></view> -->
+  <!-- <text></text> -->
+  <view class="body">
+    <view class="labor-title">
+      <text class="labor">劳动关系</text>
+    </view>
+    <view class="middle-container">
+      <view class="item1">
+        <text class="item1-title">{{LaborRelationData.duty||'未填写'}}</text>
+        <text class="item1-content">{{LaborRelationData.inserviceStatus||'未填写'}}</text>
+      </view>
+      <view class="item2 item-flex">
+        <text>合同类别</text>
+        <text>{{LaborRelationData.category||'未填写'}}</text>
+      </view>
+      <view class="item3 item-flex">
+        <text>工资</text>
+        <text>{{LaborRelationData.salary||'未填写'}}</text>
+      </view>
+      <view class="item4 item-flex">
+        <text>薪酬级别</text>
+        <text>{{LaborRelationData.salaryLevel||'未填写'}}</text>
+      </view>
+      <view class="item5 item-flex">
+        <text>录用日期</text>
+        <text>{{LaborRelationData.signDate||'未填写'}}</text>
+      </view>
+      <view class="item6 item-flex">
+        <text>转正日期</text>
+        <text>{{LaborRelationData.positiveDate||'未填写'}}</text>
+      </view>
+      <view class="item7 item-flex">
+        <text>关系来源</text>
+        <text>{{LaborRelationData.relationSource||'未填写'}}</text>
+      </view>
+      <view class="item8 item-flex">
+        <text>合同期限</text>
+        <text>{{contractDate||'未填写'}}</text>
+      </view>
+      <view class="item9 item-flex">
+        <text>社会保障号</text>
+        <text>{{LaborRelationData.socialSecurityNo||'未填写'}}</text>
+      </view>
+      <view class="item10 item-flex">
+        <text>社会保障基数</text>
+        <text>{{LaborRelationData.socialSecurityRate||'未填写'}}</text>
+      </view>
+    </view>
+    <view class="border-blur" style="height:30rpx;background:#F4F4F4">
+    </view>
+    <view class="footer-container">
+      <view class="footer-bar">
+        <text class="text">劳动合同附件</text>
+        <!-- <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#b2b2b2" ></icon> -->
+      </view>
+      <view class="footer-content">
+        <view class="item-container" bindtap="preview" data-wpypreview-a="attachment" data-wpypreview-b="{{LaborRelationData.attachment.id}}" data-wpypreview-c="{{LaborRelationData.attachment.name}}">
+          <view class="icon-content">
+            <icon class="iconfont {{icon[0].icon}}" style="font-size:60rpx; color:{{icon[0].color}}"/>
+          </view>
+          <view class="right-item">
+            <!-- <text style="color:#7a7a7a">{{LaborRelationData.attachment.name}}</text> -->
+            <text style="color:#2a2a2a">{{LaborRelationData.attachment.name||'未填写'}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="footer-bar">
+        <text class="text">保密协议</text>
+      </view>
+      <view class="footer-content">
+        <view class="item-container" bindtap="preview" style="border-bottom: 0;" data-wpypreview-a="agreement" data-wpypreview-b="{{LaborRelationData.agreement.id}}" data-wpypreview-c="{{LaborRelationData.agreement.name}}">
+          <view class="icon-content">
+            <icon class="iconfont {{icon[1].icon}}" style="font-size:60rpx; color:{{icon[1].color}}"/>
+          </view>
+          <view class="right-item">
+            <!-- <text style="color:#7a7a7a">2018/01/01 09:45</text> -->
+            <text style="color:#2a2a2a">{{LaborRelationData.agreement.name||'未填写'}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>

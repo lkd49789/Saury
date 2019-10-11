@@ -1,0 +1,145 @@
+
+    <view class="bill">
+        <view class="bill_title">
+            <text class="title">{{type!=='0'?type!=='1'?type!=='2'?'发票认领':'财务审核':'开具发票':'财务审核'}}</text>
+        </view>
+        <view class="bill_content" hidden="{{type==0?'':true}}">
+            
+<view>
+     <view class="textarea"  wx:if="{{$returnInvoice$isShow}}">
+        <view>
+            <text>{{$returnInvoice$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$returnInvoice$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$returnInvoice$input.name}}" bindfocus="$returnInvoice$bindfocus" bindblur="$returnInvoice$bindblur" placeholder="请输入{{$returnInvoice$input.title}}" bindinput="$returnInvoice$bindinput" maxlength="-1" value="{{$returnInvoice$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$returnInvoice$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$returnInvoice$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$returnInvoice$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$returnInvoice$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$returnInvoice$input.name}}" bindfocus="$returnInvoice$bindfocus" bindblur="$returnInvoice$bindblur" placeholder="请输入{{$returnInvoice$input.title}}" bindinput="$returnInvoice$bindinput" disabled="{{$returnInvoice$input.disabled}}" value="{{$returnInvoice$inputValue}}" type="{{$returnInvoice$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$returnInvoice$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+        </view>
+        <view class="bill_content" hidden="{{type==1?'':true}}">
+            
+<view>
+     <view class="textarea"  wx:if="{{$registerInvoice$isShow}}">
+        <view>
+            <text>{{$registerInvoice$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$registerInvoice$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$registerInvoice$input.name}}" bindfocus="$registerInvoice$bindfocus" bindblur="$registerInvoice$bindblur" placeholder="请输入{{$registerInvoice$input.title}}" bindinput="$registerInvoice$bindinput" maxlength="-1" value="{{$registerInvoice$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$registerInvoice$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$registerInvoice$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$registerInvoice$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$registerInvoice$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$registerInvoice$input.name}}" bindfocus="$registerInvoice$bindfocus" bindblur="$registerInvoice$bindblur" placeholder="请输入{{$registerInvoice$input.title}}" bindinput="$registerInvoice$bindinput" disabled="{{$registerInvoice$input.disabled}}" value="{{$registerInvoice$inputValue}}" type="{{$registerInvoice$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$registerInvoice$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+        </view>
+        <view class="bill_content" hidden="{{type==2?'':true}}">
+            
+<view>
+     <view class="textarea"  wx:if="{{$cancelInvoice$isShow}}">
+        <view>
+            <text>{{$cancelInvoice$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$cancelInvoice$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$cancelInvoice$input.name}}" bindfocus="$cancelInvoice$bindfocus" bindblur="$cancelInvoice$bindblur" placeholder="请输入{{$cancelInvoice$input.title}}" bindinput="$cancelInvoice$bindinput" maxlength="-1" value="{{$cancelInvoice$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$cancelInvoice$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$cancelInvoice$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$cancelInvoice$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$cancelInvoice$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$cancelInvoice$input.name}}" bindfocus="$cancelInvoice$bindfocus" bindblur="$cancelInvoice$bindblur" placeholder="请输入{{$cancelInvoice$input.title}}" bindinput="$cancelInvoice$bindinput" disabled="{{$cancelInvoice$input.disabled}}" value="{{$cancelInvoice$inputValue}}" type="{{$cancelInvoice$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$cancelInvoice$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+        </view>
+        <view class="bill_content" hidden="{{type==3?'':true}}">
+            
+    <view class="option">
+        <view>
+            <text class="title">{{$claimInvoiceId$options.title}}</text>
+        </view>
+        <picker bindchange="$claimInvoiceId$bindPickerChange" value="{{$claimInvoiceId$index}}" range="{{$claimInvoiceId$options.displayText}}" name="{{$claimInvoiceId$options.name}}">
+            <view class="picker">
+                <view>
+                    <text>{{$claimInvoiceId$options.displayText[$claimInvoiceId$index]||'请选择'}}</text>
+                </view>
+                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+        </picker>
+         <view  wx:if="{{$claimInvoiceId$options.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+
+            
+<view>
+     <view class="textarea"  wx:if="{{$claimInvoice$isShow}}">
+        <view>
+            <text>{{$claimInvoice$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$claimInvoice$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$claimInvoice$input.name}}" bindfocus="$claimInvoice$bindfocus" bindblur="$claimInvoice$bindblur" placeholder="请输入{{$claimInvoice$input.title}}" bindinput="$claimInvoice$bindinput" maxlength="-1" value="{{$claimInvoice$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$claimInvoice$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$claimInvoice$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$claimInvoice$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$claimInvoice$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$claimInvoice$input.name}}" bindfocus="$claimInvoice$bindfocus" bindblur="$claimInvoice$bindblur" placeholder="请输入{{$claimInvoice$input.title}}" bindinput="$claimInvoice$bindinput" disabled="{{$claimInvoice$input.disabled}}" value="{{$claimInvoice$inputValue}}" type="{{$claimInvoice$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$claimInvoice$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+        </view>
+        <image src="{{'../../../../images/test.png'}}" style="opacity:{{addOpacity}}" mode="scaleToFill" lazy-load="true" class="addImage" bindtap="auditing" data-wpyauditing-a=""/>
+    </view>

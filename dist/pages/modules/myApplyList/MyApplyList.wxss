@@ -1,0 +1,74 @@
+@import "./../../../components/placeHolderImage.wxss";
+.body {
+  height: 100%;
+}
+.body .top-title {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 9999;
+}
+.body .top-title .flex {
+  height: 104rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 48rpx;
+  border-bottom: 1px solid #dedede;
+}
+.body .top-title .filter {
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 99999;
+  padding: 20rpx 28rpx 0 28rpx;
+}
+.body .top-title .filter > view {
+  display: flex;
+  flex-direction: column;
+  padding: 10rpx 0;
+}
+.body .addImage {
+  width: 160rpx;
+  height: 160rpx;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 99999;
+}
+.body .text-hidden-online {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.body .main {
+  margin: 149rpx 28rpx 0 28rpx;
+  font-size: 28rpx;
+  color: #2a2a2a;
+}
+.body .main .item-container {
+  box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+  border-radius: 20rpx;
+  padding: 30rpx 24rpx;
+  margin-bottom: 44rpx;
+}
+.body .main .item-container > view:first-child {
+  margin-bottom: 20rpx;
+  display: flex;
+  justify-content: space-between;
+}
+.body .main .item-container > view:nth-child(2) {
+  margin-bottom: 20rpx;
+  color: #7a7a7a;
+}
+.body .main .item-container > view:last-child {
+  margin-bottom: 20rpx;
+  display: flex;
+  justify-content: space-between;
+}
+.body .main .item-container > view:last-child > view {
+  display: flex;
+  align-items: center;
+}

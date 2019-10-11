@@ -1,0 +1,738 @@
+<!--  -->
+<style lang='scss'>
+  .container {
+    .title {
+      height: 104rpx;
+      line-height: 104rpx;
+      font-size: 48rpx;
+      padding-left: 28rpx;
+      border-bottom: 1px solid #dedede;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      z-index: 99;
+    }
+    .scroll-y {
+      overflow: scroll;
+    }
+    .box {
+      margin: 44rpx 28rpx;
+      padding: 30rpx 28rpx 30rpx 36rpx;
+      background: #fff;
+      border-top-right-radius: 20rpx;
+      border-bottom-right-radius: 20rpx;
+      border-left-width: 6px;
+      border-left-style: solid;
+      box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+      display: flex;
+      align-items: center;
+      color: #7a7a7a;
+    }
+    .titleBlod {
+      color: #2a2a2a;
+      font-weight: bold;
+    }
+    .chooseClientInfo {
+      margin-top: 149rpx;
+      .chooseRight {
+        width: 100%;
+        .clientTitle {
+          color: #2a2a2a;
+          font-weight: bold;
+        }
+        .chooseBtn {
+          margin-top: 40rpx;
+          display: flex;
+          align-items: center;
+          >view {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            >text {
+              border-radius: 50rpx;
+              padding: 14rpx 30rpx;
+              border: 1px solid #dedede;
+              color: #7a7a7a;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 60%
+            }
+          }
+          >view:first-child {
+            margin-right: 10rpx;
+          }
+          >view:last-child {
+            margin-right: 10rpx;
+          }
+        }
+      }
+    }
+    .FillData {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      position: relative;
+      >text:first-child {
+        color: #2a2a2a;
+        font-weight: bold;
+      }
+      >text:not(:first-child) {
+        margin-top: 14rpx;
+      }
+      >view {
+        margin-top: 14rpx;
+      }
+      >view:last-child {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .fixedIcon {
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-size: 40rpx;
+        color: #bfbfbf;
+      }
+    }
+    .stageIdent {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      >text {
+        width: 100%;
+        height: 15rpx;
+      }
+    }
+    >view:last-child {
+      margin-bottom: 70rpx;
+    }
+    .addImage {
+      width: 160rpx;
+      height: 160rpx;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      z-index: 999999;
+    }
+  }
+</style>
+
+<template>
+  <view class='container'>
+    <view class="title">
+      <text>立案申请</text>
+    </view>
+    <view class="stageIdent">
+      <repeat for="{{stageIdentColor}}" key="index" index="index" item="item">
+        <text style="background:{{item.color}}" wx:if="{{!item.isShow}}"></text>
+      </repeat>
+    </view>
+    <view class="scroll-y">
+      <view class="chooseClientInfo box" style="border-left-color:{{stageIdentColor[0].color}}">
+        <view class="chooseRight" wx:if="{{clientId==''}}">
+          <text class="clientTitle">客户信息<text style="color:#7a7a7a;font-weight: normal">（创建客户或者选择已有客户）</text></text>
+          <view class="chooseBtn">
+            <view>
+              <text @tap="toClientList">选择已有客户</text>
+            </view>
+            <view>
+              <text @tap="toCreateClient">创建新客户</text>
+            </view>
+          </view>
+        </view>
+        <view class="FillData" wx:else @tap="toClientDetail">
+          <text class="titleBlod">{{clientData.name}}</text>
+          <text>{{clientData.clientTypeText}}</text>
+          <text>{{clientData.categoryText||'未填写'}}</text>
+          <icon class="iconfont icon-gengduo fixedIcon" catchtap="deleteClientInfo"></icon>
+        </view>
+      </view>
+      <view class=" box" style="border-left-color:{{stageIdentColor[1].color}}" wx:if="{{stageIdentColor[1].isShow}}">
+        <view class="FillData" wx:if="{{!isCaseInfoData}}" @tap="toCreateCaseBaseInfo">
+          <text class="titleBlod">案件信息</text>
+          <text style="margin-top:20rpx">请填写案件信息</text>
+        </view>
+        <view class="FillData" wx:else @tap="toCreateCaseBaseInfo">
+          <text>{{caseInfoData.Name}}</text>
+          <text>{{caseInfoData.CategoryText}}</text>
+          <text>收案日期：{{caseInfoData.AcceptDateText}}</text>
+        </view>
+      </view>
+      <view class=" box" style="border-left-color:{{stageIdentColor[2].color}}" wx:if="{{stageIdentColor[2].isShow}}">
+        <view class="FillData" wx:if="{{conflictInfoData.length==0}}" @tap="toCreateConflict">
+          <text>利益冲突信息</text>
+          <text>添加利益冲突信息</text>
+        </view>
+        <view class="FillData" wx:else @tap="toCreateConflict">
+          <!-- <text>{{}}</text> -->
+          <view>
+            <text style="color:#2a2a2a">利益冲突信息</text>
+            <text>共{{conflictInfoData.length}}条冲突</text>
+          </view>
+        </view>
+      </view>
+      <view class=" box" style="border-left-color:{{stageIdentColor[3].color}}" wx:if="{{stageIdentColor[3].isShow}}">
+        <view class="FillData" wx:if="{{clientLinkerData.length==0}}" @tap="toCreateClientCaseLinker">
+          <text>客户方本案联系人</text>
+          <text>填写或选择客户信息</text>
+        </view>
+        <view class="FillData" wx:else @tap="toCreateClientCaseLinker">
+          <view>
+            <text style="color:#2a2a2a">客户方本案联系人</text>
+            <text>共<text>{{clientLinkerData.length}}</text>位联系人</text>
+          </view>
+        </view>
+      </view>
+      <view class=" box" style="border-left-color:{{stageIdentColor[4].color}}" wx:if="{{stageIdentColor[4].isShow}}">
+        <view class="FillData" wx:if="{{!isCaseLayerLinkerListData}}" @tap="toCaseLawyerLinker">
+          <text>案件律师信息</text>
+          <text>请选择相关律师人员</text>
+        </view>
+        <view class="FillData" wx:else @tap="toCaseLawyerLinker">
+          <text>案件律师信息</text>
+          <text>{{caseLayerLinkerListData.name}}</text>
+          <view>
+            <text>{{caseLayerLinkerListData.categoryName}}</text>
+            <text><text>{{caseLayerLinkerListData.count-1}}</text>位其他律师</text>
+          </view>
+        </view>
+      </view>
+      <view class=" box" style="border-left-color:{{stageIdentColor[5].color}}" wx:if="{{stageIdentColor[5].isShow}}" @tap="toLawyerChargeInfo">
+        <view class="FillData" wx:if="{{!isCaseLayerChargeInfoData}}">
+          <text>收费与合同信息</text>
+          <text>请填写合同相关信息</text>
+        </view>
+        <view class="FillData" wx:else>
+          <text>案件项下的办案费用支出由：{{caseLayerChargeInfoData.paidPartyText||'未填写'}}</text>
+          <text>办案费限额：{{caseLayerChargeInfoData.chargeLimit||'未填写'}}</text>
+          <text>收费方式：{{caseLayerChargeInfoData.payStyleText||'未填写'}}</text>
+        </view>
+      </view>
+    </view>
+    <image src="{{'../../../images/test.png'}}" wx:if="{{isShowNextIcon}}" mode="scaleToFill" lazy-load="true" class="addImage" @touchend="subCaseInfoData" />
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import ajax from '../../../utils/cofig/ajax.js';
+  export default class register extends wepy.page {
+    props = {};
+    data = {
+      isNoCaseData: false,
+      stageIdentColor: [{
+          color: '#333ccc',
+          isShow: true
+        },
+        {
+          color: '#9157FA',
+          isShow: false
+        },
+        {
+          color: '#5d73fa',
+          isShow: false
+        },
+        {
+          color: '#009dff',
+          isShow: false
+        },
+        {
+          color: '#FFCB47',
+          isShow: false
+        },
+        {
+          color: '#FF9900',
+          isShow: false
+        }
+      ],
+      //客户ID
+      clientId: "",
+      clientData: {},
+      isClientData: false,
+      //案件信息
+      caseId: '',
+      isCaseInfoData: false,
+      caseInfoData: {},
+      // 冲突信息
+      conflictInfoData: [],
+      //客户方本案联系人
+      clientLinkerData: [],
+      //案件律师信息
+      caseLayerLinkerListData: {},
+      isCaseLayerLinkerListData: false,
+      //律师费用信息
+      caseLayerChargeInfoData: {},
+      isShowNextIcon: false,
+      isCaseLayerChargeInfoData: false
+    };
+    components = {};
+    methods = {
+      subCaseInfoData() {
+        var pages = getCurrentPages();
+        var prevPage = pages[pages.length - 2]; //上一个页面
+        if(prevPage.route=='pages/modules/myRegister/myRegisterList'||prevPage.route=='pages/modules/caseManagement/caseManagement'){
+            prevPage.isRefresh();
+            wx.navigateBack({
+                delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+            });
+        }else{
+          wx.redirectTo({ url: './myRegisterList' });
+        }
+         
+      },
+      //跳转至录入律师费用信息页面
+      toLawyerChargeInfo() {
+        wx.navigateTo({
+          url: './caseChargeAndContract/lawyerChargeInfo?id=' + this.caseId
+        });
+      },
+      // 案件律师信息页面
+      toCaseLawyerLinker() {
+        wx.navigateTo({
+          url: './caseLawyerLinker/caseLawyerLinkerList?id=' + this.caseId
+        });
+      },
+      //跳转至客户方本案联系人创建页面
+      toCreateClientCaseLinker() {
+        wx.navigateTo({
+          url: './clientLinker/clientCaseLinkerChosen?id=' + this.clientId
+        });
+      },
+      //跳转至创建利益冲突页面
+      toCreateConflict() {
+        wx.navigateTo({
+          url: './conflict/createConflict'
+        });
+      },
+      //跳转至创建案件基本信息页面
+      toCreateCaseBaseInfo() {
+        wx.navigateTo({
+          url: './caseInfo/createCaseInfo?ClientName=' + this.clientData.name + '&ClientId=' + this.clientId,
+        });
+      },
+      //跳转到客户详情页面
+      toClientDetail() {
+        wx.navigateTo({
+          url: '../myclient/clientDetail/itemDetail/clientBaseInfo?id=' + this.clientId
+        })
+      },
+      // 删除客户信息
+      deleteClientInfo() {
+        wx.showModal({
+          title: '提示', //提示的标题,
+          content: '是否删除已选客户信息', //提示的内容,
+          showCancel: true, //是否显示取消按钮,
+          cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
+          cancelColor: '#000000', //取消按钮的文字颜色,
+          confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
+          confirmColor: '#5d73fa', //确定按钮的文字颜色,
+          success: res => {
+            if (res.confirm) {
+              this.clientId = "";
+              this.clientData = {};
+              var create_caseinfo_data = wx.getStorageSync('CREATE_CASEINFO_DATA');
+              if (Object.keys(create_caseinfo_data).length !== 0) {
+                create_caseinfo_data.ClientId = '';
+                create_caseinfo_data.ClientName = '';
+              }
+              wx.setStorageSync('CREATE_CASEINFO_DATA', create_caseinfo_data)
+              var create_clientinfo_data = wx.getStorageSync('CREATE_CLIENTINFO_DATA');
+              create_clientinfo_data = {};
+              wx.setStorageSync('CREATE_CLIENTINFO_DATA', create_clientinfo_data);
+              this.$apply();
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        });
+      },
+      toClientList() {
+        wx.navigateTo({
+          url: '../myclient/directory/directory'
+        });
+      },
+      toCreateClient() {
+        wx.navigateTo({
+          url: '../myclient/createClient/createClientBaseInfo'
+        });
+      }
+    };
+    events = {};
+    watch = {
+      clientData(data, oldData) {
+        if (Object.keys(data).length !== 0 && Object.keys(this.caseInfoData).length !== 0) {
+          var create_caseinfo_data = wx.getStorageSync('CREATE_CASEINFO_DATA');
+          create_caseinfo_data.ClientId = this.clientId;
+          create_caseinfo_data.ClientName = this.clientData.name;
+          this.CreateOrUpdateCaseGeneralInfo(create_caseinfo_data);
+          wx.setStorageSync('CREATE_CASEINFO_DATA', create_caseinfo_data)
+        } else if (Object.keys(data).length == 0 && Object.keys(this.caseInfoData).length == 0) {
+          this.stageIdentColor[1].isShow = false;
+        }
+        this.$apply();
+      },
+    };
+    computed = {};
+    //案件基本信息提交
+    async CreateOrUpdateCaseGeneralInfo(data) {
+      wx.showLoading({
+        title: 'Loading...', //提示的内容,
+        mask: true, //显示透明蒙层，防止触摸穿透,
+        success: res => {}
+      });
+      var resData = await ajax.getData(
+        '/api/services/web/case/CreateOrUpdateCaseGeneralInfo',
+        'post',
+        data
+      )
+      if (resData.statusCode == 200) {
+        wx.setStorageSync('CREATE_CASEINFO_DATA', data)
+        this.$apply();
+      } else {
+        wx.showToast({
+          title: resData.data.error.message,
+          icon: 'none',
+          duration: 1500,
+          mask: false,
+        });
+      }
+    }
+    //创建缓存池
+    cachePool() {
+      //客户信息
+      wx.setStorage({
+        key: 'CREATE_CLIENTINFO_DATA',
+        data: {}
+      });
+      //案件信息
+      wx.setStorage({
+        key: 'CREATE_CASEINFO_DATA',
+        data: {}
+      });
+      //利益冲突
+      wx.setStorage({
+        key: 'CREATE_CONFLICTLIST_DATA',
+        data: []
+      });
+      //客户方本案联系人
+      wx.setStorage({
+        key: 'CREATE_CLIENTLINKERLIST_DATA',
+        data: []
+      });
+      //案件律师信息
+      wx.setStorage({
+        key: 'CREATE_CASELAWYERLINKERLIST_DATA',
+        data: {}
+      });
+      //案件费用信息
+      wx.setStorage({
+        key: 'CREATE_LAWYERCHARGE_DATA',
+        data: {}
+      });
+      //合同上传
+      wx.setStorage({
+        key: 'CREATE_CONTRACT_DATA',
+        data: {}
+      });
+    }
+    //获取缓存
+    getCacheData() {
+      //获取缓存中客户信息
+      wx.getStorage({
+        key: 'CREATE_CLIENTINFO_DATA',
+        success: (res) => {
+          if (Object.keys(res.data).length !== 0) {
+            this.clientId = res.data.id;
+            // this.clientId='CL20180300045';
+            this.clientData = res.data;
+            this.stageIdentColor[1].isShow = true;
+          }
+          this.$apply();
+        },
+        fail: () => {},
+        complete: () => {}
+      })
+      //获取缓存中案件信息
+      wx.getStorage({
+        key: 'CREATE_CASEINFO_DATA',
+        success: (res) => {
+          if (Object.keys(res.data).length !== 0) {
+            this.caseInfoData = res.data;
+            this.isCaseInfoData = true;
+            this.caseId = res.data.Id;
+            this.isShowNextIcon = true;
+            this.stageIdentColor[2].isShow = true;
+            this.stageIdentColor[3].isShow = true;
+            this.stageIdentColor[4].isShow = true;
+          }
+          this.$apply();
+        },
+        fail: () => {},
+        complete: () => {}
+      })
+      //获取缓存中有冲突信息
+      wx.getStorage({
+        key: 'CREATE_CONFLICTLIST_DATA',
+        success: (res) => {
+          this.conflictInfoData = res.data;
+          this.$apply();
+        },
+        fail: () => {},
+        complete: () => {}
+      })
+      //客户方本案联系人
+      wx.getStorage({
+        key: 'CREATE_CLIENTLINKERLIST_DATA',
+        success: (res) => {
+          this.clientLinkerData = res.data
+          this.$apply();
+        },
+        fail: () => {},
+        complete: () => {}
+      })
+      //获取案件律师信息
+      wx.getStorage({
+        key: 'CREATE_CASELAWYERLINKERLIST_DATA',
+        success: (res) => {
+          if (Object.keys(res.data).length !== 0) {
+            this.GetCaseChargeList(this.caseId)
+          }
+        },
+        fail: () => {},
+        complete: () => {}
+      })
+      //获取案件费用信息
+      wx.getStorage({
+        key: 'CREATE_LAWYERCHARGE_DATA',
+        success: (res) => {
+          console.log(res.data)
+          if (Object.keys(res.data).length !== 0) {
+            this.GetCaseInfoData();
+            this.caseLayerChargeInfoData = res.data;
+            this.stageIdentColor[5].isShow = true;
+            this.isCaseLayerChargeInfoData = true;
+            this.$apply();
+          }
+        },
+        fail: () => {},
+        complete: () => {}
+      })
+    }
+    //获取客户信息
+    async GetClient(id) {
+      var resData = await ajax.getData(
+        '/api/services/web/client/GetClient',
+        'post', {
+          id
+        }
+      )
+      if (resData.statusCode == 200) {
+        this.clientId = id;
+        this.clientData = resData.data.result;
+        this.stageIdentColor[1].isShow = true;
+        wx.setStorageSync('CREATE_CLIENTINFO_DATA', resData.data.result);
+        this.$apply();
+      }
+    }
+    //获取案件费用数据
+    async GetCaseInfoData() {
+      var resData = await ajax.getData(
+        '/api/services/web/case/GetCaseInfo',
+        'post', {
+          Id: this.caseId
+        }
+      )
+      if (resData.statusCode == 200) {
+        var GetCaseGeneralInfo = resData.data.result;
+        this.caseLayerChargeInfoData.chargeLimit = GetCaseGeneralInfo.chargeLimit;
+        this.caseLayerChargeInfoData.paidPartyText = GetCaseGeneralInfo.paidPartyText;
+         if(GetCaseGeneralInfo.payStyle) {
+          var payStyle = GetCaseGeneralInfo.payStyle.split(",");
+          var payStyleText = []
+          for (var index in payStyle) {
+            switch (payStyle[index]) {
+              case '1':
+                payStyleText.push('正常收费')
+                break;
+              case '2':
+                payStyleText.push('风险收费')
+                break;
+              case '3':
+                payStyleText.push('小时收费')
+                break;
+              default:
+                break;
+            }
+            
+          }
+          this.caseLayerChargeInfoData.payStyleText = payStyleText.join('+')
+        }
+        this.isCaseLayerChargeInfoData = true;
+
+      }
+      this.$apply();
+    }
+    //获取案件信息
+    async GetCaseInfo(id) {
+      var resData = await ajax.getData(
+        '/api/services/web/case/GetCaseInfo',
+        'post', {
+          Id: id
+        }
+      )
+      if (resData.statusCode == 200 && Object.keys(resData.data.result).length !== 0) {
+        var ary = resData.data.result
+        var GetCaseGeneralInfo = this.nameTo_(ary);
+        this.caseInfoData = GetCaseGeneralInfo;
+        // this.caseInfoStorage(GetCaseGeneralInfo);
+        this.GetClient(GetCaseGeneralInfo.ClientId);
+        this.isCaseInfoData = true;
+        this.isShowNextIcon = true;
+        this.caseId = GetCaseGeneralInfo.Id;
+        this.stageIdentColor[1].isShow = true;
+        this.stageIdentColor[2].isShow = true;
+        this.stageIdentColor[3].isShow = true;
+        this.stageIdentColor[4].isShow = true;
+        //利益冲突
+        this.conflictInfoData = GetCaseGeneralInfo.CaseClientRelationList;
+        this.GetGeneralCodeComboOutput(GetCaseGeneralInfo.CaseClientRelationList);
+        //客户方本案联系人
+        this.clientLinkerData = GetCaseGeneralInfo.CaseContactsList;
+        for (var index in GetCaseGeneralInfo.CaseContactsList) {
+          GetCaseGeneralInfo.CaseContactsList[index] = GetCaseGeneralInfo.CaseContactsList[index].id;
+        }
+        //获取律师费用信息
+        this.caseLayerChargeInfoData.chargeLimit = GetCaseGeneralInfo.ChargeLimit;
+        this.caseLayerChargeInfoData.paidPartyText = GetCaseGeneralInfo.PaidPartyText;
+        if(GetCaseGeneralInfo.PayStyle){
+          var payStyle = GetCaseGeneralInfo.PayStyle.split(",");
+          var payStyleText = []
+          for (var index in payStyle) {
+            switch (payStyle[index]) {
+              case '1':
+                payStyleText.push('正常收费')
+                break;
+              case '2':
+                payStyleText.push('风险收费')
+                break;
+              case '3':
+                payStyleText.push('小时收费')
+                break;
+              default:
+                break;
+            }
+          }
+          this.caseLayerChargeInfoData.payStyleText = payStyleText.join('+')
+        }
+        this.isCaseLayerChargeInfoData = true;
+        wx.setStorage({
+          key: 'CREATE_CASEINFO_DATA',
+          data: GetCaseGeneralInfo
+        });
+        //
+      }
+    }
+    //获取已有案件律师信息
+    async GetCaseChargeList(id) {
+      var resData = await ajax.getData(
+        '/api/services/web/case/GetCaseChargeList',
+        'post', {
+          id
+        }
+      )
+      if (resData.statusCode == 200 && resData.data.result.lawyerChargeList.length !== 0) {
+        this.stageIdentColor[5].isShow = true;
+        this.isCaseLayerLinkerListData = true;
+        var GetCaseChargeList = resData.data.result.lawyerChargeList;
+        var caseLayerLinkerListData = {};
+        caseLayerLinkerListData.count = GetCaseChargeList.length;
+        for (var i = 0, len = GetCaseChargeList.length; i < len; i++) {
+          if (GetCaseChargeList[i].lawyerRole == 'M') {
+            caseLayerLinkerListData.name = GetCaseChargeList[i].employeeName
+            caseLayerLinkerListData.categoryName = GetCaseChargeList[i].lawyerRoleText
+          }
+        }
+        this.caseLayerLinkerListData = caseLayerLinkerListData;
+        wx.setStorageSync('CREATE_CASELAWYERLINKERLIST_DATA', caseLayerLinkerListData)
+        this.$apply();
+        wx.pageScrollTo({
+          scrollTop: wx.getSystemInfoSync().windowHeight,
+          duration: 300
+        })
+      }
+    }
+    //获取职位
+    async GetGeneralCodeComboOutput(CaseClientRelationListData) {
+      var data = {
+        Class: "CLCDT",
+        Depth: 0,
+        IsMaxDepth: true,
+        IsRecursive: false,
+        ParentId: "",
+      }
+      var resData = await ajax.getData(
+        '/api/services/web/common/GetGeneralCodeComboOutput',
+        'post',
+        data
+      )
+      if (resData.statusCode == 200) {
+        for (var i = 0, len = CaseClientRelationListData.length; i < len; i++) {
+          if (CaseClientRelationListData[i].legalType) {
+            for (var j = 0, leng = resData.data.result.length; j < leng; j++) {
+              if (CaseClientRelationListData[i].legalType == resData.data.result[j].id) {
+                CaseClientRelationListData[i].legalTypeText = resData.data.result[j].name
+              }
+            }
+          }
+        }
+        wx.setStorage({
+          key: 'CREATE_CONFLICTLIST_DATA',
+          data: CaseClientRelationListData
+        });
+        this.$apply();
+      }
+    }
+    nameTo_(jsonObj) {
+      var result = {};
+      for (var key in jsonObj) {
+        var keyval = jsonObj[key];
+        key = key.replace(key[0], key[0].toUpperCase());
+        result[key] = keyval;
+      }
+      return result;
+    };
+    //没有数据时
+    noCaseData() {
+      //客户信息
+      wx.setStorage({
+        key: 'CREATE_CLIENTINFO_DATA',
+        data: {}
+      });
+    }
+    onLoad(options) {
+      if (options.id) {
+        this.GetCaseInfo(options.id);
+        this.GetCaseChargeList(options.id);
+      }
+      this.cachePool();
+    };
+    isDataRefresh(clientId) {
+      this.GetClient(clientId)
+      this.$apply();
+    }
+    onShow() {
+      this.getCacheData();
+    };
+  }
+</script>
+

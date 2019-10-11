@@ -1,0 +1,232 @@
+<!--  -->
+<style lang="less">
+  .body {
+    font-size: 28rpx;
+    height: 100%;
+    .container-title {
+      height: 104rpx;
+      font-size: 48rpx;
+      padding-left: 28rpx;
+      color: #2a2a2a;
+      line-height: 104rpx;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #dedede;
+    }
+    .contractinfo-container {
+      padding-top: 44rpx;
+      font-size: 28rpx;
+      .contractinfo-detail {
+        padding: 0 28rpx;
+        display: flex;
+        flex-wrap: wrap;
+        >view {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 36rpx;
+          >text:first-child {
+            color: #7a7a7a;
+            margin-bottom: 14rpx;
+          }
+        }
+      }
+    }
+    .contractinfo-doc {
+      padding: 44rpx 28rpx;
+      .doc-title {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 36rpx;
+        align-items: baseline; // justify-content: center;
+      }
+      .doc-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .content-left {
+          display: flex;
+          align-items: center;
+        }
+        .content-right {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          width: 80%;
+        }
+      }
+    }
+    .chargeinfo {
+      padding: 44rpx 28rpx;
+      .charge-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 36rpx;
+      }
+    }
+  }
+</style>
+
+<template>
+  <!-- <view></view> -->
+  <!-- <text></text> -->
+  <view class="body">
+    <view class="container-title">
+      <text class="title-text">合同信息</text>
+      <!-- <icon class="iconfont icon-bianji" style="font-size:60rpx;color:#5d73fa"></icon> -->
+    </view>
+    <view class="contractinfo-container">
+      <view class="contractinfo-detail">
+        <view style="width:100%" wx:if="{{contractinfoData.startDateText!==null}}">
+          <text>合同日期</text>
+          <text>{{contractinfoData.startDateText}}至{{contractinfoData.endDateText}}</text>
+        </view>
+        <view style="width:50%">
+          <text>办案费支出方</text>
+          <text>{{contractinfoData.paidPartyText||'未选择'}}</text>
+        </view>
+        <view style="width:50%">
+          <text>办案费限额</text>
+          <text>{{contractinfoData.chargeLimit||'未填写'}}</text>
+        </view>
+        <view style="width:50%">
+          <text>支付币种</text>
+          <text>{{contractinfoData.currencyText||'未填写'}}</text>
+        </view>
+        <view style="width:50%">
+          <text>汇率约定</text>
+          <text>{{contractinfoData.exchangeRateText||'未选择'}}</text>
+        </view>
+        <view style="width:100%">
+          <text>汇率</text>
+          <text>{{contractinfoData.exchangeRateValue||'未填写'}}</text>
+        </view>
+        <view style="width:50%">
+          <text>是否使用标的</text>
+          <text>{{contractinfoData.isTargetText}}</text>
+        </view>
+        <view style="width:50%">
+          <text>标的金额</text>
+          <text>{{contractinfoData.targetAmount||'未填写'}}</text>
+        </view>
+        <view style="width:50%">
+          <text>标的比例</text>
+          <text>{{contractinfoData.targetProrate||'0'}}%</text>
+        </view>
+        <view style="width:50%">
+          <text>免费小时</text>
+          <text>{{contractinfoData.freeHours+'小时'||'未填写'}}</text>
+        </view>
+      </view>
+    </view>
+    <view style="height:14rpx;background:#f4f4f4">
+    </view>
+    <view class="contractinfo-doc" catchtap="tocintractdoc" wx:if="{{contractinfoData.caseContractList.length!==0}}">
+      <view class="doc-title">
+        <text>合同文档</text>
+        <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#b2b2b2"></icon>
+      </view>
+      <view class="doc-content">
+        <view class="content-left">
+          <icon class="iconfont icon-wendang" style="font-size:100rpx;color:#ff9900;margin-right:30rpx;"></icon>
+        </view>
+        <view class="content-right">
+          <view class="content-left-right" style="width:100%;margin-bottom:22rpx">
+            <text style="margin-bottom:14rpx">{{contractinfoData.caseContractList[0].name}}</text>
+          </view>
+          <view style="display:flex;justify-content:space-between;align-items:center;width:100%;color:#7a7a7a">
+            <view>
+              <text>{{caseContractnewDate[0]}} <text>最新上传</text></text>
+            </view>
+            <view>
+              <text>共{{contractinfoData.caseContractList.length}}份文档</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view style="height:14rpx;background:#f4f4f4" wx:if="{{isPayStyleText}}">
+    </view>
+    <view class="chargeinfo" catchtap="tochargeinfo" wx:if="{{isPayStyleText}}">
+      <view class="charge-title">
+        <text>收费信息</text>
+        <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#b2b2b2"></icon>
+      </view>
+      <repeat for="{{payStyleList}}" key="index" index="index" item="item">
+        <view style="margin-bottom:14rpx;">
+          <text style="color:#7a7a7a">{{item.title}}</text>
+          <text>{{item.text}}</text>
+        </view>
+      </repeat>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {
+    formatTimeSymbol
+  } from '../../../../../../utils/cofig/api.js';
+  export default class contractinfo extends wepy.page {
+    components = {};
+    data = {
+      contractinfoData: {},
+      caseContractnewDate: '',
+      isPayStyleText: false,
+      payStyleList: []
+    };
+    methods = {
+      tocintractdoc() {
+        wx.navigateTo({
+          url: './contractdoc'
+        });
+      },
+      tochargeinfo() {
+        wx.navigateTo({
+          url: './chargeinfo?payStyle='+this.contractinfoData.payStyle
+        });
+      }
+    };
+    onLoad() {
+      wx.getStorage({
+        key: 'caseDetailData',
+        success: res => {
+          this.contractinfoData = res.data.caseData;
+          if (res.data.caseData.payStyle.length > 0) {
+            this.isPayStyleText = true;
+            var payStyle = res.data.caseData.payStyle.split(',');
+            for (var i in payStyle) {
+              switch (payStyle[i]) {
+                case '1':
+                  this.payStyleList[i] = {
+                    title: '正常收费：',
+                    text: this.contractinfoData.payDetailQuotaText
+                  }
+                  break;
+                case '2':
+                  this.payStyleList[i] = {
+                    title: '风险收费：',
+                    text: this.contractinfoData.payDetailRiskText
+                  }
+                  break;
+                case '3':
+                  this.payStyleList[i] = {
+                    title: '小时收费：',
+                    text: this.contractinfoData.payDetailHourlyText
+                  }
+                  break;
+              }
+            }
+          }
+          if (res.data.caseData.caseContractList.length !== 0) {
+            this.caseContractnewDate = res.data.caseData.caseContractList[
+              res.data.caseData.caseContractList.length - 1
+            ].creationTime.split('T');
+          }
+          this.$apply();
+        }
+      });
+      this.$apply();
+    }
+  }
+</script>

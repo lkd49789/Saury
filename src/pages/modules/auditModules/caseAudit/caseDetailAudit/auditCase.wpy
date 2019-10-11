@@ -1,0 +1,157 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .main {
+            margin: 149rpx 28rpx 0 28rpx;
+            .checked{
+                .radio{
+                    display: flex;
+                    flex-direction: column;
+                    // align-items: center;
+                    margin-bottom: 20rpx;
+                    >view{
+                        display: flex;
+                        align-items: center;
+                        >text{
+                            margin-left:14rpx;
+                        }
+                    }
+                }          
+            }
+        }
+        .addImage{
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99;
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <text>立案审核</text>
+        </view>
+        <view class='main'>
+            <view class="checked">
+                <radio-group class="radio-group" @change="bindPickerChang" style="padding-bottom:20rpx;">
+                    <label class="radio" wx:for="{{result}}" wx:key="index">
+                        <view>
+                            <radio value="{{item.value}}" checked="{{item.isSelected}}" color="#5d73fa"/>
+                        <text  style="margin-right:60rpx">{{item.displayText}}</text>
+                        </view>
+                    </label>
+                </radio-group>
+            </view>
+            <remark :input.sync="remark" :inputValue.sync='remarkValue' :twoWayTitle="remarkValue" />
+        </view>
+        <image src="{{'../../../../../images/test.png'}}" mode="scaleToFill"  lazy-load="true" class="addImage"  @touchend="touchEnd">
+        </image>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../../utils/cofig/ajax.js'
+    import remark from '../../../../../components/picker/input'
+    export default class auditCase extends wepy.page {
+        components = {
+            remark
+        };
+        data = {
+            submitData:{},
+            result: [],
+            remark:{
+                title:'审核意见',
+                name:'remark',
+                warning:true,
+                type:'digit',
+                options:true
+            },
+            remarkValue:''
+        };
+        methods = {
+            touchEnd(){
+                    if(this.submitData.result=="WaitForTransfer"){
+                        this.ProcessOrderItem();
+                    }else if(this.submitData.result!=="WaitForTransfer"&&this.submitData.result){
+                        this.remark.warning=true;
+                        wx.showToast({
+                          title: '审核意见不能为空！', //提示的内容,
+                          icon: 'none', //图标,
+                          duration: 2000, //延迟时间,
+                          mask: false, //显示透明蒙层，防止触摸穿透,
+                          success: res => {}
+                        });
+                    }
+                    this.$apply();
+                
+            },
+            bindPickerChang(e){
+                console.log(e.detail.value)
+                this.submitData.result=e.detail.value
+            }
+        };
+        watch={
+            remarkValue(value){
+                this.submitData.remark=value;
+                this.$apply();
+            }
+        }
+        async ProcessOrderItem(){
+            wx.showLoading({
+                title: '提交中，请稍等！', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success:()=>{
+                    this.$apply();
+                }
+            });
+            var resData=await ajax.getData(
+                '/api/services/web/caseCreation/ProcessOrderItem',
+                'post',
+                this.submitData
+            )
+            if(resData.statusCode==200){
+                var  isRefresh=wx.getStorageSync('isRefresh');
+                isRefresh.isRefresh=true;
+                wx.setStorageSync('isRefresh', isRefresh);
+                wx.navigateBack({
+                    delta: 2
+                });
+            }else{
+                wx.showToast({
+                    title: resData.data.error.message,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
+            }
+        }
+        onLoad() {
+            var OrderItem=wx.getStorageSync('OrderItem'); 
+            OrderItem.getCreationResultList[0].isSelected=true;
+            this.result  = OrderItem.getCreationResultList;
+            this.submitData.result= OrderItem.getCreationResultList[0].value;
+            this.submitData.id=OrderItem.id;
+            this.submitData.caseId=OrderItem.caseId;
+            this.$apply();
+        }
+    }
+</script>

@@ -1,0 +1,66 @@
+<!--  -->
+<style lang="less">
+.body {
+  height: 100%;
+  .container-title {
+    height: 104rpx;
+    font-size: 48rpx;
+    padding-left: 28rpx;
+    color: #2a2a2a;
+    line-height: 104rpx;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #dedede;
+  }
+  .introduce-container {
+    padding: 44rpx 28rpx;
+    font-size: 28rpx;
+    .introduce-title {
+      margin-bottom: 44rpx;
+    }
+    > view {
+      text-indent: 1em;
+      > text {
+        line-height: 50rpx;
+      }
+    }
+  }
+}
+</style>
+
+<template>
+    <!-- <view></view> -->
+    <!-- <text></text> -->
+    <view class="body">
+        <view class="container-title">
+            <text class="title-text">案件简介</text>
+            <!-- <icon class="iconfont icon-bianji" style="font-size:60rpx;color:#5d73fa"></icon> -->
+        </view>
+        <view class="introduce-container">
+            <view>
+                <text>{{description}}</text>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import ajax from '../../../../../utils/cofig/ajax.js';
+// import navbar from '../../../components/navbar';
+export default class caseintroduce extends wepy.page {
+  components = {};
+  data = {
+    description: ''
+  };
+  methods = {};
+  onLoad() {
+    wx.getStorage({
+      key: 'caseDetailData',
+      success: res => {
+        this.description = res.data.caseData.description;
+      }
+    });
+  }
+}
+</script>

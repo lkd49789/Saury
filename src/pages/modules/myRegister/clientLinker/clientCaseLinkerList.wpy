@@ -1,0 +1,260 @@
+<!--  -->
+
+<style lang='scss'>
+    .container {
+        .pageTitle {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .listBox {
+            margin: 149rpx 28rpx;
+            .clientItem {
+                position: relative;
+                box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                padding: 30rpx 22rpx;
+                margin-bottom: 44rpx;
+                display: flex;
+                align-items: center;
+                .item-left {
+                    margin: 0 20rpx;
+                }
+                .item-right {
+                    width: 100%;
+                    display: flex;
+                    .avatar {
+                        margin-right: 20rpx;
+                        >image {
+                            height: 80rpx;
+                            width: 80rpx;
+                            border-radius: 50%;
+                        }
+                    }
+                    .name-workPhone {
+                        display: flex;
+                        flex-direction: column;
+                    }
+                }
+            }
+        }
+        .chooseFixedBtn {
+            position: fixed;
+            height: 98rpx;
+            width: 100%;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            background: #5d73fa;
+            color: #fff;
+            z-index: 9999;
+            border-top: 1px solid #dfdfdf;
+            >view {
+                width: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 34rpx;
+                height: 100%;
+            }
+            >view:first-child {
+                display: flex;
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="pageTitle">
+            客户联系人
+        </view>
+        <view class="listBox">
+            <repeat for="{{ClientContacts_data}}" key="index" index="index" item="item">
+                <view class="clientItem">
+                    <view class="item-left">
+                        <checkbox value="{{index}}" checked="{{item.checked}}" color="#5d73fa" catchtap="checkboxChange('{{index}}')" />
+                    </view>
+                    <view class="item-right" catchtap="toclientLinkerDetail('{{item.id}}')">
+                        <view class="avatar">
+                            <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false" />
+                        </view>
+                        <view class="name-workPhone">
+                            <text>{{item.name}} | <text style="color:#7a7a7a;">{{item.dutyText||'未填写'}}</text></text>
+                            <text style="color:#7a7a7a;">{{item.workPhone||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+            </repeat>
+        </view>
+        <view class="chooseFixedBtn">
+            <view style="border-right:1px solid #fff" @tap="allselected">
+                <text style='margin-right:14rpx;'>全选</text>
+                <text>{{selectedCount}}<text>/{{curTotalCount}}</text></text>
+            </view>
+            <view @tap="subBtn">
+                <text>确定</text>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import {
+        myObjDistinct
+    } from '../../../../utils/cofig/api.js';
+    export default class clientCaseLinkerList extends wepy.page {
+        config = {
+            enablePullDownRefresh: true,
+            backgroundTextStyle: 'dark',
+            backgroundColorTop: '#f4f4f4',
+            backgroundColorBottom: '#f4f4f4'
+        };
+        data = {
+            ClientId: '',
+            totalCount: 0,
+            pageNumber: 1,
+            ClientContacts_data: [],
+            submitData: [],
+            curTotalCount: 0,
+            selectedCount: 0,
+        };
+        components = {};
+        methods = {
+            subBtn() {
+                var create_clientlinkerlist_data = wx.getStorageSync('CREATE_CLIENTLINKERLIST_DATA');
+                for (var index in this.ClientContacts_data) {
+                    if (this.ClientContacts_data[index].checked) {
+                        this.submitData.push(this.ClientContacts_data[index]);
+                    }
+                }
+                if (create_clientlinkerlist_data.length !== 0) {
+                    var result = myObjDistinct(this.submitData, create_clientlinkerlist_data, 'id')
+                    create_clientlinkerlist_data.push(...result);
+                } else {
+                    create_clientlinkerlist_data.push(...this.submitData)
+                }
+                wx.setStorage({
+                    key: 'CREATE_CLIENTLINKERLIST_DATA',
+                    data: create_clientlinkerlist_data,
+                    success: () => {
+                        wx.navigateBack({
+                            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                        });
+                    }
+                });
+            },
+            allselected() {
+                this.selectedCount = this.curTotalCount;
+                for (var index in this.ClientContacts_data) {
+                    this.ClientContacts_data[index].checked = true;
+                }
+                this.$apply();
+            },
+            checkboxChange(index) {
+                console.log(index);
+                if (this.ClientContacts_data[index].checked) {
+                    this.ClientContacts_data[index].checked = false
+                    this.selectedCount -= 1;
+                } else {
+                    this.ClientContacts_data[index].checked = true;
+                    this.selectedCount += 1;
+                }
+                this.$apply();
+            },
+            toclientLinkerDetail(id) {
+                wx.setStorage({
+                    key: 'CREATE_CLIENTCONTACTS_DATA',
+                    data: this.ClientContacts_data,
+                    success: () => {
+                        wx.navigateTo({
+                            url: '../../myclient/clientDetail/itemDetail/clientLinkmanDetail/clientLinkmanDetail?id=' + id
+                        });
+                    }
+                });
+            }
+        };
+        // 上拉加载
+        onReachBottom() {
+            if (this.pageNumber < this.totalCount / 10) {
+                this.pageNumber += 1;
+                this.GetClientContacts();
+                wepy.showToast({
+                    title: '加载更多...',
+                    icon: 'loading',
+                    mask: true
+                });
+            } else {
+                wepy.showToast({
+                    title: '没有更多...',
+                    icon: 'none',
+                    mask: true,
+                    duration: 1000
+                });
+            }
+        }
+        //下拉刷新
+        onPullDownRefresh() {
+            this.ClientContacts_data = [];
+            this.pageNumber = 1;
+            this.GetClientContacts();
+            wx.hideNavigationBarLoading(); //完成停止加载
+            wx.stopPullDownRefresh(); //停止下拉刷新
+            this.$apply();
+        }
+        // async getClientAavatar() {
+        //     for (var i in this.ClientContacts_data) {
+        //         var id = this.ClientContacts_data[i].id;
+        //         var http =
+        //             '/api/services/web/clientContacts/GetClientContactAvatar?id=' + id;
+        //         var linkerPhotoData = await ajax.getAavatar(http);
+        //         this.ClientContacts_data[i]['avatar'] = linkerPhotoData;
+        //     }
+        //     this.$apply();
+        // }
+        async GetClientContacts() {
+            var data = {
+                CaseId: "",
+                ClientId: this.ClientId,
+                pageNumber: this.pageNumber,
+                pageSize: 10,
+                sorting: "",
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/common/GetClientContacts',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                var ClientContacts = resData.data.result.items;
+                this.totalCount = resData.data.result.totalCount;
+                this.curTotalCount += ClientContacts.length;
+                for (var i in ClientContacts) {
+                    var id = ClientContacts[i].id;
+                    var http =
+                        '/api/services/web/clientContacts/GetClientContactAvatar?id=' + id;
+                    var linkerPhotoData = await ajax.getAavatar(http);
+                    ClientContacts[i]['avatar'] = linkerPhotoData;
+                    ClientContacts[i]['checked'] = false;
+                }
+                this.ClientContacts_data.push(...ClientContacts);
+            }
+            this.$apply();
+        }
+        onLoad(options) {
+            this.ClientId = options.id;
+            this.GetClientContacts();
+        };
+        onShow() {};
+    }
+</script>

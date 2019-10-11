@@ -1,0 +1,943 @@
+<style lang="less">
+  .body {
+    .swiper-view {
+      swiper {
+        // background-image: url(https://img02.mockplus.cn/image/2018-07-24/43faa9b0-8f1b-11e8-8fbe-a1025d7a269f.png!thumb400);
+        .swiper-item {
+          display: flex;
+          flex-direction: column;
+          border-radius: 20rpx;
+          align-items: center;
+          justify-content: center;
+          margin: 44rpx 20rpx;
+          padding: 30rpx 0;
+          background: #ffffff;
+          box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+          >view:first-child {
+            font-size: 48rpx;
+            color: #5d73fa; // font-weight: bold;
+            margin-bottom: 14rpx;
+          }
+          >view:nth-child(2) {
+            font-size: 32rpx;
+            color: #7a7a7a;
+            margin-bottom: 20rpx;
+          }
+          >view:nth-child(3) {
+            margin-bottom: 14rpx;
+          }
+          >view:nth-child(4) {
+            display: flex;
+            justify-content: space-between;
+            >view:first-child {
+              margin-right: 30rpx;
+            }
+          }
+        }
+      }
+    }
+    .function {
+      padding: 10rpx 28rpx 0 28rpx;
+      .auditFuntion {
+        swiper-item {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .swiper-item {
+            position: relative;
+            >image {
+              height: 182rpx;
+              width: 180rpx;
+            }
+            >view {
+              color: #fff;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              display: flex;
+              align-items: center;
+              flex-direction: column;
+              width: 100%;
+            }
+          }
+        }
+      }
+      .Notifications {
+        display: flex;
+        border-radius: 20rpx;
+        align-items: center;
+        justify-content: space-between;
+        margin: 44rpx 20rpx;
+        padding: 30rpx 0;
+        box-shadow: 0px 6px 20px rgba(65, 98, 213, 0.25);
+        .tishi {
+          margin-left: 28rpx;
+          margin-right: 20rpx;
+        }
+        .notData {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #7a7a7a;
+        }
+        >swiper {
+          margin-right: 28rpx;
+          .remind_swiper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            >view:first-child {
+              display: flex;
+              align-items: center;
+              >view {
+                height: 10rpx;
+                width: 10rpx;
+                background: #000;
+                border-radius: 50%;
+                margin-right: 20rpx;
+              }
+            }
+          }
+        }
+      }
+      .Function-items {
+        margin-top: 30rpx;
+        display: flex;
+        flex-wrap: wrap;
+        font-size: 26rpx;
+        color: #7a7a7a;
+        >view {
+          width: 25%; // flex:1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          margin: 20rpx 0;
+          >view:first-child {
+            height: 90rpx;
+            width: 90rpx;
+            border-radius: 50%;
+            box-shadow: 0px 0px 12px rgba(65, 98, 213, 0.2);
+            position: relative;
+            margin-bottom: 15rpx;
+            >icon {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="body">
+    <view class="swiper-view" wx:if="{{GetPersonAnnualCounts.length}}">
+      <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="{{circular}}" next-margin="40rpx" previous-margin="40rpx" bindchange="bindchange" style="height:405rpx">
+        <repeat for="{{GetPersonAnnualCounts}}" key="index" index="index" item="item">
+          <swiper-item>
+            <view class="swiper-item" @tap="toSwiper">
+              <!-- <view class="flex">
+                <view class="swperBox">
+                  <text>{{item.name}}</text>
+                  <text>{{item.value}}</text>
+                </view>
+                  <view class="swiperCompare">
+                    
+                  </view>
+              </view> -->
+              <view>
+                <text>{{item.value}}</text>
+              </view>
+              <view>
+                <text>{{item.name}}</text>
+              </view>
+              <view style="color:{{item.comparedValue>0?'#ff9900':'#069400'}}">
+                <icon class="iconfont {{item.comparedValue>0?'icon-jiantoushangshengtongji':'icon-jiantouxiajiangtongji'}}"></icon>
+                <text>{{comparedValue[index]||item.comparedValue}}%</text>
+              </view>
+              <view>
+                <view>
+                  <text style="color:#7a7a7a">去年 |</text>
+                  <text> {{item.annualData[1].value}}</text>
+                </view>
+                <view>
+                  <text style="color:#7a7a7a">今年 |</text>
+                  <text> {{item.annualData[0].value}}</text>
+                </view>
+              </view>
+            </view>
+          </swiper-item>
+        </repeat>
+      </swiper>
+    </view>
+    <view class="function">
+      <view class="auditFuntion">
+        <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" next-margin="50rpx"  style="height:200rpx" display-multiple-items='3'>
+          <repeat for="{{auditFunction}}" key="index" index="index" item="item">
+            <swiper-item>
+              <view class="swiper-item" @tap="linkAddress('{{item.link}}')">
+                <image src="{{item.image}}" mode="scaleToFill" lazy-load="false" />
+                <view>
+                  <icon class="iconfont {{item.icon}}" style="font-size:35px;"></icon>
+                  <text>{{item.displayName}}</text>
+                </view>
+              </view>
+            </swiper-item>
+          </repeat>
+        </swiper>
+      </view>
+      <view class="Notifications" @tap="toMessagePage">
+        <view class="tishi" wx:if="{{GetUserNotifications_data.length!==0}}">
+          <icon class="iconfont icon-tishi" style="font-size:70rpx;color:#ff9900"></icon>
+        </view>
+        <swiper autoplay interval="3000" circular vertical="{{true}}" skip-hidden-item-layout="{{true}}" display-multiple-items="{{GetUserNotifications_data.length==1?1:2}}" style="height:{{GetUserNotifications_data.length==1?41:82}}rpx;width:86%;" wx:if="{{GetUserNotifications_data.length!==0}}">
+          <repeat for="{{GetUserNotifications_data}}" key="index" index="index" item="item">
+            <swiper-item catchtouchmove="true">
+              <view class="remind_swiper">
+                <view>
+                  <view></view>
+                  <text>{{item.TextTile}}</text>
+                </view>
+                <text style="color:#7a7a7a">{{item.notification.creationTime}}</text>
+              </view>
+            </swiper-item>
+          </repeat>
+        </swiper>
+        <view class="notData" wx:else='{{GetUserNotifications_data.length!==0}}'>
+          <!-- <icon class="iconfont icon-tishi" style="font-size:70rpx;color:#ff9900"></icon> -->
+          <image src="../../images/NotMessage.png" mode="scaleToFill" lazy-load="false" style="height:60rpx;width:60rpx;margin-right:20rpx">
+          </image>
+          <text>暂无新消息！</text>
+        </view>
+      </view>
+      <view class="Function-items">
+        <repeat for="{{functionData}}" key="index" index="index" item="item">
+          <view @tap="linkAddress('{{item.link}}')">
+            <view>
+              <icon class="iconfont {{item.icon}}" style="color:{{item.color}};font-size:48rpx;"></icon>
+            </view>
+            <text>{{item.displayName}}</text>
+          </view>
+        </repeat>
+        <view @tap="linkAddress('../modules/zzbangVip/getCasePageList')">
+            <view>
+              <icon class="iconfont icon-zhaizhubang" style="color:#e20000;font-size:48rpx;"></icon>
+            </view>
+            <text>案源</text>
+        </view>
+      </view>
+      <!-- <view @tap="click">点击跳转</view> -->
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import 'wepy-async-function';
+  import {
+    toFixed,
+    beautify_time
+  } from '../../utils/cofig/api.js';
+  import ajax from '../../utils/cofig/ajax.js';
+  export default class mainIndex extends wepy.page {
+    components = {};
+    data = {
+      currentTab: 0,
+      // swiper
+      circular: true,
+      indicatorDots: false,
+      autoplay: false,
+      interval: 5000,
+      duration: 500,
+      //消息swiper
+      GetUserNotifications_data: [],
+      GetPersonAnnualCounts: [{
+          name: '我的客户',
+          value: 0,
+          icon: '',
+          comparedValue: '0',
+          annualData: [{
+            name: 0,
+            value: 0
+          }]
+        },
+        {
+          name: '我的案件',
+          value: 0,
+          icon: '',
+          comparedValue: '0',
+          annualData: [{
+            name: 0,
+            value: 0
+          }]
+        },
+        {
+          name: '我的日志',
+          value: 0,
+          icon: '',
+          comparedValue: '0',
+          annualData: [{
+            name: 0,
+            value: 0
+          }]
+        },
+      ],
+      swiperTitle: ['我的客户', '我的案件', '我的日志', '我的账单'],
+      comparedValue: 0,
+      //功能页面
+      functionData: [
+        // {
+        //   displayName: '我的案件',
+        //   icon: 'icon-wodeanjian',
+        //   color: '#5d73fa',
+        //   link: '../modules/mycase/mycase',
+        //   name: "Pages.Business.Cases.MyCases",
+        //   // isShow: true
+        // }, {
+        //   displayName: '我的客户',
+        //   icon: 'icon-wodekehu',
+        //   color: '#e20000',
+        //   link: '../modules/myclient/myClientList',
+        //   name: 'Pages.Customers.MyCustomers.Manage',
+        //   // isShow: true
+        // },
+        // {
+        //   displayName: '我的日志',
+        //   icon: 'icon-woderizhi',
+        //   color: '#009dff',
+        //   link: '../modules/myRecord/workRecord',
+        //   name: 'Pages.Works.Log.MyWorklog',
+        //   // isShow: true
+        // },
+        // {
+        //   displayName: '我的进程',
+        //   icon: 'icon-wodejincheng',
+        //   color: '#ff9900',
+        //   link: '../modules/myTaskCourse/taskProject',
+        //   name: 'Pages.Business.Cases.MyProcesses',
+        //   // isShow: true
+        // },
+        // {
+        //   displayName: '我的会议',
+        //   icon: 'icon-huiyi-copy',
+        //   color: '#ff9900',
+        //   link: '../modules/myMeeting/meetingList',
+        //   name: 'Pages.Works.Meeting.MyMeeting',
+        //   // isShow: true
+        // },
+        // {
+        //   displayName: '我的请假',
+        //   icon: 'icon-wodeqingjia',
+        //   color: '#ff9900',
+        //   link: '../modules/myApplyList/MyApplyList',
+        //   name: 'Pages.HumanResource.Attendance.MyApplyList',
+        //   // isShow: true
+        // }, {
+        //   displayName: '我的账单',
+        //   icon: 'icon-wodezhangdan',
+        //   color: '#ff9900',
+        //   link: '../modules/bill/myBill/myBill',
+        //   name: 'Pages.Financial.Billings.MyBillings',
+        //   // isShow: true
+        // },
+        // {
+        //   displayName: '账单管理',
+        //   icon: 'icon-zhangdanguanli',
+        //   color: '#ff9900',
+        //   link: '../modules/bill/manageBill/manageBill',
+        //   name: 'Pages.Financial.Billings.Manage',
+        //   // isShow: true
+        // },
+        // {
+        //   displayName: '我的发票',
+        //   icon: 'icon-wodefapiao',
+        //   color: '#e20000',
+        //   link: '../modules/invoice/myInvoce/myinvoice',
+        //   name: 'Pages.Financial.Invoices.MyApplyInvoices',
+        //   // isShow: true
+        // },
+        // {
+        //   displayName: '我的发票',
+        //   icon: 'icon-wodefapiao',
+        //   color: '#e20000',
+        //   link: '../modules/invoice/myInvoce/myinvoice',
+        //   name: 'Pages.Financial.Invoices.MyApplyInvoices',
+        //   // isShow: true
+        // },
+        // {
+        //   displayName: '我的费用',
+        //   icon: 'icon-wodefeiyong',
+        //   color: '#e20000',
+        //   link: '../modules/cost/myCost/myCost',
+        //   name: 'Pages.Financial.Charge.MyCharges',
+        //   // isShow: true
+        // },
+        // {
+        //   displayName: '费用管理',
+        //   icon: 'icon-feiyongguanli',
+        //   color: '#e20000',
+        //   link: '../modules/cost/manageCost/manageCost',
+        //   name: 'Pages.Financial.Charge.Manage',
+        //   // isShow: true
+        // },
+        // {
+        //   displayName: '我的收款',
+        //   icon: 'icon-wodeshoukuan',
+        //   color: '#ff9900',
+        //   link: '../modules/receivables/myReceivables/myReceivables',
+        //   name: 'Pages.Financial.Receipts.MyReceipts',
+        //   // isShow: true
+        // },
+        // {
+        //   displayName: '收款管理',
+        //   icon: 'icon-shoukuanguanli',
+        //   color: '#ff9900',
+        //   link: '../modules/receivables/manageReceivables/manageReceivables',
+        //   name: 'Pages.Financial.Receipts',
+        //   // isShow: true
+        // },
+        // {
+        //   displayName: '我的立案',
+        //   icon: 'icon-wodelian',
+        //   color: '#5d73fa',
+        //   link: '../modules/myRegister/myRegisterList',
+        //   name: 'Pages.Business.CaseApplications.MyApplyCases',
+        //   // isShow: true
+        // },
+        // {
+        //   displayName: '冲突检索',
+        //   icon: 'icon-chongtujiansuo',
+        //   color: '#e20000',
+        //   link: '../modules/conflictRetrieval/conflictRetrievalList',
+        //   name: 'Pages.Business.CaseApplications.Check',
+        //   // isShow: true
+        // },
+        // {
+        //   displayName: '利益冲突预检',
+        //   icon: 'icon-liyichongtuyujian',
+        //   color: '#e20000',
+        //   link: '../modules/ConflictInterestPreflight/ConflictInterestPreflight',
+        //   name: 'Pages.Business.CaseApplications.CheckCustomers',
+        //   // isShow: true
+        // }
+      ],
+      // 审核
+      auditFunction: [
+        {
+          displayName: '案件审核',
+          icon: 'icon-anjianshenhe',
+          color: '#5d73fa',
+          link: '../modules/auditModules/caseAudit/auditCaseList',
+          image: '../../images/1-02.png'
+        },
+        {
+          displayName: '日志审核',
+          icon: 'icon-rizhishenhe',
+          color: '#5d73fa',
+          link: '../modules/auditModules/recordAudit/recordAuditList',
+          image: '../../images/2-02.png'
+        },
+        {
+          displayName: '请假审核',
+          icon: 'icon-qingjiashenhe',
+          color: '#009dff',
+          link: '../modules/auditModules/applyAudit/applyAuditList',
+          image: '../../images/3-02.png'
+        },
+        {
+          displayName: '文书审核',
+          icon: 'icon-wenshushenhe',
+          color: '#009dff',
+          link: '../modules/auditModules/approveAudit/approveList',
+          image: '../../images/3-04.png'
+        },
+      ]
+    };
+    methods = {
+      toMessagePage() {
+        wx.navigateTo({
+          url: './messagePage/message'
+        });
+      },
+      onShareAppMessage(res) {
+        return {
+          title: '律智荟--法律圈智能汇聚平台',
+          path: '/pages/mine/index',
+          imageUrl: '../../images/ShareAppMessage.jpg',
+          success: function(res) {
+            console.log(res);
+          },
+        }
+      },
+      linkAddress(link) {
+        wx.navigateTo({
+          url: link
+        });
+      },
+      bindchange(e) {
+        // console.log(e.detail.current);
+        this.currentTab = e.detail.current;
+        this.$apply();
+      },
+      //跳转至我的客户
+      //跳转至我的案件
+      toSwiper() {
+        switch (this.currentTab) {
+          case 0:
+            wepy.navigateTo({
+              url: '../modules/myclient/myClientList'
+            });
+            break;
+          case 1:
+            wepy.navigateTo({
+              url: '../modules/mycase/mycase'
+            });
+            break;
+          case 2:
+            wepy.navigateTo({
+              url: '../modules/myRecord/workRecord'
+            });
+            break;
+          case 3:
+            wepy.navigateTo({
+              url: '../modules/bill/myBill/myBill'
+            });
+            break;
+             default:
+              break;
+        }
+        // if (this.currentTab == 'Case') {
+        // }
+      }
+    };
+    watch = {}
+    async getSwiperdata() {
+      var resData = await ajax.getData(
+        '/api/services/web/analyzeStatistics/GetPersonAnnualCounts', //获取swiper数据
+        'post'
+      );
+      console.log(resData)
+      if (resData.statusCode == 200) {
+        this.GetPersonAnnualCounts = resData.data.result;
+        //浮点指数
+        var comparedValueAry = [];
+        for (var i = 0,len=resData.data.result.length; i < len; i++) {
+          // console.log(res.data.result[i].comparedValue);
+          comparedValueAry.push((resData.data.result[i].comparedValue * 100).toFixed(2));
+          resData.data.result[i].value = Number(resData.data.result[i].value).toFixed();
+          switch (resData.data.result[i].name) {
+            case 'Client':
+              resData.data.result[i].name = '我的客户';
+              break;
+            case 'Case':
+              resData.data.result[i].name = '我的案件';
+              break;
+            case 'Worklog':
+              resData.data.result[i].name = '我的日志';
+              break;
+            case 'Finance':
+              resData.data.result[i].name = '我的财务';
+              break;
+               default:
+              break;
+          }
+        }
+        this.comparedValue = comparedValueAry;
+        wx.setStorageSync('AnnualCounts', resData.data.result);
+        this.$apply();
+      }
+    }
+    //获取通知消息
+    async GetUserNotifications() {
+      var data = {
+        maxResultCount: 10,
+        notificationName: "",
+        skipCount: 0,
+        state: "",
+      }
+      var resData = await ajax.getData(
+        '/api/services/app/notification/GetWechatMiniUserNotifications',
+        'POST',
+        data
+      )
+      if (resData.statusCode == 200) {
+        var UserNotifications_Data = resData.data.result.items;
+        for (var index=0,len=UserNotifications_Data.length;index<len;index++) {
+          UserNotifications_Data[index].notification.creationTime = beautify_time(UserNotifications_Data[index].notification.creationTime)
+          switch (UserNotifications_Data[index].notification.notificationName) {
+            case 'App.Financial.Billings.Returned':
+              UserNotifications_Data[index].TextTile = '账单-已退回';
+              break;
+            case 'App.Works.Task.Confirmed':
+              UserNotifications_Data[index].TextTile = '任务-已参与';
+              break;
+            case 'App.Works.Task.Comment.Created':
+              UserNotifications_Data[index].TextTile = '任务-新消息';
+              break;
+            case 'App.Works.Log.Returned':
+              UserNotifications_Data[index].TextTile = '工作日志-已退回';
+              break;
+            case 'App.HumanResource.Attendance.Approved':
+              UserNotifications_Data[index].TextTile = '请假-已审核';
+              break
+            case 'App.Works.Task.WaitForConfirmed':
+              UserNotifications_Data[index].TextTile = '任务-待确认'
+              break
+            case 'App.Works.Meeting.Rejected':
+              UserNotifications_Data[index].TextTile = '会议-已拒绝'
+              break
+            case 'App.HumanResource.Attendance.Created':
+              UserNotifications_Data[index].TextTile = '请假-待审核'
+              break
+            case 'App.HumanResource.Attendance.Returned':
+              UserNotifications_Data[index].TextTile = '请假-已退回'
+              break
+            case 'App.HumanResource.Attendance.Returned':
+              UserNotifications_Data[index].TextTile = '请假-已退回'
+              break
+            case 'App.Financial.Billings.Approved':
+              UserNotifications_Data[index].TextTile = '账单-已审核';
+              break;
+            case 'App.Financial.Invoice.WaitForClaimed':
+              UserNotifications_Data[index].TextTile = '发票-待领取';
+              break;
+            case 'App.Financial.Billings.Created':
+              UserNotifications_Data[index].TextTile = '账单-待处理';
+              break;
+            case 'App.Financial.Invoice.Returned':
+              UserNotifications_Data[index].TextTile = '发票-已退回';
+              break;
+            case 'App.Works.Meeting.Confirmed':
+              UserNotifications_Data[index].TextTile = '会议-已参与';
+              break;
+            case 'App.Works.Meeting.StartRemind':
+              UserNotifications_Data[index].TextTile = '会议-即将开始';
+              break;
+            case 'App.Financial.Charge.WaitForApproved':
+              UserNotifications_Data[index].TextTile = '费用-待审核';
+              break;
+            case 'App.Works.Task.Archived':
+              UserNotifications_Data[index].TextTile = '任务-已归档';
+              break;
+            case 'App.Financial.Invoice.Canceled':
+              UserNotifications_Data[index].TextTile = '发票-已作废';
+              break;
+            case 'App.Works.Meeting.MeetingMinutesCompleted':
+              UserNotifications_Data[index].TextTile = '会议-纪要-已完成';
+              break;
+            case 'App.Works.Log.Approved':
+              UserNotifications_Data[index].TextTile = '工作日志-已审核';
+              break;
+            case 'App.Works.Meeting.Reminded':
+              UserNotifications_Data[index].TextTile = '会议-预设提醒';
+              break;
+            case 'App.Financial.Receipt.WaitForConfirmed':
+              UserNotifications_Data[index].TextTile = '收款-待确认';
+              break;
+            case 'App.Financial.Receipt.WaitForClaimed':
+              UserNotifications_Data[index].TextTile = '收款-待认领';
+              break;
+            case 'App.Financial.Charge.Returned':
+              UserNotifications_Data[index].TextTile = '费用-已退回';
+              break;
+            case 'App.Works.Log.Created':
+              UserNotifications_Data[index].TextTile = '工作日志-已参与';
+              break;
+            case 'App.Financial.Charge.Approved':
+              UserNotifications_Data[index].TextTile = '费用-已审核';
+              break;
+            case 'App.Works.Task.Rejected':
+              UserNotifications_Data[index].TextTile = '任务-已拒绝';
+              break;
+            case 'App.Works.Meeting.Created':
+              UserNotifications_Data[index].TextTile = '会议-新会议';
+              break;
+            case 'App.Works.Meeting.WaitApproved':
+              UserNotifications_Data[index].TextTile = '会议-待参与';
+              break;
+            case 'App.Works.Task.Completed':
+              UserNotifications_Data[index].TextTile = '任务-已完成';
+              break;
+            case 'App.Works.Log.WaitApproved':
+              UserNotifications_Data[index].TextTile = '工作日志-待审核';
+              break;
+            case 'App.Financial.Invoice.WaitForRegistered':
+              UserNotifications_Data[index].TextTile = '发票-待开票';
+              break;
+            case 'App.Business.CaseCreation.Created':
+              UserNotifications_Data[index].TextTile = '立案-待审核';
+              break;
+            case 'App.Business.StampFiles.Returned':
+              UserNotifications_Data[index].TextTile = '文书报审-已退回';
+              break;
+            case 'App.Business.StampFiles.Created':
+              UserNotifications_Data[index].TextTile = '文书报审-待审核';
+              break;
+            case 'App.Business.StampFiles.Approved':
+              UserNotifications_Data[index].TextTile = '文书报审-已审核';
+              break;
+            case 'App.Business.StampFiles.Approved':
+              UserNotifications_Data[index].TextTile = '文书报审-已审核';
+              break;
+            default:
+              break;
+          }
+        }
+        this.GetUserNotifications_data = UserNotifications_Data;
+      } else {
+        this.GetUserNotifications_data = [];
+      }
+      this.$apply();
+    }
+    //功能权限
+    async GetFunctionItems() {
+      var id = {
+        id: this.$parent.global.currentUserId
+      }
+      var resData = await ajax.getData(
+        '/api/services/app/function/GetFunctionItems',
+        'post',
+        id
+      )
+      if (resData.statusCode == 200) {
+        var GetFunctionItemsData = resData.data.result.items
+        var itemsData = [];
+        for (var index=0,len=GetFunctionItemsData.length;index<len;index++) {
+          switch (GetFunctionItemsData[index].name) {
+            case 'Pages.Business.Cases.MyCases':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-wodeanjian',
+                color: '#5d73fa',
+                link: '../modules/mycase/mycase',
+                name: "Pages.Business.Cases.MyCases",
+              })
+              break;
+            case 'Pages.Customers.MyCustomers.Manage':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-wodekehu',
+                color: '#e20000',
+                link: '../modules/myclient/myClientList',
+                name: 'Pages.Customers.MyCustomers.Manage',
+              })
+              break;
+            case 'Pages.Works.Log.MyWorklog':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-woderizhi',
+                color: '#009dff',
+                link: '../modules/myRecord/workRecord',
+                name: 'Pages.Works.Log.MyWorklog',
+              })
+              break;
+            case 'Pages.Works.Task':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-wodejincheng',
+                color: '#ff9900',
+                link: '../modules/myTaskCourse/taskProject',
+                name: 'Pages.Works.Task',
+                isShow: true
+              })
+              break;
+            case 'Pages.Works.Meeting.MyMeeting':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-huiyi-copy',
+                color: '#ff9900',
+                link: '../modules/myMeeting/meetingList',
+                name: 'Pages.Works.Meeting.MyMeeting',
+                isShow: true
+              })
+              break;
+            case 'Pages.HumanResource.Attendance.MyApplyList':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-wodeqingjia',
+                color: '#ff9900',
+                link: '../modules/myApplyList/MyApplyList',
+                name: 'Pages.HumanResource.Attendance.MyApplyList',
+                isShow: true
+              })
+              break;
+            case 'Pages.Financial.Billings.MyBillings':
+              itemsData.push({
+                displayName:GetFunctionItemsData[index].displayName,
+                icon: 'icon-wodezhangdan',
+                color: '#ff9900',
+                link: '../modules/bill/myBill/myBill',
+                name: 'Pages.Financial.Billings.MyBillings',
+                isShow: true
+              })
+              break;
+            case 'Pages.Financial.Billings.Manage':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-zhangdanguanli',
+                color: '#ff9900',
+                link: '../modules/bill/manageBill/manageBill',
+                name: 'Pages.Financial.Billings.Manage',
+                isShow: true
+              })
+              break;
+            case 'Pages.Financial.Invoices.MyApplyInvoices':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-wodefapiao',
+                color: '#e20000',
+                link: '../modules/invoice/myInvoce/myinvoice',
+                name: 'Pages.Financial.Invoices.MyApplyInvoices',
+                isShow: true
+              })
+              break;
+            case 'Pages.Financial.Invoices.Manage':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-fapiaoguanli',
+                color: '#e20000',
+                link: '../modules/invoice/manageInvoce/manageInvoice',
+                name: 'Pages.Financial.Invoices.Manage',
+                isShow: true
+              })
+              break;
+            case 'Pages.Financial.Charge.MyCharges':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-wodefeiyong',
+                color: '#e20000',
+                link: '../modules/cost/myCost/myCost',
+                name: 'Pages.Financial.Charge.MyCharges',
+                isShow: true
+              })
+              break;
+            case 'Pages.Financial.Charge.Manage':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-feiyongguanli',
+                color: '#e20000',
+                link: '../modules/cost/manageCost/manageCost',
+                name: 'Pages.Financial.Charge.Manage',
+                isShow: true
+              })
+              break;
+            case 'Pages.Financial.Receipts.MyReceipts':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-wodeshoukuan',
+                color: '#ff9900',
+                link: '../modules/receivables/myReceivables/myReceivables',
+                name: 'Pages.Financial.Receipts.MyReceipts',
+                isShow: true
+              })
+              break;
+            case 'Pages.Financial.Receipts':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-shoukuanguanli',
+                color: '#ff9900',
+                link: '../modules/receivables/manageReceivables/manageReceivables',
+                name: 'Pages.Financial.Receipts',
+                isShow: true
+              })
+              break;
+            case 'Pages.Business.CaseApplications.MyApplyCases':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-wodelian',
+                color: '#5d73fa',
+                link: '../modules/myRegister/myRegisterList',
+                name: 'Pages.Business.CaseApplications.MyApplyCases',
+                isShow: true
+              })
+              break;
+            case 'Pages.Business.CaseApplications.Check':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-chongtujiansuo',
+                color: '#e20000',
+                link: '../modules/conflictRetrieval/conflictRetrievalList',
+                name: 'Pages.Business.CaseApplications.Check',
+                isShow: true
+              })
+              break;
+            case 'Pages.Business.CaseApplications.CheckCustomers':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-liyichongtuyujian',
+                color: '#e20000',
+                link: '../modules/ConflictInterestPreflight/ConflictInterestPreflight',
+                name: 'Pages.Business.CaseApplications.CheckCustomers',
+                isShow: true
+              })
+              break;
+              case 'Pages.Business.Cases.Manage':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-anjianguanli',
+                color: '#5d73fa',
+                link: '../modules/caseManagement/caseManagement',
+                name: 'Pages.Business.Cases.Manage',
+                isShow: true
+              })
+              break;
+              case 'Pages.Business.Cases.Create':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-lianshenqing',
+                color: '#5d73fa',
+                link: '../modules/myRegister/register',
+                name: 'Pages.Business.Cases.Create',
+                isShow: true
+              })
+              break;
+              case 'Pages.Customers.MyCustomers':
+              itemsData.push({
+                displayName: GetFunctionItemsData[index].displayName,
+                icon: 'icon-kehuguanli',
+                color: '#5d73fa',
+                link: "../modules/myclient/myClientList?IsAll=true",
+                name: 'Pages.Customers.MyCustomers',
+                isShow: true
+              })
+              break;
+          }
+        }
+        // this.setData({
+        //   functionData:itemsData
+        // })
+       this.functionData=itemsData;
+        this.$apply();
+      }
+    }
+    //获取用户信息
+    async GetCurrentLoginInformations() {
+      var CurrentLoginInformationsData = await ajax.getData(
+        '/api/services/app/session/GetCurrentLoginInformations',
+        'post'
+      )
+      if (CurrentLoginInformationsData.statusCode == 200) {
+        var userInfo = {}
+        userInfo = CurrentLoginInformationsData.data.result.user;
+        var http = '/api/services/web/personal/GetEmployeePhoto?id=' + CurrentLoginInformationsData.data.result.user.id;
+        this.$parent.global.currentUserId = CurrentLoginInformationsData.data.result.user.id;
+        var avatarData = await ajax.getAavatar(http);
+        userInfo['userAvatar'] = avatarData;
+        this.$parent.global.userInfo = userInfo;
+        this.$parent.global.tenant=CurrentLoginInformationsData.data.result.tenant;
+      }
+    }
+    onShow() {
+      this.GetCurrentLoginInformations();
+      this.getSwiperdata();
+      this.GetUserNotifications();
+      this.GetFunctionItems();
+    }
+  }
+</script>

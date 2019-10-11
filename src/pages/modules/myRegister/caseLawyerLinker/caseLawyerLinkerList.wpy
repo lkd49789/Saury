@@ -1,0 +1,474 @@
+<!--  -->
+
+<style lang='scss'>
+  .container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    .pageTitle {
+      height: 104rpx;
+      line-height: 104rpx;
+      font-size: 48rpx;
+      padding-left: 28rpx;
+      border-bottom: 1px solid #dedede;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      z-index: 99;
+    }
+    .lawyerBox {
+      margin-top: 105rpx;
+      .item {
+        .item-title {
+          height: 55rpx;
+          background: #f4f4f4;
+          width: 100%;
+          color: #7a7a7a;
+          padding-left: 28rpx;
+          display: flex;
+          align-items: center;
+        }
+        .item-content {
+          padding: 14rpx 28rpx;
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          .addLayerBtn {
+            margin-right: 14rpx;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            >image {
+              height: 70rpx;
+              width: 70rpx;
+              border-radius: 50%;
+            }
+            >text {
+              word-break: keep-all
+            }
+            >icon {
+              position: absolute;
+              right: 0;
+              top: -28rpx;
+            }
+          }
+        }
+      }
+    }
+    .chooseLayerMask {
+      background: rgba(0, 0, 0, 0.3);
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      z-index: 999;
+      top: 0;
+      left: 0;
+      .content {
+        width: 60%;
+        background: #ffffff;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 28rpx;
+        z-index: 9999;
+        height: 563rpx;
+        .input {
+          z-index: 99;
+          left: 28rpx;
+          right: 28rpx;
+          background: #ffffff;
+        }
+        .scroll-Y {
+          height: 535rpx;
+          overflow: scroll;
+          >view {
+            display: flex;
+            align-items: center;
+            margin-top: 25rpx;
+            >image {
+              height: 80rpx;
+              width: 80rpx;
+              margin-right: 14rpx;
+              border-radius: 50%;
+            }
+            >view {
+              display: flex;
+              flex-direction: column;
+            }
+          }
+        }
+      }
+    }
+    .addImage {
+      width: 160rpx;
+      height: 160rpx;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      z-index: 99;
+    }
+  }
+</style>
+
+<template>
+  <view class='container'>
+    <view class="pageTitle">
+      <text>案件律师信息</text>
+    </view>
+    <view class="lawyerBox">
+      <repeat for="{{dutiesData}}" key="index" index="dutiesData_index" item="dutiesData_item">
+        <view class="item">
+          <view class="item-title">
+            <text>{{dutiesData_item.name}}</text>
+            <text style="color:#e20000;margin-left:14rpx">{{dutiesData_item.warningText}}</text>
+          </view>
+          <view class="item-content">
+            <repeat for="{{dutiesData_item.addLawyerData}}" key="index" index="addData_index" item="item">
+              <view class="addLayerBtn">
+                <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false" />
+                <text>{{item.name}}</text>
+                <icon class="iconfont icon-zirenwushanchu1" style="font-size:15px;color:#e20000" catchtap="deleteItem('{{dutiesData_index}}','{{item.userId}}')"></icon>
+              </view>
+            </repeat>
+            <view class="addLayerBtn" wx:if="{{dutiesData_item.isShowAddImage}}">
+              <image src="{{addImage}}" mode="scaleToFill" lazy-load="false" @tap="isShowChooseLawyer('{{dutiesData_index}}','{{dutiesData_item.id}}')" />
+              <text style="color:#7a7a7a">请添加</text>
+            </view>
+          </view>
+        </view>
+      </repeat>
+    </view>
+    <view class="chooseLayerMask" wx:if="{{isShowChooseLawyer}}" id="Mask" catchtap="isMask" catchtouchmove='{{true}}'>
+      <view class="content" id='MaskContent' catchtap="isMask">
+        <view class="input">
+          <input value="{{inputValue}}" type="text" placeholder="搜索关键词" placeholder-class="placeholder" maxlength="140" bindinput="searchData" style="border-bottom:1px solid #dfdfdf;" @blur="blur" />
+        </view>
+        <view class="scroll-Y">
+          <repeat for="{{lawyerListData}}" key="index" index="index" item="item">
+            <view catchtap="addLawyerData('{{item.id}}','{{item.name}}','{{item.avatar}}','{{item.categoryName}}')">
+              <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false" />
+              <view>
+                <text>{{item.name}}</text>
+                <text style="color:#7a7a7a">{{item.organizationUnitName}}</text>
+              </view>
+            </view>
+          </repeat>
+        </view>
+      </view>
+    </view>
+    <image src="{{'../../../../images/test.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:1 ;" @tap="submitData" wx:if="{{showSubBtn}}">
+    </image>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import ajax from '../../../../utils/cofig/ajax.js';
+  import {
+    myObjDistinct
+  } from '../../../../utils/cofig/api.js';
+  export default class caseLawyerLinkerList extends wepy.page {
+    config = {
+      navigationBarTitleText: "",
+    };
+    data = {
+      addImage: '../../../../images/upload-add.png',
+      applicant: {},
+      caseId: '',
+      dutiesData: [],
+      lawyerListData: [],
+      isShowChooseLawyer: false,
+      showSubBtn: false,
+      currentIndex: 0,
+      submitData: [],
+      inputValue: '',
+    };
+    components = {};
+    methods = {
+      submitData() {
+        // addLawyerData
+        var subAry = [];
+        var caseLawyerLinkerList = wx.getStorageSync('CREATE_CASELAWYERLINKERLIST_DATA');
+        for (var dutiesData_index in this.dutiesData) {
+          for (var addLawyerData_index in this.dutiesData[dutiesData_index].addLawyerData) {
+            var subData = {
+              caseId: this.caseId,
+              lawyerRole: this.dutiesData[dutiesData_index].id,
+              userId: ''
+            }
+            if (this.dutiesData[dutiesData_index].addLawyerData[addLawyerData_index].length !== 0) {
+              subData.userId = +this.dutiesData[dutiesData_index].addLawyerData[addLawyerData_index].userId;
+              subAry.push(subData);
+              if (this.dutiesData[dutiesData_index].id == 'M') {
+                caseLawyerLinkerList.name = this.dutiesData[dutiesData_index].addLawyerData[addLawyerData_index].name;
+                caseLawyerLinkerList.categoryName = '负责人';
+              }
+            }
+          }
+        }
+        var isPrincipal = subAry.some((item) => {
+          return item.lawyerRole == 'M'
+        })
+        if (isPrincipal) {
+          caseLawyerLinkerList.count = subAry.length;
+          var storageData = caseLawyerLinkerList;
+          this.CreateOrUpdateCaseLawyer(subAry, storageData);
+        } else {
+          wx.showToast({
+            title: '负责人不能为空！', //提示的内容,
+            icon: 'none', //图标,
+            duration: 2000, //延迟时间,
+            mask: false, //显示透明蒙层，防止触摸穿透,
+            success: res => {}
+          });
+        }
+        this.$apply();
+      },
+      blur(e) {
+        if (e.detail.value == '') {
+          this.GetMyCommonlyUsedEmployees();
+        }
+      },
+      searchData(e) {
+        this.inputValue = e.detail.value;
+        this.$apply();
+      },
+      deleteItem(dutiesData_index, userId) {
+        for (var index in this.dutiesData[dutiesData_index].addLawyerData) {
+          if (this.dutiesData[dutiesData_index].addLawyerData[index].userId == userId) {
+            this.dutiesData[dutiesData_index].addLawyerData.splice(index, 1)
+          }
+          // if(this.dutiesData[dutiesData_index].id=='C'){
+          //   this.dutiesData[dutiesData_index].isShowAddImage=true;
+          // }
+        }
+        this.$apply();
+      },
+      addLawyerData(id, name, avatar, categoryName) {
+        var showData = [{
+          avatar: avatar,
+          name: name,
+          userId: id,
+          categoryName
+        }]
+        var showDatas = myObjDistinct(showData, this.dutiesData[this.currentIndex].addLawyerData, 'userId');
+        this.dutiesData[this.currentIndex].addLawyerData.push(...showDatas)
+        this.isShowChooseLawyer = false;
+        this.$apply();
+      },
+      isMask(e) {
+        if (e.currentTarget.id == 'Mask') {
+          this.isShowChooseLawyer = false;
+        }
+        this.$apply();
+      },
+      isShowChooseLawyer(index, id) {
+        this.currentIndex = index;
+        this.isShowChooseLawyer = true;
+        this.$apply();
+      }
+    };
+    events = {};
+    watch = {
+      inputValue(value) {
+        if (value == '') {
+          this.GetMyCommonlyUsedEmployees();
+        } else {
+          this.GetEmployees(value);
+        }
+      },
+      dutiesData(data) {
+        for (var index in data) {
+          switch (data[index].id) {
+            case 'M':
+              if (data[index].addLawyerData.length > 0) {
+                this.dutiesData[index].isShowAddImage = false;
+              } else if (data[index].addLawyerData.length == 0) {
+                this.dutiesData[index].isShowAddImage = true;
+              }
+              break;
+            case 'C':
+              if (data[index].addLawyerData.length > 0) {
+                this.dutiesData[index].isShowAddImage = false;
+              } else if (data[index].addLawyerData.length == 0) {
+                this.dutiesData[index].isShowAddImage = true;
+              }
+              break;
+            default:
+              break;
+          }
+        }
+        this.$apply();
+      }
+    };
+    computed = {};
+    //提交选中律师
+    async CreateOrUpdateCaseLawyer(subData, storageData) {
+      wx.showLoading({
+        title: 'Loading...', //提示的内容,
+        mask: true, //显示透明蒙层，防止触摸穿透,
+        success: res => {
+          wx.setStorageSync('CREATE_CASELAWYERLINKERLIST_DATA', storageData)
+          wx.setStorage({
+            key: 'CREATE_CASELAWYERLINKERLIST_DATA',
+            data: storageData,
+            success: () => {
+              wx.navigateBack({
+                delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+              });
+            }
+          });
+        }
+      });
+      var resData = await ajax.getData(
+        '/api/services/web/caseLawyer/CreateOrUpdateCaseLawyer',
+        'post',
+        subData
+      )
+      if (resData.statusCode == 200) {
+        console.log('提交成功');
+      }
+    }
+    //获取已有案件联系人
+    async GetCaseChargeList() {
+      var resData = await ajax.getData(
+        '/api/services/web/case/GetCaseChargeList',
+        'post', {
+          id: this.caseId
+        }
+      )
+      if (resData.statusCode == 200 && resData.data.result.length !== 0) {
+        var GetCaseChargeList = resData.data.result.lawyerChargeList;
+        for (var i = 0, len = GetCaseChargeList.length; i < len; i++) {
+          var lawyerData = {
+            name: GetCaseChargeList[i].employeeName,
+            userId: GetCaseChargeList[i].userId,
+            avatar: '',
+          }
+          var http = '/api/services/web/personal/GetEmployeePhoto?id=' + GetCaseChargeList[i].userId;
+          lawyerData.avatar = await ajax.getAavatar(http);
+          for (var j = 0, leng = this.dutiesData.length; j < leng; j++) {
+            if (GetCaseChargeList[i].lawyerRole == this.dutiesData[j].id) {
+              this.dutiesData[j].addLawyerData.push(lawyerData);
+            }
+          }
+          if (i == len - 1) {
+            this.showSubBtn = true
+            wx.hideLoading();
+          }
+        }
+        this.$apply();
+      }
+    }
+    //获取职责
+    async GetGeneralCodeComboOutput() {
+      var data = {
+        class: "CACBT",
+        depth: 0,
+        isMaxDepth: true,
+        isRecursive: false
+      }
+      var resData = await ajax.getData(
+        '/api/services/web/common/GetGeneralCodeComboOutput',
+        'post',
+        data
+      )
+      var GetCaseChargeList = await ajax.getData(
+        '/api/services/web/case/GetCaseChargeList',
+        'post', {
+          id: this.caseId
+        }
+      )
+      if (resData.statusCode == 200 && GetCaseChargeList.statusCode == 200) {
+        this.dutiesData = resData.data.result;
+        var applicant = this.$parent.global.userInfo;
+        var userId = applicant.id.toString()
+        for (var index in this.dutiesData) {
+          this.dutiesData[index].addLawyerData = [];
+          this.dutiesData[index].isShowAddImage = true;
+          if (this.dutiesData[index].id == 'C') {
+            this.dutiesData[index].isShowAddImage = false;
+            if (GetCaseChargeList.data.result.lawyerChargeList.length == 0) {
+              this.showSubBtn = true
+              var item = {
+                avatar: applicant.userAvatar,
+                name: applicant.name,
+                userId: userId,
+              }
+              this.dutiesData[index].addLawyerData.push(
+                item
+              )
+              //  this.submitData.push({
+              //   caseId: this.caseId,
+              //   lawyerRole: 'C',
+              //   userId: userId
+              // })
+            }
+          }
+          if (this.dutiesData[index].id == 'M') {
+            this.dutiesData[index].warningText = '只能选择一个人';
+          }
+        }
+      }
+      this.$apply();
+    }
+    //获取相关律师
+    async GetMyCommonlyUsedEmployees() {
+      var resData = await ajax.getData(
+        '/api/services/web/common/GetMyCommonlyUsedEmployees',
+        'post', {
+          id: 6
+        }
+      )
+      if (resData.statusCode == 200) {
+        var lawyerListData = resData.data.result;
+        for (var index in lawyerListData) {
+          var http = '/api/services/web/personal/GetEmployeePhoto?id=' + lawyerListData[index].id;
+          lawyerListData[index].avatar = await ajax.getAavatar(http);
+        }
+        this.lawyerListData = lawyerListData
+        this.$apply();
+      }
+    }
+    //搜索律师
+    async GetEmployees(filter) {
+      var data = {
+        caseId: null,
+        category: null,
+        filter,
+        name: null,
+        organizationUnitId: null,
+        pageNumber: 1,
+        pageSize: 10
+      }
+      var resData = await ajax.getData(
+        '/api/services/web/common/GetEmployees',
+        'post',
+        data
+      )
+      if (resData.statusCode == 200) {
+        var lawyerListData = resData.data.result.items;
+        for (var index in lawyerListData) {
+          var http = '/api/services/web/personal/GetEmployeePhoto?id=' + lawyerListData[index].id;
+          lawyerListData[index].avatar = await ajax.getAavatar(http);
+        }
+        this.lawyerListData = lawyerListData
+        this.$apply();
+      }
+    }
+    onLoad(options) {
+      this.caseId = options.id;
+      // this.caseId = '2B709BCC-2760-E911-AC1B-B0D9BF31DAD7';
+      this.applicant = this.$parent.global.userInfo;
+      this.GetGeneralCodeComboOutput();
+      this.GetMyCommonlyUsedEmployees();
+      this.GetCaseChargeList();
+    };
+    onShow() {};
+  }
+</script>

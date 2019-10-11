@@ -1,0 +1,149 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .main {
+            margin: 149rpx 28rpx 0 28rpx;
+        }
+        .subBtn {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 999;
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <text>创建阶段</text>
+        </view>
+        <view class='main'>
+            <Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
+            <Remark :input.sync="Remark" :inputValue.sync='RemarkValue' :twoWayTitle="RemarkValue" />
+        </view>
+        <image src="{{'../../../../../images/test.png'}}" mode="scaleToFill" lazy-load="true" class="subBtn" style="opacity:{{addOpacity}} ;" @touchstart="touchStart" @touchend="touchEnd">
+        </image>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../../utils/cofig/ajax.js';
+    import input1 from '../../../../../components/picker/input';
+    import input2 from '../../../../../components/picker/input';
+    export default class clientDetail extends wepy.page {
+        components = {
+            Name: input1,
+            Remark: input2,
+        };
+        data = {
+            addOpacity: 1,
+            submitData: {
+                Id: "",
+                Name: "",
+                ProjectId: "",
+                Remark: "",
+            },
+            Name: {
+                title: '阶段名称',
+                name: 'Name',
+                options: false,
+                warning: false,
+            },
+            NameValue: '',
+            Remark: {
+                title: '备注',
+                name: 'Remark',
+                options: true,
+                warning: false,
+            },
+            RemarkValue: '',
+        };
+        methods = {
+            touchStart() {
+                this.addOpacity = 0.6;
+                this.$apply();
+            },
+            touchEnd() {
+                if (this.submitData.Name) {
+                    this.CreateOrUpdateTaskStage();
+                } else {
+                    this.addOpacity = 1;
+                    this.Name.warning = true;
+                }
+                this.$apply();
+            }
+        };
+        watch = {
+            NameValue(value) {
+                this.submitData.Name = value;
+                this.$apply();
+            },
+            RemarkValue(value) {
+                this.submitData.Remark = value;
+                this.$apply();
+            },
+        }
+        async CreateOrUpdateTaskStage() {
+            wx.showLoading({
+                title: '提交中，请稍等！', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: () => {
+                }
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/taskPlanning/CreateOrUpdateTaskStage',
+                'post',
+                this.submitData
+            )
+            if (resData.statusCode == 200) {
+                this.addOpacity = 1;
+                var pages = getCurrentPages();
+                var prevPage = pages[pages.length - 2]; //上一个页面
+                var prevPages = pages[pages.length - 3]; //上一个页面
+                if (prevPage) {
+                    prevPage.isRefresh();
+                   prevPages.isRefresh?prevPages.isRefresh():'';
+                    wx.navigateBack({
+                        delta: 1,
+                    });
+                }
+                this.$apply();
+            } else {
+                wx.showToast({
+                    title: resData.data.error.message,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
+            }
+        }
+        onLoad(options) {
+            console.log(options);
+            this.submitData.ProjectId = options.projectId;
+            if (options.nextSort) {
+                this.submitData.Sort = +options.nextSort > +options.sort ? ((Number(options.sort) + Number(options.nextSort)) / 2).toFixed(0) : (+options.sort) * 100;
+            } else {
+                this.submitData.Sort = +options.sort == 1 ? 1 : (+options.sort) * 100
+            }
+            this.$apply();
+        }
+    }
+</script>

@@ -1,0 +1,695 @@
+<!--  -->
+<style lang='scss'>
+    .container {
+        .fixed-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 9999;
+            .case-top {
+                height: 104rpx;
+                line-height: 104rpx;
+                padding: 0 28rpx;
+                font-size: 48rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        .chargeContent {
+            margin: 210rpx 28rpx 0 28rpx;
+            .checkedBox {
+                padding: 30rpx;
+                background: #dfdfdf;
+                border-top-left-radius: 19rpx;
+                border-top-right-radius: 19rpx;
+                .title {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 22rpx;
+                    >text {
+                        font-weight: bold;
+                    }
+                }
+                .radio-group {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    .radio {
+                        flex: 1;
+                    }
+                }
+            }
+            .items-content {
+                padding: 0 28rpx 33rpx 28rpx;
+                border: 1px solid #dfdfdf;
+                border-bottom-left-radius: 19rpx;
+                border-bottom-right-radius: 19rpx;
+                .nomalItem {
+                    border-bottom: 1px solid #dfdfdf;
+                    padding: 33rpx 0;
+                    color: #7a7a7a;
+                    >view:not(:last-child) {
+                        margin-bottom: 14rpx;
+                    }
+                    >view:nth-child(1) {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                    >view:nth-child(2) {
+                        display: flex;
+                        align-items: center;
+                        >text:first-child {
+                            height: 20rpx;
+                            width: 20rpx;
+                            margin-right: 14rpx; // background: #5d73fa;
+                            border-radius: 50%;
+                        }
+                        >text:last-child {
+                            color: #2a2a2a;
+                        }
+                    }
+                }
+                .riskItem {
+                    border-bottom: 1px solid #dfdfdf;
+                    padding: 33rpx 0;
+                    color: #7a7a7a;
+                    >view:not(:last-child) {
+                        margin-bottom: 14rpx;
+                    }
+                    >view:nth-child(1) {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                    }
+                    >view:nth-child(4) {
+                        display: flex;
+                        align-items: center;
+                        >view {
+                            display: flex;
+                            align-items: center;
+                            flex: 1;
+                            >text:first-child {
+                                height: 20rpx;
+                                width: 20rpx;
+                                margin-right: 14rpx;
+                                background: #5d73fa;
+                                border-radius: 50%;
+                            }
+                            >text:last-child {
+                                color: #2a2a2a;
+                            }
+                        }
+                    }
+                }
+                .lawyerRateList {
+                    padding: 0 28rpx;
+                    >view:not(:first-child):not(:last-child) {
+                        margin: 22rpx 0;
+                    }
+                    >view:first-child {
+                        margin: 33rpx 0 22rpx 0;
+                    }
+                    .rateItems {
+                        display: flex;
+                        align-items: center;
+                        .lawyerInfo {
+                            display: flex;
+                            align-items: center;
+                            width: 60%;
+                            >image {
+                                height: 70rpx;
+                                width: 70rpx;
+                                border-radius: 50%;
+                                margin-right: 14rpx;
+                            }
+                            >text {
+                                flex: 1;
+                                margin-right: 14rpx;
+                            }
+                        }
+                        .rightInput {
+                            width: 40%;
+                            >input {
+                                text-align: right;
+                                border-bottom: 1px solid #dedede;
+                            }
+                        }
+                    }
+                }
+                .flex-container {
+                    display: flex;
+                    justify-content: space-between;
+                    >view {
+                        width: 45%;
+                    }
+                }
+            }
+        }
+        .subBtn {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 999999;
+        }
+        .navbar {
+            margin-top: 20rpx;
+            z-index: 9999;
+            border-bottom: 1px #dedede solid;
+            white-space: nowrap;
+            .item {
+                display: inline-block;
+                position: relative;
+                color: #b2b2b2;
+                margin-right: 62rpx;
+                font-size: 28rpx;
+                padding-bottom: 20rpx;
+                &:first-child {
+                    margin-left: 28rpx;
+                }
+                &.active {
+                    color: #5d73fa;
+                }
+                .navbar_box {
+                    width: 100%;
+                    height: 8rpx;
+                    background: #5d73fa;
+                    position: absolute;
+                    bottom: 1rpx;
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="fixed-view">
+            <view class="case-top">
+                <text class="title">收费方式</text>
+            </view>
+            <view class="navbar">
+                <scroll-view scroll-x>
+                    <repeat for="{{navbars}}" key="index" index="index" item="item">
+                        <view class="item {{currentTab == index ? 'active' : ''}} " @tap="navbarTap('{{index}}')" wx:if="{{payStyle[index]}}">
+                            <text >{{item}}</text>
+                            <view wx:if="{{currentTab == index}}" class="navbar_box"></view>
+                        </view>
+                    </repeat>
+                </scroll-view>
+            </view>
+        </view>
+        <view class="chargeContent">
+            <view class="charge-item" wx:if="{{currentTab==0&&payStyle[0]}}">
+                <view class="checkedBox">
+                    <view class="title">
+                        <text>正常收费类别</text>
+                        <icon hidden="{{!isAddShow}}" class="iconfont icon-xinjianzhuye" style="font-size:40rpx;color:#7a7a7a" @tap="toCreateNomalCharge"></icon>
+                    </view>
+                    <radio-group class="radio-group" bindchange="PayDetailQuota">
+                        <label class="radio" wx:for="{{PayDetailQuota}}" wx:key="index" index="index" item="item">
+                                                      <radio value="{{item.value}}" checked="{{item.isSelected}}" color="#5d73fa"/>{{item.displayText}}
+                        </label>
+                    </radio-group>
+                </view>
+                <view class="items-content">
+                    <repeat for="{{normalChargeListDatas}}" key="index" index="index" item="item">
+                        <view class="nomalItem">
+                            <view>
+                                <text>{{item.payAmount}}</text>
+                                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:40rpx;color:#b2b2b2" @tap="nomalOperating('{{item.id}}','{{index}}','nomal')"></icon>
+                            </view>
+                            <view>
+                                <text style="background:{{item.useBill=='N'?'#7a7a7a':'#5d73fa'}}"></text>
+                                <text>使用账单</text>
+                            </view>
+                            <view>
+                                {{item.remark||'未填写'}}
+                            </view>
+                            <view>
+                                {{item.payDate||'未填写'}}
+                            </view>
+                        </view>
+                    </repeat>
+                </view>
+            </view>
+            <view class="charge-item" wx:if="{{currentTab==1&&payStyle[1]}}">
+                <view class="checkedBox">
+                    <view class="title">
+                        <text>风险收费类别</text>
+                        <icon class="iconfont icon-xinjianzhuye" style="font-size:40rpx;color:#7a7a7a" @tap="toCreateRiskCharge"></icon>
+                    </view>
+                    <radio-group class="radio-group" bindchange="PayDetailRisk">
+                        <label class="radio" wx:for="{{PayDetailRisk}}" wx:key="index" index="index" item="item">
+                                                <radio value="{{item.value}}" checked="{{item.isSelected}}" color="#5d73fa"/>{{item.displayText}}
+                                            </label>
+                    </radio-group>
+                </view>
+                <view class="items-content">
+                    <repeat for="{{riskChargeListDatas}}" key="index" index="index" item="item">
+                        <view class="riskItem">
+                            <view>
+                                <text>风险金额：<text style="color:#2a2a2a">{{item.payAmount}}</text></text>
+                                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:40rpx;color:#b2b2b2" @tap="riskOperating('{{item.id}}','{{index}}','risk')"></icon>
+                            </view>
+                            <view>
+                                基本金额：<text style="color:#2a2a2a">{{item.riskBasicAmount||'未填写'}}</text>
+                            </view>
+                            <view>
+                                风险达成条件：<text style="color:#2a2a2a">{{item.remark||'未填写'}}</text>
+                            </view>
+                            <view>
+                                <view>
+                                    <text style="background:{{item.useBill=='N'?'#7a7a7a':'#5d73fa'}}"></text>
+                                    <text>使用账单</text>
+                                </view>
+                                <view>
+                                    <text style="background:{{item.isAcceptable=='N'?'#7a7a7a':'#5d73fa'}}"></text>
+                                    <text>可收款</text>
+                                </view>
+                            </view>
+                        </view>
+                    </repeat>
+                </view>
+            </view>
+            <view class="charge-item" wx:if="{{currentTab==2&&payStyle[2]}}">
+                <view class="checkedBox">
+                    <view class="title">
+                        <text>小时收费类别</text>
+                    </view>
+                    <radio-group class="radio-group" bindchange="PayDetailHourly">
+                        <label class="radio" wx:for="{{PayDetailHourly}}" wx:key="index" index="index" item="item">
+                                                <radio value="{{item.value}}" checked="{{item.isSelected}}" color="#5d73fa"/>{{item.displayText}}
+                                            </label>
+                    </radio-group>
+                </view>
+                <view class="items-content" style="padding:33rpx 0">
+                    <view style="padding:0 28rpx">
+                        <view class="flex-container">
+                            <PayPeriod :input.sync="PayPeriod" :inputValue.sync='PayPeriodValue' :twoWayTitle="PayPeriodValue" />
+                            <LimitFee :input.sync="LimitFee" :inputValue.sync='LimitFeeValue' :twoWayTitle="LimitFeeValue" />
+                        </view>
+                        <LimitHour :input.sync="LimitHour" :inputValue.sync='LimitHourValue' :twoWayTitle="LimitHourValue" />
+                    </view>
+                    <view style="height:20rpx;background:#dfdfdf;width:100%"></view>
+                    <view class="lawyerRateList">
+                        <repeat for="{{lawyerChargeListDatas}}" key="index" index="index" item="item">
+                            <view class="rateItems">
+                                <view class="lawyerInfo">
+                                    <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false" />
+                                    <text>{{item.employeeName}}</text>
+                                    <text style="color:#7a7a7a">{{item.lawyerRoleText}}</text>
+                                </view>
+                                <view class="rightInput">
+                                    <input value="{{item.chargeRatio}}%" type="text" placeholder-class="placeholder" maxlength="140" @blur="modifyLawyerRate('{{item}}','{{index}}')" />
+                                </view>
+                            </view>
+                        </repeat>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <image src="{{'../../../../images/next.png'}}" mode="scaleToFill" lazy-load="true" class="subBtn" @touchend="submitData" />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import PayPeriod from '../../../../components/picker/input';
+    import LimitFee from '../../../../components/picker/input';
+    import LimitHour from '../../../../components/picker/input';
+    import {
+        formatDate
+    } from '../../../../utils/cofig/api.js';
+    export default class chooseChargeMethod extends wepy.page {
+        components = {
+            PayPeriod,
+            LimitFee,
+            LimitHour,
+        };
+        data = {
+            imageData: '../../../../images/next.png',
+            currentTab: '',
+            navbars: ['正常收费','风险收费','小时收费'],
+            payStyle: [],
+            submitData: {},
+            caseId: '',
+            //定额收费类别
+            PayDetailQuota: [],
+            PayDetailQuotaValue: 0,
+            isAddShow: false,
+            //风险收费类别
+            PayDetailRisk: [],
+            PayDetailRiskValue: 0,
+            //小时收费类别ss
+            PayDetailHourly: [],
+            PayDetailHourlyValue: 0,
+            //小时收费收费-账单周期
+            PayPeriod: {
+                title: '账单周期',
+                name: 'PayPeriod',
+                warning: false,
+                type: 'text',
+            },
+            PayPeriodValue: '',
+            //小时收费收费-账单金额
+            LimitFee: {
+                title: '账单金额',
+                name: 'LimitFee',
+                warning: false,
+                type: 'text',
+            },
+            LimitFeeValue: '',
+            //小时收费收费-账单小时
+            LimitHour: {
+                title: '账单小时',
+                name: 'LimitHour',
+                warning: false,
+                type: 'text',
+            },
+            LimitHourValue: '',
+            //收费方式列表
+            normalChargeListDatas: [],
+            riskChargeListDatas: [],
+            lawyerChargeListDatas: [],
+        };
+        methods = {
+            navbarTap(index) {
+                this.currentTab = index;
+                this.$apply();
+            },
+            submitData() {
+                wx.setStorage({
+                    key: 'CREATE_LAWYERCHARGE_DATA',
+                    data: this.submitData,
+                    success: () => {
+                        wx.navigateTo({ url: './distributionInformation?caseId='+this.caseId });
+                    },
+                });
+            },
+            //跳转至创建风险收费
+            toCreateRiskCharge() {
+                wx.navigateTo({
+                    url: './createRiskCharge?status=' + this.PayDetailRiskValue + '&caseId=' + this.caseId
+                });
+            },
+            //跳转至创建正常收费
+            toCreateNomalCharge() {
+                wx.navigateTo({
+                    url: './createNomalCharge?status=' + this.PayDetailQuotaValue + '&caseId=' + this.caseId
+                });
+            },
+            //修改律师费率
+            modifyLawyerRate(data, index, e) {
+                if (data.chargeRatio !== e.detail.value.split('%')[0]) {
+                    data.chargeRatio = e.detail.value.split('%')[0];
+                    this.UpdateCaseLawyerCharge(data, index)
+                }
+            },
+            riskOperating(id, index, keyWords) {
+                wx.showActionSheet({
+                    itemList: ['编辑', '删除'], //按钮的文字数组，数组长度最大为6个,
+                    //   itemColor: '#000000', //按钮的文字颜色,
+                    success: res => {
+                        switch (res.tapIndex) {
+                            case 0:
+                                wx.navigateTo({
+                                    url: './createRiskCharge?id=' + id + '&caseId=' + this.caseId + '&status=' + this.PayDetailRiskValue
+                                });
+                                break;
+                            case 1:
+                                this.DeleteCaseCharge(id, index, keyWords);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+            },
+            nomalOperating(id, index, keyWords) {
+                wx.showActionSheet({
+                    itemList: ['编辑', '删除'], //按钮的文字数组，数组长度最大为6个,
+                    //   itemColor: '#000000', //按钮的文字颜色,
+                    success: res => {
+                        switch (res.tapIndex) {
+                            case 0:
+                                wx.navigateTo({
+                                    url: './createNomalCharge?id=' + id + '&caseId=' + this.caseId + '&status=' + this.PayDetailQuotaValue
+                                });
+                                break;
+                            case 1:
+                                this.DeleteCaseCharge(id, index, keyWords);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+            },
+            PayDetailQuota(e) {
+                this.PayDetailQuotaValue = e.detail.value
+                this.$apply();
+            },
+            PayDetailRisk(e) {
+                this.PayDetailRiskValue = e.detail.value
+                this.$apply();
+            },
+            PayDetailHourly(e) {
+                this.PayDetailHourlyValue = e.detail.value
+                this.$apply();
+            },
+        };
+        events = {};
+        watch = {
+            //小时收费收费-账单周期
+            PayPeriodValue(value) {
+                this.submitData.PayPeriod = value;
+                this.$apply();
+            },
+            //小时收费收费-账单金额
+            LimitFeeValue(value) {
+                this.submitData.LimitFee = value;
+                this.$apply();
+            },
+            //小时收费收费-账单小时
+            LimitHourValue(value) {
+                this.submitData.LimitHour = value;
+                this.$apply();
+            },
+            normalChargeListDatas(value) {
+                if ((this.PayDetailQuotaValue == 1 && value.length < 1) || (this.PayDetailQuotaValue == 2)) {
+                    this.isAddShow = true;
+                } else {
+                    this.isAddShow = false;
+                }
+                this.$apply();
+            },
+            PayDetailQuotaValue(value) {
+                for (var PayDetailQuota_index in this.PayDetailQuota) {
+                    if (this.PayDetailQuota[PayDetailQuota_index].value == value) {
+                        this.PayDetailQuota[PayDetailQuota_index].isSelected = true;
+                        this.submitData.PayDetailQuota = value;
+                    } else {
+                        this.PayDetailQuota[PayDetailQuota_index].isSelected = false;
+                    }
+                }
+                if ((value == 1 && this.normalChargeListDatas.length < 1) || (value == 2)) {
+                    this.isAddShow = true;
+                } else {
+                    this.isAddShow = false;
+                }
+                this.$apply();
+            },
+            PayDetailRiskValue(value) {
+                for (var PayDetailRisk_index in this.PayDetailRisk) {
+                    if (this.PayDetailRisk[PayDetailRisk_index].value == value) {
+                        this.PayDetailRisk[PayDetailRisk_index].isSelected = true;
+                        this.submitData.PayDetailRisk = value;
+                    } else {
+                        this.PayDetailRisk[PayDetailRisk_index].isSelected = false;
+                    }
+                }
+                this.$apply();
+            },
+            PayDetailHourlyValue(value) {
+                for (var PayDetailHourly_index in this.PayDetailHourly) {
+                    if (this.PayDetailHourly[PayDetailHourly_index].value == value) {
+                        this.PayDetailHourly[PayDetailHourly_index].isSelected = true;
+                        this.submitData.PayDetailHourly = value;
+                    } else {
+                        this.PayDetailHourly[PayDetailHourly_index].isSelected = false;
+                    }
+                }
+                this.$apply();
+            }
+        };
+        computed = {};
+        async GetCaseChargeAndContractForEdit() {
+            var resData = await ajax.getData(
+                '/api/services/web/case/GetCaseChargeAndContractForEdit',
+                'post', {
+                    Id: this.caseId
+                }
+            )
+            if (resData.statusCode == 200) {
+                var CaseChargeAndContractData = resData.data.result;
+                //收费方式
+                //tab收费方式
+                var payStyle = this.submitData.PayStyle.split(',');
+                var currentTab=payStyle.map((item)=>{
+                    return Number(item)
+                })
+                this.currentTab=currentTab.sort()[0]-1;
+                var payStyleList = CaseChargeAndContractData.payStyleList;
+                for (var payStyle_index = 0, len = payStyle.length; payStyle_index < len; payStyle_index++) {
+                    for (var payStyleList_index = 0, length = payStyleList.length; payStyleList_index < length; payStyleList_index++) {
+                        if (payStyle[payStyle_index] == payStyleList[payStyleList_index].value) {
+                            // this.navbars[payStyle_index] = payStyleList[payStyleList_index].displayText;
+                            payStyleList[payStyleList_index].isSelected = true;
+                        }
+                    }
+                }
+                this.payStyle = payStyleList.map((item) => {
+                    return item.isSelected;
+                })
+                //定额收费类别
+                this.PayDetailQuota = CaseChargeAndContractData.fixedFeeCategoryList;
+                this.PayDetailQuotaValue = CaseChargeAndContractData.payDetailQuota;
+                //风险收费类别
+                this.PayDetailRisk = CaseChargeAndContractData.riskFeeCategoryList;
+                this.PayDetailRiskValue = CaseChargeAndContractData.payDetailRisk;
+                //小时收费类别
+                this.PayDetailHourly = CaseChargeAndContractData.hourlyRateCategoyList;
+                this.PayDetailHourlyValue = CaseChargeAndContractData.payDetailHourly;
+                //小时收费（周期，金额，小时）
+                this.PayPeriodValue = CaseChargeAndContractData.payPeriod;
+                this.LimitFeeValue = CaseChargeAndContractData.limitFee;
+                this.LimitHourValue = CaseChargeAndContractData.limitHour;
+            }
+            this.$apply();
+        }
+        //定额收费类别-删除
+        //收费类型列表数据
+        async GetCaseChargeList(caseId) {
+            var id = caseId || this.caseId;
+            var resData = await ajax.getData(
+                '/api/services/web/case/GetCaseChargeList',
+                'post', {
+                    id
+                }
+            )
+            if (resData.statusCode == 200 && resData.data.result.length !== 0) {
+                console.log(resData.data.result);
+                var chargeListData = resData.data.result;
+                for (var index in chargeListData.normalChargeList) {
+                    chargeListData.normalChargeList[index].payDate = chargeListData.normalChargeList[index].payDate.split('T')[0];
+                }
+                this.normalChargeListDatas = chargeListData.normalChargeList;
+                this.riskChargeListDatas = chargeListData.riskChargeList;
+                this.lawyerChargeListDatas = chargeListData.lawyerChargeList;
+                this.GetAvatar(chargeListData.lawyerChargeList);
+                try {
+                    wx.setStorage({
+                        key: 'NORMAL_CHARGELIST_DATAS',
+                        data: chargeListData.normalChargeList
+                    });
+                } catch (error) {
+                    console.log(error)
+                }
+                try {
+                    wx.setStorage({
+                        key: 'RISK_CHARGELIST_DATAS',
+                        data: chargeListData.riskChargeList
+                    });
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+            this.$apply();
+        }
+        async GetAvatar(data) {
+            for (var index in data) {
+                var http = '/api/services/web/personal/GetEmployeePhoto?id=' + data[index].userId;
+                this.lawyerChargeListDatas[index].avatar = await ajax.getAavatar(http);
+            }
+            this.$apply();
+        }
+        //删除收费类别列表信息
+        async DeleteCaseCharge(id, index, keyWords) {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/casePayDetail/DeleteCaseCharge',
+                'post', {
+                    id
+                }
+            )
+            if (resData.statusCode == 200) {
+                switch (keyWords) {
+                    case 'nomal':
+                        this.normalChargeListDatas.splice(index, 1);
+                        // var nomalChargeList = wx.getStorageSync('NORMAL_CHARGELIST_DATAS');
+                        try {
+                            wx.setStorage({
+                                key: 'NORMAL_CHARGELIST_DATAS',
+                                data: this.normalChargeListDatas
+                            });
+                        } catch (error) {
+                            console.log(error)
+                        }
+                        break;
+                    case 'risk':
+                        this.riskChargeListDatas.splice(index, 1);
+                        try {
+                            wx.setStorage({
+                                key: 'RISK_CHARGELIST_DATAS',
+                                data: this.riskChargeListDatas
+                            });
+                        } catch (error) {
+                            console.log(error)
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            this.$apply();
+        }
+        //更新律师费率
+        async UpdateCaseLawyerCharge(data, index) {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/caseLawyer/UpdateCaseLawyerCharge',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                this.lawyerChargeListDatas[index] = data
+            }
+            this.$apply();
+        }
+        onLoad(options) {
+            this.caseId = options.id;
+            this.submitData = wx.getStorageSync('CREATE_LAWYERCHARGE_DATA');
+            this.GetCaseChargeAndContractForEdit();
+            this.$apply();
+        };
+        onShow() {
+            this.GetCaseChargeList();
+        };
+    }
+</script>

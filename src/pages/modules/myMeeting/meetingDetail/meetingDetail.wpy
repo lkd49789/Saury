@@ -1,0 +1,1006 @@
+<!--  -->
+<style lang="less">
+    page {
+        position: relative;
+        .placeHolderImage {
+            position: fixed;
+            top: 0rpx;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            background: #fff
+        }
+        .Full-screen {
+            position: fixed;
+            top: 0rpx;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            background: rgba(0, 0, 0, 0.3);
+            >view {
+                height: 550rpx;
+                width: 73%;
+                background: #fff;
+                position: relative;
+                >view:first-child {
+                    width: 110rpx;
+                    height: 110rpx;
+                    background: #5d73fa;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 80rpx;
+                    position: absolute;
+                    top: 0;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    z-index: 1000;
+                    color: #fff;
+                }
+                .fixed-text-count{
+                    position: absolute;
+                    bottom:100rpx;
+                    right:30rpx;
+                    font-size: 28rpx;
+                    color:#b2b2b2;
+                }
+                >view:last-child {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-top: 75rpx;
+                    >view:first-child {
+                        font-size: 36rpx;
+                        font-weight: bold;
+                        width: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding-bottom: 5rpx;
+                        border-bottom: 1px solid #dfdfdf;
+                        padding-bottom: 20rpx;
+                        margin-bottom: 20rpx;
+                    }
+                    >view:nth-child(2) {
+                        color: #7a7a7a;
+                    }
+                    >view:last-child {
+                        display: flex;
+                        align-items: center;
+                        flex-direction: row;
+                        width: 100%;
+                        height: 80rpx;
+                        // border-top: 1px solid #dfdfdf;
+                        position: absolute;
+                        bottom:0;
+                        >view {
+                            width: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background:#5d73fa;
+                            color:#fff;
+                            height:100%;
+                        }
+                        >view:first-child {
+                            border-right: 1px solid #fff;
+                        }
+                    }
+                }
+            }
+        }
+        .Full-screen-two {
+            position: fixed;
+            top: 0rpx;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            background: rgba(0, 0, 0, 0.3);
+            >view {
+                height: 70%;
+                width: 80%;
+                background: #fff;
+                border-radius: 20rpx;
+                padding: 44rpx 28rpx;
+                >view:first-child {
+                    font-size: 36rpx;
+                    margin-bottom: 44rpx;
+                }
+                >view:nth-child(2) {
+                    font-size: 32rpx;
+                    margin-bottom: 30rpx;
+                    display: flex;
+                    flex-direction: column;
+                    >text:last-child {
+                        font-weight: bold;
+                        color: #7a7a7a;
+                    }
+                }
+                >view:nth-child(3) {
+                    border-bottom: 1px solid #dfdfdf;
+                    padding-bottom: 30rpx;
+                    margin-bottom: 30rpx;
+                }
+                >view:nth-child(4) {
+                    margin-bottom: 30rpx;
+                    border-bottom: 1px solid #dfdfdf;
+                    padding-bottom: 30rpx;
+                    >view:first-child {
+                        margin-bottom: 20rpx;
+                        font-weight: bold;
+                        color: #7a7a7a;
+                    }
+                    >view:last-child {
+                        display: flex;
+                        align-items: center;
+                    }
+                }
+                >view:last-child {
+                    display: flex;
+                    flex-direction: row-reverse;
+                    >view {
+                        padding: 20rpx 30rpx;
+                        margin-left: 20rpx;
+                        border-radius: 10rpx;
+                    }
+                }
+            }
+        }
+    }
+    .body {
+        height: 100%;
+        .main {
+            >view:not(:last-child):not(:first-child):after {
+                display: block;
+                content: '';
+                height: 14rpx;
+                background: #f4f4f4;
+            }
+            >view:not(:first-child) {
+                >view {
+                    padding: 30rpx 28rpx;
+                }
+            }
+            .participant {
+                margin-right: 20rpx;
+                >image {
+                    height: 60rpx;
+                    width: 60rpx;
+                    border-radius: 50%;
+                }
+            }
+            .titleChunk {
+                border-bottom: 1px solid #dfdfdf;
+                padding: 44rpx 28rpx;
+                font-size: 34rpx;
+            }
+            .oneChunk {
+                >view {
+                    >view {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        >view {
+                            display: flex;
+                            align-items: center;
+                        }
+                    }
+                    >view:not(:last-child) {
+                        margin-bottom: 20rpx;
+                    }
+                }
+            }
+            .twoChunk {
+                >view {
+                    >view {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                    }
+                    >view:not(:last-child) {
+                        margin-bottom: 20rpx;
+                    }
+                }
+            }
+            .recordChunk {
+                >view {
+                    >view:first-child {
+                        color: #7a7a7a;
+                        margin-bottom: 30rpx;
+                    }
+                    >view:last-child {
+                        display: flex;
+                        align-items: center;
+                    }
+                }
+            }
+            .threeChunk {
+                >view {
+                    >text {
+                        display: flex;
+                        flex-direction: column;
+                    }
+                    >text:not(:last-child) {
+                        margin-bottom: 20rpx;
+                    }
+                    >text:nth-child(2n+1) {
+                        color: #7a7a7a;
+                    }
+                }
+            }
+            .fourChunk {
+                >view {
+                    >text {
+                        display: flex;
+                        flex-direction: column;
+                    }
+                    >text:not(:last-child) {
+                        margin-bottom: 30rpx;
+                    }
+                    >text:first-child {
+                        color: #7a7a7a;
+                    }
+                }
+            }
+            .fiveChunk {
+                >view {
+                    >view:first-child {
+                        margin-bottom: 30rpx;
+                        color: #7a7a7a;
+                    }
+                    >view:not(:first-child):not(:last-child) {
+                        margin-bottom: 20rpx
+                    }
+                    .docItem {
+                        display: flex;
+                        align-items: center;
+                        >icon {
+                            font-size: 60rpx;
+                            margin-right: 20rpx;
+                        }
+                    }
+                }
+            }
+            .sixChunk {
+                >view {
+                    >view:first-child {
+                        color: #7a7a7a;
+                        margin-bottom: 30rpx;
+                    }
+                    >view:not(:first-child):not(:last-child) {
+                        margin-bottom: 25rpx
+                    }
+                    >view {
+                        display: flex;
+                        align-items: center;
+                        flex-wrap:wrap;
+                    }
+                }
+            }
+            .sevenChunk {
+                >view {
+                    >view:first-child {
+                        margin-bottom: 30rpx;
+                        color: #7a7a7a
+                    }
+                    >view:last-child {
+                        display: flex;
+                        align-items: center;
+                    }
+                }
+            }
+            .eightChunk {
+                >view {
+                    >view:nth-child(1) {
+                        margin-bottom: 30rpx;
+                        color: #7a7a7a;
+                    }
+                    >view:nth-child(3) {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        color: #7a7a7a;
+                    }
+                    >view:nth-child(4) {
+                        display: flex;
+                        >view:first-child{
+                            width:25%
+                        }
+                        >view:last-child{
+                            width:75%;
+                            display:flex;
+                            flex-wrap: wrap;
+                            align-items: center;
+                            >text{
+                                border:1px dotted #5d73fa;
+                                padding:10rpx 15rpx;
+                                margin:0 14rpx 14rpx 0;
+                            }
+                        }
+                    }
+                    >view:nth-child(5) {
+                         display: flex;
+                        >view:first-child{
+                            width:25%
+                        }
+                        >view:last-child{
+                            width:75%;
+                            display:flex;
+                            flex-wrap: wrap;
+                            align-items: center;
+                            >text{
+                                border:1px dotted #5d73fa;
+                                padding:10rpx 15rpx;
+                                margin:0 14rpx 14rpx 0;
+                            }
+                        }
+                    }
+                    >view:nth-child(6){
+                        display: flex;
+                        >view:first-child{
+                            width:25%;
+                        }
+                        >view:last-child{
+                            width:75%;
+                        }
+                    }
+                    >view:not(:first-child):not(:last-child) {
+                        margin-bottom: 20rpx
+                    }
+                }
+            }
+        }
+        .bottom-fixed {
+            position: fixed;
+            height: 98rpx;
+            width: 100%;
+            bottom: 0;
+            // border-top: 1px solid #dfdfdf;
+            display: flex;
+            align-items: center;
+            background: #5d73fa;
+            >view {
+                width: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 34rpx;
+                color: #fff;
+                height:100%;
+            }
+            >view:first-child {
+                border-right: 1px solid #fff;
+            }
+        }
+        .bottom-fixed-record {
+            position: fixed;
+            height: 98rpx;
+            width: 100%;
+            bottom: 0;
+            border-top: 1px solid #dfdfdf;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34rpx;
+            background: #fff;
+            color: #5d73fa;
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class='main'>
+            <view class="titleChunk">
+                <text>{{meetingData.title||'未填写'}}</text>
+            </view>
+            <view class="oneChunk">
+                <view>
+                    <view>
+                        <view>
+                            <image src="{{meetingData.moderatorAvatar}}" mode="scaleToFill"
+                              lazy-load="false" style="height:20px;width:20px;border-radius:50%; color:#7a7a7a;margin-right:15rpx"/>
+                            <text>{{meetingData.employeeName||'未填写'}}(主持人)</text>
+                        </view>
+                        <view style="color:#7a7a7a">
+                            <text>{{meetingData.categoryText||'未填写'}}</text>
+                        </view>
+                    </view>
+                    <view>
+                        <view>
+                           <image src="{{meetingData.linkerAvatar}}" mode="scaleToFill"
+                              lazy-load="false" style="height:20px;width:20px;border-radius:50%;color:#7a7a7a;margin-right:15rpx"/>
+                            <text style="color:#7a7a7a">{{meetingData.linkerName||'未填写'}}(联系人)</text>
+                        </view>
+                        <view>
+                            <icon class="iconfont icon-xiaotouxiang" style="font-size:40rpx;color:{{meetingData.privacy=='Y'?'#ff9900':'#069400'}};margin-right:15rpx"></icon>
+                            <text style="color:#7a7a7a">{{meetingData.privacy=='Y'?'参会人员可见':'公开'}}</text>
+                        </view>
+                    </view>
+                    <view>
+                        <view style="display:flex;align-items:center;">
+                            <view style="width:25rpx;height:25rpx;border-radius:50%;margin-right:15rpx;background:{{meetingData.isMark=='Y'?'#5d73fa':'#7a7a7a'}}">
+                            </view>
+                            <text>{{meetingData.isMark=='Y'?'已标记':'未标记'}}</text>
+                        </view>
+                        <!-- <view style="color:#e20000">
+                            <text>重要且紧急</text>
+                        </view> -->
+                    </view>
+                </view>
+            </view>
+            <view class="twoChunk">
+                <view>
+                    <view>
+                        <view>
+                            <text>{{meetingData.startTime.Y}} </text>
+                            <text>{{meetingData.startTime.M}}至</text>
+                            <!-- <text wx:if="{{meetingData.startTime.Y!==meetingData.endTime.Y}}">{{meetingData.endTime.Y}} </text> -->
+                            <text>{{meetingData.endTime.M}}</text>
+                        </view>
+                        <text style="color:#ff9900">{{meetingData.diffTime}}h</text>
+                    </view>
+                    <view>
+                        <text>{{meetingData.remindTime}}分钟前提醒</text>
+                        <text style="color:{{meetingData.statusColor}}">{{meetingData.statusText||'未填写'}}</text>
+                    </view>
+                </view>
+            </view>
+            <view class="recordChunk" wx:if="{{meetingData.status=='A'}}">
+                <view>
+                    <view>
+                        <text>会议纪要</text>
+                    </view>
+                    <view @tap="previewDoc('{{meetingData.id}}','.docx')">
+                        <icon class="iconfont icon-wold1" style="font-size:60rpx;color:#009dff;margin-right:20rpx"></icon>
+                        <text>{{meetingData.title}}.docx</text>
+                    </view>
+                </view>
+            </view>
+            <view class="threeChunk">
+                <view>
+                    <text>会议议题</text>
+                    <text>{{meetingData.subject||'未填写'}}</text>
+                    <text>会议准备</text>
+                    <text>{{meetingData.prepare||'未填写'}}</text>
+                    <text>备注</text>
+                    <text>{{meetingData.remark||'未填写'}}</text>
+                </view>
+            </view>
+            <view class="fourChunk">
+                <view>
+                    <text>关联项目</text>
+                    <text>案件名称：<text style="color:#5d73fa">{{meetingData.caseName||'未填写'}}</text> </text>
+                    <text>客户名称：<text style="color:#5d73fa">{{meetingData.clientName||'未填写'}}</text></text>
+                </view>
+            </view>
+            <view class="fiveChunk">
+                <view>
+                    <view>
+                        <text>会议附件</text>
+                    </view>
+                    <repeat for="{{meetingData.attachmentList}}" key="index" index="index" item="item">
+                        <view class="docItem">
+                            <icon class="iconfont {{item.icon}}" style="color:{{item.color}}" @tap="preview('{{item.id}}','{{item.extension}}')"></icon>
+                            <text>{{item.name}}</text>
+                        </view>
+                    </repeat>
+                </view>
+            </view>
+            <view class="sixChunk">
+                <view>
+                    <view>
+                        <text>会议参与人</text>
+                    </view>
+                    <view>
+                        <view style="color:#069400;margin-right:20rpx;">
+                            <text>已确认</text>
+                        </view>
+                        <repeat for="{{meetingData.participantList}}" key="index" index="index" item="item">
+                            <view class="participant" wx:if="{{item.status=='C'}}">
+                                <image src="{{item.Avatar}}" mode="scaleToFill" lazy-load="false">
+                                </image>
+                            </view>
+                        </repeat>
+                    </view>
+                    <view>
+                        <view style="color:#ff9900;margin-right:20rpx;">
+                            <text>待确认</text>
+                        </view>
+                        <repeat for="{{meetingData.participantList}}" key="index" index="index" item="item">
+                            <view class="participant" wx:if="{{item.status=='N'}}">
+                                <image src="{{item.Avatar}}" mode="scaleToFill" lazy-load="false">
+                                </image>
+                            </view>
+                        </repeat>
+                    </view>
+                </view>
+            </view>
+            <view class="sevenChunk">
+                <view>
+                    <view>
+                        <text>会议嘉宾</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-wodedaohang" style="font-size:50rpx;color:#7a7a7a;margin-right:20rpx">
+                        </icon>
+                        <view>
+                            <text>{{meetingData.visitor||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="eightChunk">
+                <view>
+                    <view>
+                        <text>会议室信息</text>
+                    </view>
+                    <view>
+                        <text>{{meetingData.meetingRoom.name}}</text>
+                    </view>
+                    <view>
+                        <text>{{meetingData.meetingRoom.levelText}}</text>
+                        <text>{{meetingData.meetingRoom.scaleText}}</text>
+                    </view>
+                    <view>
+                        <view>
+                            <text style="color:#7a7a7a">会议室风格：</text>
+                        </view>
+                        <view>
+                            <repeat for="{{meetingData.meetingRoom.styleText}}" key="index" index="index" item="item">
+                                <text>{{item}}</text>
+                            </repeat>
+                        </view>
+                    </view>
+                    <view>
+                        <view>
+                            <text style="color:#7a7a7a">设备信息：</text>
+                        </view>
+                        <view>
+                            <repeat for="{{meetingData.meetingRoom.equipmentText}}" key="index" index="index" item="item">
+                                <text>{{item}}</text>
+                            </repeat>
+                        </view>
+                    </view>
+                    <view style="margin-bottom:{{isParticipate?'98rpx':'30rpx'}}">
+                        <view>
+                            <text style="color:#7a7a7a">会议室地址：</text>
+                        </view>
+                        <view>
+                            <text>{{meetingData.meetingRoom.address||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view wx:if="{{isParticipate}}">
+            <view class="bottom-fixed">
+                <view @tap="noParticipation">
+                    <text>不参与</text>
+                </view>
+                <view @tap='participate'>
+                    <text>参与</text>
+                </view>
+            </view>
+        </view>
+        <view class="Full-screen" catchtouchmove="true" wx:if="{{noParticipate}}">
+            <view>
+                <view>
+                    <text>?</text>
+                </view>
+                <view>
+                    <view>
+                        <text>不参与</text>
+                    </view>
+                    <view>
+                        <textarea placeholder="备注原因" name="textarea" style="height:254rpx;width:440rpx;" maxlength="200" fixed='true' bindblur="bindblur" value="{{remarkValue}}" bindinput="bindinput"/>
+                    </view>
+                     <view class="fixed-text-count">
+                        <text>200/{{TextCount}}</text>
+                    </view>
+                    <view>
+                        <view @tap='noParticipation'>
+                            <text>取消</text>
+                        </view>
+                        <view @tap="comfirmNoParticipation">
+                            <text>确定</text>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view class="Full-screen" catchtouchmove="true" wx:if="{{participate}}">
+            <view>
+                <view>
+                    <text>?</text>
+                </view>
+                <view>
+                    <view>
+                        <text>确认参与</text>
+                    </view>
+                    <view>
+                        <textarea placeholder="备注原因" name="textarea" style="height:254rpx;width:440rpx;" maxlength="200" fixed='true'  value="{{remarkValue}}" bindinput="bindinput" />
+                    </view>
+                    <view class="fixed-text-count">
+                        <text>200/{{TextCount}}</text>
+                    </view>
+                    <view>
+                        <view @tap='participate'>
+                            <text>取消</text>
+                        </view>
+                        <view @tap="comfirmParticipation">
+                            <text>确定</text>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import {
+        formatDate
+    } from '../../../../utils/cofig/api.js';
+    export default class clientDetail extends wepy.page {
+        components = {};
+        data = {
+            items: [{
+                    name: 'D',
+                    value: '完善中',
+                    checked: 'true'
+                },
+                {
+                    name: 'A',
+                    value: '已完善，不可修改'
+                },
+            ],
+            id: '',
+            meetingData: {},
+            userId: 0,
+            noParticipate: false, //不参与弹框
+            participate: false, //参与弹框
+            isParticipate: false, //是否参与
+            participated:false,
+            remarkValue: '', //是否参与原因数据
+            radioStatus: 'D', //单选选中的值
+            TextCount:0
+        };
+        methods = {
+            // 保存会议纪要
+            comfirmRcord() {
+                if (this.remarkValue) {
+                    this.CreateOrUpdateMeetingMinutes();
+                } else {
+                    wx.showToast({
+                        title: '备注原因不能为空！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            },
+            //单元框赋值
+            radioChange(e) {
+                this.radioStatus = e.detail.value;
+                this.$apply();
+            },
+            // 失去焦点
+            bindinput(e) {
+                this.remarkValue = e.detail.value
+                this.$apply();
+            },
+            //参与
+            comfirmParticipation() {
+                if (this.remarkValue) {
+                    this.ConfirmMeetingParticipant('C');
+                } else {
+                    wx.showToast({
+                        title: '备注原因不能为空！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            },
+            //不参与
+            comfirmNoParticipation() {
+                if (this.remarkValue) {
+                    this.ConfirmMeetingParticipant('R');
+                } else {
+                    wx.showToast({
+                        title: '备注原因不能为空！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            },
+            // 显示隐藏完善会议纪要弹窗
+            meetingRcord() {
+                this.remarkValue = '';
+                this.meetingRcord = !this.meetingRcord;
+                this.recordSummary = !this.recordSummary;
+            },
+            //显示
+            noParticipation() {
+                // this.remarkValue = '';
+                this.remarkValue='';
+                this.noParticipate = !this.noParticipate;
+                // this.waitAffirm = !this.waitAffirm;
+                this.$apply();
+            },
+            participate() {
+                // this.remarkValue = '';
+                this.remarkValue="";
+                this.participate = !this.participate;
+                this.$apply();
+                // this.waitAffirm = !this.waitAffirm;
+            },
+            preview(id, fileClass) {
+                var http = '/api/services/web/meetingAttachment/GetDocumentFile?id=' + id;
+                ajax.preView(http, fileClass)
+            },
+            previewDoc(id, fileClass) {
+                var http = '/api/services/web/meeting/GetMeetingMinutesFile?id=' + id;
+                ajax.preView(http, fileClass)
+            },
+        };
+        watch={
+            remarkValue(value){
+                this.TextCount=value.length;
+            }
+        }
+        async GetMeeting() {
+            wx.showLoading({
+              title: 'Loading...', //提示的内容,
+              mask: true, //显示透明蒙层，防止触摸穿透,
+              success: res => {}
+            });
+            var data = {
+                id: this.id,
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/meeting/GetMeeting',
+                'post',
+                data
+            )
+            // console.log(resData.data.result);
+            switch (resData.statusCode) {
+                case 200:
+                    if (resData.data.result) {
+                        var meetingData = resData.data.result;
+                        //主持人头像
+                        if(meetingData.moderator){
+                            var mhttp = '/api/services/web/personal/GetEmployeePhoto?id=' + meetingData.moderator
+                           var moderatorAvatar=await ajax.getUserAvatar(mhttp)
+                             meetingData.moderatorAvatar=moderatorAvatar.tempFilePath;
+                        }
+                        //联系人头像
+                        if(meetingData.linker){
+                            var lhttp = '/api/services/web/personal/GetEmployeePhoto?id=' + meetingData.linker
+                            var linkerAvatar=await ajax.getUserAvatar(lhttp);
+                            meetingData.linkerAvatar=linkerAvatar.tempFilePath;
+                        }
+                        // 是否标记
+                        if(meetingData.isMark){
+                             meetingData.isMark = meetingData.isMark.replace(/\s+/g, "");
+                            
+                        }
+                        if( meetingData.privacy){
+                             meetingData.privacy = meetingData.privacy.replace(/\s+/g, "");
+                        }
+                        // //开始结束时间
+                        var startTime=meetingData.startTime;
+                        var endTime=meetingData.endTime;
+                        var start_Time = formatDate(startTime);
+                        var start = {};
+                        var end_Time = formatDate(endTime);
+                        var end = {};
+                        start.Y= start_Time[0] + '/' + start_Time[1] + '/' + start_Time[2];
+                        start.M = start_Time[3] + ':' + start_Time[4];
+                        end.M = end_Time[3] + ':' + end_Time[4];
+                        meetingData.startTime = start;
+                        meetingData.endTime = end;
+                        //相隔时间
+                        meetingData.diffTime=(new Date(new Date(endTime).getTime()-new Date(startTime).getTime())/3600000).toFixed();
+                        //确认状态
+                        switch (meetingData.status) {
+                            case 'D':
+                                meetingData['statusColor'] = "#ff9900"
+                                break;
+                            case 'C':
+                                meetingData['statusColor'] = "#009dff"
+                                break;
+                            case 'A':
+                                meetingData['statusColor'] = "#069400"
+                                break;
+                            default:
+                                meetingData['statusColor'] = "#ff9900"
+                                break;
+                        }
+                        //附件
+                        for (var index in meetingData.attachmentList) {
+                            var attachmentList = meetingData.attachmentList;
+                            switch (attachmentList[index].extension) {
+                                case '.pdf':
+                                    attachmentList[index]['icon'] = 'icon-pdfpng1';
+                                    attachmentList[index]['color'] = '#e20000';
+                                    break;
+                                case '.ppt':
+                                    attachmentList[index]['icon'] = 'icon-pdfpng1';
+                                    attachmentList[index]['color'] = '#e20000';
+                                    break;
+                                case '.pptx':
+                                    var iconfont = {};
+                                    attachmentList[index]['icon'] = 'icon-pdfpng1';
+                                    attachmentList[index]['color'] = '#e20000';
+                                    break;
+                                case '.png':
+                                    var iconfont = {};
+                                    attachmentList[index]['icon'] = 'icon-pdfpng1';
+                                    attachmentList[index]['color'] = '#e20000';
+                                    break;
+                                case '.docx':
+                                    attachmentList[index]['icon'] = 'icon-wold1';
+                                    attachmentList[index]['color'] = '#009dff';
+                                    break;
+                                case '.doc':
+                                    attachmentList[index]['icon'] = 'icon-wold1';
+                                    attachmentList[index]['color'] = '#009dff';
+                                    break;
+                                case '.xls':
+                                    attachmentList[index]['icon'] = 'icon-exl1';
+                                    attachmentList[index]['color'] = '#069400';
+                                    break;
+                                case '.xlsx':
+                                    attachmentList[index]['icon'] = 'icon-exl1';
+                                    attachmentList[index]['color'] = '#069400';
+                                    break;
+                                case '.jpg':
+                                    attachmentList[index]['icon'] = 'icon-jpggeshi';
+                                    attachmentList[index]['color'] = '#ff9900';
+                                    break;
+                                // case '.png':
+                                //     attachmentList[index]['icon'] = 'icon-jpggeshi';
+                                //     attachmentList[index]['color'] = '#ff9900';
+                                //     break;
+                                default:
+                                    attachmentList[index]['icon'] = 'icon-weizhiwenjiangeshi';
+                                    attachmentList[index]['color'] = '#7a7a7a';
+                                    break;
+                            }
+                        }
+                        //会议参与人
+                        for (var pindex in meetingData.participantList) {
+                            if(meetingData.participantList[pindex].employeeId==this.userId){  
+                                if(meetingData.participantList[pindex].status=='N'&&meetingData.status!=='A'){
+                                    this.isParticipate=true;
+                                }else if(meetingData.participantList[pindex].status=='A'){
+                                    this.isParticipate=false;
+                                }
+                            }
+                            var participantList = meetingData.participantList[pindex];
+                            var phttp = '/api/services/web/personal/GetEmployeePhoto?id=' + participantList.employeeId
+                            var participantAvatar = await ajax.getUserAvatar(phttp);
+                            participantList.Avatar = participantAvatar.tempFilePath;
+                        }
+                        //会议室风格
+                        if(meetingData.meetingRoom.styleText.length!==0){
+                            meetingData.meetingRoom.styleText=meetingData.meetingRoom.styleText.split(',');
+                            meetingData.meetingRoom.equipmentText=meetingData.meetingRoom.equipmentText.split(',');
+                        }else{
+                            meetingData.meetingRoom.styleText=['未填写'];
+                            meetingData.meetingRoom.equipmentText=['未填写'];
+                        }
+                        //原因
+                        // this.remarkValue=meetingData.remark;
+                        this.meetingData = meetingData;
+                    } else {
+                        console.log('数据为空');
+                        this.placeHolder.placeHolderImageIndex = 0;
+                        this.placeHolder.placeHolderShow = true;
+                    }
+                    this.$apply();
+                    break;
+                case 403:
+                    console.log('您没有权限');
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    console.log('数据请求错误')
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                default:
+                    break;
+            }
+        }
+        // 是否参与
+        async ConfirmMeetingParticipant(status) {
+            wx.showLoading({
+                title: '提交中，请稍等！', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success:()=>{
+                this.isParticipate=false;
+                this.noParticipate = false;
+                this.participate=false;
+                this.$apply();
+                }
+            });
+            var data = {
+                EmployeeId: this.userId,
+                MeetingId: this.id,
+                Remark: this.remarkValue,
+                Status: status,
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/meetingParticipant/ConfirmMeetingParticipant',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                 wx.showToast({
+                        title: '操作完成',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                var isRefresh = wx.getStorageSync('isRefresh');
+                isRefresh.isRefresh = true
+                wx.setStorageSync('isRefresh', isRefresh);
+                wx.navigateBack({
+                    delta: 1
+                });
+            }
+        }
+        //完善提交会议日志
+        async CreateOrUpdateMeetingMinutes() {
+            var data = {
+                Id: this.id,
+                Status: this.radioStatus,
+                Summary: this.remarkValue
+            }
+            var res = await ajax.getData(
+                '/api/services/web/meeting/CreateOrUpdateMeetingMinutes',
+                'post',
+                data
+            );
+            if (res.statusCode == 200) {
+                var isRefresh = wx.getStorageSync('isRefresh');
+                isRefresh.isRefresh = true
+                wx.setStorageSync('isRefresh', isRefresh);
+                wx.navigateBack({
+                    delta: 1
+                });
+            }
+        }
+        onLoad(options) {
+            this.id = options.id;
+            this.$apply();
+        }
+        onShow(){
+            if(this.$parent.global.userInfo.id){
+                 this.userId = this.$parent.global.userInfo.id.toString();
+            }
+            this.GetMeeting();
+        }
+    }
+</script>

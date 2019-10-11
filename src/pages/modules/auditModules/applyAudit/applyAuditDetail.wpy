@@ -1,0 +1,337 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        position: relative;
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .main {
+            margin-top: 149rpx;
+            .content-top {
+                padding: 0 28rpx 30rpx 28rpx;
+                >view:not(:last-child) {
+                    margin-bottom: 20rpx;
+                }
+                >view:first-child {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                >view:not(:first-child) {
+                    display: flex;
+                    flex-direction: column; // align-items: center;
+                    justify-content: center;
+                    >text:first-child {
+                        margin-bottom: 14rpx;
+                        color: #7a7a7a;
+                    }
+                }
+            }
+            .border-line {
+                height: 20rpx;
+                width: 100%rpx;
+                background: #f4f4f4;
+            }
+            .content-bottom {
+                padding: 30rpx 28rpx 30rpx 28rpx;
+                >view:first-child {
+                    margin-bottom: 30rpx;
+                    color: #7a7a7a;
+                }
+                >view:last-child {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    >view:first-child {
+                        margin-right: 30rpx;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        >image {
+                            height: 80rpx;
+                            width: 80rpx;
+                            border-radius: 50%;
+                            margin-bottom: 20rpx
+                        }
+                    }
+                    >view {
+                        display: flex;
+                        flex-direction: column; // justify-content:center;
+                    }
+                    >view:last-child {
+                        width: 80%;
+                        >view {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-bottom: 20rpx;
+                        }
+                        >view:last-child {
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+            }
+            .auditStatus {
+                padding: 40rpx 28rpx 30rpx 28rpx;
+                .radio-group {
+                    display: flex;
+                    justify-content: space-between;
+                }
+                .checked {
+                    margin-bottom: 50rpx;
+                }
+            }
+        }
+        .addImage{
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 9999;
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <text>请假详情</text>
+        </view>
+        <view class='main'>
+            <view class="content-top">
+                <view>
+                    <text wx:if="{{auditStatus}}">{{VacationApplyOutputData.eName}}</text>
+                    <text wx:else="{{auditStatus}}">{{VacationApplyOutputData.vacationTypeText}}</text>
+                    <text style="color:#ff9900">{{VacationApplyOutputData.totalDay}}天</text>
+                </view>
+                <view>
+                    <text wx:if="{{auditStatus}}">{{VacationApplyOutputData.vacationTypeText}}</text>
+                </view>
+                <view>
+                    <text>请假时间</text>
+                    <text>{{VacationApplyOutputData.startDateText}}至{{VacationApplyOutputData.endDateText}}</text>
+                </view>
+                <view>
+                    <text>此区间节假日天数</text>
+                    <text>{{VacationApplyOutputData.vacationDay}}天</text>
+                </view>
+                <view>
+                    <text>备注</text>
+                    <text>{{VacationApplyOutputData.memo||'未填写'}}</text>
+                </view>
+            </view>
+            <view class="border-line" wx:if="{{VacationApplyOutputData.status!=='W'||auditStatus}}">
+            </view>
+            <view class="content-bottom" wx:if="{{VacationApplyOutputData.status!=='W'}}">
+                <view>
+                    <text>审核信息</text>
+                </view>
+                <view>
+                    <view>
+                        <image src="{{VacationApplyOutputData.avatar}}" mode="scaleToFill" lazy-load="false">
+                        </image>
+                        <view>
+                            <text>{{VacationApplyOutputData.approveUserText}}</text>
+                        </view>
+                    </view>
+                    <view>
+                        <view>
+                            <text style="color:{{VacationApplyOutputData.status=='A'?'#069400':'#e20000'}}">{{VacationApplyOutputData.statusText}}</text>
+                            <text>{{VacationApplyOutputData.approveTimeText}}</text>
+                        </view>
+                        <view>
+                            <text style="color:#7a7a7a">{{VacationApplyOutputData.approveMemo||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="auditStatus" wx:if="{{auditStatus}}">
+                <view class="checked">
+                    <radio-group class="radio-group" @change="bindPickerChange">
+                        <label class="radio" wx:for="{{isPass}}" wx:key="index" style="width:50%;">
+                                <radio value="{{item.value}}"  color="#5d73fa" checked="{{item.isChecked}}" @tap="click"/>
+                                <text  style="margin-right:60rpx">{{item.displayText}}</text>
+                            </label>
+                    </radio-group>
+                    <view wx:if="{{warning}}" style="color:#e20000">
+                        <text>此字段是必填字段</text>
+                    </view>
+                </view>
+                <textarea :input.sync="input" :inputValue.sync='inputValue' :twoWayTitle="inputValue" fixed="{{true}}" />
+            </view>
+        </view>
+         <image src="{{'../../../../images/test.png'}}" wx:if="{{auditStatus}}"  mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;"  @touchstart="touchStart" @touchend="touchEnd">
+        </image>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import input from '../../../../components/picker/input';
+    export default class clientDetail extends wepy.page {
+        components = {
+            textarea: input
+        };
+        data = {
+            addOpacity:1,
+            submitData: {},
+            VacationApplyOutputData: {},
+            auditStatus: false,
+            isPass: [{
+                    value: 'A',
+                    displayText: '通过审核',
+                    isChecked: false,
+                },
+                {
+                    value: 'R',
+                    displayText: "审核退回",
+                    isChecked: false,
+                }
+            ],
+            input: {
+                title: '审核意见',
+                name: 'approveUserText',
+                options: true,
+                warning: false,
+            },
+            inputValue: '',
+            warning: false,
+        };
+        methods = {
+            touchStart(){
+                this.addOpacity = 0.6;
+                this.$apply();
+            },
+            touchEnd(){
+                if (this.submitData.status) {
+                    switch (this.submitData.status ) {
+                        case 'A':
+                             this.CreateVacationApprove(this.submitData);
+                            break;
+                        case 'R':  
+                             if(this.submitData.approveMemo){
+                                  this.CreateVacationApprove(this.submitData);
+                             }else{
+                                 this.input.warning = true;
+                                 this.addOpacity=1;
+                             }
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    this.addOpacity = 1;
+                    this.warning = true;
+                }
+                this.$apply();
+            },
+            bindPickerChange(e) {
+                this.submitData.status = e.detail.value;
+                this.$apply();
+            },
+            click() {
+                this.warning = false;
+            }
+        };
+        watch = {
+            inputValue(data) {
+                this.submitData.approveMemo = data;
+                this.$apply();
+            }
+        }
+        async GetVacationApplyOutput() {
+            wx.showLoading({
+              title: 'Loading...', //提示的内容,
+              mask: true, //显示透明蒙层，防止触摸穿透,
+              success: res => {}
+            });
+            var data = {
+                id: this.submitData.parentId
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/employeeVacation/GetVacationApplyOutput',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                var VacationApplyOutputData = resData.data.result;
+                if(VacationApplyOutputData.status=='W'){
+                    this.auditStatus=true;
+                }else{
+                    this.auditStatus=false;
+                }
+                if (VacationApplyOutputData.approveUserId) {
+                    var http = '/api/services/web/personal/GetEmployeePhoto?id=' + VacationApplyOutputData.approveUserId;
+                    var avatar = await ajax.getAavatar(http);
+                    VacationApplyOutputData['avatar'] = avatar;
+                }
+                this.VacationApplyOutputData = VacationApplyOutputData;
+            } else {
+                wx.showToast({
+                    title: '网络出差中！',
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
+            }
+            this.$apply();
+        }
+        async CreateVacationApprove(data) {
+             wx.showLoading({
+                 title: '提交中，请稍等！', //提示的内容,
+                 mask: true, //显示透明蒙层，防止触摸穿透,
+                 success:()=>{
+                    this.addOpacity = 1;
+                    this.$apply();
+                 }
+               });
+            var resData = await ajax.getData(
+                '/api/services/web/employeeVacation/CreateVacationApprove',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                wx.showToast({
+                    title: '审核完成', //提示的内容,
+                    icon: 'success', //图标,
+                    duration: 2000, //延迟时间,
+                    mask: false, //显示透明蒙层，防止触摸穿透,
+                    success: res => {
+                        var isRefresh = wx.getStorageSync('isRefresh');
+                        isRefresh.isRefresh = true;
+                        wx.setStorageSync('isRefresh', isRefresh);
+                        wx.navigateBack({
+                            delta: 1
+                        });
+                    }
+                });
+            } else {
+                wx.showToast({
+                    title: '提交失败',
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
+            }
+        }
+        onLoad(options) {
+            this.submitData.parentId = options.id;
+            this.GetVacationApplyOutput();
+            this.$apply();
+        }
+    }
+</script>

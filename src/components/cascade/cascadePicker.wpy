@@ -1,0 +1,72 @@
+
+
+
+<style lang="less">
+    .tui-picker-content {
+        margin-bottom: 36rpx;
+        picker {
+            padding: 20rpx 0;
+            border-bottom: 1px solid #dfdfdf;
+            .tui-picker-detail {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                color: #7a7a7a;
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="tui-picker-content">
+        <view>{{pickerData.title}}</view>
+        <picker mode="multiSelector" value="{{pickerData}}" bindchange="changePickerData" range="{{pickerData.pickerDataArray}}" name="{{pickerData.name}}" bindcolumnchange="changePickerDataColumn">
+            <view class="tui-picker-detail" style="background:{{pickerData.isChecked?'#dfdfdf':''}}">
+                {{pickerData||'请选择'}}
+                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+            </view>
+        </picker>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    export default class cascadePicker extends wepy.component {
+        props = {
+            pickerData: {
+                type: Object
+            },
+            pickerIndex:{
+                type:Array
+            }
+        };
+        data = {
+            pickerData: '请选择',
+        };
+        components = {};
+        methods = {
+            changePickerDataColumn(e) {
+                console.log(e);
+                console.log(e.detail.column, e.detail.value);
+                var nextRegion = this.RegionData[e.detail.column][e.detail.value];
+                console.log(nextRegion);
+                this.GetRegion(e.detail.column + 1, nextRegion.depth + 1, nextRegion.id)
+            },
+            changePickerData(e) {
+                var pickerData = [];
+                for (var index in e.detail.value) {
+                    pickerData[index] = this.pickerDataArray[index][e.detail.value[index]]
+                }
+                this.pickerData = pickerData.join('/');
+                this.$apply();
+            },
+        };
+        events = {};
+        watch = {};
+        computed = {};
+        onLoad() {};
+        onShow() {};
+    }
+</script>
+
+

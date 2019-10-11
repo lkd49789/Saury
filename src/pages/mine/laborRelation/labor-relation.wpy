@@ -1,0 +1,305 @@
+<!--  -->
+<style lang="less">
+  .body {
+    height: 100%;
+    .labor-title {
+      font-size: 48rpx;
+      color: #2a2a2a;
+      height: 104rpx;
+      line-height: 104rpx;
+      padding: 0 28rpx;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #dedede;
+    }
+    .middle-container {
+      padding: 44rpx 28rpx;
+      display: flex;
+      overflow: hidden;
+      flex-wrap: wrap;
+      font-size: 32rpx;
+      .item1 {
+        width: 100%;
+        margin-bottom: 36rpx;
+        .item1-title {
+          color: #2a2a2a;
+          margin-right: 10rpx;
+          font-size: 34rpx;
+        }
+        .item1-content {
+          font-size: 26rpx;
+          color: #7a7a7a;
+        } //   flex: 1;;;
+      }
+      .item2 {
+        width: 50%;
+      }
+      .item3 {
+        width: 50%;
+      }
+      .item4 {
+        width: 50%;
+      }
+      .item5 {
+        width: 50%;
+      }
+      .item6 {
+        width: 50%;
+      }
+      .item7 {
+        width: 50%;
+      }
+      .item8 {
+        width: 100%;
+      }
+      .item9 {
+        width: 100%;
+      }
+      .item10 {
+        width: 100%;
+      }
+      view {
+        margin-bottom: 36rpx;
+        text:first-child {
+          font-size: 28rpx;
+          color: #7a7a7a;
+          margin-bottom: 10rpx;
+        }
+        text:last-child {
+          // color: #7a7a7a;
+          font-size: 28rpx;
+        }
+      }
+    }
+    .item-flex {
+      display: flex;
+      flex-direction: column;
+    }
+    .footer-container {
+      padding: 30rpx 28rpx;
+      .footer-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        .text {
+          font-size: 32rpx;
+          color: #7a7a7a;
+        }
+      }
+      .item-container {
+        display: flex;
+        align-items: center; //   justify-content: space-between;
+        margin: 20rpx 0;
+        font-size: 28rpx;
+        border-bottom: 1px solid #bfbfbf;
+        padding-bottom: 40rpx;
+        .icon-content {
+          margin-right: 20rpx
+        }
+        .right-item {
+          display: flex;
+          flex-direction: column;
+          padding: 20rpx 0;
+          width: 85%;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <!-- <view></view> -->
+  <!-- <text></text> -->
+  <view class="body">
+    <view class="labor-title">
+      <text class="labor">劳动关系</text>
+    </view>
+    <view class="middle-container">
+      <view class="item1">
+        <text class="item1-title">{{LaborRelationData.duty||'未填写'}}</text>
+        <text class="item1-content">{{LaborRelationData.inserviceStatus||'未填写'}}</text>
+      </view>
+      <view class="item2 item-flex">
+        <text>合同类别</text>
+        <text>{{LaborRelationData.category||'未填写'}}</text>
+      </view>
+      <view class="item3 item-flex">
+        <text>工资</text>
+        <text>{{LaborRelationData.salary||'未填写'}}</text>
+      </view>
+      <view class="item4 item-flex">
+        <text>薪酬级别</text>
+        <text>{{LaborRelationData.salaryLevel||'未填写'}}</text>
+      </view>
+      <view class="item5 item-flex">
+        <text>录用日期</text>
+        <text>{{LaborRelationData.signDate||'未填写'}}</text>
+      </view>
+      <view class="item6 item-flex">
+        <text>转正日期</text>
+        <text>{{LaborRelationData.positiveDate||'未填写'}}</text>
+      </view>
+      <view class="item7 item-flex">
+        <text>关系来源</text>
+        <text>{{LaborRelationData.relationSource||'未填写'}}</text>
+      </view>
+      <view class="item8 item-flex">
+        <text>合同期限</text>
+        <text>{{contractDate||'未填写'}}</text>
+      </view>
+      <view class="item9 item-flex">
+        <text>社会保障号</text>
+        <text>{{LaborRelationData.socialSecurityNo||'未填写'}}</text>
+      </view>
+      <view class="item10 item-flex">
+        <text>社会保障基数</text>
+        <text>{{LaborRelationData.socialSecurityRate||'未填写'}}</text>
+      </view>
+    </view>
+    <view class="border-blur" style="height:30rpx;background:#F4F4F4">
+    </view>
+    <view class="footer-container">
+      <view class="footer-bar">
+        <text class="text">劳动合同附件</text>
+        <!-- <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#b2b2b2" ></icon> -->
+      </view>
+      <view class="footer-content">
+        <view class="item-container" @tap="preview('attachment','{{LaborRelationData.attachment.id}}','{{LaborRelationData.attachment.name}}')">
+          <view class="icon-content">
+            <icon class="iconfont {{icon[0].icon}}" style="font-size:60rpx; color:{{icon[0].color}}"></icon>
+          </view>
+          <view class="right-item">
+            <!-- <text style="color:#7a7a7a">{{LaborRelationData.attachment.name}}</text> -->
+            <text style="color:#2a2a2a">{{LaborRelationData.attachment.name||'未填写'}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="footer-bar">
+        <text class="text">保密协议</text>
+      </view>
+      <view class="footer-content">
+        <view class="item-container" @tap="preview('agreement','{{LaborRelationData.agreement.id}}','{{LaborRelationData.agreement.name}}')" style="border-bottom: 0;">
+          <view class="icon-content">
+            <icon class="iconfont {{icon[1].icon}}" style="font-size:60rpx; color:{{icon[1].color}}"></icon>
+          </view>
+          <view class="right-item">
+            <!-- <text style="color:#7a7a7a">2018/01/01 09:45</text> -->
+            <text style="color:#2a2a2a">{{LaborRelationData.agreement.name||'未填写'}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import ajax from '../../../utils//cofig/ajax.js'
+  export default class index extends wepy.page {
+    data = {
+      LaborRelationData: {},
+      contractDate: '',
+      icon: []
+    };
+    methods = {
+      preview(name, fileId, fileName) {
+        if (name == 'attachment') {
+          var http = '/api/services/web/personal/DownloadLaborRelationAttachment?id=' + fileId
+          var fileClass = '.' + fileName.split('.')[1];
+          ajax.preView(http, fileClass)
+        } else if (name == 'agreement') {
+          var http = '/api/services/web/personal/DownloadLaborRelationAgreement?id=' + fileId
+          var fileClass = '.' + fileName.split('.')[1];
+          ajax.preView(http, fileClass)
+        }
+      },
+      tobianji() {
+        wepy.navigateTo({
+          url: '../laborRelation/labor-compile'
+        });
+      },
+      toajunct() {
+        wepy.navigateTo({
+          url: '../laborRelation/labor-adjunct'
+        });
+      }
+    };
+    async GetLaborRelation() {
+      var LaborRelationData = await ajax.getData(
+        '/api/services/web/personal/GetLaborRelation',
+        'post'
+      )
+      if (LaborRelationData.statusCode == 200 && LaborRelationData.data.result !== null) {
+        var LaborRelationData = LaborRelationData.data.result
+        this.LaborRelationData = LaborRelationData;
+        LaborRelationData.signDate=LaborRelationData.signDate.split('T')[0];
+        LaborRelationData.positiveDate=LaborRelationData.positiveDate.split('T')[0];
+        //合同期限
+        var startDate = LaborRelationData.startDate.split('T')[0];
+        var endDate = LaborRelationData.endDate.split('T')[0];
+        this.contractDate = startDate + '--' + endDate;
+        //附件处理
+        var agreementIcon = LaborRelationData.agreement.name.split('.')[1];
+        var attachmentIcon = LaborRelationData.attachment.name.split('.')[1];
+        this.setIcon(agreementIcon, 0);
+        this.setIcon(attachmentIcon, 1);
+        this.$apply();
+      }
+    }
+    setIcon(fileClass, index) {
+      switch (fileClass) {
+        case 'pdf':
+          var iconfont = {};
+          iconfont['icon'] = 'icon-pdfpng1';
+          iconfont['color'] = '#e20000';
+          this.icon[index] = iconfont;
+          break;
+        case 'png':
+          var iconfont = {};
+          iconfont['icon'] = 'icon-pdfpng1';
+          iconfont['color'] = '#e20000';
+          this.icon[index] = iconfont;
+          break;
+        case 'docx':
+          var iconfont = {};
+          iconfont['icon'] = 'icon-wold1';
+          iconfont['color'] = '#009dff';
+          this.icon[index] = iconfont;
+          break;
+        case 'doc':
+          var iconfont = {};
+          iconfont['icon'] = 'icon-wold1';
+          iconfont['color'] = '#009dff';
+          this.icon[index] = iconfont;
+          break;
+        case 'xls':
+          var iconfont = {};
+          iconfont['icon'] = 'icon-exl1';
+          iconfont['color'] = '#069400';
+          this.icon[index] = iconfont;
+          break;
+        case 'xlsx':
+          var iconfont = {};
+          iconfont['icon'] = 'icon-exl1';
+          iconfont['color'] = '#069400';
+          this.icon[index] = iconfont;
+          break;
+        case 'jpg':
+          var iconfont = {};
+          iconfont['icon'] = 'icon-jpggeshi';
+          iconfont['color'] = '#ff9900';
+          this.icon[index] = iconfont;
+          break;
+        default:
+          var iconfont = {};
+          iconfont['icon'] = 'icon-weizhiwenjiangeshi';
+          iconfont['color'] = '#7a7a7a';
+          this.icon[index] = iconfont;
+          break;
+      }
+    }
+    onLoad() {
+      this.GetLaborRelation()
+    }
+  }
+</script>

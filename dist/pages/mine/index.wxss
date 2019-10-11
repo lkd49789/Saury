@@ -1,0 +1,127 @@
+.body {
+  height: 100%;
+  padding: 28rpx;
+}
+.header {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  position: relative;
+}
+.circle .avatar {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+}
+.msg {
+  margin-left: 40rpx;
+  display: flex;
+  flex-direction: column;
+}
+.name {
+  font-size: 48rpx;
+  color: #2a2a2a;
+}
+.phone {
+  color: #7a7a7a;
+}
+.partner {
+  display: inline-block;
+  height: 100%;
+  line-height: 100%;
+  color: #7a7a7a;
+  font-size: 28rpx;
+  margin-left: 40rpx;
+  vertical-align: center;
+}
+.empty {
+  flex: 1;
+  height: 106rpx;
+}
+.toright {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(0, -50%);
+  width: 20px;
+  height: 40px;
+}
+.nav-content {
+  padding: 50rpx;
+  display: flex;
+  border-bottom: 1px solid #dedede;
+  font-size: 28rpx;
+  color: #7a7a7a;
+  align-items: center;
+}
+.nav-content text {
+  display: block;
+  text-align: center;
+}
+.line {
+  border-right: 1px solid #dedede;
+  height: 44rpx;
+  vertical-align: center;
+}
+.nav-content view {
+  margin: 0 auto;
+}
+.bot {
+  margin-bottom: 12rpx;
+  font-weight: bold;
+  color: #2a2a2a;
+  font-size: 30rpx;
+}
+.footer,
+.middle {
+  margin-top: 44rpx;
+  padding: 0 24rpx;
+  box-shadow: 0px 8rpx 30rpx rgba(65, 98, 213, 0.25);
+  border-radius: 20rpx;
+  font-size: 28rpx;
+  color: #7a7a7a;
+}
+.inline {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #dedede;
+  height: 120rpx;
+  line-height: 120rpx;
+}
+.share {
+  background: #fafafa;
+  box-sizing: inherit;
+  color: #7a7a7a;
+  padding: 0;
+  width: 100%;
+  font-size: 28rpx;
+  text-align: left;
+}
+.share::after {
+  border: 0;
+}
+.inline:last-child {
+  border-bottom: 0;
+}
+.left-icon {
+  margin-right: 24rpx;
+}
+.icon {
+  text-align: center;
+  vertical-align: middle;
+  fill: currentColor;
+  overflow: hidden;
+}
+Page {
+  /* background: #1baceb; */
+  position: absolute;
+  font-size: 36rpx;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #fafafa;
+  overflow-y: hidden;
+}
+Page .extra-word {
+  height: 100%;
+}

@@ -1,0 +1,297 @@
+<!--  -->
+<style lang="less">
+  .body {
+    height: 100%;
+    position: relative;
+    .container-title {
+      height: 104rpx;
+      width:100%;
+      font-size: 48rpx;
+      padding-left: 28rpx;
+      color: #2a2a2a;
+      line-height: 104rpx;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #dedede;
+      position: fixed;
+      top:0;
+      left:0;
+      z-index:99;
+      background: #fff;
+    }
+    .item-container {
+      padding: 149rpx 0rpx;
+      font-size: 28rpx;
+      color: #2a2a2a;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      .item-content {
+        display: flex;
+        padding: 0 28rpx 36rpx 28rpx;
+        .item-left {
+          width: 10%;
+        }
+        .item-right {
+          width: 85%;
+          justify-content: space-between;
+          display: flex;
+          flex-direction: column; // align-content:
+          >view {
+            margin-bottom: 14rpx;
+          }
+          >view:nth-child(4) {
+            display: flex;
+            align-items: center;
+            >view {
+              height: 20rpx;
+              width: 20rpx;
+              border-radius: 50%;
+              background: #5d73fa;
+              margin-right: 20rpx;
+            }
+          }
+          >view:nth-child(6) {
+            display: flex;
+            align-items: center; //   justify-content: center;
+            margin-bottom: 20rpx;
+            color: #ffffff;
+            flex-wrap:wrap;
+            >view {
+              width: 20%;
+              margin-top:20rpx;
+              >image {
+                height: 80rpx;
+                width: 80rpx;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+              display: flex; // align-items: center;
+              // justify-content: center;
+            }
+          }
+          .visitorAvatar {
+            display: flex;
+            align-items: center; //   justify-content: center;
+            margin-bottom:20rpx;
+            color: #ffffff;
+            flex-wrap:wrap;
+            >view {
+              width: 20%;
+              margin-top:20rpx;
+              >image {
+                height: 80rpx;
+                width: 80rpx;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+              display: flex; // align-items: center;
+              // justify-content: center;
+            }
+          }
+          .between {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+          }
+        }
+      }
+      >view:not(:last-child)::after {
+        content: '';
+        display: block;
+        height: 14rpx;
+        background: #f4f4f4;
+      }
+      >view:not(:first-child) {
+        padding: 36rpx 0;
+      }
+    }
+  }
+</style>
+
+<template>
+  <!-- <view></view> -->
+  <!-- <text></text> -->
+  <view class="body">
+    <view class="container-title">
+      <text class="title-text">拜访记录</text>
+    </view>
+    <view class="item-container">
+      <repeat for="{{VisitRecordsData}}" key="index" index="index" item="item">
+        <view>
+          <view class="item-content">
+            <view class="item-left">
+              <icon class="iconfont icon-xuanxiang" style="font-size:40rpx;color:#5d73fa"></icon>
+            </view>
+            <view class="item-right">
+              <view class="between">
+                <text>{{item.startDateText||'未填写'}}</text>至 <text>{{item.endDateText||'未填写'}}</text>
+                <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+              </view>
+              <view class="between">
+                <text style=" font-weight: bold">{{item.clientName}}</text>
+                <text style="color:#5d73fa">{{item.serviceModeText||'未填写'}}</text>
+              </view>
+              <view style="color:#7a7a7a">
+                <text>{{item.title}}</text>
+              </view>
+              <view style="margin-bottom:36rpx">
+                <view></view>
+                <text>{{item.communicationModeText||'未填写'}}</text>
+              </view>
+              <view style="color:#7a7a7a;">
+                <text>受访人员</text>
+              </view>
+              <view>
+                <repeat for="{{intervieweeAvatar[index]}}" key="index" index="index" item="item">
+                  <view>
+                    <image src="{{intervieweeAvatar[index][index]}}" mode="scaleToFill" lazy-load="false">
+                    </image>
+                  </view>
+                </repeat>
+              </view>
+              <view style="color:#7a7a7a">
+                <text><text>{{item.content||'未填写'}}</text></text>
+              </view>
+              <view style="color:#7a7a7a;margin-top:14rpx">
+                <text>拜访人员</text>
+              </view>
+              <view class="visitorAvatar">
+                <repeat for="{{visitorAvatar[index]}}" key="visitorIndex" index="visitorIndex" item="item">
+                  <view>
+                    <image src="{{visitorAvatar[index][visitorIndex]}}" mode="scaleToFill" lazy-load="false">
+                    </image>
+                  </view>
+                </repeat>
+              </view>
+              <view>
+                <icon class="iconfont icon-dizhi" style="font-size:30rpx;color:#5d73fa;margin-right:20rpx;"></icon>
+                <text>{{item.address||'未填写'}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </repeat>
+    </view>
+    <placeHolderImage :placeHolder.sync="placeHolder" />
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import ajax from '../../../../../utils/cofig/ajax.js';
+  import mixins from '../../../../../utils/cofig/mixin.js';
+  import placeHolderImage from '../../../../../components/placeHolderImage';
+  export default class visitrecord extends wepy.page {
+    config = {
+    enablePullDownRefresh: true,
+    backgroundTextStyle: 'dark',
+    backgroundColorTop: '#f4f4f4',
+    backgroundColorBottom: '#f4f4f4'
+  };
+    components = {
+      placeHolderImage
+    };
+    data = {
+      clientId:'',
+      VisitRecordsData: {},
+      recordsToatalCount: 0,
+      visitorAvatar: [], //拜访人头像
+      intervieweeAvatar: [], //受访人头像,
+      pageNumber:1
+    };
+    mixins = [mixins];
+    methods = {};
+    // 上拉加载
+    onReachBottom() {
+      if (this.pageNumber < this.recordsToatalCount / 10) {
+        this.pageNumber += 1;
+       this.GetVisitRecords();
+       this.getAvatar();
+        wepy.showToast({
+          title: '加载更多...',
+          icon: 'loading',
+          mask: true
+        });
+      } else {
+        wepy.showToast({
+          title: '没有更多...',
+          icon: 'none',
+          mask: true,
+          duration: 1000
+        });
+      }
+    }
+    async getAvatar() {
+      for (var i in this.VisitRecordsData) {
+        var intervieweeList = this.VisitRecordsData[i].intervieweeList;
+        var interviewee = []
+        for (var j in intervieweeList) {
+          var http = intervieweeList[j].avatar;
+          var intervieweeAvatar = await ajax.getUserAvatar(http);
+          if (intervieweeAvatar.statusCode == 200) {
+            interviewee.push(intervieweeAvatar.tempFilePath)
+          } else {
+            wx.showToast({
+              title: '网络故障!部分数据无法正常显示',
+              icon: 'none',
+              duration: 1500,
+              mask: false,
+            });
+          }
+        }
+        this.intervieweeAvatar[i] = interviewee;
+      }
+      for (var i in this.VisitRecordsData) {
+        var visitorList = this.VisitRecordsData[i].visitorList;
+        var visitor = []
+        for (var j in visitorList) {
+          var http = visitorList[j].avatar;
+          var intervieweeAvatar = await ajax.getUserAvatar(http)
+          if (intervieweeAvatar.statusCode == 200) {
+            visitor.push(intervieweeAvatar.tempFilePath)
+          } else {
+            wx.showToast({
+              title: '网络故障!部分数据无法正常显示',
+              icon: 'none',
+              duration: 1500,
+              mask: false,
+            });
+          }
+        }
+        this.visitorAvatar[i] = visitor;
+      }
+      this.$apply();
+    }
+    async GetVisitRecords() {
+      var data = {
+        ClientId: this.clientId,
+        pageNumber: this.pageNumber,
+        pageSize: 10
+      }
+      var VisitRecordsData=await ajax.getData(
+        '/api/services/web/clientVisitServiceRecords/GetVisitRecords',
+        'post',
+        data
+      )
+      this.VisitRecordsData=this.VisitRecordsData.concat(VisitRecordsData.data.result.items);
+      this.$apply();
+    }
+    onLoad() {
+      wx.getStorage({
+        key: 'clientData',
+        success: res => {
+          this.VisitRecordsData = res.data.RecordsDatas.items;
+          this.clientId= res.data.RecordsDatas.items[0].clientId;
+          this.recordsToatalCount = res.data.RecordsDatas.totalCount;
+          this.getAvatar();
+          this.$apply();
+        }
+      });
+    }
+  }
+</script>

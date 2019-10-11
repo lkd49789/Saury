@@ -1,0 +1,34 @@
+
+    <view class="bill">
+        <view class="bill_title">
+            <text class="title">账单审核</text>
+        </view>
+        <view class="bill_content">
+            <view class="checked">
+                <view>
+                    <text>审核选择</text>
+                </view>
+                <radio-group class="radio-group" bindchange="bindPickerChange" style="padding-bottom:20rpx;">
+                    <label class="radio"  wx:for="{{auditings}}" wx:key="index">
+                        <radio value="{{item.value}}" checked="{{item.isShow}}" color="#5d73fa" disabled="{{item.isShow}}"/>
+                        <text style="margin-right:60rpx">{{item.name}}</text>
+                    </label>
+                </radio-group>
+                <view class="warming"  wx:if="{{warning[0]}}">
+                    <text>审核选择字段是必需的</text>
+                </view>
+            </view>
+            <view class="input">
+                <view>
+                    <text>审批意见</text>
+                </view>
+                <view class="input-container" style="border-bottom:1px solid {{inputChecked[1]?'#5d73fa':'#dedede'}};color:#7a7a7a">
+                    <textarea id="Remark" name="Remark" bindfocus="bindfocus" bindblur="bindblur" placeholder="请输入备注" bindinput="bindinput" type="text" value="{{remark?remark:''}}" auto-height style="width:100%;" data-wpybindfocus-a="{{1}}" data-wpybindblur-a="{{1}}"/>
+                </view>
+                <view class="warming" wx:if="{{warning[1]}}">
+                    <text>若退回审核，则审批意见字段是必须的</text>
+                </view>
+            </view>
+        </view>
+        <image src="{{'../../../../images/test.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" bindtap="auditing" data-wpyauditing-a=""/>
+    </view>

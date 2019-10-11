@@ -1,0 +1,32 @@
+
+    <!-- <view></view> -->
+    <!-- <text></text> -->
+    <view class="body">
+        <view class="container-title fixed">
+            <text class="title-text">{{title}}</text>
+            <!-- <icon class="iconfont icon-bianji" style="font-size:60rpx;color:#5d73fa"></icon> -->
+        </view>
+        <view class="linkman-container">
+          <block wx:for="{{linkerData}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+            <view class="linkman-item" bindtap="toclientlinkmandetail" data-wpytoclientlinkmandetail-a="{{index}}">
+                <view class="linkman-item-left">
+                    <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false" style="width: 80rpx;height: 80rpx;border-radius:50%">
+                    </image>
+                </view>
+                <view class="linkman-item-right">
+                    <text>{{item.name||'未填写'}}</text>
+                    <text>{{item.dutyText||'未填写'}}</text>
+                    <view>
+                        <text>{{item.workPhone||'未填写'}}</text>
+                    </view>
+                </view>
+            </view>
+          </block>
+        </view>
+        
+    <view  wx:if="{{$placeHolderImage$placeHolder.placeHolderShow}}" class="placeHolderImage" catchtouchmove="$placeHolderImage$true">
+                <image src="{{$placeHolderImage$placeHolderImage[$placeHolderImage$placeHolder.placeHolderImageIndex]}}" mode="scaleToFill" lazy-load="false" style="width:580rpx;height:580rpx">
+                </image>
+    </view>
+
+    </view>

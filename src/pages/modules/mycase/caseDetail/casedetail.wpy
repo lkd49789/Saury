@@ -1,0 +1,2890 @@
+<!--  -->
+<style lang="less">
+  .body {
+    position: relative; //占位图
+    .placeholderImage {
+      position: fixed;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      >image {
+        width: 325rpx;
+        width: 325rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    .addimage {
+      width: 160rpx;
+      height: 160rpx;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      z-index: 10000;
+    }
+    .fixed {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 100000;
+      width: 100%;
+      background: #fff; // display: fixed;
+      .container-title {
+        height: 104rpx;
+        font-size: 48rpx;
+        padding: 0 28rpx;
+        color: #2a2a2a;
+        line-height: 104rpx;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+    .personal-information {
+      margin-top: 198rpx;
+    }
+    .case-container {
+      padding: 44rpx 28rpx; // 案件简介
+      position: relative;
+      .case-one-item {
+        box-shadow: 0px 8rpx 30rpx rgba(65, 98, 213, 0.25);
+        border-radius: 20rpx;
+        margin-bottom: 44rpx;
+        padding: 30rpx 20rpx;
+        font-size: 28rpx; //   width: 100%;
+        height: 100%;
+        >view {
+          color: #7a7a7a;
+        }
+        >view:last-child {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        } //案情分析
+        .case-one-line {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          margin-bottom: 32rpx;
+          color: #2a2a2a;
+          .icon-more {
+            margin-left: 20rpx;
+            font-size: 30rpx;
+            color: #b2b2b2;
+          }
+        }
+      }
+      .case-two-item {
+        box-shadow: 0px 8rpx 30rpx rgba(65, 98, 213, 0.25);
+        border-radius: 20rpx;
+        margin-bottom: 44rpx;
+        padding: 30rpx 20rpx;
+        font-size: 28rpx; //   width: 100%;
+        height: 100%;
+        >view {
+          color: #7a7a7a;
+        }
+        >view:last-child {
+          color: #2a2a2a;
+        } //文字省略
+        .case-introduce {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+          -webkit-line-break: auto;
+          -webkit-box-orient: vertical;
+        }
+        .case-one-line {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          margin-bottom: 32rpx;
+          color: #2a2a2a;
+          .icon-more {
+            margin-left: 20rpx;
+            font-size: 30rpx;
+            color: #b2b2b2;
+          }
+        }
+      }
+      .case-three-item {
+        box-shadow: 0px 8rpx 30rpx rgba(65, 98, 213, 0.25);
+        border-radius: 20rpx;
+        margin-bottom: 44rpx;
+        padding: 30rpx 20rpx;
+        font-size: 28rpx; //   width: 100%;
+        height: 100%;
+        .linkman {
+          position: relative;
+          height: 100%;
+          padding: 30rpx 0;
+          display: flex;
+          align-items: center;
+          >image {
+            height: 60rpx;
+            width: 60rpx; // background: #ff9900;
+            border-radius: 50%;
+            position: absolute; //   top: 50%;
+            border: 1px solid #fff;
+          }
+        }
+        .case-one-line {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          margin-bottom: 32rpx;
+          color: #2a2a2a;
+          .icon-more {
+            margin-left: 20rpx;
+            font-size: 30rpx;
+            color: #b2b2b2;
+          }
+        }
+      }
+      .case-four-item {
+        box-shadow: 0px 8rpx 30rpx rgba(65, 98, 213, 0.25);
+        border-radius: 20rpx;
+        margin-bottom: 44rpx;
+        padding: 30rpx 20rpx;
+        font-size: 28rpx;
+        height: 100%;
+        .case-one-line {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          margin-bottom: 32rpx;
+          color: #2a2a2a;
+          .icon-more {
+            margin-left: 20rpx;
+            font-size: 30rpx;
+            color: #b2b2b2;
+          }
+        }
+      }
+      .case-five-item {
+        box-shadow: 0px 8rpx 30rpx rgba(65, 98, 213, 0.25);
+        border-radius: 20rpx;
+        margin-bottom: 44rpx;
+        padding: 30rpx 20rpx;
+        font-size: 28rpx; //   width: 100%;
+        height: 100%;
+        .case-one-line {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          margin-bottom: 32rpx;
+          color: #2a2a2a;
+          .icon-more {
+            margin-left: 20rpx;
+            font-size: 30rpx;
+            color: #b2b2b2;
+          }
+        }
+      } // .case-item {
+      //   box-shadow: 0px 8rpx 30rpx rgba(65, 98, 213, 0.25);
+      //   border-radius: 20rp;
+      //   margin-bottom: 44rpx;
+      //   padding: 0 20rpx 30rpx 20rpx;
+      //   font-size: 28rpx; //   width: 100%;
+      //   height: 100%;
+      //   color: #2a2a2a;
+      //   .case-one-line {
+      //     display: flex;
+      //     justify-content: space-between;
+      //     align-items: baseline;
+      //     margin-bottom: 32rpx;
+      //     .icon-more {
+      //       margin-left: 20rpx;
+      //       font-size: 30rpx;
+      //       color: #b2b2b2;
+      //     }
+      //     .icon-left {
+      //       font-size: 30rpx;
+      //       margin-left: 20rpx;
+      //     }
+      //   }
+      // }
+    }
+  } // 客户
+  .personal-container {
+    font-size: 28rpx;
+    .personal-item1 {
+      box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+      border-radius: 20rpx;
+      padding: 30rpx 22rpx;
+      margin-bottom: 44rpx;
+      .personal-item1-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 36rpx;
+      }
+    }
+    .personal-item2 {
+      box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+      border-radius: 20rpx;
+      padding: 30rpx 22rpx;
+      margin-bottom: 44rpx;
+      .personal-item2-two {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 36rpx;
+      }
+      .linkman {
+        position: relative;
+        height: 100%;
+        padding: 30rpx 0;
+        display: flex;
+        align-items: center;
+        >image {
+          height: 60rpx;
+          width: 60rpx; // background: #ff9900;
+          border-radius: 50%;
+          position: absolute; //   top: 50%;
+          border: 1px solid #fff;
+        }
+      }
+    }
+    .personal-item3 {
+      box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+      border-radius: 20rpx;
+      padding: 30rpx 22rpx;
+      margin-bottom: 44rpx;
+    }
+    .personal-item4 {
+      box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+      border-radius: 20rpx;
+      padding: 30rpx 22rpx;
+      margin-bottom: 44rpx;
+      .personal-item4-four {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 36rpx;
+      }
+      .personal-last {
+        display: flex;
+        justify-content: space-between;
+        .personal-last-left {
+          display: flex; // width: 21%;
+          align-items: center;
+          width: 65%;
+        }
+      }
+    }
+  } //任务内容
+  .task-content-container {
+    .task-list {
+      margin: 40rpx 15rpx 0 15rpx;
+      border: 1px solid #dfdfdf;
+      border-top-left-radius: 20rpx;
+      border-top-right-radius: 20rpx;
+      >view:first-child {
+        background: #dfdfdf;
+        padding: 30rpx 20rpx;
+        border-top-left-radius: 19rpx;
+        border-top-right-radius: 19rpx;
+        >view:first-child {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          >view {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            >view {
+              display: flex;
+              width: 40rpx;
+              height: 40rpx;
+              border: 1px solid #ff9900;
+              border-radius: 50%;
+              align-items: center;
+              justify-content: center;
+              margin-right: 50rpx;
+              color: #ff9900;
+            }
+            icon {
+              position: absolute;
+              top: -10rpx;
+              right: 0;
+            }
+          }
+        }
+        >view:last-child {
+          margin: 20rpx 0;
+        }
+      }
+      .task-item {
+        display: flex;
+        padding: 0 28rpx;
+        align-items: center;
+        height: 100%;
+        justify-content: space-between;
+        .item-info {
+          padding: 33rpx 10rpx 33rpx 0;
+          border-bottom: 1px solid #dfdfdf;
+          .item-title {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+          .item-statistics {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+        }
+        .item-isAccept {
+          margin-right: -27rpx;
+          height: 158rpx;
+          width: 38rpx;
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center; // padding:19rpx 0;
+          >text {
+            text-align: center;
+          }
+        }
+      }
+      >view:last-child {
+        >view:nth-child(1) {
+          border-bottom: 0;
+        }
+        >view:nth-child(2) {
+          border-bottom: 0;
+        }
+      }
+    }
+    .add-task {
+      display: flex;
+      margin: 0rpx 15rpx 0 15rpx;
+      border: 1px solid #dfdfdf;
+      border-top: 0;
+      border-bottom-left-radius: 20rpx;
+      border-bottom-right-radius: 20rpx;
+      padding: 23rpx 28rpx;
+      align-items: center;
+      color: #7a7a7a;
+      >text:first-child {
+        border: 1px dotted #dedede;
+        font-size: 37rpx;
+        padding: 0 12rpx;
+        margin-right: 20rpx;
+      }
+    }
+  } //文档页面
+  // 1.固定部分
+  .doc-fixed {
+    font-size: 28rpx;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #dedede;
+    .search_top {
+      display: flex;
+      align-items: center;
+      position: relative;
+      .search_input {
+        width: 100%; // border:1px solid #dfdfdf;
+        margin: 10rpx 20rpx;
+        border-radius: 100rpx;
+        padding:0 14rpx;
+        justify-content: space-between;
+        background: #f4f4f4;
+        display: flex;
+        align-items: center;
+        .input_sousuo {
+          margin-right: 14rpx;
+          color: #5d73fa;
+          font-size: 24px;
+        }
+        >input {
+          width: 100%;
+        }
+        >view {
+          width: 10%;
+          text-align: center;
+          color: #5d73fa
+        }
+        .input-delete{
+          position: absolute;
+          right:40rpx;
+          top:5rpx;
+          z-index:999
+        }
+      }
+      .top_right_btn {
+        // width: 15%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    .flex {
+      padding: 10rpx 28rpx;
+      color: #7a7a7a;
+    }
+  }
+  .pop-down-box {
+    padding: 0 28rpx;
+    font-size: 28rpx;
+    color: #7a7a7a;
+    background: #fff;
+    border: 1px solid #dedede; // box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+    .pop-down-content {
+      display: flex;
+      flex-direction: column;
+    }
+  } // 2.内容部分
+  .doc-container {
+    .doc-item {
+      margin-bottom: 44rpx;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+      border-radius: 20rpx;
+      padding: 44rpx 20rpx;
+      .item-right {
+        display: flex;
+        flex-direction: column; //   align-items: center;
+        margin-left: 20rpx;
+        width: 80%;
+        .item-text {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          font-size: 28rpx;
+          color: #2a2a2a;
+          font-weight: bold; // width: 67%;
+          margin-bottom: 10rpx;
+        }
+        .item-count {
+          font-size: 28rpx;
+          color: #7a7a7a;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          >view {
+            display: flex;
+            align-items: baseline;
+          }
+        }
+      }
+    }
+  }
+  .log-container {
+    margin-bottom: 44rpx;
+    padding: 0rpx 28rpx;
+    margin-top: 238rpx;
+    .statistics-win {
+      padding: 60rpx 20rpx;
+      box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+      border-radius: 20rpx;
+      position: relative;
+      .statisticsIcon {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+      .win-hidden {
+        // flex-warp:nowrap;
+        flex: 1;
+        justify-content: center;
+      }
+      .statistics-down-icon {
+        position: absolute;
+        bottom: -25rpx; //   top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    } //   日志弹框详情
+  } // .statistics-win-detail {
+  //   box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25); // border-radius: 20rpx;
+  //   position: relative;
+  //   padding: 44rpx 28rpx;
+  //   .statistics-list {
+  //     font-size: 28rpx;
+  //     padding: 30rpx 0;
+  //     margin-top: 30rpx;
+  //     border-top: 1px solid #f4f4f4;
+  //     .statistics-title {
+  //       flex-direction: row-reverse;
+  //     }
+  //   }
+  // }
+  // 日志列表
+  .log-list-container {
+    margin-top: 44rpx;
+    .log-list-content {
+      padding: 30rpx 22rpx;
+      box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+      border-radius: 20rpx;
+      margin-bottom: 44rpx;
+      .log-list-item1 {
+        display: flex;
+        justify-content: space-between;
+        font-size: 28rpx;
+        color: #2a2a2a;
+        align-items: center;
+        .item1-right {
+          color: #5d73fa;
+          font-size: 32rpx;
+        }
+      }
+      .log-list-item2 {
+        margin: 20rpx 0;
+        font-size: 28rpx;
+        color: #7a7a7a;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+      .log-list-item3 {
+        display: flex;
+        justify-content: space-between;
+        font-size: 28rpx;
+        color: #2a2a2a;
+        .item3-left {
+          display: flex;
+          align-items: center;
+        }
+        .item3-right {
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+  } //开庭信息
+  .court-info-container {
+    padding: 30rpx 22rpx;
+    box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+    border-radius: 20rpx;
+    margin-bottom: 44rpx;
+    font-size: 28rpx;
+    color: #2a2a2a;
+    .iconfont {
+      font-size: 30rpx;
+      color: #ff9900;
+      margin-right: 22rpx;
+    }
+    .court-item1 {
+      display: flex;
+      justify-content: space-between;
+      align-content: baseline;
+      margin-bottom: 22rpx;
+      .item1-left {
+        display: flex;
+        align-items: baseline;
+      } // .item1-right{}
+    }
+    .info-item {
+      display: flex;
+      flex-wrap: wrap; // > view:first-child {
+      //   margin-top: 30rpx;
+      // }
+      >view {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 30rpx;
+        >text:first-child {
+          margin-bottom: 20rpx;
+          color: #7a7a7a;
+        }
+      }
+      >view:nth-child(2n) {
+        width: 60%;
+      }
+      >view:nth-child(2n + 1) {
+        width: 40%;
+      }
+    }
+  } //财务部分
+  .amount-container {
+    height: 100%;
+    padding: 0 28rpx;
+    .aggregate-amount {
+      box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+      border-radius: 20rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 70rpx 0;
+      .amount-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+    >view:nth-child(2) {
+      margin-top: 44rpx;
+    }
+    .amount-item {
+      padding: 30rpx 22rpx;
+      margin-bottom: 44rpx;
+      font-size: 28rpx; // box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+      border-bottom: 1px solid #dfdfdf; // border-radius: 20rpx;
+      .amount-item-top {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20rpx;
+        >view:first-child {
+          color: #2a2a2a;
+        }
+      }
+    }
+  } //公共部分
+  .marg-bot {
+    margin-bottom: 22rpx;
+  }
+  .flex {
+    display: flex;
+    align-items: center;
+  }
+  .flex-column {
+    display: flex;
+    align-items: center;
+    flex-direction: column; //   justify-content: center;
+  }
+  .flex-column-reverse {
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse; //   justify-content: center;
+  }
+  .color {
+    color: #7a7a7a;
+  }
+  .blue-text {
+    font-size: 48rpx;
+    color: #5d73fa;
+  }
+  .margin-bot-10 {
+    margin-bottom: 10rpx;
+  }
+  .avator3 {
+    width: 30rpx;
+    height: 30rpx;
+    border-radius: 50%;
+    background: #5d73fa;
+  }
+  .document {
+    position: relative;
+    .placeholderImage {
+      position: fixed;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      >image {
+        width: 325rpx;
+        width: 325rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+  .loseColor {
+    color: #7a7a7a !important;
+    text {
+      text-decoration: line-through;
+    }
+  }
+</style>
+
+<template>
+  <view>
+    <view class="body">
+      <view class="fixed">
+        <!-- <view class="fixed2"> -->
+        <view class="container-title">
+          <text class="title-text">案件详情</text>
+        </view>
+        <navbar :navbars='navbars' :currentTab.sync="currentTab" :twoWayTitle="currentTab"></navbar>
+        <view wx:if='{{currentTab==3}}'>
+          <view class="doc-fixed">
+            <view class="search_top">
+              <view class="search_input">
+                <icon class="iconfont icon-sousuo1 input_sousuo"></icon>
+                <input value="{{caseDetailData.documentDatas.searchDocValue}}" type="text" confirm-type="search" placeholder="文档搜索" maxlength="50"  bindconfirm="searchDoc"  auto-focus ></input>
+                <icon class="iconfont icon-zirenwushanchu input-delete" style="font-size:30rpx;color:#7a7a7a" wx:if="{{caseDetailData.documentDatas.isValue}}" catchtap="clearDoc"></icon>
+              </view>
+              
+            </view>
+            <view class="flex">
+               <text @tap="goBack('{{caseDetailData.documentDatas.fixedPath.lastPathId}}','{{caseDetailData.documentDatas.fixedPath.lastPathClass}}')" style="color:{{caseDetailData.documentDatas.filePath.length==0?'#5d73fa':'#7a7a7a'}}">{{caseDetailData.documentDatas.fixedPath.filePath}}</text>
+              <repeat for="{{caseDetailData.documentDatas.filePath}}" key="index" index="index" item="item">
+                <text @tap="goBack('{{caseDetailData.documentDatas.lastPathId[index]}}','{{caseDetailData.documentDatas.lastPathClass[index]}}','{{index}}')" style="color:{{index==caseDetailData.documentDatas.filePath.length-1?'#5d73fa':'#7a7a7a'}}">{{item}}</text>
+              </repeat>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="personal-information" wx:if="{{currentTab==0}}">
+        <!-- <repeat for="{{caseDetailData.caseData}}" key="index" index="index" item="item"> -->
+        <view class="case-container" wx:if="{{caseDetailData.caseData.caseDetail!==null}}">
+          <view class="case-one-item" @tap="tocasebase">
+            <view class="case-one-line">
+              <text>{{caseDetailData.caseData.caseDetail.name||'未填写'}} </text>
+              <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
+            </view>
+            <view class="marg-bot">
+              <text>{{caseDetailData.caseData.caseDetail.serialId||'未填写'}}</text>
+            </view>
+            <view class="marg-bot">
+              <text>{{caseDetailData.caseData.caseDetail.categoryText||'未填写'}}</text>
+            </view>
+            <view style="color: #ff9900;">
+              <text>{{caseDetailData.caseData.caseDetail.processStatusText||'未填写'}}</text>
+            </view>
+          </view>
+          <view class="case-two-item" @tap="tocaseintroduce">
+            <view class="case-one-line">
+              <text style="color:#7a7a7a">案情简介
+                                      </text>
+              <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
+            </view>
+            <view class="case-introduce">
+              <text>{{caseDetailData.caseData.caseDetail.description||'未填写'}}
+                                                                                      </text>
+            </view>
+          </view>
+          <view class="case-three-item" @tap='tocasepersonnelin' wx:if="{{caseDetailData.caseData.userPhoto.length!==0}}">
+            <view class="case-one-line">
+              <text style="color:#7a7a7a">案件律师信息
+                                                                                                          </text>
+              <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
+            </view>
+            <view class="linkman">
+              <repeat for="{{caseDetailData.caseData.userPhoto}}" key="index" index="index" item="item">
+                <image class="avator" style="z-index:{{index}};left:{{index*40}}rpx" src="{{caseDetailData.caseData.userPhoto[index]}}" mode="scaleToFill" lazy-load="false"></image>
+              </repeat>
+            </view>
+          </view>
+          <view class="case-four-item" @tap="toconflictinterest">
+            <view class="case-one-line">
+              <text style="color:#7a7a7a">利益冲突信息
+                                                                                                          </text>
+              <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
+            </view>
+            <view style="margin-bottom:22rpx;" wx:if="{{caseDetailData.caseData.caseDetail.caseClientRelationList[0].name}}">
+              <text>{{caseDetailData.caseData.caseDetail.caseClientRelationList[0].name}}
+                                                                                          </text>
+            </view>
+            <view class="case-one-line" style="margin-bottom:0">
+              <text style="color:#7a7a7a">{{caseDetailData.caseData.caseDetail.caseClientRelationList[0].category||'未填写'}}
+                                                                                                          </text>
+              <text style="color:#7a7a7a">共{{caseDetailData.caseData.caseDetail.caseClientRelationList.length}}条冲突信息</text>
+            </view>
+          </view>
+          <view class="case-five-item" @tap='tocontractinfo'>
+            <view class="case-one-line">
+              <text style="color:#7a7a7a">合同信息
+                                                                                                          </text>
+              <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
+            </view>
+            <view class="marg-bot">
+              <text>案件项下的办案费用支出:{{caseDetailData.caseData.caseDetail.paidPartyText!==''?caseDetailData.caseData.caseDetail.paidPartyText:'未填写'}}
+                                                                           </text>
+            </view>
+            <view style="color:#7a7a7a" class="marg-bot">
+              <text>办案费限额:{{caseDetailData.caseData.caseDetail.chargeLimit||'未填写'}}</text>
+            </view>
+            <view style="color:#7a7a7a">
+              <text>收费方式:{{caseDetailData.caseData.payStyleText||'未填写'}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="placeholderImage" wx:else="{{caseDetailData.caseData.caseDetail!==null}}">
+          <image src="{{placeholderImage}}" mode="widthFix" lazy-load="false" />
+        </view>
+        <!-- </repeat> -->
+      </view>
+      <!-- </swiper-item> -->
+      <!-- 客户 -->
+      <!-- <swiper-item> -->
+      <view class="personal-information" wx:if="{{currentTab==1}}">
+        <view class="case-container" wx:if="{{caseDetailData.clientData.clientAllData!==null}}">
+          <view class="personal-container">
+            <view class="personal-item1" @tap="toclientbase">
+              <view class="personal-item1-title">
+                <text>{{caseDetailData.clientData.clientAllData.name||'未填写'}}</text>
+                <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#b2b2b2;margin-left:20rpx"></icon>
+              </view>
+              <view class="marg-bot color">
+                <text>{{caseDetailData.clientData.clientAllData.id||'未填写'}}</text>
+              </view>
+              <view class="marg-bot">
+                <text>{{caseDetailData.clientData.clientAllData.industryTypeText||'未填写'}}</text>
+              </view>
+              <view class="flex">
+                <icon class="iconfont icon-dizhi" style="font-size:40rpx;margin-right:20rpx ;color:#ff9900"></icon>
+                <text>{{caseDetailData.clientData.clientAllData.address||'未填写'}}</text>
+              </view>
+            </view>
+            <view class="personal-item2" @tap="toclientlinkman" wx:if="{{caseDetailData.clientData.linkerPhoto.length!==0}}">
+              <view class="personal-item2-two">
+                <text style="color:#7a7a7a">客户联系人
+                                                                                                          </text>
+                <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#b2b2b2"></icon>
+              </view>
+              <view class="linkman">
+                <repeat for="{{caseDetailData.clientData.linkerPhoto}}" key="index" index="index" item="item">
+                  <image src="{{caseDetailData.clientData.linkerPhoto[index]}}" lazy-load="false" style="z-index:{{index}};left:{{index*40}}rpx">
+                  </image>
+                </repeat>
+              </view>
+            </view>
+            <view class="personal-item3" wx:if="{{caseDetailData.clientData.clientAllData.categoryText=='公民个人'}}">
+              <view style="display:flex; flex-direction: column;">
+                <view class="flex" style="margin-bottom:32rpx">
+                  <text style="font-size:32rpx;">自然人</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-shenfenzheng" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.cardNo||'未填写'}}</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-minzu" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.nationText||'未填写'}}</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-chushengriqi" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                  <text class="color">{{caseDetailData.clientData.birthday||'未填写'}}</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-zhiye" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.occupation||'未填写'}}</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-youxiang" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.email||'未填写'}}</text>
+                </view>
+              </view>
+            </view>
+            <view class="personal-item3" wx:else="{{caseDetailData.clientData.clientAllData.categoryText!=='公民个人'}}">
+              <view style="display:flex; flex-direction: column;">
+                <view class="flex" style="margin-bottom:32rpx">
+                  <text style="font-size:32rpx;">客户负责人/法定代表人信息</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <text class="color" style="border-right:1px solid #bfbfbf;padding-right:19rpx">{{caseDetailData.clientData.clientAllData.legalDutyText}}</text>
+                  <text style="color:#5d73fa;margin-left:20rpx;">{{caseDetailData.clientData.clientAllData.legalPersonText}}</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-ren" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.linker||'未填写'}}</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-dianhua" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.landline||'未填写'}}</text>
+                </view>
+                <view style="" class="flex marg-bot">
+                  <icon class="iconfont icon-youxiang" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.email||'未填写'}}</text>
+                </view>
+                <view style="" class="flex">
+                  <icon class="iconfont icon-chuanzhen" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                  <text class="color">{{caseDetailData.clientData.clientAllData.landline||'未填写'}}</text>
+                </view>
+              </view>
+            </view>
+            <view class="personal-item4" @tap="tovisitrecord" wx:if='{{caseDetailData.clientData.contactLength!==0}}'>
+              <view class="personal-item4-four">
+                <text class="color">拜访记录</text>
+                <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#b2b2b2"></icon>
+              </view>
+              <view class="marg-bot">
+                <text>{{caseDetailData.clientData.clientContactsListLastData.startDateText}}至{{caseDetailData.clientData.clientContactsListLastData.endDateText}}</text>
+              </view>
+              <view class="personal-last">
+                <view class="personal-last-left">
+                  <view style="width:20rpx;height:20rpx;border:1px solid #5d73fa;border-radius:50%;;"></view>
+                  <view>
+                    <text style="padding-left:20rpx">{{caseDetailData.clientData.clientContactsListLastData.communicationModeText}}</text>
+                  </view>
+                </view>
+                <view>
+                  <text style="color:#ff9900; ">共{{caseDetailData.clientData.contactLength}}条记录</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="placeholderImage" wx:else="{{caseDetailData.clientData.clientAllData!==null}}">
+          <image src="{{placeholderImage}}" mode="widthFix" lazy-load="false">
+          </image>
+        </view>
+      </view>
+      <!-- </swiper-item> -->
+      <!-- 任务 -->
+      <!-- <swiper-item> -->
+      <view class="personal-information" wx:if="{{currentTab==2}}">
+        <!-- <view class="case-container" style="margin-top:0 "> -->
+        <view class='task-content-container' wx:if="{{caseDetailData.taskDatas.TaskStagesDatas.length!==0}}">
+          <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{'300'}}" style="min-height:{{caseDetailData.taskDatas.viewHeight[caseDetailData.taskDatas.current]}}rpx" circular="{{false}}" previous-margin='30rpx'
+            next-margin="30rpx" bindchange='taskBindChange' current="{{caseDetailData.taskDatas.current}}">
+            <repeat for="{{caseDetailData.taskDatas.TaskStagesDatas}}" key="index" index="sIndex" item="item">
+              <swiper-item>
+                <view class="task-list">
+                  <view>
+                    <view>
+                      <text>{{item.name}}</text>
+                      <view>
+                        <view>
+                          <text>{{item.taskCount}}</text>
+                        </view>
+                        <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" catchtap="moreChoose('{{item}}','{{sIndex}}')"></icon>
+                      </view>
+                    </view>
+                    <view>
+                      <text>{{item.remark||'未填写'}}</text>
+                    </view>
+                  </view>
+                  <!-- <scroll-view scroll-y scroll-with-animation @scroll="scroll" style="heihgt:500rpx;white-space:nowrap;"> -->
+                  <repeat for="{{caseDetailData.taskDatas.TasksDatas[sIndex].items}}" key="index" index="index" item="item">
+                    <view class="task-item" @tap="toTaskDetail('{{item.id}}')" bindlongpress="longpress('{{item.id}}')">
+                      <view style="margin-right:20rpx" wx:if="{{item.isAccept=='Y'&&item.isParticipant=='Y'}}">
+                        <checkbox value="{{item.title}}" checked="{{item.checked}}" color="#5d73fa" catchtap="isChecked('{{sIndex}}','{{index}}','{{item.checked}}','{{item.id}}')" />
+                      </view>
+                      <view style="width:{{item.isAccept=='Y'?'86%':'97%'}};" class="{{item.checked?'loseColor':''}} item-info">
+                        <view class="item-title">
+                          <text>{{item.title||'未填写'}}</text>
+                        </view>
+                        <view class="item-statistics">
+                          <view style="color:#7a7a7a">
+                            <icon class="iconfont icon-riqi" style="font-size:30rpx;margin-right:20rpx"></icon>
+                            <text>{{item.endTime||'未填写'}}</text>
+                          </view>
+                          <view>
+                            <icon class="iconfont icon-fujian-copy" style="font-size:30rpx;color:#5d73fa;margin-right:20rpx"></icon>
+                            <text style="margin-right:20rpx">{{item.checkItemCount}}</text>
+                            <icon class="iconfont icon-zirenwu-copy" style="font-size:30rpx;color:#5d73fa;margin-right:20rpx"></icon>
+                            <text>{{item.commentCount}}</text>
+                          </view>
+                        </view>
+                      </view>
+                      <view class="item-isAccept" style="background:#ff9900" wx:if="{{item.isAccept=='N'&&item.isParticipant=='Y'}}">
+                        <text>未确认</text>
+                      </view>
+                    </view>
+                  </repeat>
+                  <!-- </scroll-view> -->
+                </view>
+                <view class="add-task" catchtap="addTask('{{item.projectId}}')">
+                  <text>+</text>
+                  <text>新建任务</text>
+                </view>
+              </swiper-item>
+            </repeat>
+          </swiper>
+        </view>
+        <view class="placeholderImage" wx:else="{{caseDetailData.taskDatas.TaskStagesDatas.length!==0}}">
+          <image src="{{placeholderImage}}" mode="widthFix" lazy-load="false">
+          </image>
+        </view>
+      </view>
+      <!-- </swiper-item> -->
+      <!-- 文档管理 -->
+      <!-- <swiper-item> -->
+      <view class="personal-information document" wx:if="{{currentTab==3}}" style=" margin-top: 326rpx;">
+        <view class="case-container" wx:if="{{caseDetailData.documentDatas.documentData.length!==0}}">
+          <repeat for="{{caseDetailData.documentDatas.documentData}}" key="index" index="index" item="item">
+            <view class="doc-container" @tap="preview('{{item.id}}','{{item.fileExtension}}','{{item.docClass}}','{{item.filePath}}')">
+              <view class="doc-item">
+                <icon class="iconfont {{caseDetailData.documentDatas.fileIcon[index]}}" style="font-size:100rpx;color:{{caseDetailData.documentDatas.fileColor[index]}}"></icon>
+                <view class="item-right">
+                  <view class="item-text">
+                     <text>{{item.title}}</text>
+                  </view>
+                  <view class='item-count'>
+                    <view>
+                      <icon class="iconfont icon-wendang" styl="color:#7a7a7a;font-size:30rpx;"></icon>
+                      <text style="margin-left:14rpx;">{{item.folderCount||'0'}}</text>
+                    </view>
+                    <view>
+                      <icon class="iconfont icon-wenjian" styl="color:#7a7a7a;font-size:30rpx;"></icon>
+                      <text style="margin-left:14rpx;">{{item.fileSize||'0'}}</text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </repeat>
+        </view>
+        <view class="placeholderImage" wx:else="{{caseDetailData.documentDatas.documentData.length!==0}}">
+          <image src="{{placeholderImage}}" mode="widthFix" lazy-load="false">
+          </image>
+        </view>
+      </view>
+      <!-- </swiper-item> -->
+      <!-- 日志 -->
+      <!-- <swiper-item> -->
+      <view class="personal-information" wx:if="{{currentTab==4}}">
+        <!-- <view class=" height5"> -->
+        <view class="log-container" wx:if="{{caseDetailData.workLogsDatas.workLogData.length!==0}}">
+          <view class="statistics-win">
+            <view class="statisticsIcon">
+              <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#dedede"></icon>
+            </view>
+            <view class="flex win-hidden">
+              <view class="flex-column " style="width:33%">
+                <text style="" class="blue-text margin-bot-10">{{caseDetailData.workLogsDatas.selfDuration+'0'}}h</text>
+                <text class="color" style="font-size:28rpx;">自报时长</text>
+              </view>
+              <view class="flex-column" style="width:33%">
+                <text class="blue-text margin-bot-10">{{caseDetailData.workLogsDatas.businessDuration+'0'}}</text>
+                <text class="color" style="font-size:28rpx;">业务时长</text>
+              </view>
+              <view class="flex-column" style="width:33%">
+                <text class="blue-text margin-bot-10">{{caseDetailData.workLogsDatas.billDuration+'0'}}</text>
+                <text class="color" style="font-size:28rpx;">账单时长</text>
+              </view>
+            </view>
+          </view>
+          <!-- 日志列表 -->
+          <view class="log-list-container">
+            <repeat for="{{caseDetailData.workLogsDatas.workLogData}}" key="index" index="index" item="item">
+              <view class="log-list-content" @tap="tologdetail('{{item.id}}')">
+                <view class="log-list-item1">
+                  <view class="item1-left">
+                    {{caseDetailData.workLogsDatas.startTime[index][0]}} {{caseDetailData.workLogsDatas.startTime[index][1]}}-{{caseDetailData.workLogsDatas.startTime[index][0]==caseDetailData.workLogsDatas.endTime[index][0]?caseDetailData.workLogsDatas.endTime[index][1]:caseDetailData.workLogsDatas.endTime[index][0]+caseDetailData.workLogsDatas.endTime[index][1]}}
+                  </view>
+                  <text class="item1-right">{{item.selfDuration+'.0'}}h</text>
+                </view>
+                <view class="log-list-item2">
+                  <text>{{item.description}}</text>
+                </view>
+                <view class="log-list-item3">
+                  <view class="item3-left">
+                    <!-- <view style="background: #5d73fa"></view> -->
+                    <image src="{{caseDetailData.workLogsDatas.avatarData[index]}}" mode="scaleToFill" lazy-load="false" style="width:70rpx;height:70rpx;border-radius:50%;">
+                    </image>
+                    <text style="margin-left:30rpx">{{item.employeeName}}</text>
+                  </view>
+                  <view class="item3-right">
+                    <view style="width:30rpx;height:30rpx;border-radius:50%;border:1px solid {{caseDetailData.workLogsDatas.processStatus[index]}}"></view>
+                    <text style="margin-left:30rpx">{{item.processStatusText}}</text>
+                  </view>
+                </view>
+              </view>
+            </repeat>
+          </view>
+          <!-- </view> -->
+        </view>
+        <view class="placeholderImage" wx:else="{{caseDetailData.workLogsDatas.workLogData.length==0}}">
+          <image src="{{placeholderImage}}" mode="widthFix" lazy-load="false">
+          </image>
+        </view>
+      </view>
+      <!-- </swiper-item> -->
+      <!-- <swiper-item> -->
+      <!-- 开庭 -->
+      <view class="personal-information" wx:if="{{currentTab==5}}">
+        <view class="case-container" wx:if="{{caseDetailData.CourtsDatas.CourtsData.length!==0}}">
+          <!-- <view style="position:relative;"> -->
+          <repeat for="{{caseDetailData.CourtsDatas.CourtsData}}" key="index" index="index" item="item">
+            <view class="court-info-container">
+              <view class="court-item1">
+                <view class="item1-left">
+                  <icon class="iconfont icon-fayuankaiting"></icon>
+                  <text>{{item.courtText}}</text>
+                </view>
+                <view class="item1-right">
+                  <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2" @tap="courtShow('{{index}}')"></icon>
+                </view>
+              </view>
+              <view class="court-item1">
+                <view class="item1-left">
+                  <icon class="iconfont icon-tixingkaiting"></icon>
+                  <text>提前{{item.warningTime}}天提醒 @{{item.warningLawyerName}}</text>
+                </view>
+                <view class="item1-right" style="display:flex;align-items:center">
+                  <text style="width:30rpx;height:30rpx;border-radius:50%;background:{{item.singleColor}};margin-right:20rpx"></text>
+                  <text style="color:#7a7a7a">{{item.categoryText}}</text>
+                </view>
+              </view>
+              <view class="court-item1">
+                <view class="item1-left">
+                  <icon class="iconfont icon-riqi"></icon>
+                  <text style="font-size:32rpx">{{caseDetailData.CourtsDatas.startYear[index]}} {{caseDetailData.CourtsDatas.startHour[index]}}至 {{caseDetailData.CourtsDatas.endYear[index]}} {{caseDetailData.CourtsDatas.endHour[index]}}</text>
+                </view>
+              </view>
+              <view class="court-item1">
+                <view class="item1-left">
+                  <icon class="iconfont icon-dizhi1"></icon>
+                  <text>{{item.address}}</text>
+                </view>
+              </view>
+              <view class="info-item">
+                <view class="fayuan" style="width:100%;">
+                  <text>法院</text>
+                  <text>{{item.courtText}}</text>
+                </view>
+                <view>
+                  <text>主审法官／指定仲裁员</text>
+                  <text>{{item.courtPerson}}</text>
+                </view>
+                <view>
+                  <text>法院简称</text>
+                  <text>{{item.memo}}</text>
+                </view>
+                <view>
+                  <text>座机</text>
+                  <text>{{item.telPhone}}</text>
+                </view>
+                <view>
+                  <text>手机号码</text>
+                  <text>{{item.cellPhone}}</text>
+                </view>
+                <view style="width:100%">
+                  <text>备注</text>
+                  <text>{{item.remark}}</text>
+                </view>
+              </view>
+            </view>
+          </repeat>
+          <!-- </view> -->
+        </view>
+        <view class="placeholderImage" wx:else="{{caseDetailData.CourtsDatas.CourtsData.length==0}}">
+          <image src="{{placeholderImage}}" mode="widthFix" lazy-load="false">
+          </image>
+        </view>
+      </view>
+      <!-- </swiper-item> -->
+      <!-- <swiper-item> -->
+      <!-- 财务 -->
+      <view class="personal-information" wx:if="{{currentTab==6}}">
+        <swiper duration="{{duration}}" circular="{{circular}}" style="white-space: nowrap;width:100%; height:{{caseDetailData.AmountDatas.AmountDataHeight+400}}rpx;" next-margin="50rpx" catchchange="getAmountData">
+          <swiper-item>
+            <view class="case-container height1" style="padding:44rpx 0rpx">
+              <view class="amount-container">
+                <view id="aggregate-amount" class="aggregate-amount">
+                  <view class="amount-content">
+                    <text style="font-size:28rpx;color:#7a7a7a;margin-bottom:24rpx">账单总金额</text>
+                    <text style="font-size:48rpx;color:#5d73fa">{{caseDetailData.AmountDatas.AmountData[0].UserCaseBillingCount}}</text>
+                  </view>
+                </view>
+                <repeat for="{{caseDetailData.AmountDatas.UserCaseBillingItem}}" key="index" index="index" item="item">
+                  <view class="amount-item">
+                    <view class="amount-item-top">
+                      <text>账单金额:{{item.billingAmount}}</text>
+                      <text style="color:{{item.textColor}}">{{item.processStatusText}}</text>
+                    </view>
+                    <text class="color">账单日期:{{item.billingDateText}}</text>
+                  </view>
+                </repeat>
+              </view>
+            </view>
+          </swiper-item>
+          <swiper-item>
+            <view class="case-container height2" style="padding:44rpx 0rpx">
+              <view class="amount-container">
+                <view class="aggregate-amount">
+                  <view class="amount-content">
+                    <text style="font-size:28rpx;color:#7a7a7a;margin-bottom:24rpx">发票<text>{{caseDetailData.AmountDatas.AmountData[1].displayName}}</text></text>
+                    <text style="font-size:48rpx;color:#5d73fa">{{caseDetailData.AmountDatas.AmountData[1].total||0}}</text>
+                  </view>
+                </view>
+                <repeat for="{{caseDetailData.AmountDatas.UserInvoicesItem}}" key="index" index="index" item="item">
+                  <view class="amount-item">
+                    <view class="amount-item-top">
+                      <text>发票金额：{{item.invoiceAmount}}</text>
+                      <text></text>
+                      <text style="color:{{item.statusColor}}">{{item.statusName}}</text>
+                    </view>
+                    <text class="color">开票日期:{{caseDetailData.AmountDatas.UserInvoicesDate[index]}}</text>
+                  </view>
+                </repeat>
+              </view>
+            </view>
+          </swiper-item>
+          <swiper-item>
+            <view class="case-container" style="padding:44rpx 0rpx">
+              <view class="amount-container">
+                <view class="aggregate-amount">
+                  <view class="amount-content">
+                    <text style="font-size:28rpx;color:#7a7a7a;margin-bottom:24rpx">收款<text>{{caseDetailData.AmountDatas.AmountData[2].displayName}}</text></text>
+                    <text style="font-size:48rpx;color:#5d73fa">{{caseDetailData.AmountDatas.AmountData[2].total||0}}</text>
+                  </view>
+                </view>
+                <repeat for="{{caseDetailData.AmountDatas.UserReceiptsItem}}" key="index" index="index" item="item">
+                  <view class="amount-item">
+                    <view class="amount-item-top">
+                      <text>收款金额：{{item.payAmount}}</text>
+                      <text style="color:{{item.statusColor}}">{{item.statusName}}</text>
+                    </view>
+                    <text class="color">收款日期:{{caseDetailData.AmountDatas.UserReceiptsDate[index]}}</text>
+                  </view>
+                </repeat>
+              </view>
+            </view>
+          </swiper-item>
+          <swiper-item>
+            <view class="case-container" style="padding:44rpx 0rpx">
+              <view class="amount-container">
+                <view class="aggregate-amount">
+                  <view class="amount-content">
+                    <text style="font-size:28rpx;color:#7a7a7a;margin-bottom:24rpx">费用<text>{{caseDetailData.AmountDatas.AmountData[3].displayName}}</text></text>
+                    <text style="font-size:48rpx;color:#5d73fa">{{caseDetailData.AmountDatas.AmountData[3].total||0}}</text>
+                  </view>
+                </view>
+                <repeat for="{{caseDetailData.AmountDatas.UserChargesItem}}" key="index" index="index" item="item">
+                  <view class="amount-item">
+                    <view class="amount-item-top">
+                      <text>发票金额：{{item.chargeAmount}}</text>
+                      <text style="color:{{item.statusColor}}">{{item.statusName}}</text>
+                    </view>
+                    <text class="color">收款日期:{{caseDetailData.AmountDatas.UserChargesDate[index]}}</text>
+                  </view>
+                </repeat>
+              </view>
+            </view>
+          </swiper-item>
+        </swiper>
+        <view class="placeholderImage" wx:if="{{false}}">
+          <image src="{{placeholderImage}}" mode="widthFix" lazy-load="false">
+          </image>
+        </view>
+      </view>
+      <image src="../../../../images/add.png" mode="scaleToFill" lazy-load="false" class="addimage" wx:if="{{currentTab==2}}" @tap="tocreate"></image>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import 'wepy-async-function';
+  import navbar from '../../../../components/navbar';
+  import ajax from '../../../../utils/cofig/ajax.js';
+  import api from '../../../../utils/cofig/api.js';
+  export default class caseDetail extends wepy.page {
+    components = {
+      navbar
+    };
+    data = {
+      task:false,
+      currentTab: 0,
+      navbars: ['案件', '客户', '任务', '文档', '日志', '开庭', '财务'],
+      winHeight1: '',
+      winHeight2: '',
+      circular: false,
+      // autoplay: false,
+      duration: 300,
+      circular: true,
+      // addHeight: '',
+      enablebacktotop: true,
+      toggle: false,
+      chooseSize: false,
+      taskchooseSize: false,
+      courtchooseSize: false,
+      confirmTaskChoose: false,
+      isAcceptChoose: false,
+      // 占位图
+      placeholderImage: '../../../../images/noData.png',
+      // loghide: true
+      animationData: [],
+      // 获取数据
+      id: 0,
+      userId: [],
+      clientId: '',
+      caseDetailData: {
+        caseData: {
+          caseDetail: {},
+          userPhoto: []
+        },
+        clientData: {
+          clientAllData: {},
+          linkerPhoto: [],
+          linkerTotalCount: 0,
+          linkerData: {},
+          clientContactsListData: {},
+          clientContactsListLastData: {},
+          contactLength: 0,
+          birthday: ''
+        },
+        //任务
+        taskDatas: {
+          TaskStagesDatas: [],
+          TasksDatas: [],
+          setTimeout: '',
+          viewHeight: [],
+          pageNumber: [],
+          current: 0,
+          stageId: [],
+        },
+        //文档数据
+        documentDatas: {
+          documentData: {},
+          fileIcon: [],
+          fileColor: [],
+          filePath: [],
+          lastPathClass: [],
+          lastPathId: [],
+          SyncPath:"",
+          isValue: false,
+          searchDocValue:'',
+          fixedPath:{
+            lastPathClass:'',
+            lastPathId:'M43',
+            filePath:'首页'
+          }
+        },
+        workLogsDatas: {
+          workLogData: {},
+          selfDuration: 0,
+          businessDuration: 0,
+          billDuration: 0,
+          startTime: [],
+          endTime: [],
+          avatarData: [],
+          processStatus: []
+        },
+        CourtsDatas: {
+          CourtsData: {},
+          endYear: [],
+          endHour: [],
+          startYear: [],
+          startHour: []
+        },
+        //财务
+        AmountDatas: {
+          PageNumber: [1, 1, 1, 1],
+          AmountData: [],
+          AmountDataHeight: 0,
+          AmountCurrent: 0,
+          UserCaseBillingItem: [],
+          UserCaseBillingHeight: 0,
+          UserInvoicesItem: [],
+          UserInvoicesItemHeight: 0,
+          UserInvoicesDate: [],
+          UserReceiptsItemHeight: 0,
+          UserReceiptsItem: [],
+          UserReceiptsDate: [],
+          UserChargesItemHeight: 0,
+          UserChargesItem: [],
+          UserChargesDate: []
+        }
+      }
+    };
+    methods = {
+      //任务
+      //新建任务
+      addTask(projectId) {
+        wx.navigateTo({
+          url: '../../myTaskCourse/taskStage/createtask/creatTask?projectId=' + projectId + '&currentStage=' + this.caseDetailData.taskDatas.current + '&category=' + 0
+        });
+      },
+      //是否完成任务
+      isChecked(sIndex, index, checked, id) {
+        if (!this.caseDetailData.taskDatas.TasksDatas[sIndex].items[index].childTask) {
+          this.caseDetailData.taskDatas.TasksDatas[sIndex].items[index].checked = true
+          var Timeout = setTimeout(() => {
+            this.caseDetailData.taskDatas.TasksDatas[sIndex].items[index].checked = false
+            this.$apply();
+          }, 0);
+          this.caseDetailData.taskDatas.setTimeout = Timeout;
+          wx.showToast({
+            title: '请先检查子任务！',
+            icon: 'none',
+            duration: 1500,
+            mask: false,
+          });
+        } else if (!checked) {
+          this.CompletedTaskParticipant(id, 'Y', checked);
+          this.caseDetailData.taskDatas.TasksDatas[sIndex].items[index].checked = !this.caseDetailData.taskDatas.TasksDatas[sIndex].items[index].checked
+        } else {
+          this.CompletedTaskParticipant(id, 'N', checked)
+          this.caseDetailData.taskDatas.TasksDatas[sIndex].items[index].checked = !this.caseDetailData.taskDatas.TasksDatas[sIndex].items[index].checked
+        };
+        this.$apply();
+      },
+      // 去详情页面
+      toTaskDetail(id) {
+        wx.navigateTo({
+          url: '../../myTaskCourse/taskStage/taskDetail/taskdetail?id=' + id
+        });
+      },
+      // 更多选项
+      moreChoose(item, index) {
+        var nextSort = this.caseDetailData.taskDatas.TaskStagesDatas.length - 1 > index ? this.caseDetailData.taskDatas.TaskStagesDatas[index + 1].sort : 0;
+        var itemList = ['在此后添加新阶段', '新建任务', '删除'];
+        wx.showActionSheet({
+          itemList: itemList,
+          itemColor: '#5d73fa',
+          success: res => {
+            if (res.tapIndex == 0) {
+              wx.navigateTo({
+                url: '../../myTaskCourse/taskStage/createtask/createStage?projectId=' + item.projectId + '&sort=' + item.sort + '&nextSort=' + nextSort
+              });
+            }
+            if (res.tapIndex == 1) {
+              wx.navigateTo({
+                url: '../../myTaskCourse/taskStage/createtask/creatTask?projectId=' + item.projectId + '&currentStage=' + this.caseDetailData.taskDatas.current + '&category=' + 0
+              });
+            }
+            if (res.tapIndex == 2) {
+              if (item.taskCount == 0 && item.participantTaskCount == 0) {
+                this.DeleteTaskStage(item.id, index);
+              } else {
+                wx.showToast({
+                  title: '对不起，请先清空此阶段列表上的任务，然后再删除这个阶段列表！', //提示的内容,
+                  icon: 'none', //图标,
+                  duration: 2000, //延迟时间,
+                  mask: true, //显示透明蒙层，防止触摸穿透,
+                  success: res => {}
+                });
+              }
+            }
+          }
+        });
+      },
+      // 删除任务
+      longpress(id) {
+        wx.showModal({
+          title: '是否确认删除该项任务！',
+          content: '',
+          showCancel: true,
+          cancelText: '取消',
+          cancelColor: '#000000',
+          confirmText: '确定',
+          confirmColor: '#5d73fa',
+          success: res => {
+            if (res.confirm) {
+              this.DeleteTask(id);
+            }
+          }
+        });
+      },
+      //开庭显示按钮
+      courtShow(index) {
+        if (
+          this.caseDetailData.CourtsDatas.CourtsData[index].operations !== null
+        ) {
+          var operations = this.caseDetailData.CourtsDatas.CourtsData[index]
+            .operations;
+          var option = [];
+          for (var i in operations) {
+            option[i] = operations[i].text;
+          }
+          wx.showActionSheet({
+            itemList: option, //显示的列表项
+            success: function(res) {
+              //res.tapIndex点击的列表项
+              // console.log(res)
+              if (option[res.tapIndex] == '删除') {
+                // console.log(111);
+              }
+              if (option[res.tapIndex] == '修改') {
+                // console.log(222);
+              }
+              if (option[res.tapIndex] == '查看') {
+                wx.showToast({
+                  title: '用户没有权限',
+                  icon: 'none',
+                  duration: 1000,
+                  mask: false
+                });
+              }
+              // if(res.tapIndex){}
+              // console.log(that[res.tapIndex])
+            },
+            fail: function(res) {},
+            complete: function(res) {}
+          });
+        } else {
+          wx.showToast({
+            title: '用户没有权限',
+            icon: 'none',
+            duration: 1000,
+            mask: false
+          });
+        }
+      },
+      // 任务滑动切换数据
+      taskBindChange(e) {
+        this.caseDetailData.taskDatas.current = e.detail.current;
+        this.$apply();
+      },
+      // //财务滑动切换数据
+      getAmountData(e) {
+        if (wx.pageScrollTo) {
+          wx.pageScrollTo({
+            scrollTop: 0,
+            duration: 0
+          });
+        }
+        this.caseDetailData.AmountDatas.AmountCurrent = e.detail.current;
+        if (e.detail.current == 0) {
+          this.caseDetailData.AmountDatas.AmountDataHeight = this.caseDetailData.AmountDatas.UserCaseBillingHeight;
+        }
+        if (e.detail.current == 1) {
+          this.caseDetailData.AmountDatas.AmountDataHeight = this.caseDetailData.AmountDatas.UserInvoicesItemHeight;
+        }
+        if (e.detail.current == 2) {
+          this.caseDetailData.AmountDatas.AmountDataHeight = this.caseDetailData.AmountDatas.UserReceiptsItemHeight;
+        }
+        if (e.detail.current == 3) {
+          this.caseDetailData.AmountDatas.AmountDataHeight = this.caseDetailData.AmountDatas.UserChargesItemHeight;
+        }
+      },
+      // 文档返回上几层
+      goBack(id, docClass, index) {
+        if(index>=0){
+          this.caseDetailData.documentDatas.lastPathClass.splice(
+            index+1,
+            this.caseDetailData.documentDatas.lastPathClass.length - index
+          );
+          this.caseDetailData.documentDatas.lastPathId.splice(
+            index+1,
+            this.caseDetailData.documentDatas.lastPathId.length - index
+          );
+          this.caseDetailData.documentDatas.filePath.splice(
+            index+1,
+            this.caseDetailData.documentDatas.filePath.length - index
+          );
+          this.getDocumentData(id, docClass);
+        }else{
+           this.caseDetailData.documentDatas.filePath=[];
+           this.caseDetailData.documentDatas.lastPathClass=[];
+           this.caseDetailData.documentDatas.lastPathId=[];
+           this.getDocumentData(this.id, 'M1');
+        }
+         
+      },
+      // 文档预览
+      preview(id, fileClass, docClass, textPath) {
+        var fileClass = fileClass.replace('.', '').toLowerCase();
+        if (fileClass !== 'folder') {
+          wx.getStorage({
+            key: 'access',
+            success: res => {
+              wx.downloadFile({
+                header: {
+                  'content-type': 'application/octet-stream',
+                  Authorization: 'Bearer ' + res.data
+                },
+                url: 'https://www.ailinkedlaw.com/api/services/web/document/GetDocumentFile?id=' +
+                  id,
+                success: res => {
+                  var filePath = res.tempFilePath;
+                  // this.showView = !this.showView;
+                  // console.log(filePath);
+                  switch (fileClass) {
+                    case 'jpg':
+                      wx.previewImage({
+                        current: res.tempFilePath, // 当前显示图片的http链接
+                        urls: [res.tempFilePath] // 需要预览的图片http链接列表
+                      });
+                      break;
+                    case 'png':
+                      wx.previewImage({
+                        current: res.tempFilePath, // 当前显示图片的http链接
+                        urls: [res.tempFilePath] // 需要预览的图片http链接列表
+                      });
+                      break;
+                    default:
+                      wx.openDocument({
+                        filePath: filePath,
+                        fileType: fileClass,
+                        success: res => {
+                          // this.file.push(res.data);
+                          console.log('打开文件');
+                          // this.$apply();
+                        },
+                        fail: err => {
+                          console.log(err);
+                        }
+                      });
+                      // this.showView = !this.showView;
+                      break;
+                  }
+                  this.$apply();
+                },
+                fail: err => {
+                  console.log(err);
+                }
+              });
+            }
+          });
+        } else {
+          this.getDocumentData(id, docClass);
+          this.caseDetailData.documentDatas.lastPathClass.push(docClass);
+          this.caseDetailData.documentDatas.lastPathId.push(id);
+          var filePath = textPath.split('/');
+          filePath = '/' + filePath[filePath.length - 1];
+          this.caseDetailData.documentDatas.filePath.push(filePath);
+          // if(this.caseDetailData.documentDatas.searchDocValue){
+          //   this.caseDetailData.documentDatas.filePath=filePath
+          // }else{
+            
+          // }
+        }
+      },
+      //文档搜索
+      searchDoc(e) {
+        let value = e.detail.value;
+        this.caseDetailData.documentDatas.searchDocValue=value;
+        this.caseDetailData.documentDatas.isValue=value?true:false;
+        var docClass='';
+        var parentId='';
+        if(this.caseDetailData.documentDatas.filePath.length>0){
+           docClass=this.caseDetailData.documentDatas.lastPathClass[this.caseDetailData.documentDatas.lastPathClass.length-1];
+           parentId=this.caseDetailData.documentDatas.lastPathId[this.caseDetailData.documentDatas.lastPathId.length-1];
+        }else{
+          docClass='M1';
+          parentId=this.id;
+        }
+        this.getDocumentData(parentId, docClass,value)
+        this.$apply();
+      },
+      //清除搜索
+      clearDoc(){
+        this.caseDetailData.documentDatas.isValue=false;
+        this.caseDetailData.documentDatas.searchDocValue='';
+        this.getDocumentData(this.id, 'M1');
+        this.$apply();
+      },
+      // 案件基本信息页面
+      tocasebase() {
+        wx.navigateTo({
+          url: './cases/casebase?id=' + this.id
+        });
+      },
+      // 案情简介页面
+      tocaseintroduce() {
+        wx.navigateTo({
+          url: './cases/caseintroduce?'
+        });
+      },
+      //案件人员信息
+      tocasepersonnelin() {
+        wx.navigateTo({
+          url: './cases/casepersonnelinformation?id=' + this.id
+        });
+        // }
+      },
+      // 跳转到利益冲突列表
+      toconflictinterest() {
+        if (this.caseDetailData.caseData.caseDetail.caseClientRelationList.length > 0) {
+          wx.navigateTo({
+            url: './cases/conflictinterest/conflictinterest?id=' + this.id
+          });
+        }
+      },
+      // 跳转到合同详情页面
+      tocontractinfo() {
+        wx.navigateTo({
+          url: './cases/contractdetail/contractinfo?'
+        });
+      },
+      //跳转至客户基本信息页
+      toclientbase() {
+        wx.navigateTo({
+          url: '../../myclient/clientDetail/itemDetail/clientBaseInfo'
+        });
+      },
+      // 跳转至客户联系人页
+      toclientlinkman() {
+        wx.navigateTo({
+          url: '../../myclient/clientDetail/itemDetail/clientLinkman?id=' + this.clientId + '&caseId=' + this.id + '&title=客户方本案联系人'
+        });
+      },
+      //跳转至拜访记录页
+      tovisitrecord() {
+        wx.navigateTo({
+          url: '../../myclient/clientDetail/itemDetail/recordsList'
+        });
+      },
+      tocreate(e) {
+        if (this.currentTab == 2) {
+          this.toCreateTasks();
+        }
+        if (this.currentTab == 5) {
+          wx.navigateTo({
+            url: './task/taskdetail'
+          });
+        }
+      },
+      // 日志详情
+      tologdetail(id) {
+        wx.navigateTo({
+          url: '../../myRecord/myLogdetail/logdetail?id=' + id
+        });
+      }
+    };
+    watch = {
+      currentTab(current) {
+        if (wx.pageScrollTo) {
+          wx.pageScrollTo({
+            scrollTop: 0,
+            duration: 0
+          });
+        }
+      },
+    };
+    computed = {
+      AmountDataHeight() {
+        if (this.caseDetailData.AmountDatas.AmountCurrent == 0) {
+          // if(this.caseDetailData.AmountDatas.AmountCurrent=0){
+          this.caseDetailData.AmountDatas.AmountDataHeight = this.caseDetailData.AmountDatas.UserCaseBillingHeight;
+          // this.$apply();
+          // }
+        }
+        if (this.caseDetailData.AmountDatas.AmountCurrent == 1) {
+          // if(this.caseDetailData.AmountDatas.AmountCurrent=0){
+          this.caseDetailData.AmountDatas.AmountDataHeight = this.caseDetailData.AmountDatas.UserInvoicesItemHeight;
+          // this.$apply();
+          // }
+        }
+        if (this.caseDetailData.AmountDatas.AmountCurrent == 2) {
+          // if(this.caseDetailData.AmountDatas.AmountCurrent=0){
+          this.caseDetailData.AmountDatas.AmountDataHeight = this.caseDetailData.AmountDatas.UserReceiptsItemHeight;
+          // this.$apply();
+          // }
+        }
+        if (this.caseDetailData.AmountDatas.AmountCurrent == 3) {
+          // if(this.caseDetailData.AmountDatas.AmountCurrent=0){
+          this.caseDetailData.AmountDatas.AmountDataHeight = this.caseDetailData.AmountDatas.UserChargesItemHeight;
+          // this.$apply();
+          // }
+        }
+      }
+    };
+    // 创建阶段任务（最后）;
+    toCreateTasks() {
+      var sort = this.caseDetailData.taskDatas.TaskStagesDatas.length - 1;
+      var projectId = this.id;
+      if(this.task)
+      wx.navigateTo({
+        url: '../../myTaskCourse/taskStage/createtask/createStage?projectId=' + projectId + '&sort=' + sort
+      });
+      else
+      wx.navigateTo({ url: '../../myTaskCourse/createProject' });
+    }
+    //案件信息
+    async getCaseData() {
+      wx.showLoading({
+          title: '加载中,请稍等!',
+          mask: false
+        });
+      var id = {
+        id: this.id
+      };
+      var caseData = await ajax.getData(
+        '/api/services/web/case/GetCaseInfo',
+        'POST',
+        id
+      );
+      // console.log(caseData.data.result);
+      if (caseData.statusCode == 200 && caseData.data.result !== null) {
+        
+        this.caseDetailData.caseData.caseDetail = caseData.data.result;
+        // this.clientId = caseData.data.result.clientId;
+        var caseLawyerList = caseData.data.result.caseLawyerList;
+        // 头像Id去重
+        var userIds = [];
+        for (var index in caseLawyerList) {
+          userIds[index] = caseLawyerList[index].userId;
+        }
+        this.userId = api.myDistinct(userIds);
+        //头像处理
+        for (var index in this.userId) {
+          // console.log(this.userId[index])
+          var http =
+            '/api/services/web/personal/GetEmployeePhoto?id=' +
+            this.userId[index];
+          var userAvatar = await ajax.getUserAvatar(http);
+          // console.log(userAvatar);
+          if (userAvatar.statusCode == 200) {
+            this.caseDetailData.caseData.userPhoto[index] =
+              userAvatar.tempFilePath;
+            this.$apply();
+          } else {
+            wx.showToast({
+              title: '网络故障!',
+              icon: 'none',
+              duration: 1500,
+              mask: false
+            });
+          }
+        }
+        // 付款方式数据
+        var contractForEditData = await ajax.getData(
+          '/api/services/web/case/GetCaseChargeBasic',
+          'post',
+          id
+        );
+        if (contractForEditData.statusCode == 200) {
+          //付款方式字符串替换
+          this.caseDetailData.caseData.contractForEditData =
+            contractForEditData.data.result;
+          if (contractForEditData.data.result.payStyleText !== null) {
+            this.caseDetailData.caseData.payStyleText = contractForEditData.data.result.payStyleText.replace(
+              /,/g,
+              '+'
+            );
+          } else {
+            this.caseDetailData.caseData.payStyleText = '未填写';
+          }
+        } else {
+          wx.showToast({
+            title: '数据异常,部分数据无法正常显示',
+            icon: 'none',
+            duration: 1500,
+            mask: false
+          });
+        }
+        // 将数据保存到本地
+        var caseDetailData = {
+          caseData: this.caseDetailData.caseData.caseDetail,
+          contractForEditData: this.caseDetailData.caseData.contractForEditData,
+          payStyleText: this.caseDetailData.caseData.payStyleText
+          // userPhoto: this.caseDetailData.caseData.userPhoto
+        };
+        wx.setStorage({
+          key: 'caseDetailData',
+          data: caseDetailData
+        });
+        this.$apply();
+      } else {
+        if (caseData.statusCode !== 200) {
+          wx.showToast({
+            title: '网络故障!',
+            icon: 'none',
+            duration: 1500,
+            mask: false
+          });
+          this.caseDetailData.caseData.caseDetail = null;
+        } else if (caseData.data.result == null) {
+          this.caseDetailData.caseData.caseDetail = null;
+        }
+      }
+      this.$apply();
+    }
+    //客户信息
+    async getClient() {
+      var clientId = {
+        id: this.clientId
+      };
+      var clientData = await ajax.getData(
+        '/api/services/web/client/GetClient',
+        'post',
+        clientId
+      );
+      // console.log(clientData, "客户联系人");
+      // clientData.data.result=null;
+      if (clientData.statusCode == 200 && clientData.data.result !== null) {
+        // console.log(clientData.result);
+        this.caseDetailData.clientData.clientAllData = clientData.data.result;
+        // 出生日期处理
+        if (clientData.data.result.birthday !== null) {
+          this.caseDetailData.clientData.birthday = clientData.data.result.birthday
+            .split('T')[0]
+            .toString();
+        } else {
+          this.caseDetailData.clientData.birthday = '未填写';
+        }
+        // 客户联系人
+        var clientId = {
+          caseId: this.id,
+          ClientId: this.clientId,
+          pageNumber: 1,
+          pageSize: 10
+        };
+        var clientLinkerData = await ajax.getData(
+          '/api/services/web/clientContacts/GetClientContactsList',
+          'post',
+          clientId
+        );
+        // 客户联系人头像
+        if (clientLinkerData.statusCode == 200) {
+          this.caseDetailData.clientData.linkerData =
+            clientLinkerData.data.result.items;
+          this.caseDetailData.clientData.linkerTotalCount = clientLinkerData.data.result.totalCount;
+          var clientLinkerData = clientLinkerData.data.result.items;
+          for (var index in clientLinkerData) {
+            var id = clientLinkerData[index].id;
+            var http =
+              '/api/services/web/clientContacts/GetClientContactAvatar?id=' + id;
+            var linkerPhoto = await ajax.getUserAvatar(http);
+            if (linkerPhoto.statusCode == 200) {
+              this.caseDetailData.clientData.linkerPhoto[index] =
+                linkerPhoto.tempFilePath;
+              this.caseDetailData.clientData.linkerData[index]['avatar'] = linkerPhoto.tempFilePath
+            } else {
+              wx.showToast({
+                title: '部分数据异常！',
+                icon: 'none',
+                duration: 1500,
+                mask: false
+              });
+            }
+          }
+          this.$apply();
+        } else {
+          wx.showToast({
+            title: '部分数据异常！',
+            icon: 'none',
+            duration: 1500,
+            mask: false
+          });
+        }
+        // 拜访记录
+        var recordId = {
+          clientId: this.clientId,
+          pageNumber: 1,
+          pageSize: 10,
+        };
+        var clientContactsListData = await ajax.getData(
+          '/api/services/web/clientVisitServiceRecords/GetVisitRecords',
+          'post',
+          recordId
+        );
+        if (clientContactsListData.statusCode == 200 && clientContactsListData.data.result.items.length !== 0) {
+          this.caseDetailData.clientData.clientContactsListData =
+            clientContactsListData.data.result.items;
+          this.caseDetailData.clientData.contactLength = clientContactsListData.data.result.totalCount
+          // 拜访记录最新时间
+          this.caseDetailData.clientData.clientContactsListLastData =
+            clientContactsListData.data.result.items[0];
+        }
+        // 客户联系人缓存数据
+        var ContactsListData = {
+          items: this.caseDetailData.clientData.linkerData,
+          totalCount: this.caseDetailData.clientData.linkerTotalCount
+        }
+        // 拜访记录缓存数据
+        var RecordsDatas = {
+          items: this.caseDetailData.clientData.clientContactsListData,
+          totalCount: this.caseDetailData.clientData.recordsToatalCount
+        }
+        // 本地存储
+        var clientAllData = {
+          clientBaseInfoData: this.caseDetailData.clientData.clientAllData, //客户详情信息
+          ContactsListData: ContactsListData, //客户联系人
+          RecordsDatas: RecordsDatas, //拜访记录,
+        };
+        wx.setStorageSync('clientData', clientAllData);
+        this.$apply();
+      } else {
+        if (clientData.statusCode !== 200) {
+          this.caseDetailData.clientData.clientAllData = null;
+          wx.showToast({
+            title: '网络故障！',
+            icon: 'none',
+            duration: 1500,
+            mask: false
+          });
+        } else if (clientData.data.result == null) {
+          this.caseDetailData.clientData.clientAllData = null;
+        }
+      }
+      this.$apply();
+    }
+    //任务
+    //获取任务阶段
+    async GetTaskStages() {
+      var data = {
+        projectId: this.id
+      }
+      var TaskProjectBasic = await ajax.getData(
+        '/api/services/web/taskProject/GetTaskProjectBasic',
+        'post',
+        {id:this.id}
+      )
+      if(!TaskProjectBasic.data.result.id)
+      return false;
+      else
+      this.task = true;
+      var TaskStagesDatas = await ajax.getData(
+        '/api/services/web/taskPlanning/GetTaskStages',
+        'post',
+        data
+      )
+      switch (TaskStagesDatas.statusCode) {
+        case 200:
+          if (TaskStagesDatas.data.result.length !== 0) {
+            // console.log(TaskStagesDatas.data.result);
+            var TaskStagesData = TaskStagesDatas.data.result;
+            this.caseDetailData.taskDatas.TaskStagesDatas = TaskStagesData;
+            for (var index in TaskStagesData) {
+              var stageId = TaskStagesData[index].id;
+              this.caseDetailData.taskDatas.stageId[index] = TaskStagesData[index].id
+              this.caseDetailData.taskDatas.pageNumber[index] = 1;
+              this.caseDetailData.taskDatas.viewHeight[index] = 500;
+              this.GetTasks(index, stageId);
+            }
+            this.$apply();
+          }
+          break;
+        case 403:
+          console.log('您没有权限');
+          this.placeHolder.placeHolderImageIndex = 3;
+          this.placeHolder.placeHolderShow = true;
+          this.$apply();
+          break;
+        case 500:
+          console.log('数据请求错误')
+          this.placeHolder.placeHolderImageIndex = 1;
+          this.placeHolder.placeHolderShow = true;
+          this.$apply();
+        default:
+          break;
+      }
+      this.$apply();
+    }
+    //获取任务项
+    async GetTasks(index, stageId) {
+      var data = {
+        pageNumber: this.caseDetailData.taskDatas.pageNumber[index],
+        pageSize: 100,
+        stageId: stageId,
+        projectId: this.id
+      }
+      var GetTasksDatas = await ajax.getData(
+        '/api/services/web/taskPlanning/GetTasks',
+        'post',
+        data
+      )
+      if (GetTasksDatas.data.result.items.length !== 0) {
+        var TasksData = GetTasksDatas.data.result
+        var childChecked = [];
+        for (var i in TasksData.items) {
+          if (TasksData.items[i].isCompleted == 'Y') {
+            TasksData.items[i]['checked'] = true
+          } else {
+            TasksData.items[i]['checked'] = false
+          }
+          if (TasksData.items[i].isCompleted == 'D') {
+            TasksData.items[i]['childTask'] = false
+          } else {
+            TasksData.items[i]['childTask'] = true
+          }
+          if (TasksData.items[i].endTime) {
+            // TasksData.items[i].endTime = api.formatTimeSymbol(TasksData.items[i].endTime, '/');
+            var hourTime=new Date(TasksData.items[i].endTime).getHours();
+                if(hourTime>7&&hourTime<25){
+                    var millTime=new Date(TasksData.items[i].endTime).getTime()-(8*60*60*1000);
+                    TasksData.items[i].endTime=new Date(millTime);
+                }else{
+                    var millTime=(16*60*60*1000)+new Date(TasksData.items[i].endTime).getTime();
+                   TasksData.items[i].endTime=new Date(millTime);
+                }
+              TasksData.items[i].endTime = api.formatTimeSymbol(TasksData.items[i].endTime, '-')
+          }
+        }
+        this.caseDetailData.taskDatas.TasksDatas[index] = TasksData;
+        this.caseDetailData.taskDatas.viewHeight[index] += TasksData.items.length * 175;
+      } else {
+        // child[index].push([])
+        this.caseDetailData.taskDatas.TasksDatas[index] = {
+          item: [],
+          totalCount: 0
+        }
+      }
+      // console.log(child)
+      this.$apply();
+    }
+    //完成任务
+    async CompletedTaskParticipant(id, isCompleted, checked) {
+      var date = new Date();
+      var data = {
+        isMark: "Y",
+        isParticipant: "Y",
+        isRemind: "Y",
+        endTime: date,
+        id: id,
+        isCompleted: isCompleted,
+        projectId: this.id
+      };
+      var res = await ajax.getData(
+        '/api/services/web/taskParticipant/CompletedTaskParticipant',
+        'post',
+        data
+      )
+      if (res.data.success) {
+        if (res.statusCode == 200 && res.data.success) {
+          if (!checked) {
+            wx.showToast({
+              title: '已完成',
+              icon: 'none',
+              duration: 1500,
+              mask: false,
+            });
+          } else {
+            wx.showToast({
+              title: '已取消',
+              icon: 'none',
+              duration: 1500,
+              mask: false,
+            });
+          }
+        }
+      }
+    }
+    //删除阶段任务
+    async DeleteTaskStage(id, index) {
+      var resData = await ajax.getData(
+        '/api/services/web/taskPlanning/DeleteTaskStage',
+        'post', {
+          id: id
+        }
+      )
+      if (resData.statusCode == 200) {
+        this.caseDetailData.taskDatas.viewHeight = this.caseDetailData.taskDatas.viewHeight.splice(index, 1)
+        this.caseDetailData.taskDatas.pageNumber = this.caseDetailData.taskDatas.pageNumber.splice(index, 1)
+        this.caseDetailData.taskDatas.stageId = this.caseDetailData.taskDatas.stageId.splice(index, 1)
+        if (this.current > 0) {
+          this.current = this.current - 1;
+        } else {
+          this.current = 0;
+        }
+        if (this.caseDetailData.taskDatas.current > 0) {
+          this.caseDetailData.taskDatas.current = this.caseDetailData.taskDatas.current - 1;
+        } else {
+          this.caseDetailData.taskDatas.current = 0;
+        }
+        this.GetTaskStages();
+        this.$apply();
+      } else {
+        wx.showToast({
+          title: resData.data.error.message,
+          icon: 'none',
+          duration: 1500,
+          mask: false,
+        });
+      }
+    }
+    //删除任务项
+    async DeleteTask(id) {
+      var data = {
+        id
+      }
+      var resData = await ajax.getData(
+        '/api/services/web/taskPlanning/DeleteTask',
+        'post',
+        data
+      )
+      if (resData.statusCode == 200) {
+        this.caseDetailData.taskDatas.TasksDatas.totalCount -= 1;
+        this.caseDetailData.taskDatas.TasksDatas.items = this.caseDetailData.taskDatas.TasksDatas.splice(index, 1);
+        this.caseDetailData.taskDatas.current = this.caseDetailData.taskDatas.current;
+        this.GetTaskStages();
+        this.GetTasks();
+        this.$apply();
+      } else {
+        wx.showToast({
+          title: resData.data.error.message,
+          icon: 'none',
+          duration: 1500,
+          mask: false,
+        });
+      }
+    }
+    //文档
+    async getDocumentData(docClass, parentId, keyWords) {
+      var keyWord = keyWords || '';
+      var data = {
+        // SyncPath: this.SyncPath,
+        caseId: this.id,
+        docClass: docClass,
+        isRight: 0,
+        myFile: false,
+        onlyFile: false,
+        pageNumber: 1,
+        pageSize: 50,
+        parentId: parentId,
+        sorting: 'Name asc',
+        title: keyWord,
+        topClass: 'M1'
+      };
+      var documentData = await ajax.getData(
+        '/api/services/web/document/GetDocumentsWithFolders',
+        'post',
+        data
+      );
+      if (
+        documentData.statusCode == 200&&documentData.data.result.items.length>0
+      ) {
+        // this.caseDetailData.documentDatas.searchDocValue='';
+        // this.caseDetailData.documentDatas.isValue=false;
+        this.caseDetailData.documentDatas.documentData =documentData.data.result.items;
+        var document = documentData.data.result.items;
+        //图标 颜色
+        for (var index in document) {
+          //  this.caseDetailData.documentDatas.pathText.push(text)
+          var iconClass = document[index].fileExtension.toLowerCase();
+          switch (iconClass) {
+            case '.pdf':
+              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-pdfpng1';
+              this.caseDetailData.documentDatas.fileColor[index] = '#e20000';
+              break;
+            case '.png':
+              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-pdfpng1';
+              this.caseDetailData.documentDatas.fileColor[index] = '#e20000';
+              break;
+            case '.xls':
+              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-exl1';
+              this.caseDetailData.documentDatas.fileColor[index] = '#069400';
+              break;
+            case '.xlsx':
+              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-exl1';
+              this.caseDetailData.documentDatas.fileColor[index] = '#069400';
+              break;
+            case '.docx':
+              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-wold1';
+              this.caseDetailData.documentDatas.fileColor[index] = '#009dff';
+              break;
+            case '.doc':
+              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-wold1';
+              this.caseDetailData.documentDatas.fileColor[index] = '#009dff';
+              break;
+            case '.jpg':
+              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-jpggeshi';
+              this.caseDetailData.documentDatas.fileColor[index] = '#ff9900';
+              break;
+            case 'folder':
+              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-wendang';
+              this.caseDetailData.documentDatas.fileColor[index] = '#ff9900';
+              break;
+            default:
+              this.caseDetailData.documentDatas.fileIcon[index] =
+                'icon-weizhiwenjiangeshi';
+              this.caseDetailData.documentDatas.fileColor[index] = '#7a7a7a';
+              break;
+          }
+        }
+      } else {
+        if (documentData.statusCode !== 200) {
+          this.caseDetailData.documentDatas.documentData = [];
+          wx.showToast({
+            title: '网络故障！',
+            icon: 'none',
+            duration: 1500,
+            mask: false
+          });
+        } else if (documentData.data.result.items.length == 0) {
+          this.caseDetailData.documentDatas.documentData = [];
+        }
+      }
+      this.$apply();
+    }
+    //日志
+    async getWorkLogs() {
+      var data = {
+        caseId: this.id,
+        keyword: '',
+        pageNumber: 1,
+        pageSize: 10,
+        sorting: 'StartTime Desc'
+      };
+      var workLogsData = await ajax.getData(
+        '/api/services/web/worklog/GetWorklogs',
+        'post',
+        data
+      );
+      // workLogsData.statusCode=300
+      // workLogsData.data.result.items=[]
+      if (
+        workLogsData.statusCode == 200 &&
+        workLogsData.data.result.items.length !== 0
+      ) {
+        this.caseDetailData.workLogsDatas.workLogData =
+          workLogsData.data.result.items;
+        var workLogData = workLogsData.data.result.items;
+        this.caseDetailData.workLogsDatas.selfDuration=workLogData.reduce((pre,cur)=>{
+             console.log(cur)
+            return cur.selfDuration+pre;
+        },)
+        for (var index in workLogData) {
+          // this.caseDetailData.workLogsDatas.selfDuration += Number(
+          //   workLogData[index].selfDuration.toFixed(2)
+          // ); //自报时长
+          this.caseDetailData.workLogsDatas.businessDuration += Number(
+            workLogData[index].businessDuration.toFixed(2)
+          ); //业务时长
+          this.caseDetailData.workLogsDatas.billDuration += Number(
+            workLogData[index].billDuration.toFixed(2)
+          ); //账单时长
+          // 开始结束时间处理
+          this.caseDetailData.workLogsDatas.startTime[index] = workLogData[
+              index
+            ].startTime
+            .replace(/[a-zA-Z]/g, ' ')
+            .split(' ');
+          this.caseDetailData.workLogsDatas.endTime[index] = workLogData[
+              index
+            ].endTime
+            .replace(/[a-zA-Z]/g, ' ')
+            .split(' ');
+          //创建人头像
+          var http =
+            '/api/services/web/personal/GetEmployeePhoto?id=' +
+            workLogData[index].employeeId;
+          var avatarData = await ajax.getUserAvatar(http);
+          // console.log(avatarData)
+          // avatarData.statusCode=100
+          if (avatarData.statusCode == 200) {
+            this.caseDetailData.workLogsDatas.avatarData[index] =
+              avatarData.tempFilePath;
+          } else {
+            wx.showToast({
+              title: '网络故障！部分数据无法正常显示',
+              icon: 'none',
+              duration: 1500,
+              mask: false
+            });
+          }
+          //审核状态
+          switch (workLogData[index].processStatus) {
+            case 'A':
+              this.caseDetailData.workLogsDatas.processStatus[index] = '#339933';
+              break;
+            case 'N':
+              this.caseDetailData.workLogsDatas.processStatus[index] = '#009dff';
+              break;
+            case 'R':
+              this.caseDetailData.workLogsDatas.processStatus[index] = '#e20000';
+              break;
+            default:
+              break;
+          }
+        }
+      } else {
+        if (workLogsData.statusCode !== 200) {
+          wx.showToast({
+            title: '网络故障！',
+            icon: 'none',
+            duration: 1500,
+            mask: false
+          });
+          this.caseDetailData.workLogsDatas.workLogData = [];
+        } else if (workLogsData.data.result.items.length == 0) {
+          this.caseDetailData.workLogsDatas.workLogData = [];
+        }
+      }
+      this.$apply();
+    }
+    //开庭
+    async GetCourts() {
+      var data = {
+        caseId: this.id,
+        keyword: '',
+        pageNumber: 1,
+        pageSize: 20,
+        sorting: 'StartTime Desc'
+      };
+      var CourtsDatas = await ajax.getData(
+        '/api/services/web/caseCourt/GetCourts',
+        'post',
+        data
+      );
+      // console.log(CourtsDatas)
+      // // CourtsDatas.statusData=100;
+      // CourtsDatas.data.result.items=[]
+      if (
+        CourtsDatas.statusCode == 200 &&
+        CourtsDatas.data.result.items.length !== 0
+      ) {
+        this.caseDetailData.CourtsDatas.CourtsData =
+          CourtsDatas.data.result.items;
+        var CourtsDatas = CourtsDatas.data.result.items;
+        for (var index in CourtsDatas) {
+          this.caseDetailData.CourtsDatas.endYear[index] = CourtsDatas[
+              index
+            ].endTime
+            .split('T')[0]
+            .replace(/-/g, '/');
+          this.caseDetailData.CourtsDatas.endHour[index] = CourtsDatas[
+              index
+            ].endTime
+            .split('T')[1]
+            .replace('Z', ' ');
+          this.caseDetailData.CourtsDatas.startYear[index] = CourtsDatas[
+              index
+            ].startTime
+            .split('T')[0]
+            .replace(/-/g, '/');
+          this.caseDetailData.CourtsDatas.startHour[index] = CourtsDatas[
+              index
+            ].startTime
+            .split('T')[1]
+            .replace('Z', ' ');
+          // console.log(CourtsDatas[index].endTime.split('T')[1].replace('Z', ' '));
+        }
+      } else {
+        if (CourtsDatas.statusCode !== 200) {
+          wx.showToast({
+            title: '网络故障！',
+            icon: 'none',
+            duration: 1500,
+            mask: false
+          });
+          this.caseDetailData.CourtsDatas.CourtsData = [];
+        } else if (CourtsDatas.data.result.items.length == 0) {
+          this.caseDetailData.CourtsDatas.CourtsData = [];
+        }
+      }
+      this.$apply();
+    }
+    //财务
+    //账单
+    async GetUserCaseBilling() {
+      var id = {
+        caseId: this.id,
+        isRoleFilter: true,
+        statusList: ['A']
+      };
+      var UserCaseBillingCount = await ajax.getData(
+        '/api/services/web/financialBilling/GetUserBillingsCount',
+        'POST',
+        id
+      );
+      if (UserCaseBillingCount.statusCode == 200 && UserCaseBillingCount.data.result !== null) {
+        var UserCaseBilling = {};
+        UserCaseBilling['UserCaseBillingCount'] = UserCaseBillingCount.data.result.items.length !== 0 ? UserCaseBillingCount.data.result.items[0].total : 0;
+        var itemId = {
+          caseId: this.id,
+          pageNumber: this.caseDetailData.AmountDatas.PageNumber[0],
+          pageSize: 10,
+        };
+        var UserCaseBillingItem = await ajax.getData(
+          '/api/services/web/financialBilling/GetMyBillings',
+          'POST',
+          itemId
+        );
+        // console.log(UserCaseBillingItem);
+        if (UserCaseBillingItem.statusCode == 200) {
+          UserCaseBilling['UserCaseBillingTotalCount'] =
+            UserCaseBillingItem.data.result.totalCount.toString(2);
+          // if(this.caseDetailData.AmountDatas.PageNumber[0]=1){
+          // console.log(UserCaseBillingItem.data.result.items.length);
+          this.caseDetailData.AmountDatas.UserCaseBillingHeight +=
+            UserCaseBillingItem.data.result.items.length * 200;
+          var UserCaseBillingItem = UserCaseBillingItem.data.result.items;
+          for (var index in UserCaseBillingItem) {
+            switch (UserCaseBillingItem[index].processStatusText) {
+              case '预开账单':
+                UserCaseBillingItem[index]['textColor'] = '#009DFF';
+                break;
+              case '等待审核':
+                UserCaseBillingItem[index]['textColor'] = '#ff9900';
+                break;
+              case '审核退回':
+                UserCaseBillingItem[index]['textColor'] = '#e20000';
+                break;
+              case '审核通过':
+                UserCaseBillingItem[index]['textColor'] = '#069400';
+                break;
+              default:
+                break;
+            }
+          }
+          this.caseDetailData.AmountDatas.UserCaseBillingItem = this.caseDetailData.AmountDatas.UserCaseBillingItem.concat(
+            UserCaseBillingItem
+          );
+        } else {
+          wx.showToast({
+            title: '网络故障，部分数据无法加载！',
+            icon: 'none',
+            duration: 1500,
+            mask: false
+          });
+        }
+        this.caseDetailData.AmountDatas.AmountData[0] = UserCaseBilling;
+      } else {
+        if (UserCaseBillingCount.statusCode !== 200) {
+          wx.showToast({
+            title: '网络故障！',
+            icon: 'none',
+            duration: 1500,
+            mask: false
+          });
+          this.caseDetailData.AmountDatas.UserCaseBillingCount = null;
+        } else if (UserCaseBillingCount.data.result == null) {
+          this.caseDetailData.AmountDatas.UserCaseBillingCount = null;
+        }
+      }
+      this.$apply();
+    }
+    //发票
+    async GetUserCaseInvoice() {
+      var id = {
+        caseId: this.id,
+        isRoleFilter: true,
+        statusList: ["Claimed"]
+      };
+      var UserCaseInvoiceCount = await ajax.getData(
+        '/api/services/web/financialInvoice/GetUserInvoicesCount',
+        'post',
+        id
+      );
+      if (UserCaseInvoiceCount.statusCode == 200) {
+        var UserCaseInvoice = UserCaseInvoiceCount.data.result.items[0];
+        this.caseDetailData.AmountDatas.AmountData[1] = UserCaseInvoice;
+        var itemId = {
+          caseId: this.id,
+          pageNumber: this.caseDetailData.AmountDatas.PageNumber[1],
+          pageSize: 10
+        };
+        var UserInvoicesItem = await ajax.getData(
+          '/api/services/web/financialInvoice/GetUserInvoices',
+          'post',
+          itemId
+        );
+        // console.log(UserInvoicesItem.data.result.items.length);
+        if (
+          UserInvoicesItem.statusCode == 200 &&
+          UserInvoicesItem.data.result.items.length !== 0
+        ) {
+          // UserCaseInvoice['UserInvoicesTotalCount'] =
+          //   UserInvoicesItem.data.result.totalCount;
+          var UserInvoicesItem = UserInvoicesItem.data.result.items;
+          this.caseDetailData.AmountDatas.UserInvoicesItemHeight +=
+            UserInvoicesItem.length * 250;
+          var date = [];
+          for (var index in UserInvoicesItem) {
+            date[index] = UserInvoicesItem[index].creationTime.split('T')[0];
+            switch (UserInvoicesItem[index].statusName) {
+              case '已领取':
+                UserInvoicesItem[index]['statusColor'] = '#069400';
+                break;
+              case '未提交':
+                UserInvoicesItem[index]['statusColor'] = '#5d73fa';
+                break;
+              case '待处理':
+                UserInvoicesItem[index]['statusColor'] = '#ff9900';
+                break;
+              case '已退回':
+                UserInvoicesItem[index]['statusColor'] = '#e20000';
+                break;
+              case '已开票':
+                UserInvoicesItem[index]['statusColor'] = '#009dff';
+              case '已到账':
+                UserInvoicesItem[index]['statusColor'] = '#069400';
+              case '未到账':
+                UserInvoicesItem[index]['statusColor'] = '#e20000';
+              case '部分到账':
+                UserInvoicesItem[index]['statusColor'] = '#009dff';
+                break;
+              default:
+                break;
+            }
+          }
+          this.caseDetailData.AmountDatas.UserInvoicesDate = this.caseDetailData.AmountDatas.UserInvoicesDate.concat(
+            date
+          );
+          this.caseDetailData.AmountDatas.UserInvoicesItem = this.caseDetailData.AmountDatas.UserInvoicesItem.concat(
+            UserInvoicesItem
+          );
+        }
+        this.caseDetailData.AmountDatas.AmountData[1] = UserCaseInvoice;
+      } else {
+        if (UserCaseInvoiceCount.statusCode !== 200) {
+          wx.showToast({
+            title: '网络故障！',
+            icon: 'none',
+            duration: 1500,
+            mask: false
+          });
+          this.caseDetailData.AmountDatas.UserCaseInvoiceCount = null;
+        } else if (UserCaseInvoiceCount.data.result == null) {
+          this.caseDetailData.AmountDatas.UserCaseInvoiceCount = null;
+        }
+      }
+      this.$apply();
+    }
+    // 收款
+    async GetUserCaseReceiptCount() {
+      var id = {
+        caseId: this.id
+      };
+      var UserCaseReceiptCount = await ajax.getData(
+        '/api/services/web/financialReceipt/GetUserReceiptsCount',
+        'post',
+        id
+      );
+      if (
+        UserCaseReceiptCount.statusCode == 200
+      ) {
+        var UserCaseReceipt = UserCaseReceiptCount.data.result.items[1];
+        var itemId = {
+          caseId: this.id,
+          pageNumber: this.caseDetailData.AmountDatas.PageNumber[2],
+          pageSize: 10
+        };
+        var UserReceiptsItem = await ajax.getData(
+          '/api/services/web/financialReceipt/GetUserReceipts',
+          'post',
+          itemId
+        );
+        if (UserReceiptsItem.statusCode == 200) {
+          // UserCaseReceipt['UserReceiptsTotalCount'] =
+          //   UserReceiptsItem.data.result.totalCount;
+          var UserReceiptsItem = UserReceiptsItem.data.result.items;
+          this.caseDetailData.AmountDatas.UserReceiptsItemHeight +=
+            UserReceiptsItem.length * 250;
+          var date = [];
+          for (var index in UserReceiptsItem) {
+            date[index] = UserReceiptsItem[index].creationTime.split('T')[0];
+            switch (UserReceiptsItem[index].statusName) {
+              case '已领取':
+                UserReceiptsItem[index]['statusColor'] = '#069400';
+                break;
+              case '未领取':
+                UserReceiptsItem[index]['statusColor'] = '#ff9900';
+                break;
+              case '待确认':
+                UserReceiptsItem[index]['statusColor'] = '#ff9900';
+                break;
+              case '待分配':
+                UserReceiptsItem[index]['statusColor'] = '#ff9900';
+                break;
+              case '未提交':
+                UserReceiptsItem[index]['statusColor'] = '#5d73fa';
+                break;
+              case '已分配':
+                UserReceiptsItem[index]['statusColor'] = '#069400';
+                break;
+              default:
+                break;
+            }
+          }
+          this.caseDetailData.AmountDatas.UserReceiptsDate = this.caseDetailData.AmountDatas.UserReceiptsDate.concat(
+            date
+          );
+          this.caseDetailData.AmountDatas.UserReceiptsItem = this.caseDetailData.AmountDatas.UserReceiptsItem.concat(
+            UserReceiptsItem
+          );
+        } else {
+          wx.showToast({
+            title: '网络故障！部分数据无法加载',
+            icon: 'none',
+            duration: 1500,
+            mask: false
+          });
+        }
+        this.caseDetailData.AmountDatas.AmountData[2] = UserCaseReceipt;
+      } else {
+        if (UserCaseReceiptCount.statusCode !== 200) {
+          this.caseDetailData.AmountDatas.UserCaseReceiptCount = null;
+          wx.showToast({
+            title: '网络故障！',
+            icon: 'none',
+            duration: 1500,
+            mask: false
+          });
+        } else if (UserCaseReceiptCount.data.result == null) {
+          this.caseDetailData.AmountDatas.UserCaseReceiptCount = null;
+        }
+      }
+      this.$apply();
+    }
+    // 费用
+    async GetUserCaseChargeCount() {
+      var id = {
+        caseId: this.id
+      };
+      var UserCaseChargeCount = await ajax.getData(
+        '/api/services/web/financialCharge/GetUserChargesCount',
+        'post',
+        id
+      );
+      if (
+        UserCaseChargeCount.statusCode == 200 &&
+        UserCaseChargeCount.data.result !== null
+      ) {
+        var UserCaseCharge = UserCaseChargeCount.data.result.items[0];
+        var itemId = {
+          caseId: this.id,
+          pageNumber: this.caseDetailData.AmountDatas.PageNumber[3],
+          pageSize: 10
+        };
+        var UserChargesItem = await ajax.getData(
+          '/api/services/web/financialCharge/GetUserCharges',
+          'post',
+          itemId
+        );
+        // console.log(UserChargesItem)
+        if (UserChargesItem.statusCode == 200) {
+          // UserCaseCharge['UserChargesTotalCount'] =
+          //   UserChargesItem.data.result.totalCount;
+          var UserChargesItem = UserChargesItem.data.result.items;
+          this.caseDetailData.AmountDatas.UserChargesItemHeight +=
+            UserChargesItem.length * 250;
+          var date = [];
+          for (var index in UserChargesItem) {
+            date[index] = UserChargesItem[index].creationTime.split('T')[0];
+            switch (UserChargesItem[index].statusName) {
+              case '待审核':
+                UserChargesItem[index]['statusColor'] = '#ff9900';
+                break;
+              case '已审核':
+                UserChargesItem[index]['statusColor'] = '#069400';
+                break;
+              case '已退回':
+                UserChargesItem[index]['statusColor'] = '#e20000';
+                break;
+              default:
+                break;
+            }
+          }
+          this.caseDetailData.AmountDatas.UserChargesDate = this.caseDetailData.AmountDatas.UserChargesDate.concat(
+            date
+          );
+          this.caseDetailData.AmountDatas.UserChargesItem = this.caseDetailData.AmountDatas.UserChargesItem.concat(
+            UserChargesItem
+          );
+        } else {
+          wx.showToast({
+            title: '网络故障！部分数据无法正常加载',
+            icon: 'none',
+            duration: 1500,
+            mask: false
+          });
+        }
+        // console.log(UserCaseCharge);
+        this.caseDetailData.AmountDatas.AmountData[3] = UserCaseCharge;
+      } else {
+        if (UserCaseChargeCount.statusCode !== 200) {
+          wx.showToast({
+            title: '网络故障！',
+            icon: 'none',
+            duration: 1500,
+            mask: false
+          });
+          this.caseDetailData.AmountDatas.UserCaseChargeCount = null;
+        } else if (UserCaseChargeCount.data.result == null) {
+          this.caseDetailData.AmountDatas.UserCaseChargeCount = null;
+        }
+      }
+      this.$apply();
+    }
+    onReachBottom() {
+      if (this.currentTab == 6) {
+        switch (this.caseDetailData.AmountDatas.AmountCurrent) {
+          case 0:
+            if (
+              this.caseDetailData.AmountDatas.AmountData[0]
+              .UserCaseBillingTotalCount /
+              10 >
+              this.caseDetailData.AmountDatas.PageNumber[0]
+            ) {
+              this.caseDetailData.AmountDatas.PageNumber[0] += 1;
+              // this.caseDetailData.AmountDatas.AmountDataHeight=this.caseDetailData.AmountDatas.UserCaseBillingHeight
+              this.GetUserCaseBilling();
+              this.$apply();
+            } else {
+              wx.showToast({
+                title: '到底了',
+                icon: 'none',
+                duration: 1500,
+                mask: false
+              });
+            }
+            break;
+          case 1:
+            if (
+              this.caseDetailData.AmountDatas.AmountData[1]
+              .count /
+              10 >
+              this.caseDetailData.AmountDatas.PageNumber[1]
+            ) {
+              this.caseDetailData.AmountDatas.PageNumber[1] += 1;
+              // this.caseDetailData.AmountDatas.AmountDataHeight=this.caseDetailData.AmountDatas.UserCaseBillingHeight
+              this.GetUserCaseInvoice();
+              this.$apply();
+            } else {
+              wx.showToast({
+                title: '到底了',
+                icon: 'none',
+                duration: 1500,
+                mask: false
+              });
+            }
+            break;
+          case 2:
+            if (
+              this.caseDetailData.AmountDatas.AmountData[2].count /
+              10 >
+              this.caseDetailData.AmountDatas.PageNumber[2]
+            ) {
+              this.caseDetailData.AmountDatas.PageNumber[2] += 1;
+              // this.caseDetailData.AmountDatas.AmountDataHeight=this.caseDetailData.AmountDatas.UserCaseBillingHeight
+              this.GetUserCaseReceiptCount();
+              this.$apply();
+            } else {
+              wx.showToast({
+                title: '到底了',
+                icon: 'none',
+                duration: 1500,
+                mask: false
+              });
+            }
+            break;
+          case 3:
+            if (
+              this.caseDetailData.AmountDatas.AmountData[3].count /
+              10 >
+              this.caseDetailData.AmountDatas.PageNumber[3]
+            ) {
+              this.caseDetailData.AmountDatas.PageNumber[3] += 1;
+              // this.caseDetailData.AmountDatas.AmountDataHeight=this.caseDetailData.AmountDatas.UserCaseBillingHeight
+              this.GetUserCaseChargeCount();
+              this.$apply();
+            } else {
+              wx.showToast({
+                title: '到底了',
+                icon: 'none',
+                duration: 1500,
+                mask: false
+              });
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    onLoad(options) {
+      this.id = options.id;
+      this.SyncPath="M0,M1,"+options.id;
+      this.clientId = options.clientId;
+      this.docClass = options.id;
+      this.caseDetailData.documentDatas.fixedPath.lastPathClass =options.id;
+      this.getCaseData();
+      this.getClient();
+      this.GetTaskStages();
+      this.getDocumentData(options.id, 'M1');
+      this.getWorkLogs();
+      this.GetCourts();
+      //财务加载
+      this.GetUserCaseBilling();
+      this.GetUserCaseReceiptCount();
+      this.GetUserCaseInvoice();
+      this.GetUserCaseChargeCount();
+      this.$apply();
+    }
+    isRefresh() {
+      this.caseDetailData.taskDatas.TaskStagesDatas = [];
+      this.caseDetailData.taskDatas.TasksDatas = [];
+      this.caseDetailData.taskDatas.viewHeight = [];
+      this.caseDetailData.taskDatas.pageNumber = [];
+      this.caseDetailData.taskDatas.stageId = [];
+      this.GetTaskStages();
+      this.GetTasks();
+      this.$apply();
+    }
+    onHide() {}
+    onUnload() {}
+  }
+</script>

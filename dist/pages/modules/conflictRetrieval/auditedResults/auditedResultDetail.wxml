@@ -1,0 +1,60 @@
+
+    <view class="container">
+        <view class="page-title">
+            案件冲突检索结果详情
+        </view>
+        <view class="main">
+           <view class="search-condition">
+                <view>检索条件</view>
+                <view>
+                    <view>
+                        <view>类别</view>
+                        <view>{{OrderItemData.conflictCondition.conflictList[0].category||"未填写"}}</view>
+                    </view>
+                    <view>
+                        <view>客户名称（中）</view>
+                        <view>{{OrderItemData.conflictCondition.conflictList[0].name||"未填写"}}</view>
+                    </view>
+                    <view>
+                        <view>客户名称（英）</view>
+                        <view>{{OrderItemData.conflictCondition.conflictList[0].enName||"未填写"}}</view>
+                    </view>
+                    <view>
+                        <view>检索关键字（中）</view>
+                        <view>{{OrderItemData.conflictCondition.conflictList[0].searchName||"未填写"}}</view>
+                    </view>
+                    <view>
+                        <view>检索关键字（英）</view>
+                        <view>{{OrderItemData.conflictCondition.conflictList[0].searchEnName||"未填写"}}</view>
+                    </view>
+                </view>
+            </view>
+            <view class="search-result"  wx:if="{{OrderItemData.conflictResults.length>0}}">
+                <view>检索结果</view>
+                <block wx:for="{{OrderItemData.conflictResults}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                    <view style="margin-bottom: {{item.litigantList.length>0?'0':'44rpx'}};">
+                        <view>
+                            <text>{{item.clientName||"未填写"}}</text>
+                            <icon wx:if="{{item.litigantList.length>0}}" class="iconfont icon-gengduo" style="font-size:40rpx;color:#b2b2b2"/>
+                        </view>
+                        <view>{{item.clientEnName||"未填写"}}</view>
+                        <view>{{item.caseName||'未填写'}}</view>
+                        <view/>
+                        <view>
+                            <view>{{item.caseManager||'未填写'}}</view>
+                            <view>{{item.caseStatusText||'未填写'}}</view>
+                        </view>
+                    </view>
+                    <view wx:if="{{item.litigantList.length>0}}" class="litigantList">
+                        <block wx:for="{{OrderItemData.conflictResults[index].litigantList}}" wx:for-index="litigantList_index" wx:for-item="item" wx:key="litigantList_index">
+                            <view class="litigantList-item">
+                                <view>{{item.category||'未填写'}}</view>
+                                <view>{{item.name||'未填写'}}</view>
+                                <view>{{item.enName||'未填写'}}</view>
+                            </view>
+                        </block>
+                    </view>
+                </block>
+            </view>
+        </view>
+    </view>

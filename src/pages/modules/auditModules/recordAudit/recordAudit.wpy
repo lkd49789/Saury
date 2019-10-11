@@ -1,0 +1,237 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 9999;
+        }
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99;
+        }
+        .main {
+            margin: 149rpx 28rpx 0 28rpx;
+            >view:first-child {
+                margin: 30rpx 0;
+                display: flex;
+                flex-direction: column;
+                >text:first-child {
+                    margin-bottom: 20rpx;
+                }
+            }
+            .auditStatus {
+                margin: 30rpx 0 40rpx 0;
+                .radio-group {
+                    display: flex;
+                    justify-content: space-between;
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <text>日志审核</text>
+        </view>
+        <view class='main'>
+            <view>
+                <text>自报时长（小时）</text>
+                <text style="color:#7a7a7a">{{selfDuration}}</text>
+            </view>
+            <view>
+                <businessDuration :input.sync="businessDuration" :inputValue.sync='businessDurationValue' :twoWayTitle="businessDurationValue" />
+                <billDuration :input.sync="billDuration" :inputValue.sync='billDurationValue' :twoWayTitle="billDurationValue" />
+            </view>
+            <view class="auditStatus">
+                <view class="checked">
+                    <radio-group class="radio-group" @change="bindPickerChange">
+                        <label class="radio" wx:for="{{isPass}}" wx:key="index" style="width:50%;">
+                                    <radio value="{{item.value}}"  color="#5d73fa" checked="{{item.isChecked}}" @tap="click"/>
+                                    <text  style="margin-right:60rpx">{{item.displayText}}</text>
+                                </label>
+                    </radio-group>
+                    <view wx:if="{{warning}}" style="color:#e20000">
+                        <text>该字段是必填的</text>
+                    </view>
+                </view>
+            </view>
+            <approvalRemark :input.sync="approvalRemark" :inputValue.sync='approvalRemarkValue' :twoWayTitle="approvalRemarkValue" />
+        </view>
+        <image src="{{'../../../../images/test.png'}}" style="opacity:{{addOpacity}} ;" mode="scaleToFill" lazy-load="true" class="addImage"  @touchstart="touchStart" @touchend="touchEnd">
+        </image>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import input1 from '../../../../components/picker/input';
+    import input2 from '../../../../components/picker/input';
+    import input3 from '../../../../components/picker/input';
+    export default class recordAudit extends wepy.page {
+        components = {
+            businessDuration: input1,
+            billDuration: input2,
+            approvalRemark: input3
+        };
+        data = {
+            addOpacity:1,
+            selfDuration: 0,
+            submitData: {
+                //    "id": "WL13ae9116540d566d",
+                //     "businessDuration": 0,
+                //     "billDuration": 0,
+                //     "approvalResult": "R",
+                //     "approvalRemark": "拒绝"
+            },
+            businessDuration: {
+                title: '业务时长（小时）',
+                name: 'businessDuration',
+                options: false,
+                warning: false,
+            },
+            businessDurationValue: '',
+            billDuration: {
+                title: '账单时长（小时）',
+                name: 'billDuration',
+                options: false,
+                warning: false,
+            },
+            billDurationValue: '',
+            isPass: [{
+                    value: 'A',
+                    displayText: '通过审核',
+                    isChecked: false,
+                },
+                {
+                    value: 'R',
+                    displayText: "审核退回",
+                    isChecked: false,
+                }
+            ],
+            approvalRemark: {
+                title: '审核意见',
+                name: 'approvalRemark',
+                options: true,
+                warning: false,
+            },
+            approvalRemarkValue: '',
+            warning: false
+        };
+        watch = {
+            businessDurationValue(value) {
+                this.submitData.businessDuration = Number(value);
+                this.$apply();
+            },
+            billDurationValue(value) {
+                this.submitData.billDuration = Number(value);
+                this.$apply();
+            },
+            approvalRemarkValue(value) {
+                this.submitData.approvalRemark = value;
+                this.$apply();
+            },
+        }
+        methods = {
+            touchStart(){
+                this.addOpacity = 0.6;
+                this.$apply();
+            },
+            touchEnd(){
+                if (this.submitData.approvalResult) {
+                    switch (this.submitData.approvalResult ) {
+                        case 'A':
+                             this.SaveWorklogApproval(this.submitData);
+                            break;
+                        case 'R':  
+                             if(this.submitData.approvalRemark){
+                                  this.SaveWorklogApproval(this.submitData);
+                             }else{
+                                 this.approvalRemark.warning = true;
+                                    this.addOpacity = 1;
+                             }
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    this.addOpacity = 1;
+                    this.warning = true;
+                }
+                this.$apply();
+            },
+            submitData() {
+                 
+            },
+            bindPickerChange(e) {
+                this.submitData.approvalResult = e.detail.value;
+                this.$apply();
+            },
+            click() {
+                this.warning = false;
+                this.$apply();
+            }
+        };
+        async SaveWorklogApproval(data) {
+             wx.showLoading({
+                 title: '提交中，请稍等！', //提示的内容,
+                 mask: true, //显示透明蒙层，防止触摸穿透,
+                 success:()=>{
+                    this.addOpacity = 1;
+                    this.$apply();
+                 }
+               });
+            var subData = [
+                data
+            ]
+            var resData = await ajax.getData(
+                '/api/services/web/worklogApproval/SaveWorklogApproval',
+                'post',
+                subData
+            )
+            if (resData.statusCode == 200) {
+                 var isRefresh = wx.getStorageSync('isRefresh');
+                    isRefresh.isRefresh = true;
+                    wx.setStorageSync('isRefresh', isRefresh);
+                    wx.navigateBack({
+                        delta: 2
+                    });
+            } else {
+                wx.showToast({
+                    title: '审核失败！',
+                    icon: 'none',
+                    duration: 1500,
+                    mask: true,
+                });
+            }
+            this.$apply();
+        }
+        onLoad(options) {
+            var parentData = JSON.parse(options.data);
+            console.log(options.data);
+            this.submitData.id = parentData.id;
+            this.selfDuration = parentData.selfDuration;
+            // this.businessDurationValue = parentData.businessDuration !== 0 || parentData.selfDuration 
+            // this.billDurationValue = parentData.billDuration !== 0 || parentData.selfDuration 
+            this.businessDurationValue = parentData.businessDuration
+            this.billDurationValue = parentData.billDuration
+            this.$apply();
+        }
+    }
+</script>

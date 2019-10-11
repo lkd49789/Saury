@@ -1,0 +1,100 @@
+@import "./../../../../components/placeHolderImage.wxss";
+text {
+  word-break: break-all;
+}
+.body {
+  height: 100%;
+}
+.body .placeHolderText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7a7a7a;
+  font-size: 28rpx;
+}
+.body .top-title {
+  height: 104rpx;
+  line-height: 104rpx;
+  font-size: 48rpx;
+  padding-left: 28rpx;
+  border-bottom: 1px solid #dedede;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 99;
+}
+.body .main {
+  margin: 149rpx 28rpx 0 28rpx;
+  font-size: 28rpx;
+  color: #2a2a2a;
+}
+.body .main > view {
+  box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+  border-radius: 20rpx;
+  padding: 30rpx 22rpx;
+  margin-bottom: 44rpx;
+}
+.body .main > view > view:first-child {
+  margin-bottom: 32rpx;
+}
+.body .main > view > view:not(:first-child):not(:last-child) {
+  margin-bottom: 22rpx;
+}
+.body .main .client-detail > view:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.body .main .client-detail > view:first-child > text {
+  width: 93%;
+}
+.body .main .client-detail > view:last-child {
+  display: flex;
+  align-items: center;
+}
+.body .main .client-detail > view:last-child > text {
+  margin-left: 20rpx;
+}
+.body .main .client-avatar > view:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.body .main .client-avatar .avatarList {
+  position: relative;
+  height: 60rpx;
+}
+.body .main .client-avatar .avatarList .avatar {
+  position: absolute;
+  top: 0;
+}
+.body .main .client-avatar .client-one {
+  display: flex;
+  align-items: center;
+}
+.body .main .client-avatar .client-one > view {
+  margin-left: 20rpx;
+  color: #7a7a7a;
+}
+.body .main .link-project > view:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.body .main .client-records > view:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: #7a7a7a;
+}
+.body .main .client-records > view:last-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.body .main .client-records > view:last-child > view:first-child {
+  display: flex;
+  align-items: center;
+}

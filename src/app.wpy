@@ -1,0 +1,654 @@
+<style lang="less">
+  @import url('./utils/icon/iconfont.less');
+   ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    color: transparent;
+  }
+  text {
+    word-break: break-all
+  }
+  page {
+    font-size: 28rpx;
+    color: #2a2a2a;
+    // height: 100%;
+    width:100%;
+  }
+   .placeHolderImage{
+        position:fixed;
+        // height: 100%;
+        top:0rpx;
+        left:0;
+        height:100%;
+        width:100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index:99;
+        background:#fff
+     }
+     .page-title {
+      height: 104rpx;
+      line-height: 104rpx;
+      font-size: 48rpx;
+      padding-left: 28rpx;
+      border-bottom: 1px solid #dedede;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      z-index: 999;
+    }
+    .chooseFixedBtn-one{
+            position:fixed;
+            height:98rpx;
+            width:100%;
+            bottom:0;
+            display:flex;
+            align-items:center;
+            background:#5d73fa;
+            color:#fff;
+            z-index:9999;
+            >view{
+                width:100%;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:34rpx;
+                height:100%;
+            }
+        }
+      .btn-sub {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99;
+        }
+        //一行隐藏
+        .oneLine-hidden{
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        //多行隐藏
+        .manyLines-hidden{
+          -webkit-line-clamp: 2; // 用来限制在一个块元素显示的文本的行数
+          display: -webkit-box; // 将对象作为弹性伸缩盒模型显示
+          -webkit-box-orient: vertical; //设置或检查伸缩盒对象的子元素的排列方式
+          text-overflow: ellipsis; // 在多行文本的情况下，用...隐藏超出范围的文本
+          word-break: break-all;
+          overflow: hidden;
+        }
+</style>
+
+<script>
+  import wepy from 'wepy';
+  import 'wepy-async-function';
+  import ajax from './utils/cofig/ajax.js';
+  export default class extends wepy.app {
+    config = {
+      "pages": [
+        //主页
+        'pages/main/index',
+        //消息页面
+        'pages/main/messagePage/message',
+        //登陆
+        'pages/login/login',
+        //选择登录页面
+        'pages/login/choosePageLogin',
+        'pages/login/forgetPassword',
+        // //日程
+        'pages/schedule/index',
+        'pages/schedule/plan/details',
+        'pages/schedule/plan/createDetails',
+        //我的
+        'pages/mine/index',
+        'pages/mine/data/basedata',
+        //我的名片
+        'pages/mine/myBusinessCard/myBusinessCard',
+        // 'pages/mine/myBusinessCard/showMyBusinessCard',
+        'pages/mine/myBusinessCard/map',
+        //个人简历
+        'pages/mine/myrecord/record',
+        // 劳动关系
+        'pages/mine/laborRelation/labor-relation',
+        //webView
+        'pages/mine/webView/viewView',
+        'pages/mine/webView/help_webView',
+        //设置
+        'pages/mine/tools',
+        //模块
+        // //我的案件
+        // 'pages/modules/mycase/mycase',
+        // 'pages/modules/mycase/caseDetail/casedetail',
+        // 'pages/modules/mycase/caseDetail/cases/casebase',
+        // 'pages/modules/mycase/caseDetail/cases/caseintroduce',
+        // 'pages/modules/mycase/caseDetail/cases/casepersonnelinformation',
+        // 'pages/modules/mycase/search/search_case',
+        // //案件人员详情信息
+        // 'pages/modules/mycase/caseDetail/cases/casepersonal/creatpersonalinfo',
+        // //利益冲突
+        // 'pages/modules/mycase/caseDetail/cases/conflictinterest/conflictinterest',
+        // 'pages/modules/mycase/caseDetail/cases/conflictinterest/conflictinterest-detail',
+        // //合同信息
+        // 'pages/modules/mycase/caseDetail/cases/contractdetail/contractinfo',
+        // 'pages/modules/mycase/caseDetail/cases/contractdetail/chargeinfo',
+        // 'pages/modules/mycase/caseDetail/cases/contractdetail/contractdoc',
+        // //我的客户模块
+        // 'pages/modules/myclient/myClientList',
+        // 'pages/modules/myclient/clientDetail/clientStatistics',
+        // 'pages/modules/myclient/clientDetail/clientDetail',
+        // 'pages/modules/myclient/clientDetail/itemDetail/clientBaseInfo',
+        // 'pages/modules/myclient/clientDetail/itemDetail/clientLinkman',
+        // 'pages/modules/myclient/clientDetail/itemDetail/clientCaseMange',
+        // 'pages/modules/myclient/search/search_client',
+        // //客户方本案联系人详情页
+        // 'pages/modules/myclient/clientDetail/itemDetail/clientLinkmanDetail/clientLinkmanDetail',
+        // 'pages/modules/myclient/clientDetail/itemDetail/recordsList',
+        // 我的日志模块
+        // 'pages/modules/myRecord/workRecord',
+        // 'pages/modules/myRecord/myLogdetail/logdetail',
+        // 'pages/modules/myRecord/MyParticipantWorklogs/MyParticipantWorklogsDetail',
+        // 'pages/modules/myRecord/logsStatistics/statisticsDetail',
+        // 'pages/modules/myRecord/creatWorkRecord/creatWorkRecord',
+        // 'pages/modules/myRecord/logsStatistics/statisticsCovers/statisticsRecord',
+        // 'pages/modules/myRecord/compileRecord/compileRecord',
+        // 'pages/modules/myRecord/search/search_record',
+        // 'pages/modules/myRecord/logDoc/document',
+        //任务进程模块
+        // 'pages/modules/myTaskCourse/taskProject',
+        // 'pages/modules/myTaskCourse/taskStage/taskStageList',
+        // 'pages/modules/myTaskCourse/taskStage/taskDetail/taskdetail',
+        // 'pages/modules/myTaskCourse/taskStage/createtask/createStage',
+        // 'pages/modules/myTaskCourse/taskStage/createtask/creatTask',
+        // 'pages/modules/myTaskCourse/taskStage/createtask/creatTaskAll',
+        // 'pages/modules/myTaskCourse/search/searchTask',
+        //我的会议
+        // 'pages/modules/myMeeting/meetingList',
+        // 'pages/modules/myMeeting/meetingDetail/meetingDetail',
+        // 'pages/modules/myMeeting/search/searchMeeting',
+        // 'pages/modules/myMeeting/creatMeeting/creatMeeting',
+        // 'pages/modules/myMeeting/creatMeeting/chooseMeetingRoom',
+        //我的请假
+        // 'pages/modules/myApplyList/MyApplyList',
+        // 'pages/modules/myApplyList/myApplyDetail/myApplyDetail',
+        // 'pages/modules/myApplyList/createApply/createApply',
+        // 'pages/modules/myApplyList/search/searchMyApply',
+        //审核模块
+        //请假审核
+        // 'pages/modules/auditModules/applyAudit/applyAuditList',
+        // 'pages/modules/auditModules/applyAudit/search/searchApplyAudit',
+        // 'pages/modules/auditModules/applyAudit/applyAuditDetail',
+        //日志审核
+        // 'pages/modules/auditModules/recordAudit/recordAuditList',
+        // 'pages/modules/auditModules/recordAudit/recordAudit',
+        // 'pages/modules/auditModules/recordAudit/search/searchRecordAudit',
+        // 'pages/modules/auditModules/recordAudit/logDetail',
+        // //案件审核
+        // 'pages/modules/auditModules/caseAudit/auditCaseList',
+        // 'pages/modules/auditModules/caseAudit/caseDetailAudit/caseDetailAudit',
+        // 'pages/modules/auditModules/caseAudit/caseDetailAudit/auditCase',
+        // 'pages/modules/auditModules/caseAudit/search/searchCase_audit',
+        // //文书审核
+        // 'pages/modules/auditModules/approveAudit/approveList',
+        // 'pages/modules/auditModules/approveAudit/approveDetail',
+        // 'pages/modules/auditModules/approveAudit/approveAudit',
+        // 'pages/modules/auditModules/approveAudit/search/searchApprove',
+        // //我的账单
+        // 'pages/modules/bill/myBill/myBill',
+        // 'pages/modules/bill/myBill/myBillDetail',
+        // 'pages/modules/bill/myBill/myBillDetails',
+        // 'pages/modules/bill/manageBill/manageBill',
+        // 'pages/modules/bill/manageBill/manageBillDetail',
+        // 'pages/modules/bill/manageBill/manageBillDetails',
+        // 'pages/modules/bill/manageBill/manageBillExamine',
+        // 'pages/modules/bill/search/searchMyBill',
+        // 'pages/modules/bill/search/searchManageBill',
+        // //我的发票
+        // 'pages/modules/invoice/myInvoce/myinvoice',
+        // 'pages/modules/invoice/myInvoce/myinvoiceDetail',
+        // 'pages/modules/invoice/manageInvoce/manageInvoice',
+        // 'pages/modules/invoice/manageInvoce/manageInvoiceDetail',
+        // 'pages/modules/invoice/manageInvoce/manageInvoiceExamine',
+        // 'pages/modules/invoice/search/searchMyNoice',
+        // 'pages/modules/invoice/search/searchManageNoice',
+        // //收款认领
+        // 'pages/modules/receivables/myReceivables/myReceivables',
+        // 'pages/modules/receivables/myReceivables/myReceivablesDetail',
+        // 'pages/modules/receivables/manageReceivables/manageReceivables',
+        // 'pages/modules/receivables/manageReceivables/manageReceivablesDetail',
+        // 'pages/modules/receivables/manageReceivables/manageReceivablesExamine',
+        // 'pages/modules/receivables/search/searchReceivables',
+        // 'pages/modules/receivables/search/searchManageReceivables',
+        // //我的费用
+        // 'pages/modules/cost/myCost/myCost',
+        // 'pages/modules/cost/myCost/myCostDetail',
+        // 'pages/modules/cost/manageCost/manageCost',
+        // 'pages/modules/cost/manageCost/manageCostDetail',
+        // 'pages/modules/cost/manageCost/manageCostExamine',
+        // 'pages/modules/cost/search/searchCost',
+        // 'pages/modules/cost/search/searchManageCost',
+        // //我的日程
+        // 'pages/modules/mySchedule/mySchedule',
+
+      ],
+      "subPackages":[
+        {
+          "root":'pages/modules/zzbangVip',
+          "name":'zzbangVip',
+          "pages":[
+            'getCasePageList',
+            'caseDetailPage',
+            'register',
+            'pactDoc'
+          ],
+          "independent":false,
+        },
+        {
+          "root":'pages/modules/conflictRetrieval',
+          "name":'conflictRetrieval',
+          "pages":[
+            'conflictRetrievalList',
+            'conflictRetrievalAudit/conflictRetrievalDetail',
+            'conflictRetrievalAudit/searchResult',
+            'conflictRetrievalAudit/subSearchResult',
+            'auditedResults/auditedResults',
+            'auditedResults/auditedResultDetail',
+            'search/conflictSearch',
+          ],
+          "independent":false,
+        },
+        {
+          "root":'pages/modules/myRegister',
+          "name":'myRegister',
+          "pages":[
+            'register',
+            'myRegisterList',
+            'search/search_register',
+            'caseInfo/createCaseInfo',
+            'conflict/conflictDetail',
+            'conflict/createConflict',
+            'conflict/conflictList',
+            'clientLinker/clientCaseLinkerChosen',
+            'clientLinker/createClientLinker',
+            'clientLinker/clientCaseLinkerList',
+            'caseLawyerLinker/caseLawyerLinkerList',
+            'caseChargeAndContract/lawyerChargeInfo',
+            'caseChargeAndContract/chooseChargeMethod',
+            'caseChargeAndContract/createNomalCharge',
+            'caseChargeAndContract/createRiskCharge',
+            'caseChargeAndContract/distributionInformation'
+          ],
+          "independent":false
+        },
+        {
+          "root":"pages/modules/mycase",
+          "name":"mycase",
+          "pages":[
+            "mycase",
+            "caseDetail/casedetail",
+            "caseDetail/cases/casebase",
+            "caseDetail/cases/caseintroduce",
+            "caseDetail/cases/casepersonnelinformation",
+            "search/search_case",
+            "caseDetail/cases/casepersonal/creatpersonalinfo",
+            "caseDetail/cases/conflictinterest/conflictinterest",
+            "caseDetail/cases/conflictinterest/conflictinterest-detail",
+            "caseDetail/cases/contractdetail/contractinfo",
+            "caseDetail/cases/contractdetail/chargeinfo",
+            "caseDetail/cases/contractdetail/contractdoc"
+          ],
+          "independent":false
+        },
+        {
+          "root":"pages/modules/myclient",
+          "name":"myclient",
+          "pages":[
+            "myClientList",
+            "clientDetail/clientStatistics",
+            "clientDetail/clientDetail",
+            "clientDetail/itemDetail/clientBaseInfo",
+            "clientDetail/itemDetail/clientLinkman",
+            "clientDetail/itemDetail/clientCaseMange",
+            "search/search_client",
+            "clientDetail/itemDetail/clientLinkmanDetail/clientLinkmanDetail",
+            "clientDetail/itemDetail/recordsList",
+            "directory/directory",
+            "createClient/createClientBaseInfo",
+            "createClient/createClientPrincipalInfo",
+          ],
+          "independent":false
+        },
+        {
+          "root":"pages/modules/myRecord",
+          "name":"myRecord",
+          "pages":[
+            "workRecord",
+            "myLogdetail/logdetail",
+            "MyParticipantWorklogs/MyParticipantWorklogsDetail",
+            "logsStatistics/statisticsDetail",
+            "creatWorkRecord/creatWorkRecord",
+            "logsStatistics/statisticsCovers/statisticsRecord",
+            "compileRecord/compileRecord",
+            "search/search_record",
+            "logDoc/document",
+            "myLogdetail/auditResultsDetail"
+          ],
+          "independent":false
+        },
+        {
+          "root":"pages/modules/myTaskCourse",
+          "name":"myTaskCourse",
+          "pages":[
+            "taskProject",
+            "createProject",
+            "taskStage/taskStageList",
+            "taskStage/taskDetail/taskdetail",
+            "taskStage/createtask/createStage",
+            "taskStage/createtask/creatTask",
+            "taskStage/createtask/creatTaskAll",
+            "search/searchTask",
+            "caseClientSearch/searchCaseClient"
+          ],
+          "independent":false
+        },
+        {
+          "root":"pages/modules/myMeeting",
+          "name":"myMeeting",
+          "pages":[
+            "meetingList",
+            "meetingDetail/meetingDetail",
+            "search/searchMeeting",
+            "creatMeeting/creatMeeting",
+            "creatMeeting/chooseMeetingRoom"
+          ],
+          "independent":false
+        },
+        {
+          "root":"pages/modules/myApplyList",
+          "name":"myApplyList",
+          "pages":[
+            "MyApplyList",
+            "myApplyDetail/myApplyDetail",
+            "createApply/createApply",
+            "search/searchMyApply"
+          ],
+          "independent":false
+        },
+        {
+          "root":"pages/modules/auditModules/applyAudit",
+          "name":"applyAudit",
+          "pages":[
+            "applyAuditList",
+            "search/searchApplyAudit",
+            "applyAuditDetail",
+          ],
+          "independent":false
+        },
+        {
+          "root":"pages/modules/auditModules/recordAudit",
+          "name":"recordAudit",
+          "pages":[
+            "recordAuditList",
+            "recordAudit",
+            "search/searchRecordAudit",
+            "logDetail"
+          ],
+          "independent":false
+        },
+        {
+          "root":"pages/modules/auditModules/caseAudit",
+          "name":"caseAudit",
+          "pages":[
+            "auditCaseList",
+            "caseDetailAudit/caseDetailAudit",
+            "caseDetailAudit/auditCase",
+            "search/searchCase_audit"
+          ],
+          "independent":false
+        },
+        {
+          "root":"pages/modules/auditModules/approveAudit",
+          "name":"approveAudit",
+          "pages":[
+            "approveList",
+            "approveDetail",
+            "approveAudit",
+            "search/searchApprove"
+          ],
+          "independent":false
+        },
+        {
+          "root": "pages/modules/bill",
+          "name":"bill",
+          "pages": [
+            "myBill/myBill",
+            "myBill/myBillDetail",
+            "myBill/myBillDetails",
+            "manageBill/manageBill",
+            "manageBill/manageBillDetail",
+            "manageBill/manageBillDetails",
+            "manageBill/manageBillExamine",
+            "search/searchMyBill",
+            "search/searchManageBill"
+          ],
+          "independent":false
+        },
+        {
+          "root": "pages/modules/invoice",
+          "name":"invoice",
+          "pages": [
+            "myInvoce/myinvoice",
+            "myInvoce/myinvoiceDetail",
+            "manageInvoce/manageInvoice",
+            "manageInvoce/manageInvoiceDetail",
+            "manageInvoce/manageInvoiceExamine",
+            "search/searchMyNoice",
+            "search/searchManageNoice"
+          ],
+          "independent":false
+        },
+        {
+          "root": "pages/modules/receivables",
+          "name":"receivables",
+          "pages": [
+            "myReceivables/myReceivables",
+            "myReceivables/myReceivablesDetail",
+            "manageReceivables/manageReceivables",
+            "manageReceivables/manageReceivablesDetail",
+            "manageReceivables/manageReceivablesExamine",
+            "search/searchReceivables",
+            "search/searchManageReceivables"
+          ],
+          "independent":false
+        },
+        {
+          "root": "pages/modules/cost",
+          "name":"cost",
+          "pages": [
+            "myCost/myCost",
+            "myCost/myCostDetail",
+            "myCost/financialOperationRecord",
+            "manageCost/manageCost",
+            "manageCost/manageCostDetail",
+            "manageCost/manageCostExamine",
+            "search/searchCost",
+            "search/searchManageCost"
+          ],
+          "independent":false
+        },
+        {
+          "root": "pages/modules/caseManagement",
+          "name":"caseManagement",
+          "pages": [
+            "caseManagement",
+            "search/search_caseManagement"
+          ],
+          "independent":false
+        },
+        {
+          "root":'pages/modules/ConflictInterestPreflight',
+          "name":'ConflictInterestPreflight',
+          "pages":[
+            'ConflictInterestPreflight'
+          ],
+          "independent":false,
+        },
+      ],
+      window: {
+        backgroundTextStyle: 'light',
+        navigationBarBackgroundColor: '#5d73fa',
+        navigationBarTitleText: '律智荟',
+        navigationBarTextStyle: 'white'
+        // enablePullDownRefresh: true,
+        // backgroundTextStyle: 'dark',
+        // backgroundColorTop: '#f4f4f4',
+        // backgroundColorBottom: '#f4f4f4'
+      },
+      tabBar: {
+        color: '#7a7a7a',
+        selectedColor: '#5d73fa',
+        backgroundColor: '#fff',
+        // borderStyle: 'black',
+        list: [{
+            iconPath: './images/home.png',
+            selectedIconPath: './images/homeSelect.png',
+            pagePath: 'pages/main/index',
+            text: '首页'
+          },
+          {
+            iconPath: './images/schedule.png',
+            selectedIconPath: './images/scheduleSelect.png',
+            pagePath: 'pages/schedule/index',
+            text: '日程'
+          },
+          {
+            iconPath: './images/mine.png',
+            selectedIconPath: './images/mineSelect.png',
+            pagePath: 'pages/mine/index',
+            text: '我的'
+          }
+        ]
+      }
+    };
+    global = {
+      userInfo: {},
+      netWorkString: true,
+      options:{},
+      currentUserId:0,
+      tenant:{},
+    }
+    //获取用户信息
+    async GetCurrentLoginInformations() {
+      var CurrentLoginInformationsData = await ajax.getData(
+        '/api/services/app/session/GetCurrentLoginInformations',
+        'post'
+      )
+      if (CurrentLoginInformationsData.statusCode == 200) {
+        var userInfo = {}
+        userInfo = CurrentLoginInformationsData.data.result.user;
+        var http = '/api/services/web/personal/GetEmployeePhoto?id=' + CurrentLoginInformationsData.data.result.user.id;
+        this.global.currentUserId = CurrentLoginInformationsData.data.result.user.id;
+        var avatarData = await ajax.getAavatar(http);
+        userInfo['userAvatar'] = avatarData;
+        this.global.userInfo = userInfo;
+        this.global.tenant=CurrentLoginInformationsData.data.result.tenant;
+      }
+    }
+    onLaunch() {
+      // 判断是否有网
+      wx.onNetworkStatusChange(res => {
+        if (res.isConnected) {
+          this.global.netWorkString = true;
+        } else {
+          this.global.netWorkString = false;
+        }
+      });
+      if(Object.keys(this.global.userInfo).length==0){
+        this.GetCurrentLoginInformations();
+      }
+    }
+    onShow(options) {
+      this.global.options=options;
+      wx.login({
+        success: res => {
+          var code = res.code;
+          wx.getSetting({
+            success: res => {
+              var accessToken=wx.getStorageSync('access');
+              if (res.authSetting['scope.userInfo']) {
+                wx.getUserInfo({
+                  withCredentials: true,
+                  success: res => {
+                    wx.request({
+                      url: 'https://www.ailinkedlaw.com/api/Account/GetWechatUserInfo', //接口地址
+                      data: {
+                        code: code,
+                        encryptedData: res.encryptedData,
+                        iv: res.iv,
+                        rawData: res.rawData,
+                        signature: res.signature
+                      },
+                      method: "POST",
+                      header: {
+                        'content-type': 'application/json' //默认值
+                      },
+                      success: res => {
+                        if (res.data.result.accessToken) {
+                          try {
+                            wx.setStorageSync('access', res.data.result.accessToken);
+                          } catch (err) {
+                            console.log(err);
+                          }
+                        } else {
+                          wx.redirectTo({
+                            url: '/pages/login/choosePageLogin'
+                          });
+                        }
+                      }
+                    })
+                  }
+                });
+              }else if(!accessToken || !res.authSetting['scope.userInfo']){
+                 wx.redirectTo({
+                      url: '/pages/login/choosePageLogin'
+                  });
+              }
+            }
+          })
+        }
+      })
+      //检查是否存在新版本
+      wx.getUpdateManager().onCheckForUpdate((res) => {
+        // 请求完新版本信息的回调
+        if (res.hasUpdate) { //如果有新版本
+          // 小程序有新版本，会主动触发下载操作（无需开发者触发）
+          wx.getUpdateManager().onUpdateReady(() => { //当新版本下载完成，会进行回调
+            wx.showModal({
+              title: '更新提示',
+              content: '新版本已经准备好，单击确定重启应用',
+              showCancel: false,
+              success: (res) => {
+                if (res.confirm) {
+                  // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
+                  wx.getUpdateManager().applyUpdate();
+                }
+              }
+            })
+          })
+          // 小程序有新版本，会主动触发下载操作（无需开发者触发）
+          wx.getUpdateManager().onUpdateFailed(() => { //当新版本下载失败，会进行回调
+            wx.showModal({
+              title: '提示',
+              content: '检查到有新版本，但下载失败，请检查网络设置',
+              showCancel: false,
+            })
+          })
+        }
+      });
+    }
+  }
+</script>

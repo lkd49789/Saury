@@ -1,0 +1,74 @@
+@import "./../../../../components/navbar.wxss";
+.bill .top-title {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 10000;
+}
+.bill .top-title .flex {
+  height: 104rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 48rpx;
+}
+.bill .top-title .filter {
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 99999;
+  padding: 20rpx 28rpx 0 28rpx;
+}
+.bill .top-title .filter > view {
+  display: flex;
+  flex-direction: column;
+  padding: 10rpx 0;
+}
+.bill .bill_content {
+  background: #ffffff;
+  margin: 0 auto;
+  box-shadow: 0rpx 8rpx 30rpx 0rpx rgba(65, 98, 213, 0.25);
+  border-radius: 20rpx;
+  padding: 30rpx 24rpx;
+  margin: 44rpx 28rpx;
+  font-size: 28rpx;
+  overflow: auto;
+}
+.bill .bill_content .caseConflictBorder_radius {
+  border: 1px solid;
+  width: 15rpx;
+  height: 15rpx;
+  line-height: 28rpx;
+  border-radius: 15rpx;
+  margin-right: 10rpx;
+  display: inline-block;
+}
+.bill .bill_content .bill_view {
+  line-height: 50rpx;
+}
+.bill .bill_content .bill_gray {
+  color: #7a7a7a;
+  border-color: #7a7a7a;
+}
+.bill .bill_content .bill_blue {
+  color: #009dff;
+  border-color: #009dff;
+}
+.bill .bill_content .bill_red {
+  color: #e20000;
+  border-color: #e20000;
+}
+.bill .bill_content .bill_yellow {
+  color: #ff9900;
+  border-color: #ff9900;
+}
+.bill .bill_content .bill_green {
+  color: #069400;
+  border-color: #069400;
+}
+.bill .bill_content .bill_state {
+  float: right;
+  position: relative;
+}

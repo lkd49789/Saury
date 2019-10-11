@@ -1,0 +1,137 @@
+
+    <view class="body">
+        <view class="top-title">
+            <text>请假申请</text>
+        </view>
+        <view class="main">
+            
+    <view class="tui-picker-content">
+        <view>{{$StartTime$timeObj.title}}</view>
+        <picker mode="multiSelector" value="{{$StartTime$dateTime}}" bindchange="$StartTime$changeDateTime" range="{{$StartTime$dateTimeArray}}" name="{{$StartTime$timeObj.name}}" disabled="{{$StartTime$timeObj.isChecked}}" bindcolumnchange="$StartTime$changeDateTimeColumn">
+            <view class="tui-picker-detail" style="background:{{$StartTime$timeObj.isChecked?'#dfdfdf':''}}">
+                  {{$StartTime$dateData[0]+'/'+$StartTime$dateData[1]+'/'+$StartTime$dateData[2]+' '+$StartTime$dateData[3]+':'+$StartTime$dateData[4]+':'+$StartTime$dateData[5]}}
+                 <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+        </picker>
+    </view>
+
+            
+    <view class="tui-picker-content">
+        <view>{{$EndTime$timeObj.title}}</view>
+        <picker mode="multiSelector" value="{{$EndTime$dateTime}}" bindchange="$EndTime$changeDateTime" range="{{$EndTime$dateTimeArray}}" name="{{$EndTime$timeObj.name}}" disabled="{{$EndTime$timeObj.isChecked}}" bindcolumnchange="$EndTime$changeDateTimeColumn">
+            <view class="tui-picker-detail" style="background:{{$EndTime$timeObj.isChecked?'#dfdfdf':''}}">
+                  {{$EndTime$dateData[0]+'/'+$EndTime$dateData[1]+'/'+$EndTime$dateData[2]+' '+$EndTime$dateData[3]+':'+$EndTime$dateData[4]+':'+$EndTime$dateData[5]}}
+                 <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+        </picker>
+    </view>
+
+            
+    <view class="option">
+        <view>
+            <text class="title">{{$VacationType$options.title}}</text>
+        </view>
+        <picker bindchange="$VacationType$bindPickerChange" value="{{$VacationType$index}}" range="{{$VacationType$options.displayText}}" name="{{$VacationType$options.name}}">
+            <view class="picker">
+                <view>
+                    <text>{{$VacationType$options.displayText[$VacationType$index]||'请选择'}}</text>
+                </view>
+                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+        </picker>
+         <view  wx:if="{{$VacationType$options.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+
+            
+<view>
+     <view class="textarea"  wx:if="{{$VacationDay$isShow}}">
+        <view>
+            <text>{{$VacationDay$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$VacationDay$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$VacationDay$input.name}}" bindfocus="$VacationDay$bindfocus" bindblur="$VacationDay$bindblur" placeholder="请输入{{$VacationDay$input.title}}" bindinput="$VacationDay$bindinput" maxlength="-1" value="{{$VacationDay$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$VacationDay$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$VacationDay$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$VacationDay$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$VacationDay$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$VacationDay$input.name}}" bindfocus="$VacationDay$bindfocus" bindblur="$VacationDay$bindblur" placeholder="请输入{{$VacationDay$input.title}}" bindinput="$VacationDay$bindinput" disabled="{{$VacationDay$input.disabled}}" value="{{$VacationDay$inputValue}}" type="{{$VacationDay$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$VacationDay$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+            
+<view>
+     <view class="textarea"  wx:if="{{$TotalDay$isShow}}">
+        <view>
+            <text>{{$TotalDay$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$TotalDay$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$TotalDay$input.name}}" bindfocus="$TotalDay$bindfocus" bindblur="$TotalDay$bindblur" placeholder="请输入{{$TotalDay$input.title}}" bindinput="$TotalDay$bindinput" maxlength="-1" value="{{$TotalDay$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$TotalDay$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$TotalDay$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$TotalDay$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$TotalDay$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$TotalDay$input.name}}" bindfocus="$TotalDay$bindfocus" bindblur="$TotalDay$bindblur" placeholder="请输入{{$TotalDay$input.title}}" bindinput="$TotalDay$bindinput" disabled="{{$TotalDay$input.disabled}}" value="{{$TotalDay$inputValue}}" type="{{$TotalDay$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$TotalDay$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+            <view  wx:if="{{annualVacationShow}}" style="margin-top:-20rpx;margin-bottom:20rpx;color:#e20000">
+                <text>当前剩余年假{{annualVacation}}天</text>
+            </view>
+            
+<view>
+     <view class="textarea"  wx:if="{{$Memo$isShow}}">
+        <view>
+            <text>{{$Memo$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$Memo$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$Memo$input.name}}" bindfocus="$Memo$bindfocus" bindblur="$Memo$bindblur" placeholder="请输入{{$Memo$input.title}}" bindinput="$Memo$bindinput" maxlength="-1" value="{{$Memo$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$Memo$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$Memo$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$Memo$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$Memo$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$Memo$input.name}}" bindfocus="$Memo$bindfocus" bindblur="$Memo$bindblur" placeholder="请输入{{$Memo$input.title}}" bindinput="$Memo$bindinput" disabled="{{$Memo$input.disabled}}" value="{{$Memo$inputValue}}" type="{{$Memo$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$Memo$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+        </view>
+        <image src="{{'../../../../images/test.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;" bindtouchstart="touchStart" bindtouchend="touchEnd">
+        </image>
+    </view>

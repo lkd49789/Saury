@@ -1,0 +1,93 @@
+@import "./../../../components/placeHolderImage.wxss";
+@import "./../../../components/navbar.wxss";
+.body .placeHolderImage {
+  height: 85%;
+  top: 187rpx;
+}
+.body .self-title {
+  height: 104rpx;
+  line-height: 104rpx;
+  font-size: 48rpx;
+  margin-left: 28rpx;
+}
+.body .mod-icon {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 160rpx;
+  height: 160rpx;
+}
+.body .container {
+  padding: 40rpx 28rpx;
+}
+.body .container .bg-container {
+  font-size: 26rpx;
+  color: #7a7a7a;
+}
+.body .container .bg-container .container-top {
+  display: flex;
+  align-items: baseline;
+}
+.body .container .bg-container .container-top .content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.body .container .bg-container .container-main {
+  margin: 32rpx 0rpx 40rpx 70rpx;
+  border-bottom: 1px solid #bfbfbf;
+}
+.body .container .bg-container .container-main .one-line .education-degree > text:first-child {
+  padding-right: 20rpx;
+  border-right: 1px solid #bfbfbf;
+}
+.body .container .bg-container .container-main .one-line .education-degree > text:last-child {
+  padding-left: 20rpx;
+  color: #5d73fa;
+}
+.body .container .bg-container .container-main .two-line {
+  width: 100%;
+}
+.body .container .bg-container .container-main .three-line {
+  margin: 20rpx 0 40rpx 0;
+  white-space: normal;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.body .commodity_attr_box {
+  height: 196rpx;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 2000;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.body .commodity_attr_box .box {
+  margin: 0 28rpx;
+  width: 694rpx;
+  color: #7a7a7a;
+  font-size: 34rpx;
+}
+.body .commodity_attr_box .box .box1 {
+  height: 98rpx;
+  width: 100%;
+  border-bottom: 1px solid #bfbfbf;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.body .commodity_attr_box .box .box2 {
+  height: 98rpx;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

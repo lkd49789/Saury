@@ -1,0 +1,217 @@
+
+    <view class="container">
+        <view class="keyword-search"  wx:if="{{showPage}}">
+            <view class="search_top">
+                <view class="search_input">
+                    <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"/>
+                    <input value="{{searchClentValue}}" type="text" confirm-type="search" placeholder="客户名称" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
+                    </input>
+                </view>
+                <view class="top_right_btn">
+                    <icon class="iconfont icon-gaojisousuo" style="color:#5d73fa;font-size:35px;" bindtap="showPage"/>
+                </view>
+            </view>
+            <view class="search_history">
+                <view class="history_title">
+                    <text>历史搜索</text>
+                    <icon class="iconfont icon-shanchu2" style="color:#7a7a7a;font-size:35rpx;" catchtap="deletItemAll" wx:if="{{history_keyWord_client.length!==0}}"/>
+                </view>
+                <view class="history_content">
+                    <block wx:for="{{history_keyWord_client}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                        <view bindtap="history" bindlongpress="longTap" data-wpyhistory-a="{{item}}" data-wpylongtap-a="{{index}}">
+                            <text>{{item}}</text>
+                            <icon class="iconfont icon-zirenwushanchu" style="color:#dfdfdf;font-size:30rpx;" wx:if="{{isShowArray[index]}}" catchtap="deletItem" data-wpydeletitem-a="{{index}}"/>
+                        </view>
+                    </block>
+                </view>
+            </view>
+        </view>
+        <view class="advanced-search-input-panel"  wx:else="{{showPage}}">
+            <view class="advanced-search-title">
+                <text>高级搜索</text>
+                <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" bindtap="showPage"/>
+            </view>
+            <view class="advanced-search-content">
+                <view class="tui-picker-content">
+                    <view>开始时间</view>
+                    <picker mode="date" value="{{startDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChangeStart">
+                        <view class="tui-picker-detail">
+                            {{startDate||'请选择'}}
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+                        </view>
+                    </picker>
+                </view>
+                <view class="tui-picker-content">
+                    <view>结束时间</view>
+                    <picker mode="date" value="{{endDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChangeEnd">
+                        <view class="tui-picker-detail">
+                            {{endDate||'请选择'}}
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+                        </view>
+                    </picker>
+                </view>
+                
+<view>
+     <view class="textarea"  wx:if="{{$Name$isShow}}">
+        <view>
+            <text>{{$Name$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$Name$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$Name$input.name}}" bindfocus="$Name$bindfocus" bindblur="$Name$bindblur" placeholder="请输入{{$Name$input.title}}" bindinput="$Name$bindinput" maxlength="-1" value="{{$Name$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$Name$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$Name$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$Name$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$Name$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$Name$input.name}}" bindfocus="$Name$bindfocus" bindblur="$Name$bindblur" placeholder="请输入{{$Name$input.title}}" bindinput="$Name$bindinput" disabled="{{$Name$input.disabled}}" value="{{$Name$inputValue}}" type="{{$Name$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$Name$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+                
+<view>
+     <view class="textarea"  wx:if="{{$Id$isShow}}">
+        <view>
+            <text>{{$Id$input.title}}</text>
+        </view>
+        <view class="textarea-container" style="border-bottom:1px solid {{$Id$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <textarea name="{{$Id$input.name}}" bindfocus="$Id$bindfocus" bindblur="$Id$bindblur" placeholder="请输入{{$Id$input.title}}" bindinput="$Id$bindinput" maxlength="-1" value="{{$Id$inputValue}}" auto-height cursor-spacing="5px" fixed="{{$Id$true}}" style="width:83%"/>
+        </view>
+        <view wx:if="{{$Id$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+    <view class="input"  wx:else>
+        <view>
+            <text>{{$Id$input.title}}</text>
+        </view>
+        <view class="input-container" style="border-bottom:1px solid {{$Id$inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
+            <input name="{{$Id$input.name}}" bindfocus="$Id$bindfocus" bindblur="$Id$bindblur" placeholder="请输入{{$Id$input.title}}" bindinput="$Id$bindinput" disabled="{{$Id$input.disabled}}" value="{{$Id$inputValue}}" type="{{$Id$input.type||'text'}}" confirm-type="done" cursor-spacing="5px"/>
+        </view>
+        <view wx:if="{{$Id$input.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+   
+</view>
+    
+
+                
+    <view class="option">
+        <view>
+            <text class="title">{{$OrganizationUnitId$options.title}}</text>
+        </view>
+        <picker bindchange="$OrganizationUnitId$bindPickerChange" value="{{$OrganizationUnitId$index}}" range="{{$OrganizationUnitId$options.displayText}}" name="{{$OrganizationUnitId$options.name}}">
+            <view class="picker">
+                <view>
+                    <text>{{$OrganizationUnitId$options.displayText[$OrganizationUnitId$index]||'请选择'}}</text>
+                </view>
+                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+        </picker>
+         <view  wx:if="{{$OrganizationUnitId$options.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+
+                
+    <view class="option">
+        <view>
+            <text class="title">{{$ImportLevel$options.title}}</text>
+        </view>
+        <picker bindchange="$ImportLevel$bindPickerChange" value="{{$ImportLevel$index}}" range="{{$ImportLevel$options.displayText}}" name="{{$ImportLevel$options.name}}">
+            <view class="picker">
+                <view>
+                    <text>{{$ImportLevel$options.displayText[$ImportLevel$index]||'请选择'}}</text>
+                </view>
+                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+        </picker>
+         <view  wx:if="{{$ImportLevel$options.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+
+                
+    <view class="option">
+        <view>
+            <text class="title">{{$Origin$options.title}}</text>
+        </view>
+        <picker bindchange="$Origin$bindPickerChange" value="{{$Origin$index}}" range="{{$Origin$options.displayText}}" name="{{$Origin$options.name}}">
+            <view class="picker">
+                <view>
+                    <text>{{$Origin$options.displayText[$Origin$index]||'请选择'}}</text>
+                </view>
+                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+        </picker>
+         <view  wx:if="{{$Origin$options.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+
+                
+    <view class="option">
+        <view>
+            <text class="title">{{$ClientType$options.title}}</text>
+        </view>
+        <picker bindchange="$ClientType$bindPickerChange" value="{{$ClientType$index}}" range="{{$ClientType$options.displayText}}" name="{{$ClientType$options.name}}">
+            <view class="picker">
+                <view>
+                    <text>{{$ClientType$options.displayText[$ClientType$index]||'请选择'}}</text>
+                </view>
+                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+            </view>
+        </picker>
+         <view  wx:if="{{$ClientType$options.warning}}" style="color:#e20000">
+                <text>此字段是必填字段</text>
+        </view>
+    </view>
+
+                <view class="tui-picker-content">
+                    <view>地区</view>
+                    <!-- <picker mode="region" value="{{region}}" bindchange="changePickerData" name="region" bindcolumnchange="changePickerDataColumn" custom-item="{{customItem}}">
+                        <view class="tui-picker-detail">
+                            {{region.length!==0?region[0]+'/'+region[1]+'/'+region[2]:'请选择'}}
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                        </view>
+                    </picker> -->
+                    <picker mode="multiSelector" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" value="{{region}}" range="{{multiArray}}">
+                        <view class="tui-picker-detail">
+                            {{regionText || '请选择'}}
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+                        </view>
+                    </picker>
+                </view>
+                <view class="tui-picker-content">
+                    <view>业务类型</view>
+                    <picker mode="multiSelector" value="{{CategoryIndex}}" bindtap="getData" bindchange="change" bindcolumnchange="bindMultiPickerColumnChangeCategory" range="{{Category}}" range-key="name" data-wpygetdata-a="Category" data-wpychange-a="Category">
+                        <view class="tui-picker-detail">
+                            {{getCategoryArr.length!==0?getCategoryArr:'请选择'}}
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+                        </view>
+                    </picker>
+                </view>
+                <view class="tui-picker-content">
+                    <view>客户行业</view>
+                    <picker mode="multiSelector" value="{{IndustryTypeIndex}}" bindtap="getData" bindchange="change" bindcolumnchange="bindMultiPickerColumnChangeCategory2" range="{{IndustryType}}" range-key="name" data-wpygetdata-a="IndustryType" data-wpychange-a="IndustryType">
+                        <view class="tui-picker-detail">
+                            {{getTradeArr.length!==0?getTradeArr:'请选择'}}
+                            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+                        </view>
+                    </picker>
+                </view>
+                <image class="btn-sub" src="../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearchSubmit"/>
+            </view>
+        </view>
+    </view>

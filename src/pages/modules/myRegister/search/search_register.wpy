@@ -1,0 +1,515 @@
+<!--  -->
+<style lang='less'>
+    .container {
+        margin: 44rpx 28rpx;
+        .keyword-search {
+            .search_top {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .search_input {
+                    width: 100%; // border:1px solid #dfdfdf;
+                    padding: 10rpx 20rpx;
+                    border-radius: 100rpx;
+                    background: #f4f4f4;
+                    display: flex;
+                    align-items: center;
+                    margin-right: 14rpx;
+                    >icon {
+                        margin-right: 14rpx;
+                    }
+                    >input {
+                        width: 100%;
+                    }
+                }
+                .top_right_btn {
+                    // width: 15%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+            .search_history {
+                margin-top: 28rpx;
+                .history_title {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+                .history_content {
+                    margin-top: 10rpx;
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    >view {
+                        background: #f4f4f4;
+                        padding: 10rpx 20rpx;
+                        border-radius: 50rpx;
+                        color: #7a7a7a;
+                        margin: 14rpx;
+                        position: relative;
+                        >icon {
+                            // animation: item_delet_icon 1s linear;
+                            position: absolute;
+                            top: -30rpx;
+                            right: -10rpx;
+                        }
+                    }
+                }
+            }
+        }
+        .advanced-search-input-panel {
+            .advanced-search-title {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                >text {
+                    font-size: 40rpx;
+                }
+            }
+            .advanced-search-content {
+                margin: 30rpx 0 40rpx 0;
+            }
+        }
+        .tui-picker-content {
+            margin-bottom: 36rpx;
+            picker {
+                padding: 20rpx 0;
+                border-bottom: 1px solid #dfdfdf;
+                .tui-picker-detail {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    color: #7a7a7a;
+                }
+            }
+            .checkbox {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                .checkboxItem {
+                    margin: 20rpx 20rpx 0 0;
+                }
+            }
+        }
+        .checkedBox {
+            margin-bottom: 36rpx;
+            border-bottom: 1px solid #dedede;
+            .checkbox-group {
+                padding-top: 22rpx; // height: 106rpx;
+                display: flex;
+                align-items: center; // justify-content: center;
+                flex-wrap: wrap;
+                width: 100%;
+                .label {
+                    padding-bottom: 22rpx;
+                    width: 50%;
+                    align-items: center;
+                    display: flex;
+                }
+            }
+        }
+        .checkedRadioBox{
+            // padding: 0 28rpx 22rpx 28rpx;
+            margin-bottom: 36rpx;
+            border-bottom: 1px solid #dedede;
+            .radio-group {
+                height: 106rpx;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: nowrap;
+                width: 100%;
+                .radio {
+                    align-items: center;
+                    flex: 1;
+                    display: flex;
+                    justify-content: center;
+                }
+            }
+        }
+        .btn-sub {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99;
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="keyword-search" wx:if="{{showPage}}">
+            <view class="search_top">
+                <view class="search_input">
+                    <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"></icon>
+                    <input value="{{searchKeyWords}}" type="text" confirm-type="search" placeholder="案件名称/客户名称" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
+                    </input>
+                </view>
+                <view class="top_right_btn">
+                    <icon class="iconfont icon-gaojisousuo" style="color:#5d73fa;font-size:35px;" @tap="showPage"></icon>
+                </view>
+            </view>
+            <view class="search_history">
+                <view class="history_title">
+                    <text>历史搜索</text>
+                    <icon class="iconfont icon-shanchu2" style="color:#7a7a7a;font-size:35rpx;" catchtap="deletItemAll" wx:if="{{History_KeyWord.length!==0}}"></icon>
+                </view>
+                <view class="history_content">
+                    <repeat for="{{History_KeyWord}}" key="index" index="index" item="item">
+                        <view @tap="history('{{item}}')" bindlongpress="longTap('{{index}}')">
+                            <text>{{item}}</text>
+                            <icon class="iconfont icon-zirenwushanchu" style="color:#dfdfdf;font-size:30rpx;" wx:if="{{isShowArray[index]}}" catchtap="deletItem('{{index}}')"></icon>
+                        </view>
+                    </repeat>
+                </view>
+            </view>
+        </view>
+        <view class="advanced-search-input-panel" wx:else="{{showPage}}">
+            <view class="advanced-search-title">
+                <text>高级搜索</text>
+                <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
+            </view>
+            <view class="advanced-search-content">
+                <Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
+                <ClientName :input.sync="ClientName" :inputValue.sync='ClientNameValue' :twoWayTitle="ClientNameValue" />
+                <view class="tui-picker-content">
+                    <view>收案时间</view>
+                    <view style="display:flex;align-items:center;">
+                        <picker id="startAcceptDate" mode="date" value="{{searchData.AcceptDate.StartDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
+                            <view class="tui-picker-detail">
+                                {{searchData.AcceptDate.StartDate||'请选择'}}
+                                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                            </view>
+                        </picker>
+                        <text style="margin:0 20rpx">至</text>
+                        <picker id="endAcceptDate" mode="date" value="{{searchData.AcceptDate.EndDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
+                            <view class="tui-picker-detail">
+                                {{searchData.AcceptDate.EndDate||'请选择'}}
+                                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="tui-picker-content">
+                    <view>创建时间</view>
+                    <view style="display:flex;align-items:center;">
+                        <picker id="startCreateDate" mode="date" value="{{searchData.CreationTime.StartDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
+                            <view class="tui-picker-detail">
+                                {{searchData.CreationTime.StartDate||'请选择'}}
+                                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                            </view>
+                        </picker>
+                        <text style="margin:0 20rpx">至</text>
+                        <picker id="endCreateDate" mode="date" value="{{searchData.CreationTime.EndDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
+                            <view class="tui-picker-detail">
+                                {{searchData.CreationTime.EndDate||'请选择'}}
+                                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <LawyerRole :options.sync="LawyerRole" :index.sync='LawyerRoleIndex' :twoWayTitle="LawyerRoleIndex" />
+            </view>
+            <view class="checkedBox">
+                <view class="title">
+                    案件类型
+                </view>
+                <checkbox-group @change="checkboxChange" class="checkbox-group">
+                    <label wx:for="{{Category}}" wx:key="index" index="index" item="item " class="label">
+                                <checkbox value="{{item.value}}" checked="{{item.isSelected}}" name="id"  color="#5d73fa"/> {{item.displayText}}
+                        </label>
+                </checkbox-group>
+            </view>
+            <view class="checkedRadioBox">
+                <view class="title">
+                    状态
+                </view>
+                <radio-group class="radio-group" @change="radioChange">
+                  <label class="radio" wx:for="{{Status}}"  wx:key="index" index="index" item="item ">
+                    <radio value="{{item.value}}" checked="{{item.isSelected}}" color="#5d73fa" /> {{item.displayText}}
+                  </label>
+                </radio-group>
+            </view>
+            <view class="checkedBox" wx:if="{{isProcessStatus}}">
+                <view class="title">
+                    立案流程状态
+                </view>
+                <checkbox-group @change="checkboxChangeProcessStatus" class="checkbox-group">
+                    <label wx:for="{{ProcessStatus}}" wx:key="index" index="index" item="item " class="label">
+                                <checkbox value="{{item.value}}" checked="{{item.isSelected}}" name="id"  color="#5d73fa"/> {{item.displayText}}
+                        </label>
+                </checkbox-group>
+            </view>
+        </view>
+        <image wx:if="{{!showPage}}" class="btn-sub" src="../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearchSubmit" />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import {
+        myDistinct
+    } from '../../../../utils/cofig/api.js';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import {
+        formatDate
+    } from '../../../../utils/cofig/api.js';
+    import Name from '../../../../components/picker/input';
+    import ClientName from '../../../../components/picker/input';
+    import LawyerRole from '../../../../components/picker/option';
+    export default class searchRegister extends wepy.page {
+        components = {
+            Name,
+            ClientName,
+            LawyerRole
+        }
+        data = {
+            searchData: {},
+            History_KeyWord: [],
+            searchKeyWords: '',
+            showPage: true,
+            isShowArray: [],
+            Name: {
+                title: '案件名称',
+                name: 'Name',
+                warning: false,
+            },
+            NameValue: '',
+            ClientName: {
+                title: '客户名称',
+                name: 'ClientName',
+                warning: false,
+            },
+            ClientNameValue: '',
+            LawyerRole: {
+                title: '参案角色',
+                name: 'LawyerRole',
+                value: [''],
+                displayText: [
+                    '请选择'
+                ],
+                warning: false
+            },
+            LawyerRoleIndex: 0,
+            //案件类别
+            Category: [],
+            //状态
+            Status:[],
+            isProcessStatus:false,
+            //立案流程状态
+            ProcessStatus:[],
+            ProcessStatusData:[],
+        };
+        methods = {
+            checkboxChangeProcessStatus(e){
+                 if (e.detail.value.length !== 0) {
+                    this.searchData.ProcessStatus = e.detail.value.join(',')
+                } else {
+                    this.searchData.ProcessStatus = ''
+                }
+                this.$apply();
+            },
+            radioChange(e){
+                this.isProcessStatus=true;
+                this.searchData.Status=e.detail.value;
+                this.statusFilter(e.detail.value);
+                this.$apply();
+            },
+            checkboxChange(e) {
+                if (e.detail.value.length !== 0) {
+                    this.searchData.Category = e.detail.value.join(',')
+                } else {
+                    this.searchData.Category = ''
+                }
+                this.$apply();
+            },
+            bindDateChange(e) {
+                switch (e.currentTarget.id) {
+                    case 'startAcceptDate':
+                        this.searchData.AcceptDate.StartDate = e.detail.value;
+                        break;
+                    case 'endAcceptDate':
+                        this.searchData.AcceptDate.EndDate = e.detail.value;
+                        break;
+                    case 'startCreateDate':
+                        this.searchData.CreationTime.StartDate = e.detail.value;
+                        break;
+                    case 'endCreateDate':
+                        this.searchData.CreationTime.EndDate = e.detail.value;
+                        break;
+                    default:
+                        break;
+                }
+                this.$apply();
+            },
+            advancedSearchSubmit() {
+                if (Object.keys(this.searchData).length !== 0) {
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2]; //上一个页面
+                    if(prevPage){
+                        prevPage.isRefresh(this.searchData);
+                    }
+                    wx.navigateBack({
+                        delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                    });
+                } else {
+                    wx.showToast({
+                        title: '没有搜索内容！', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: false, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                }
+            },
+            showPage() {
+                this.showPage = !this.showPage;
+                this.$apply();
+            },
+            deletItemAll() {
+                wx.showModal({
+                    title: '确认是否删除！', //提示的标题,
+                    content: '全部历史记录', //提示的内容,
+                    showCancel: true, //是否显示取消按钮,
+                    cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
+                    cancelColor: '#7a7a7a', //取消按钮的文字颜色,
+                    confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
+                    confirmColor: '#5d73fa', //确定按钮的文字颜色,
+                    success: res => {
+                        if (res.confirm) {
+                            this.History_KeyWord = [];
+                            var history = wx.getStorageSync('HISTORY_KEYWORD_REGISTER');
+                            history = [];
+                            wx.setStorageSync('HISTORY_KEYWORD_REGISTER', history);
+                            this.$apply();
+                        }
+                    }
+                });
+            },
+            deletItem(index) {
+                this.History_KeyWord.splice(index, 1);
+                var history = wx.getStorageSync('HISTORY_KEYWORD_REGISTER');
+                history.splice(index, 1);
+                wx.setStorageSync('HISTORY_KEYWORD_REGISTER', history);
+            },
+            longTap(index) {
+                this.isShowArray = this.isShowArray.map(item => {
+                    item = false;
+                    return item
+                })
+                this.isShowArray[index] = true;
+                this.$apply();
+            },
+            history(item) {
+                this.searchKeyWords = item;
+                this.$apply();
+            },
+            submitSearch(e) {
+                var value = e.detail.value.replace(/(^\s*)|(\s*$)/g, "");
+                if (value) {
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2]; //上一个页面
+                    if(prevPage){
+                        this.searchData.KeyWord=e.detail.value;
+                        prevPage.isRefresh(this.searchData);
+                    }
+                    wx.navigateBack({
+                        delta: 1, //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                        success: () => {
+                            var History_KeyWord = wx.getStorageSync('HISTORY_KEYWORD_REGISTER');
+                            if (History_KeyWord.length >= 20) {
+                                History_KeyWord.splice(History_KeyWord.length - 1, 1);
+                            }
+                            History_KeyWord.unshift(value);
+                            History_KeyWord = myDistinct(History_KeyWord);
+                            wx.setStorageSync('HISTORY_KEYWORD_REGISTER', History_KeyWord)
+                        }
+                    });
+                    this.$apply();
+                } else {
+                    wx.showToast({
+                        title: '搜索为空,请重试！', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                }
+            }
+        };
+        watch = {
+            NameValue(value) {
+                this.searchData.Name = value;
+                this.$apply();
+            },
+            ClientNameValue(value) {
+                this.searchData.ClientName = value;
+                this.$apply();
+            },
+            LawyerRoleIndex(index) {
+                this.searchData.LawyerRole = this.LawyerRole.value[index];
+                this.$apply();
+            }
+        };
+        // 判断初始化历史数据
+        isHistory() {
+            var pages = getCurrentPages();
+            var prevPage = pages[pages.length - 2]; //上一个页面
+            prevPage.data.queryStream = {};
+            prevPage.data.refresh = false;
+            var History_KeyWord = wx.getStorageSync('HISTORY_KEYWORD_REGISTER');
+            if (!History_KeyWord) {
+                History_KeyWord = [];
+                wx.setStorageSync('HISTORY_KEYWORD_REGISTER', History_KeyWord)
+            } else {
+                this.History_KeyWord = History_KeyWord;
+                for (var index in this.History_KeyWord) {
+                    this.isShowArray[index] = false;
+                }
+            }
+            this.$apply();
+        }
+        //状态数据过滤
+        statusFilter(status){
+            var ProcessStatusData=this.ProcessStatusData;
+            this.ProcessStatus=ProcessStatusData.filter((item)=>{
+                return item.value.substr(0, 1)==status
+            }) 
+        }
+        //获取代编辑数据
+        async GetCaseApplyListSearchInput() {
+            var resData = await ajax.getData(
+                '/api/services/web/caseApplication/GetCaseApplyListSearchInput',
+                'post'
+            )
+            if (resData.statusCode == 200) {
+                var CaseApplyListSearchInputDatas = resData.data.result;
+                for (var lawyerRoleList_index in CaseApplyListSearchInputDatas.lawyerRoleList) {
+                    this.LawyerRole.value.push(CaseApplyListSearchInputDatas.lawyerRoleList[lawyerRoleList_index].value);
+                    this.LawyerRole.displayText.push(CaseApplyListSearchInputDatas.lawyerRoleList[lawyerRoleList_index].displayText);
+                }
+                this.Category = CaseApplyListSearchInputDatas.categoryList;
+                this.Status=CaseApplyListSearchInputDatas.statusList;
+                this.ProcessStatusData=CaseApplyListSearchInputDatas.processStatusList;
+            }
+            this.$apply();
+        }
+        onLoad() {
+            this.searchData.CreationTime = {
+                StartDate:'',
+                EndDate:'',
+            };
+            this.searchData.AcceptDate = {
+                StartDate:'',
+                EndDate:'',
+            };
+            this.isHistory();
+            this.GetCaseApplyListSearchInput();
+        };
+        onShow() {};
+    }
+</script>
+

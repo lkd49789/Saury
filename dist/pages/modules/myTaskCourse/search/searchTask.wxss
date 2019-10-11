@@ -1,0 +1,96 @@
+@import "./../../../../components/picker/pickerOption.wxss";
+@import "./../../../../components/picker/pickerDate.wxss";
+@import "./../../../../components/picker/input.wxss";
+.container {
+  margin: 44rpx 28rpx;
+}
+.container .keyword-search .search_top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.container .keyword-search .search_top .search_input {
+  width: 100%;
+  padding: 10rpx 20rpx;
+  border-radius: 100rpx;
+  background: #f4f4f4;
+  display: flex;
+  align-items: center;
+  margin-right: 14rpx;
+}
+.container .keyword-search .search_top .search_input > icon {
+  margin-right: 14rpx;
+}
+.container .keyword-search .search_top .search_input > input {
+  width: 100%;
+}
+.container .keyword-search .search_top .top_right_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.container .keyword-search .search_history {
+  margin-top: 28rpx;
+}
+.container .keyword-search .search_history .history_title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.container .keyword-search .search_history .history_content {
+  margin-top: 10rpx;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.container .keyword-search .search_history .history_content > view {
+  background: #f4f4f4;
+  padding: 10rpx 20rpx;
+  border-radius: 50rpx;
+  color: #7a7a7a;
+  margin: 14rpx;
+  position: relative;
+}
+.container .keyword-search .search_history .history_content > view > icon {
+  position: absolute;
+  top: -30rpx;
+  right: -10rpx;
+}
+.container .advanced-search-input-panel .advanced-search-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.container .advanced-search-input-panel .advanced-search-title > text {
+  font-size: 40rpx;
+}
+.container .advanced-search-input-panel .advanced-search-content {
+  margin: 30rpx 0;
+}
+.container .advanced-search-input-panel .advanced-search-content .caseSearchInput {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.container .advanced-search-input-panel .advanced-search-content .caseSearchInput > view:first-child {
+  width: 90%;
+}
+.container .advanced-search-input-panel .advanced-search-content .caseSearchInput > view:last-child {
+  background: #5d73fa;
+  height: 60rpx;
+  width: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+}
+.container .advanced-search-input-panel .advanced-search-content .caseSearchInput > view:last-child > icon {
+  font-size: 40rpx;
+  color: #ffffff;
+}
+.container .advanced-search-input-panel .btn-sub {
+  width: 160rpx;
+  height: 160rpx;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 99;
+}

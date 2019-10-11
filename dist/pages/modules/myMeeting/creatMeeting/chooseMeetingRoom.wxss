@@ -1,0 +1,80 @@
+.body {
+  height: 100%;
+}
+.body .addImage {
+  width: 160rpx;
+  height: 160rpx;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 99;
+}
+.body .top-title {
+  height: 104rpx;
+  line-height: 104rpx;
+  font-size: 48rpx;
+  padding-left: 28rpx;
+  border-bottom: 1px solid #dedede;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 99;
+}
+.body .main {
+  margin: 149rpx 28rpx 0 28rpx;
+}
+.body .main .option {
+  margin-bottom: 36rpx;
+}
+.body .main .option picker {
+  padding: 20rpx 0;
+  border-bottom: 1px solid #dfdfdf;
+}
+.body .main .option picker .picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #7a7a7a;
+}
+.body .main .option picker .picker .part-item {
+  position: relative;
+  margin: 10rpx;
+  background: #dfdfdf;
+  padding: 5rpx 20rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.body .main .option picker .picker .part-item > icon {
+  position: absolute;
+  bottom: 31rpx;
+  right: -12rpx;
+}
+.body .main .item {
+  margin-top: 44rpx;
+}
+.body .main .item > view:not(:last-child) {
+  margin-bottom: 30rpx;
+}
+.body .main .item > view:first-child {
+  display: flex;
+}
+.body .main .item > view:first-child > view {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+.body .main .item > view:first-child > view > text:first-child {
+  margin-bottom: 20rpx;
+  color: #7a7a7a;
+}
+.body .main .item > view:not(:first-child) {
+  display: flex;
+  flex-direction: column;
+}
+.body .main .item > view:not(:first-child) > text:first-child {
+  margin-bottom: 20rpx;
+  color: #7a7a7a;
+}

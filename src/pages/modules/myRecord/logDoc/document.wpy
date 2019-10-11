@@ -1,0 +1,367 @@
+
+<style lang="less">
+    .body {
+        height: 100%;
+        position: relative;
+        .container-title {
+            height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            color: #2a2a2a;
+            line-height: 104rpx;
+            background: #fff; // display: flex;
+            // justify-content: space-between;
+            border-bottom: 1px solid #dedede;
+        } //固定
+        .fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+        .doc-item-contianer {
+            font-size: 28rpx;
+            padding: 145rpx 28rpx 0 20rpx; // margin-top: 159rpx;
+            // position: relative;
+            .modal-view {
+                top: 0px;
+                left: 0px;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                position: fixed;
+                z-index: 0;
+                background: rgba(0, 0, 0, 0.15);
+                display: flex;
+                flex-direction: column-reverse;
+                .box {
+                    background: #fff;
+                    height: 196rpx;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    >view {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        height: 100%;
+                        width: 90%;
+                    }
+                }
+            }
+            .doc-item {
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 50rpx 22rpx;
+                margin-bottom: 44rpx;
+                .doc-left-content {
+                    width: 85%;
+                    margin-left: 49rpx;
+                    display: flex;
+                    flex-direction: column;
+                    .texthide {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+                }
+            }
+        }
+        .modal-img {
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            z-index: 0;
+            background: #000;
+            display: flex; // justify-items: center;
+            justify-content: center;
+            align-items: center;
+            .img {
+                z-index: 1;
+            }
+        }
+        .video-view {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #000;
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .videoContent {
+                width: 100%;
+                position: fixed;
+                z-index: 1000
+            }
+        }
+    }
+</style>
+
+<template>
+    <!-- <view></view> -->
+    <!-- <text></text> -->
+    <view class="body">
+        <view class="container-title fixed">
+            <text class="title-text">日志文档</text>
+        </view>
+        <view class="doc-item-contianer">
+            <repeat for="{{logAttachmentList}}" key="index" index="index" item="item">
+                <view class="doc-item" @tap="preview('{{item.id}}','{{item.extension}}','{{index}}','{{item.size}}')" wx:hidden='{{showVideo}}'>
+                    <icon class="iconfont {{fileIcon[index]}}" style="font-size:80rpx;color:{{fileColor[index]}}"></icon>
+                    <view class="doc-left-content">
+                        <text class="texthide">{{item.name}}</text>
+                        <view style="height:20rpx;width:{{progress[index]}}%;background:#7a7a7a;margin-top:10rpx"></view>
+                    </view>
+                    <!-- <view> -->
+                </view>
+            </repeat>
+            <view id='videoView' class="video-view" wx:if="{{showVideo}}" capture-catch:tap="colseVideo" catchtouchmove='true'>
+                <view class="videoContent">
+                    <video id="myVideo" style="width:100%;" src="{{videoPath}}" danmu-list="{{danmuList}}" objectFit="cover" enable-danmu danmu-btn page-gesture="{{true}}" controls></video>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    export default class contractdoc extends wepy.page {
+        components = {};
+        data = {
+            logAttachmentList:{},
+            fileIcon: [],
+            fileColor: [],
+            showVideo: false,
+            videoPath: '',
+            progress: [],
+            stopProgress: []
+        };
+        methods = {
+            myCatchTouch() {
+                console.log('禁止滑动');
+                return;
+            },
+            colseVideo(e) {
+                console.log(e)
+                if (e.target.id = "videoView") {
+                    this.showVideo = false;
+                }
+            },
+            preview(fileId, fileClass, progressIndex, fileSize) {
+                var fileClass = fileClass.replace('.', '').toLowerCase();
+                if (this.progress[progressIndex] !== 100) {
+                    this.stopProgress[progressIndex] = !this.stopProgress[progressIndex]
+                    var http = '/api/services/web/worklogAttachment/GetDocumentFile?id=' + fileId;
+                    switch (fileClass) {
+                        case 'jpg':
+                            this.downloadFile(http, fileClass, progressIndex);
+                            break;
+                        case 'png':
+                            this.downloadFile(http, fileClass, progressIndex);
+                            break;
+                        case 'xls':
+                            this.downloadFile(http, fileClass, progressIndex);
+                            break;
+                        case 'xlsx':
+                            this.downloadFile(http, fileClass, progressIndex);
+                            break;
+                        case 'docx':
+                            this.downloadFile(http, fileClass, progressIndex);
+                            break;
+                        case 'doc':
+                            this.downloadFile(http, fileClass, progressIndex);
+                            break;
+                        case 'pdf':
+                            this.downloadFile(http, fileClass, progressIndex);
+                            break;
+                        case 'mp4':
+                            this.downloadFile(http, fileClass, progressIndex);
+                            break;
+                        default:
+                            wx.showToast({
+                                title: '文件格式不支持！',
+                                icon: 'none',
+                                duration: 1500,
+                                mask: false,
+                            });
+                            break;
+                    }
+                } else {
+                    //在获取缓存中的数据
+                    wx.getStorage({
+                        key: 'cacheDownLoadData',
+                        success: res => {
+                            var filePath = res.data[progressIndex]
+                            switch (fileClass) {
+                                case 'jpg':
+                                    wx.previewImage({
+                                        current: filePath, // 当前显示图片的http链接
+                                        urls: [filePath] // 需要预览的图片http链接列表
+                                    });
+                                    break;
+                                case 'png':
+                                    wx.previewImage({
+                                        current: filePath, // 当前显示图片的http链接
+                                        urls: [filePath] // 需要预览的图片http链接列表
+                                    });
+                                    break;
+                                case 'mp4':
+                                    this.videoPath = filePath;
+                                    this.showVideo = true;
+                                    this.$apply();
+                                    break;
+                                default:
+                                    wx.openDocument({
+                                        filePath: filePath,
+                                        fileType: fileClass,
+                                        success: res => {
+                                            console.log('打开文件');
+                                        },
+                                        fail: err => {
+                                            console.log(err);
+                                        }
+                                    });
+                                    break;
+                                    this.$apply();
+                            }
+                        }
+                    });
+                }
+            }
+        };
+        downloadFile = (http, fileClass, progressIndex) => {
+            console.log(http, fileClass, progressIndex);
+            var fileClass = fileClass.toLowerCase();
+            if (fileClass !== 'folder') {
+                wx.getStorage({
+                    key: 'access',
+                    success: res => {
+                        var downloadTask = wx.downloadFile({
+                            header: {
+                                'content-type': 'application/octet-stream',
+                                Authorization: 'Bearer ' + res.data
+                            },
+                            url: 'https://www.ailinkedlaw.com' + http,
+                            success: res => {
+                                var filePath = res.tempFilePath;
+                                var cacheData = wx.getStorageSync('cacheDownLoadData');
+                                cacheData[progressIndex] = filePath;
+                                wx.setStorageSync('cacheDownLoadData', cacheData);
+                            },
+                            fail: err => {
+                                console.log(err);
+                            },
+                            complete: () => {
+                                wx.hideLoading();
+                            }
+                        });
+                        downloadTask.onProgressUpdate((res) => {
+                            if (this.stopProgress[progressIndex]) {
+                                this.progress[progressIndex] = res.progress
+                                this.$apply();
+                            } else {
+                                downloadTask.abort()
+                            }
+                        })
+                    }
+                });
+            }
+        }
+        async getDocumentData(id) {
+            var logId = {
+                id
+            };
+            var resData = await ajax.getData(
+                '/api/services/web/worklog/GetWorklog',
+                'post',
+                logId
+            )
+            if (resData.statusCode == 200) {
+                this.logAttachmentList=resData.data.result.attachmentList;
+                var logAttachmentList=resData.data.result.attachmentList;
+                if (logAttachmentList.length !== 0) {
+                    var cacheData = [];
+                    for (var index in logAttachmentList) {
+                        this.progress[index] = 0;
+                        cacheData[index] = 0;
+                        this.stopProgress[index] = false;
+                        //文件类型图标处理
+                        var iconClass = logAttachmentList[
+                            index
+                        ].extension.toLowerCase();
+                        // console.log(iconClass);
+                        switch (iconClass) {
+                            case '.pdf':
+                                this.fileIcon[index] = 'icon-pdfpng1';
+                                this.fileColor[index] = '#e20000';
+                                break;
+                            case '.png':
+                                this.fileIcon[index] = 'icon-pdfpng1';
+                                this.fileColor[index] = '#e20000';
+                                break;
+                            case '.xls':
+                                this.fileIcon[index] = 'icon-exl1';
+                                this.fileColor[index] = '#069400';
+                                break;
+                            case '.xlsx':
+                                this.fileIcon[index] = 'icon-exl1';
+                                this.fileColor[index] = '#069400';
+                                break;
+                            case '.docx':
+                                this.fileIcon[index] = 'icon-wold1';
+                                this.fileColor[index] = '#009dff';
+                                break;
+                            case '.doc':
+                                this.fileIcon[index] = 'icon-wold1';
+                                this.fileColor[index] = '#009dff';
+                                break;
+                            case '.jpg':
+                                this.fileIcon[index] = 'icon-jpggeshi';
+                                this.fileColor[index] = '#ff9900';
+                                break;
+                            case '.mp4':
+                                this.fileIcon[index] = 'icon-shipinwenjian';
+                                this.fileColor[index] = '#fc5959';
+                                break;
+                            default:
+                                this.fileIcon[index] = 'icon-weizhiwenjiangeshi';
+                                this.fileColor[index] = '#7a7a7a';
+                                break;
+                        }
+                        this.$apply();
+                    }
+                    wx.setStorage({
+                        key: 'cacheDownLoadData',
+                        data: cacheData
+                    });
+                }
+            } else {
+                wx.showToast({
+                    title: '网络故障，请重试！', //提示的内容,
+                    icon: 'none', //图标,
+                    duration: 2000, //延迟时间,
+                    mask: true, //显示透明蒙层，防止触摸穿透,
+                    success: res => {}
+                });
+            }
+        }
+        onLoad(options) {
+            this.getDocumentData(options.id);
+        }
+        onHide() {}
+    }
+</script>
+
+

@@ -1,0 +1,34 @@
+
+    <view class="body">
+        <view class="top-title">
+            <text class="title">日志审核</text>
+            <icon class="iconfont icon-sousuo" style="font-size:60rpx;color:#5d73fa" bindtap="toSearchPage"/>
+        </view>
+        <view class="main">
+            <block wx:for="{{ApprovalWorklogsData}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                <view class="item-content" bindtap="toLogDetail" data-wpytologdetail-a="{{item.id}}">
+                    <view>
+                        <view>
+                            <icon class="iconfont icon-xiaotouxiang" style="font-size:50rpx;color:#5d73fa;margin-right:15rpx"/>
+                            <text>{{item.employeeName||'未填写'}} </text>
+                        </view>
+                        <view style="color:#ff9900">
+                            <text>{{item.selfDuration||'未填写'}}h</text>
+                        </view>
+                    </view>
+                    <view class="text-hidden">
+                        <text>{{item.description||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <text>{{item.startTime.Y}} {{item.startTime.M}}至{{item.endTime.Y}} {{item.endTime.M}}</text>
+                    </view>
+                </view>
+            </block>
+        </view>
+        
+    <view  wx:if="{{$placeHolderImage$placeHolder.placeHolderShow}}" class="placeHolderImage" catchtouchmove="$placeHolderImage$true">
+                <image src="{{$placeHolderImage$placeHolderImage[$placeHolderImage$placeHolder.placeHolderImageIndex]}}" mode="scaleToFill" lazy-load="false" style="width:580rpx;height:580rpx">
+                </image>
+    </view>
+
+    </view>

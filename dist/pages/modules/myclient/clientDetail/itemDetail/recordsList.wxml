@@ -1,0 +1,71 @@
+
+  <!-- <view></view> -->
+  <!-- <text></text> -->
+  <view class="body">
+    <view class="container-title">
+      <text class="title-text">拜访记录</text>
+    </view>
+    <view class="item-container">
+      <block wx:for="{{VisitRecordsData}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+        <view>
+          <view class="item-content">
+            <view class="item-left">
+              <icon class="iconfont icon-xuanxiang" style="font-size:40rpx;color:#5d73fa"/>
+            </view>
+            <view class="item-right">
+              <view class="between">
+                <text>{{item.startDateText||'未填写'}}</text>至 <text>{{item.endDateText||'未填写'}}</text>
+                <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"/>
+              </view>
+              <view class="between">
+                <text style=" font-weight: bold">{{item.clientName}}</text>
+                <text style="color:#5d73fa">{{item.serviceModeText||'未填写'}}</text>
+              </view>
+              <view style="color:#7a7a7a">
+                <text>{{item.title}}</text>
+              </view>
+              <view style="margin-bottom:36rpx">
+                <view/>
+                <text>{{item.communicationModeText||'未填写'}}</text>
+              </view>
+              <view style="color:#7a7a7a;">
+                <text>受访人员</text>
+              </view>
+              <view>
+                <block wx:for="{{intervieweeAvatar[index]}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                  <view>
+                    <image src="{{intervieweeAvatar[index][index]}}" mode="scaleToFill" lazy-load="false">
+                    </image>
+                  </view>
+                </block>
+              </view>
+              <view style="color:#7a7a7a">
+                <text><text>{{item.content||'未填写'}}</text></text>
+              </view>
+              <view style="color:#7a7a7a;margin-top:14rpx">
+                <text>拜访人员</text>
+              </view>
+              <view class="visitorAvatar">
+                <block wx:for="{{visitorAvatar[index]}}" wx:for-index="visitorIndex" wx:for-item="item" wx:key="visitorIndex">
+                  <view>
+                    <image src="{{visitorAvatar[index][visitorIndex]}}" mode="scaleToFill" lazy-load="false">
+                    </image>
+                  </view>
+                </block>
+              </view>
+              <view>
+                <icon class="iconfont icon-dizhi" style="font-size:30rpx;color:#5d73fa;margin-right:20rpx;"/>
+                <text>{{item.address||'未填写'}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+    
+    <view  wx:if="{{$placeHolderImage$placeHolder.placeHolderShow}}" class="placeHolderImage" catchtouchmove="$placeHolderImage$true">
+                <image src="{{$placeHolderImage$placeHolderImage[$placeHolderImage$placeHolder.placeHolderImageIndex]}}" mode="scaleToFill" lazy-load="false" style="width:580rpx;height:580rpx">
+                </image>
+    </view>
+
+  </view>

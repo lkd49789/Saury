@@ -1,0 +1,1836 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        position: relative;
+        .fixed-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 100;
+        }
+        .placeholder::before {
+            height: 199rpx;
+            content: '';
+            display: block;
+        }
+        .container-title {
+            height: 104rpx;
+            font-size: 48rpx;
+            padding: 0 28rpx;
+            color: #2a2a2a;
+            line-height: 104rpx;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .taskdetail-container {
+            height: 100%;
+            font-size: 28rpx;
+            color: #2a2a2a;
+            >view:not(:first-child)::before {
+                content: '';
+                display: block;
+                height: 14rpx;
+                background: #f4f4f4;
+            }
+            .task-title-content {
+                padding: 44rpx 28rpx;
+                >view:not(:nth-child(3)) {
+                    margin-bottom: 20rpx;
+                }
+                .tag {
+                    display: flex;
+                    align-items: baseline;
+                    flex-wrap: wrap;
+                    >view {
+                        margin-right: 20rpx;
+                        border: 1px dashed #7a7a7a;
+                        color: #5d73fa;
+                        padding: 10rpx 20rpx;
+                        margin-bottom: 20rpx;
+                    }
+                }
+                .address {
+                    display: flex;
+                    align-items: baseline;
+                }
+            }
+            .task-time-content {
+                //   margin: 44rpx 28rpx;
+                .tasktime-contianer {
+                    padding: 44rpx 28rpx;
+                    display: flex; // width: 100%;
+                    flex-wrap: wrap;
+                    >view {
+                        width: 50%;
+                        display: flex;
+                        flex-direction: column;
+                        margin-bottom: 20rpx;
+                        >text:first-child {
+                            color: #7a7a7a;
+                            margin-bottom: 14rpx;
+                        }
+                    }
+                }
+            }
+            .child-task {
+                //   padding: 44rpx 28rpx;
+                .childcontainer {
+                    padding: 44rpx 28rpx;
+                    .child-item {
+                        margin-top: 25rpx;
+                        display: flex;
+                        align-items: center;
+                    }
+                }
+                .addChiled {
+                    display: flex;
+                    align-items: center;
+                    margin-top: 25rpx;
+                    .addIcon {
+                        border: 1px dashed #7a7a7a;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 0 12rpx;
+                        margin-right: 20rpx;
+                        color: #7a7a7a
+                    }
+                }
+            }
+            .accessory-container {
+                .accessory-content {
+                    padding: 44rpx 28rpx;
+                    .accessory-item {
+                        margin-top: 20rpx;
+                        display: flex;
+                        align-items: center;
+                        .accessory-right {
+                            margin-left: 20rpx;
+                            width: 85%;
+                            display: flex;
+                            flex-direction: column; // align-items: center;
+                            >text:first-child {
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
+                            }
+                        }
+                    }
+                }
+            }
+            .linkman-container {
+                .linkman-content {
+                    padding: 44rpx 28rpx;
+                    .linkman-item {
+                        display: flex;
+                        align-items: center;
+                        margin-top: 20rpx;
+                        justify-content: space-between;
+                        >image {
+                            height: 80rpx;
+                            width: 80rpx;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        >view:last-child {
+                            width: 83%;
+                            border-bottom: 1px solid #f4f4f4;
+                            padding: 20rpx 0;
+                            >view {
+                                display: flex;
+                                justify-content: space-between;
+                                margin-bottom: 14rpx; //   > view:first-child {
+                                //     display: flex;
+                                //     flex-direction: column;
+                                //   }
+                            }
+                        }
+                    }
+                }
+            }
+            .isAccept {
+                position: fixed;
+                height: 98rpx;
+                width: 100%;
+                bottom: 0;
+                display: flex;
+                align-items: center;
+                background: #5d73fa; // color:#fff;
+                z-index: 99;
+                >view {
+                    width: 50%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 34rpx;
+                    color: #fff;
+                }
+                >view:first-child {
+                    border-right: 1px solid #fff;
+                }
+            }
+            .Full-screen {
+                position: fixed;
+                top: 0rpx;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 999;
+                background: rgba(0, 0, 0, 0.3);
+                >view {
+                    height: 498rpx;
+                    width: 73%;
+                    background: #fff;
+                    position: relative;
+                    >view:first-child {
+                        width: 120rpx;
+                        height: 120rpx;
+                        background: #5d73fa;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 80rpx;
+                        position: absolute;
+                        top: 0;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        z-index: 1000;
+                        color: #fff;
+                    }
+                    >view:last-child {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        margin-top: 75rpx;
+                        >view:first-child {
+                            font-size: 36rpx;
+                            font-weight: bold;
+                            width: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            padding-bottom: 5rpx;
+                            border-bottom: 1px solid #dfdfdf;
+                            margin-bottom: 20rpx;
+                        }
+                        >view:nth-child(2) {
+                            color: #7a7a7a;
+                        }
+                        >view:last-child {
+                            display: flex;
+                            align-items: center;
+                            flex-direction: row;
+                            width: 100%;
+                            height: 115rpx; // border-top: 1px solid #dfdfdf;
+                            >view {
+                                width: 50%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                height: 100%;
+                                background: #5d73fa;
+                                color: #fff;
+                            }
+                            >view:first-child {
+                                border-right: 1px solid #fff;
+                            }
+                        }
+                    }
+                }
+            }
+            .Full-screen2 {
+                position: fixed;
+                top: 0rpx;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 999;
+                background: rgba(0, 0, 0, 0.3);
+                >view {
+                    height: 400rpx;
+                    width: 73%;
+                    background: #fff;
+                    position: relative;
+                    >view:nth-child(2) {
+                        width: 110rpx;
+                        height: 110rpx;
+                        background: #5d73fa;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 80rpx;
+                        position: absolute;
+                        top: 0;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        z-index: 1000;
+                        color: #fff;
+                    }
+                    .fixed-text-count {
+                        position: absolute;
+                        bottom: 100rpx;
+                        right: 30rpx;
+                        font-size: 28rpx;
+                        color: #b2b2b2;
+                    }
+                    >view:last-child {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        margin-top: 30rpx;
+                        >view:first-child {
+                            width: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            padding-bottom: 5rpx;
+                            padding-bottom: 20rpx;
+                            margin-bottom: 20rpx;
+                            color: #7a7a7a;
+                        }
+                        >view:nth-child(2) {
+                            color: #7a7a7a;
+                        }
+                        >view:last-child {
+                            display: flex;
+                            align-items: center;
+                            flex-direction: row;
+                            width: 100%;
+                            height: 80rpx; // border-top: 1px solid #dfdfdf;
+                            position: absolute;
+                            bottom: 0;
+                            >view {
+                                width: 50%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                background: #5d73fa;
+                                color: #fff;
+                                height: 100%;
+                            }
+                            >view:first-child {
+                                border-right: 1px solid #fff;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .chat-panel {
+            padding: 0 28rpx;
+            font-size: 28rpx;
+            color: #2a2a2a;
+            padding-bottom: 160rpx; // position: relative;
+            display: flex;
+            flex-direction: column-reverse; // position:relative;
+            >view {
+                margin-top: 44rpx;
+            } // .reverseView{
+            //   display:flex;
+            //   flex-direction: column-reverse;
+            //   >view{
+            //     margin-bottom: 44rpx;
+            //   }
+            // }
+            .loadMore {
+                display: flex; // flex-direction:column;
+                justify-content: center;
+            }
+            .chat-left {
+                display: flex;
+                align-items: center;
+                >view:first-child {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center; // color: #fff;
+                    margin-right: 20rpx; //  background: #f2f2f2;
+                    >image {
+                        height: 80rpx;
+                        width: 80rpx; // background: #ff9900;
+                        border-radius: 50%; // flex-direction:
+                    }
+                }
+                .left-image {
+                    background: #f2f2f2;
+                    border-radius: 20rpx;
+                    display: flex;
+                    flex-direction: column;
+                }
+                .left-doc {
+                    background: #f2f2f2;
+                    border-radius: 20rpx;
+                    padding: 20rpx 20rpx;
+                }
+            }
+            .chat-right {
+                display: flex;
+                align-items: center;
+                flex-direction: row-reverse;
+                >view:first-child {
+                    margin-left: 20rpx;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    >image {
+                        height: 80rpx;
+                        width: 80rpx;
+                        border-radius: 50%;
+                    }
+                }
+                .right-image {
+                    // background: #f2f2f2;
+                    border-radius: 20rpx;
+                    display: flex;
+                    flex-direction: column;
+                    padding: 20rpx 20rpx;
+                }
+                .right-doc {
+                    // background: #f2f2f2;
+                    border-radius: 20rpx;
+                    padding: 20rpx 20rpx;
+                } // >view:last-child {
+                //     background: #5d73fa;
+                //     color: #fff;
+                //     border-radius: 20rpx;
+                //     width: 70%;
+                //     display: flex;
+                //     flex-direction: column;
+                //     padding: 10rpx 20rpx;
+                // }
+            }
+            .video-view {
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                background: #000;
+                z-index: 500;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                .videoContent {
+                    width: 100%;
+                    position: fixed;
+                    z-index: 1000;
+                }
+            }
+        }
+        .chat-input {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            right: 0; //   height: 80rpx;
+            //   width: 100%;
+            //   width: 760rpx;
+            background: #f2f2f2;
+            .input-content {
+                //   align-items: center;
+                display: flex;
+                align-items: center;
+                justify-content: center; // width: 100%;
+                align-items: center;
+                margin: 20rpx 20rpx 30rpx 20rpx;
+                .placeholder {
+                    color: #2a2a2a;
+                }
+                >input {
+                    // width: 100%;
+                    padding: 0 20rpx;
+                    border: 1px solid #bfbfbf;
+                    background: #fff;
+                    border-radius: 10rpx;
+                    width: 100%;
+                    height: 80rpx;
+                    margin-right: 16rpx
+                } // }
+            }
+            .chat-icon {
+                display: flex;
+                margin: -9rpx 28rpx 20rpx;
+                >view {
+                    width: 100rpx;
+                    height: 100rpx;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: #fff;
+                    border-radius: 20rpx;
+                    margin-right: 20rpx;
+                }
+            }
+        }
+        .productinfo-container {
+            font-size: 28rpx;
+            color: #2a2a2a;
+            >view:not(:last-child)::after {
+                content: '';
+                display: block;
+                height: 14rpx;
+                background: #f4f4f4;
+            }
+            .first-chunk {
+                margin: 44rpx 28rpx;
+                >view {
+                    display: flex;
+                    flex-direction: column;
+                    >text:first-child {
+                        color: #7a7a7a;
+                        margin-bottom: 14rpx;
+                    }
+                }
+                >view:not(:last-child) {
+                    margin-bottom: 20rpx;
+                }
+            }
+            .two-chunk {
+                padding: 44rpx 28rpx;
+                display: flex;
+                flex-direction: column;
+                >text:first-child {
+                    color: #7a7a7a;
+                    margin-bottom: 20rpx;
+                }
+            }
+            .three-chunk {
+                padding: 44rpx 28rpx;
+                display: flex;
+                flex-direction: column;
+                >text:not(:first-child) {
+                    margin-bottom: 14rpx;
+                }
+                >text:first-child {
+                    color: #7a7a7a;
+                    margin-bottom: 20rpx;
+                }
+            }
+            .four-chunk {
+                padding: 44rpx 28rpx;
+                display: flex;
+                flex-direction: column;
+                >text:not(:first-child) {
+                    margin-bottom: 14rpx;
+                }
+                >text:first-child {
+                    color: #7a7a7a;
+                    margin-bottom: 20rpx;
+                }
+            }
+            .five-chunk {
+                padding: 44rpx 28rpx;
+                >view:not(:first-child) {
+                    margin-bottom: 20rpx;
+                }
+                >view:first-child {
+                    color: #7a7a7a;
+                    margin-bottom: 20rpx;
+                }
+                .linkman-list {
+                    display: flex;
+                    align-items: center;
+                    >view:first-child {
+                        height: 80rpx;
+                        width: 80rpx;
+                        background: #ff9900;
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        margin-right: 30rpx;
+                        >text {
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+        }
+    }
+</style>
+<template>
+    <!-- <view></view> -->
+    <!-- <text></text> -->
+    <view class="body winHeight">
+        <view class="fixed-view">
+            <view class="container-title">
+                <text class="title-text">{{taskData.title}}</text>
+                <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#7a7a7a" wx:if="{{taskData.isAccept=='Y'}}" @tap="operation"></icon>
+            </view>
+            <navbar :navbars='navbars' :currentTab.sync="currentTab" :twoWayTitle="currentTab"></navbar>
+        </view>
+        <!-- <view style="height:200rpx;width:100%;">
+                                                                </view> -->
+        <view style="margin-top:170rpx;" hidden="{{currentTab==0?'':true}}">
+            <view class="taskdetail-container">
+                <view class="task-title-content">
+                    <view>
+                        <text style="font-size:32rpx;word-wrap:break-word;">{{taskData.title}}</text>
+                    </view>
+                    <view style="color:#7a7a7a">
+                        <text style="word-wrap:break-word;">{{taskData.description||'未填写'}}</text>
+                    </view>
+                    <view class="tag">
+                        <icon class="iconfont icon-biaoqian" style="color:#7a7a7a;font-size:40rpx;margin-right:20rpx"></icon>
+                        <repeat for="{{tag}}" key="index" index="index" item="item">
+                            <view>
+                                <text>{{tag[index]}}</text>
+                            </view>
+                        </repeat>
+                    </view>
+                    <view class="address">
+                        <icon class="iconfont icon-dizhi1" style="font-size:40rpx;color:#ff9900;margin-right:20rpx"></icon>
+                        <view>
+                            <text>{{taskData.address||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+                <view class="task-time-content">
+                    <view style="" class="tasktime-contianer">
+                        <view style="width:60%;">
+                            <text>任务时间</text>
+                            <view>
+                                <!-- <text style="margin-right:10rpx">04-05</text> -->
+                                <text>{{taskData.endTime||'未知'}}<text wx:if="{{taskData.endTime}}" style="color:#e20000">截止</text></text>
+                            </view>
+                        </view>
+                        <view style="width:40%;">
+                            <text>任务时长</text>
+                            <text>{{taskData.taskDuration||'0'}}h</text>
+                        </view>
+                        <view style="width:100%;">
+                            <text>预计时长</text>
+                            <text>{{taskData.estimate}}h</text>
+                        </view>
+                    </view>
+                </view>
+                <view class="child-task" wx:if="{{taskData.checkItems.length>0||taskData.isAccept!=='N'}}">
+                    <view class="childcontainer">
+                        <view style="color:#7a7a7a">
+                            <text>子任务</text>
+                        </view>
+                        <repeat for="{{taskData.checkItems}}" key="index" index="index" item="item">
+                            <view @tap="isCompleted('{{item}}','{{index}}','{{isChecked[index]}}')" bindlongpress="longpress('{{index}}')" class="child-item">
+                                <checkbox value="{{item.name}}" checked="{{isChecked[index]}}" color="#5d73fa" wx:if="{{taskData.isCompleted!=='Y'&&taskData.isAccept=='Y'}}" style="margin-right:10rpx" />
+                                <text style="text-decoration:{{isChecked[index]?'line-through':'none'}};color:{{isChecked[index]?'#7a7a7a':'#2a2a2a'}}">{{item.title}}</text>
+                            </view>
+                        </repeat>
+                        <view class="addChiled" @tap="addChild" wx:if="{{taskData.isAccept=='Y'}}">
+                            <view class="addIcon">
+                                <text>+</text>
+                            </view>
+                            <view style="color:#5d73fa">
+                                <text>添加子任务</text>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+                <view class="accessory-container" wx:if="{{taskData.attachments.length>0}}">
+                    <view class="accessory-content">
+                        <view style="color:#7a7a7a">
+                            <text>附件</text>
+                        </view>
+                        <repeat for="{{taskData.attachments}}" key="index" index="index" item="item">
+                            <view class="accessory-item" @tap="preView('{{item.id}}','{{item.extension}}','{{item.size}}')">
+                                <icon class="iconfont {{fileIcon[index]}}" style="font-size:80rpx;color:{{fileColor[index]}};margin-right:14rpx;"></icon>
+                                <view class="accessory-right">
+                                    <text>{{item.name}}</text>
+                                    <text style="color:#7a7a7a">{{item.size||'0Kb'}}</text>
+                                </view>
+                            </view>
+                        </repeat>
+                    </view>
+                </view>
+                <view class="linkman-container" style="margin-bottom:{{showIsAccept?'100rpx;':'0'}}" wx:if="{{taskData.participants.length>0}}">
+                    <view class="linkman-content">
+                        <view style="color:#7a7a7a">
+                            <text>参与人</text>
+                        </view>
+                        <repeat for="{{taskData.participants}}" key="index" index="index" item="item">
+                            <view class="linkman-item">
+                                <image src="{{avatar[index]}}" mode="scaleToFill" lazy-load="false">
+                                </image>
+                                <view>
+                                    <view>
+                                        <view>
+                                            <text style="margin-right:14rpx">{{item.employeeName}}</text>
+                                            <text style="color:#7a7a7a" wx:if="{{item.isAssigner=='Y'}}">任务分配人</text>
+                                        </view>
+                                        <view>
+                                            <text style="color:{{item.priorityText=='普通'?'#009dff':item.priorityText=='紧急'?'#FF9900':'#E20000'}}">{{item.priorityText}}</text>
+                                        </view>
+                                    </view>
+                                    <view>
+                                        <view>
+                                            <text style="margin-right:14rpx;color:{{item.isAccept=='Y'?'#069400':item.isAccept=='R'?'#e20000':'#FF9900'}}">{{item.isAccept=='Y'?'已接受':item.isAccept=='R'?'已拒绝':'未接受'}}</text>
+                                            <text>{{item.remindTime+'h'||'未填写'}}</text>
+                                        </view>
+                                        <view wx:if="{{item.isAssigner=='Y'}}">
+                                            <text style="color:#ff9900">{{item.isCompleted=='Y'?'已完成':'未完成'}}</text>
+                                        </view>
+                                    </view>
+                                </view>
+                            </view>
+                        </repeat>
+                    </view>
+                </view>
+                <view class="isAccept" wx:if="{{showIsAccept}}">
+                    <view @tap="noAccept">
+                        <text>拒绝任务</text>
+                    </view>
+                    <view @tap="accept">
+                        <text>参与任务</text>
+                    </view>
+                </view>
+                <view class="Full-screen" catchtouchmove="true" wx:if="{{participateView}}">
+                    <view>
+                        <view>
+                            <text>?</text>
+                        </view>
+                        <view>
+                            <view>
+                                <text>拒绝参与</text>
+                            </view>
+                            <view>
+                                <textarea placeholder="备注原因" name="textarea" style="height:234rpx;width:440rpx;" maxlength="140" bindinput="bindinput" value="{{refuseRemark}}" bindblur='bindblur' fixed='{{true}}' />
+                                <view wx:if="{{warning}}" style="color:#e20000">
+                                    <text>此字段是必填字段</text>
+                                </view>
+                            </view>
+                            <view>
+                                <view @tap='cancelView'>
+                                    <text>取消</text>
+                                </view>
+                                <view @tap="comfirmParticipation">
+                                    <text>确定拒绝</text>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+                <view class="Full-screen2" catchtouchmove="true" wx:if="{{childView}}">
+                    <view>
+                        <!-- <view>
+                                    <text>?</text>
+                                </view> -->
+                        <view>
+                            <!-- <view> 
+                                        <text>不参与</text>
+                                    </view> -->
+                            <view>
+                                <textarea placeholder="请填写子任务名称" name="childName" style="height:254rpx;width:440rpx;" maxlength="200" fixed='true' value="{{childName}}" bindinput="childNameInput" />
+                            </view>
+                            <view class="fixed-text-count">
+                                <text>200/{{TextCount}}</text>
+                            </view>
+                            <view>
+                                <view @tap='childCancel'>
+                                    <text>取消</text>
+                                </view>
+                                <view @tap="submitChildName">
+                                    <text>确定</text>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view style="margin-top:170rpx;" hidden="{{currentTab==1?'':true}}">
+            <view class="chat-panel" style="padding-bottom:{{sendShow?'260rpx':'160rpx'}};">
+                <!-- <view class="reverseView"> -->
+                <repeat for="{{fileInfo}}" key="index" index="index" item="item">
+                    <view class="chat-right" wx:if="{{item.creatorUserId==userId}}">
+                        <view>
+                            <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false">
+                            </image>
+                        </view>
+                        <view style="background:{{item.message!==null?'#5d73fa':'#f4f4f4'}};border-radius:20rpx;max-width:76%">
+                            <view wx:if="{{item.message!==null}}" style="padding:20rpx;color:#fff">
+                                <text style="word-wrap:break-word;display:block">{{item.message}}</text>
+                                <text style="color:{{item.message!==null?'#dedede':'#7a7a7a'}}">{{item.creationTime}}</text>
+                            </view>
+                            <view wx:else="{{item.message!==null}}" @tap="preView('{{fileInfo[index].id}}', '{{fileInfo[index].extension}}','{{fileInfo[index].size}}','{{item.image}}')">
+                                <view wx:if="{{item.extension=='.jpg'||item.extension=='.png'}}" style="padding: 20rpx" class=".right-image">
+                                    <view>
+                                        <image src="{{item.image}}" lazy-load="true" mode="aspectFix" style="margin:20rpx 10rpx;width:470rpx;">
+                                        </image>
+                                    </view>
+                                    <view>
+                                        <text style="color:{{item.message!==null?'#dedede':'#7a7a7a'}}">{{item.creationTime}}</text>
+                                    </view>
+                                </view>
+                                <view wx:else="{{item.extension=='.jpg'||item.extension=='.png'}}" style="padding: 20rpx;display:flex;align-items:center" class="rigth-doc">
+                                    <view>
+                                        <icon class="iconfont {{item.icon}}" style="color:{{item.color}};font-size:80rpx"></icon>
+                                    </view>
+                                    <view style="display:flex;flex-direction:column;margin-left:14rpx;color:#7a7a7a;width:80%">
+                                        <view style="display:flex ">
+                                            <view style='width:193px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'>
+                                                <text style="font-size:34rpx;">{{item.name}}</text>
+                                            </view>
+                                        </view>
+                                        <view>
+                                            <text style="font-size:28rpx;margin-top:10rpx">{{item.size}}Kb</text>
+                                        </view>
+                                        <view>
+                                            <text style="color:{{item.message!==null?'#dedede':'#7a7a7a'}}">{{item.creationTime}}</text>
+                                        </view>
+                                    </view>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                    <view class="chat-left" wx:else="{{item.creatorUserId==userId}}">
+                        <view>
+                            <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false">
+                            </image>
+                        </view>
+                        <view style='width:72%'>
+                            <view wx:if="{{item.message!==null}}" style='background:#f2f2f2;font-size:28rpx;  border-radius:20rpx;padding:20rpx;'>
+                                <text style="word-wrap:break-word;display:block">{{item.message}}</text>
+                                <text style="color:#7a7a7a">{{item.creationTime}}</text>
+                            </view>
+                            <view wx:else="{{item.message!==null}}" @tap="preView('{{fileInfo[index].id}}', '{{fileInfo[index].extension}}','{{fileInfo[index].size}}')">
+                                <view wx:if="{{item.extension=='.jpg'||item.extension=='.png'}}" class="left-image">
+                                    <view style="display:flex;flex-direction:column;padding:20rpx">
+                                        <image src="{{item.image}}" lazy-load="true" style="width:100%">
+                                        </image>
+                                        <text style="font-size:34rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display:block">{{item.name}}</text>
+                                        <text style="color:#7a7a7a">{{item.creationTime}}</text>
+                                    </view>
+                                </view>
+                                <view wx:else="{{item.extension=='.jpg'||item.extension=='.png'}}" class="left-doc">
+                                    <view style="display:flex;align-items:center;">
+                                        <icon class="iconfont {{fileInfo[index].icon}}" style="color:{{fileInfo[index].color}};font-size:80rpx"></icon>
+                                        <view style="display:flex;flex-direction:column;margin-left:20rpx;width:20%;">
+                                            <view style="display:flex ;width:360rpx;">
+                                                <text style="font-size:34rpx;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;width:80%">{{fileInfo[index].name}}</text>
+                                            </view>
+                                            <view style="width:360rpx">
+                                                <text style="font-size:28rpx;">{{fileInfo[index].size}}Kb</text>
+                                            </view>
+                                        </view>
+                                    </view>
+                                    <view>
+                                        <text style="color:#7a7a7a">{{item.creationTime}}</text>
+                                    </view>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </repeat>
+                <view id='videoView' class="video-view" wx:if="{{showVideo}}" capture-catch:tap="colseVideo" style="margin-top:{{showVideo?'0':'44rpx'}}">
+                    <view class="videoContent">
+                        <video id="myVideo" style="width:100%;" src="{{videoPath}}" danmu-list="{{danmuList}}" objectFit="fill" enable-danmu danmu-btn page-gesture="{{true}}" controls></video>
+                    </view>
+                </view>
+                <!-- </view> -->
+                <view class="loadMore" wx:if='{{pageNumber <= totalCount / pageSize}}' @tap="loadMore">
+                    <text style="color:#7a7a7a">查看更多讨论消息</text>
+                </view>
+                <view class="loadMore" wx:if='{{pageNumber > totalCount / pageSize}}'>
+                    <text style="color:#b2b2b2">没有更多了</text>
+                </view>
+            </view>
+            <view class="chat-input" wx:if="{{taskData.isAccept=='Y'&&taskData.isParticipant=='Y'}}">
+                <view class="input-content">
+                    <!-- <view> -->
+                    <!-- <form bindreset="cleanInput"> -->
+                    <input value="{{msgData}}" type="text" placeholder="请输入您的内容" confirm-type="send" adjust-position="{{true}}" bindconfirm="sendMsg" bindfocus="bindfocus">
+                    </input>
+                    <icon class="iconfont icon-shangchuantianjia1" style="font-size:80rpx;color:#7a7a7a" @tap="showSend"></icon>
+                </view>
+                <view class="chat-icon" wx:if="{{sendShow}}">
+                    <view style="">
+                        <icon class="iconfont icon-tupian-copy" style="color:#7a7a7a;font-size:80rpx;" @tap="chooseImage"></icon>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-paizhaoshangchuan" style="color:#7a7a7a;font-size:80rpx;" @tap="chooseVideo(id)"></icon>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../../utils/cofig/ajax.js';
+    import navbar from '../../../../../components/navbar';
+    import api from '../../../../../utils/cofig/api.js';
+    export default class taskdetail extends wepy.page {
+        components = {
+            navbar
+        };
+        data = {
+            // Refresh:false,
+            currentTab: 0,
+            navbars: ['任务详情', '讨论'],
+            taskData: {},
+            tag: [],
+            endTime: '',
+            fileIcon: [],
+            fileColor: [],
+            avatar: [],
+            id: 0,
+            isChecked: [],
+            // 讨论数据
+            userId: 0, //用户ID
+            userImage: '', //用户头像
+            // parentIndex: 0,
+            // parentSIndex: 0,
+            showIsAccept: false,
+            CommentsDatas: [],
+            fileInfo: [], //文件信息
+            pageSize: 10,
+            pageNumber: 1,
+            totalCount: 0,
+            msgData: '', //文字信息
+            scrollTop: 0,
+            sendShow: false, //控制发送文件或图片的底部弹框开关
+            imageData: [],
+            showVideo: false,
+            videoPath: '',
+            //拒绝参与弹窗
+            refuseRemark: '', //拒绝原因
+            participateView: false,
+            warning: false,
+            //添加子任务
+            childName: '',
+            childView: false,
+            TextCount: 0,
+        };
+        methods = {
+            // 删除子任务
+            longpress(index) {
+                if (this.taskData.isCompleted !== 'Y' && this.taskData.isAccept == 'Y') {
+                    wx.showModal({
+                        title: '是否确认删除子任务',
+                        content: '',
+                        showCancel: true,
+                        cancelText: '取消',
+                        cancelColor: '#000000',
+                        confirmText: '确定',
+                        confirmColor: '#5d73fa',
+                        success: res => {
+                            if (res.confirm) {
+                                this.DeleteSubTask(index);
+                            }
+                        }
+                    });
+                }
+            },
+            //添加提交子任务名称
+            submitChildName() {
+                if (this.childName.length !== 0) {
+                    this.CreateOrUpdateSubTask();
+                } else {
+                    wx.showToast({
+                        title: '子任务名称不能为空！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            },
+            //子任务输入框数据
+            childNameInput(e) {
+                this.childName = e.detail.value;
+                this.$apply();
+            },
+            //显示添加子任务
+            addChild() {
+                // if(this.taskData.isCompleted=='N'){
+                this.childView = true;
+                this.$apply();
+                // }
+            },
+            //关闭子任务
+            childCancel() {
+                this.childName = '';
+                this.childView = false;
+                this.$apply();
+            },
+            //编辑操作
+            operation() {
+                wx.showActionSheet({
+                    itemList: ['完成任务', '删除任务'],
+                    itemColor: '#5d73fa',
+                    success: res => {
+                        if (res.tapIndex == 0) {
+                            var parentChecked = this.isChecked.every(i => {
+                                return i === true;
+                            });
+                            console.log(parentChecked);
+                            if (parentChecked) {
+                                this.CompletedTaskParticipant('Y');
+                            } else {
+                                wx.showToast({
+                                    title: '检查子任务是否全部完成！',
+                                    icon: 'none',
+                                    duration: 1500,
+                                    mask: false,
+                                });
+                            }
+                        }
+                        if (res.tapIndex == 1) {
+                            wx.showModal({
+                                title: '是否确认删除该任务！',
+                                content: '',
+                                showCancel: true,
+                                cancelText: '取消',
+                                cancelColor: '#000000',
+                                confirmText: '确定',
+                                confirmColor: '#5d73fa',
+                                success: res => {
+                                    if (res.confirm) {
+                                        this.DeleteTask()
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            },
+            //拒绝参与
+            //拒绝原因
+            bindinput(e) {
+                this.refuseRemark = e.detail.value;
+                this.warning = false;
+                this.$apply();
+            },
+            bindblur() {
+                if (!this.refuseRemark) {
+                    this.warning = true;
+                }
+            },
+            // 拒绝确定
+            comfirmParticipation() {
+                if (this.refuseRemark) {
+                    this.ConfirmTaskParticipant('R');
+                } else {
+                    this.warning = true;
+                }
+            },
+            //隐藏
+            cancelView() {
+                this.participateView = false;
+            },
+            //显示
+            noAccept() {
+                this.participateView = true;
+            },
+            //参与任务
+            accept() {
+                this.ConfirmTaskParticipant('Y');
+            },
+            // 关闭视频
+            colseVideo(e) {
+                console.log(e);
+                if ((e.target.id = 'videoView')) {
+                    this.showVideo = false;
+                } else {
+                    return;
+                }
+            },
+            // 发送视频
+            chooseVideo() {
+                wx.chooseVideo({
+                    sourceType: ['album', 'camera'],
+                    maxDuration: 60,
+                    camera: 'back',
+                    success: res => {
+                        console.log(res);
+                        var tempFilePath = res.tempFilePath;
+                        var thumbTempFilePath = res.thumbTempFilePath;
+                        var time = new Date();
+                        var creationTime = api.formatTime(time);
+                        this.uploadFile(
+                            'video',
+                            tempFilePath,
+                            creationTime,
+                            thumbTempFilePath
+                        );
+                        this.getScroll();
+                    }
+                });
+            },
+            // 发送图片
+            chooseImage() {
+                wx.chooseImage({
+                    count: 1,
+                    sizeType: ['original', 'compressed'],
+                    sourceType: ['album', 'camera'],
+                    success: res => {
+                        // tempFilePath可以作为img标签的src属性显示图片
+                        console.log(res);
+                        const tempFilePaths = res.tempFilePaths[0];
+                        var time = new Date();
+                        var creationTime = api.formatTime(time);
+                        this.uploadFile('image', tempFilePaths, creationTime);
+                        this.getScroll();
+                    }
+                });
+            },
+            bindfocus(e) {
+                // this.sendShow=false;
+                this.getScroll();
+            },
+            showSend() {
+                this.getScroll();
+                this.sendShow = !this.sendShow;
+            },
+            // 发送信息
+            sendMsg(e) {
+                //  this.CommentsDatas=[];
+                var msg = e.detail.value;
+                this.getComment(msg);
+                // var pageNumber= this.pageNumber
+                this.setData({
+                    msgData: ''
+                });
+                var time = new Date();
+                var creationTime = api.formatTime(time);
+                console.log(creationTime);
+                var msgInfo = {
+                    message: msg,
+                    creatorUserId: this.userId,
+                    avatar: this.userImage,
+                    creationTime: creationTime
+                };
+                this.fileInfo.unshift(msgInfo);
+                this.getScroll();
+                this.$apply();
+            },
+            //加载更多讨论消息
+            loadMore() {
+                var that = this;
+                that.pageNumber += 1;
+                that.GetComments();
+            },
+            //   预览
+            preView(fileId, fileClass, fileSize, filePath) {
+                console.log(fileId, fileClass, fileSize, filePath);
+                wx.showLoading({
+                    title: '加载中，请稍等！',
+                    mask: true
+                });
+                if (fileId == null) {
+                    wx.previewImage({
+                        current: filePath, // 当前显示图片的http链接
+                        urls: [filePath] // 需要预览的图片http链接列表
+                    });
+                } else {
+                    var http =
+                        '/api/services/web/taskAttachment/GetDocumentFile?id=' + fileId;
+                    switch (fileClass) {
+                        case '.jpg':
+                            ajax.preView(http, fileClass);
+                            break;
+                        case '.png':
+                            ajax.preView(http, fileClass);
+                            break;
+                        case '.xls':
+                            ajax.preView(http, fileClass);
+                            break;
+                        case '.xlsx':
+                            ajax.preView(http, fileClass);
+                            break;
+                        case '.docx':
+                            ajax.preView(http, fileClass);
+                            break;
+                        case '.doc':
+                            ajax.preView(http, fileClass);
+                            break;
+                        case '.pdf':
+                            ajax.preView(http, fileClass);
+                            break;
+                        case '.mp4':
+                            this.showVideo = true;
+                            wx.getStorage({
+                                key: 'access',
+                                success: res => {
+                                    var downloadTask = wx.downloadFile({
+                                        header: {
+                                            'content-type': 'application/octet-stream',
+                                            Authorization: 'Bearer ' + res.data
+                                        },
+                                        url: 'https://www.ailinkedlaw.com' + http,
+                                        success: res => {
+                                            // console.log(res);
+                                            this.videoPath = res.tempFilePath;
+                                            this.$apply();
+                                        },
+                                        fail: err => {
+                                            console.log(err);
+                                        },
+                                        complete: () => {
+                                            wx.hideLoading();
+                                        }
+                                    });
+                                    downloadTask.onProgressUpdate(r => {
+                                        console.log(r);
+                                        console.log('下载进度', r.progress);
+                                        console.log('已经下载的数据长度', r.totalBytesWritten);
+                                        console.log(
+                                            '预期需要下载的数据总长度',
+                                            r.totalBytesExpectedToWrite
+                                        );
+                                    });
+                                }
+                            });
+                            break;
+                        default:
+                            wx.showToast({
+                                title: '文件格式不支持！',
+                                icon: 'none',
+                                duration: 1500,
+                                mask: false
+                            });
+                            break;
+                    }
+                }
+            },
+            //点击选中完成任务
+            isCompleted(item, index, isChecked) {
+                if (this.taskData.isCompleted !== 'Y' && this.taskData.isAccept == 'Y') {
+                    this.isChecked[index] = !this.isChecked[index];
+                    var data = {
+                        formVisible: false,
+                        parentTaskId: this.taskData.id,
+                        projectId: this.taskData.projectId,
+                        stageId: this.taskData.stageId,
+                        tempText: '',
+                    };
+                    data.completedTime = item.completedTime || '';
+                    data.id = item.id || '';
+                    data.isCompleted = isChecked ? 'N' : 'Y';
+                    data.sort = item.sort || '';
+                    data.title = item.title || '';
+                    this.changeChildStatus(data, isChecked);
+                    this.$apply();
+                }
+            }
+        };
+        watch = {
+            currentTab(newCurrent, oldCurrent) {
+                if (newCurrent !== oldCurrent) {
+                    if (newCurrent == 0) {
+                        if (wx.pageScrollTo) {
+                            wx.pageScrollTo({
+                                scrollTop: 0,
+                                duration: 0
+                            });
+                        }
+                        this.sendShow = false;
+                    }
+                    if (newCurrent == 1) {
+                        this.getScroll();
+                        this.$apply();
+                    }
+                }
+            },
+            childName(value) {
+                console.log(value);
+                this.TextCount = value.length;
+                this.$apply();
+            },
+            isChecked(newData, oldData) {
+                if (newData !== oldData) {
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2]; //上一个页面
+                    console.log(prevPage);
+                    if (prevPage) {
+                        prevPage.isRefresh();
+                    }
+                }
+            }
+        };
+        // 完成任务上传数据
+        async changeChildStatus(data, isChecked) {
+            wx.showLoading({
+                title: '加载中,请稍等!',
+                duration: 200,
+                mask: true,
+                success: () => {}
+            });
+            var res = await ajax.getData(
+                '/api/services/web/taskPlanning/CreateOrUpdateSubTask',
+                'post',
+                data
+            );
+            if (res.statusCode == 200) {
+                if (isChecked) {
+                    wx.showToast({
+                        title: '已完成',
+                        icon: 'none',
+                        duration: 500,
+                        mask: false
+                    });
+                } else {
+                    wx.showToast({
+                        title: '已取消',
+                        icon: 'none',
+                        duration: 500,
+                        mask: false
+                    });
+                }
+            }
+        }
+        // 设置scrollTop
+        getScroll() {
+            var that = this;
+            //   if(that.scrollTop )
+            wx.createSelectorQuery()
+                .select('.winHeight')
+                .boundingClientRect(function(rect) {
+                    // console.log(parseInt(parseInt(rect.bottom)*that.pageNumber*10))
+                    that.scrollTop = parseInt(parseInt(rect.bottom) * that.pageNumber * 10);
+                    wx.pageScrollTo({
+                        scrollTop: that.scrollTop,
+                        duration: 0
+                    });
+                })
+                .exec();
+        }
+        // 获得任务详情
+        async getTask() {
+            wx.showLoading({
+                title: '加载中,请稍等!',
+                mask: false
+            });
+            var id = {
+                id: this.id
+            };
+            let { data } = await ajax.getData(
+                '/api/services/web/taskPlanning/GetTask',
+                'post',
+                id
+            );
+            var taskData = data;
+            //是否显示编辑图标
+            if (taskData.result.isAccept == 'N') {
+                this.showIsAccept = true;
+            } else {
+                this.showIsAccept = false;
+            }
+            // 标签
+            // console.log(taskData.result.tag);
+            if (taskData.result.tag !== '' && taskData.result.tag !== null) {
+                this.tag = taskData.result.tag.split(',');
+            } else {
+                this.tag[0] = '标签未知';
+            }
+            if (taskData.result.startTime !== null && taskData.result.endTime !== null) {
+                var millTime=new Date(taskData.result.endTime).getTime()-(8*60*60*1000);
+                    taskData.result.endTime=new Date(millTime);
+                taskData.result.endTime = api.formatTimeSymbol(taskData.result.endTime, '-')
+                //任务时长
+                taskData.result.taskDuration = this.getInervalHour(taskData.result.startTime, taskData.result.endTime);
+            }
+            if (taskData.result.estimate) {
+                taskData.result.estimate = taskData.result.estimate.toFixed(1);
+            }
+            //子任务
+            if (taskData.result.checkItems.length !== 0) {
+                for (var index in taskData.result.checkItems) {
+                    switch (taskData.result.checkItems[index].isCompleted) {
+                        case 'Y':
+                            this.isChecked[index] = true;
+                            break;
+                        case 'N':
+                            this.isChecked[index] = false;
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+            }
+            //附件图标
+            if (taskData.result.attachments !== null) {
+                for (var index in taskData.result.attachments) {
+                    taskData.result.attachments[index].size=(taskData.result.attachments[index].size/1024).toFixed(0)>1024?(taskData.result.attachments[index].size/1024/1024).toFixed(0)+'Mb':(taskData.result.attachments[index].size/1024).toFixed(0)+'Kb';
+                    var iconClass = taskData.result.attachments[index].extension;
+                    switch (iconClass) {
+                        case '.pdf':
+                            this.fileIcon.push('icon-pdfpng1');
+                            this.fileColor.push('#e20000');
+                            break;
+                        case '.png':
+                            this.fileIcon.push('icon-pdfpng1');
+                            this.fileColor.push('#e20000');
+                            break;
+                        case '.xls':
+                            this.fileIcon.push('icon-exl1');
+                            this.fileColor.push('#069400');
+                            break;
+                        case '.xlsx':
+                            this.fileIcon.push('icon-exl1');
+                            this.fileColor.push('#069400');
+                            break;
+                        case '.docx':
+                            this.fileIcon.push('icon-wold1');
+                            this.fileColor.push('#009dff');
+                            break;
+                        case '.doc':
+                            this.fileIcon.push('icon-wold1');
+                            this.fileColor.push('#009dff');
+                            break;
+                        case '.jpg':
+                            this.fileIcon.push('icon-jpggeshi');
+                            this.fileColor.push('#ff9900');
+                            break;
+                        case '.jpeg':
+                            this.fileIcon.push('icon-jpggeshi');
+                            this.fileColor.push('#ff9900');
+                            break;
+                        case 'folder':
+                            this.fileIcon.push('icon-wendang');
+                            this.fileColor.push('#ff9900');
+                            break;
+                        default:
+                            this.fileIcon.push('icon-weizhiwenjiangeshi');
+                            this.fileColor.push('#7a7a7a');
+                            break;
+                    }
+                }
+            }
+            //参与人头像
+            if (
+                taskData.result.participants !== '' &&
+                taskData.result.participants !== null
+            ) {
+                for (var index in taskData.result.participants) {
+                    var id = taskData.result.participants[index].employeeId;
+                    var http = '/api/services/web/personal/GetEmployeePhoto?id=' + id;
+                    var avatarData = await ajax.getAavatar(http);
+                    this.avatar[index] = avatarData;
+                }
+            }
+            this.taskData = taskData.result;
+            this.$apply();
+            // console.log(taskData.result.tag.split(','))
+        }
+        //获得讨论内容
+        async GetComments() {
+            wx.showLoading({
+                title: '加载中,请稍等!',
+                mask: false
+            });
+            // if (wx.pageScrollTo) {
+            // }
+            var data = {
+                TaskId: this.id,
+                pageNumber: this.pageNumber,
+                pageSize: this.pageSize
+            };
+            var CommentsDatas = await ajax.getData(
+                '/api/services/web/taskComment/GetComments',
+                'post',
+                data
+            );
+            this.CommentsDatas = CommentsDatas.data.result.item;
+            this.totalCount = CommentsDatas.data.result.totalCount;
+            var arr = [];
+            for (var index in CommentsDatas.data.result.items) {
+                var obj = {};
+                arr[index] = obj;
+                if (CommentsDatas.data.result.items[index].file !== null) {
+                    var file = CommentsDatas.data.result.items[index].file;
+                    obj['size'] = file.size;
+                    obj['extension'] = file.extension.toLowerCase();
+                    obj['name'] = file.name;
+                    obj['id'] = file.id;
+                    obj['message'] = null;
+                    var extension = file.extension.toLowerCase();
+                    switch (extension) {
+                        case '.jpg':
+                            obj['icon'] = '';
+                            obj['color'] = '';
+                            var http =
+                                '/api/services/web/taskAttachment/GetDocumentFile?id=' + file.id;
+                            var image = await ajax.getAavatar(http);
+                            console.log(image);
+                            obj['image'] = image;
+                            break;
+                        case '.png':
+                            obj['icon'] = '';
+                            obj['color'] = '';
+                            var http =
+                                '/api/services/web/taskAttachment/GetDocumentFile?id=' + file.id;
+                            var image = await ajax.getAavatar(http);
+                            obj['image'] = image;
+                            break;
+                        case '.xls':
+                            obj['icon'] = 'icon-exl1';
+                            obj['color'] = '#069400';
+                            break;
+                        case '.xlsx':
+                            obj['icon'] = 'icon-exl1';
+                            obj['color'] = '#069400';
+                            break;
+                        case '.docx':
+                            obj['icon'] = 'icon-wold1';
+                            obj['color'] = '#009dff';
+                            break;
+                        case '.doc':
+                            obj['icon'] = 'icon-wold1';
+                            obj['color'] = '#009dff';
+                            break;
+                        case '.pdf':
+                            obj['icon'] = 'icon-pdfpng1';
+                            obj['color'] = '#e20000';
+                            break;
+                        case '.mp4':
+                            obj['icon'] = 'icon-shipinwenjian';
+                            obj['color'] = '#fc5959';
+                            break;
+                        default:
+                            obj['icon'] = 'icon-weizhiwenjiangeshi';
+                            obj['color'] = '#7a7a7a';
+                            break;
+                    }
+                } else if (CommentsDatas.result.items[index].message !== null) {
+                    obj['message'] = CommentsDatas.result.items[index].message;
+                }
+                // 头像
+                if (CommentsDatas.result.items[index].creatorUserId !== this.userId) {
+                    obj['creatorUserId'] = CommentsDatas.result.items[index].creatorUserId;
+                    var http =
+                        '/api/services/web/personal/GetEmployeePhoto?id=' +
+                        CommentsDatas.result.items[index].creatorUserId;
+                    var avatarData = await ajax.getAavatar(http);
+                    obj['avatar'] = avatarData;
+                } else {
+                    obj['creatorUserId'] = this.userId;
+                    obj['avatar'] = this.userImage;
+                }
+                // 日期
+                // if (this.CommentsDatas[index].creationTime !== '' && this.CommentsDatas[index].creationTime !== null) {
+                obj['creationTime'] = CommentsDatas.result.items[
+                    index
+                ].creationTime.replace(/[a-zA-Z]/g, ' ').split('.')[0];
+                // }
+            }
+            if (this.pageNumber > 1) {
+                // this.CommentsDatas = this.CommentsDatas.concat(CommentsDatas.result.items)
+                this.fileInfo = this.fileInfo.concat(arr);
+            } else {
+                // this.CommentsDatas = CommentsDatas.result.items;
+                this.fileInfo = arr;
+            }
+            this.$apply();
+        }
+        // 发送文本信息
+        getComment(msg) {
+            var data = {
+                comment: {
+                    taskId: this.id,
+                    message: msg
+                }
+            };
+            wx.showLoading({
+                title: '发送中',
+                mask: true
+            });
+            ajax.getData('/api/services/web/taskComment/CreateComment', 'post', data);
+            var pages = getCurrentPages();
+                var prevPage = pages[pages.length - 2]; //上一个页面
+                if (prevPage) {
+                prevPage.isRefresh();
+            }
+        }
+        //上传图片
+        async uploadFile(choose, tempFilePaths, creationTime, cover) {
+            // var creationTimes =
+            var data = {
+                chunk: 0,
+                chunks: 1,
+                id: this.id,
+                file: '(binary)'
+            };
+            var infoData = await ajax.uploadFile(
+                '/api/services/web/taskComment/uploadAttachment',
+                tempFilePaths,
+                data
+            );
+            console.log(infoData);
+            if (choose == 'image') {
+                var imageInfoData = JSON.parse(infoData.data).result;
+                console.log(imageInfoData);
+                if (infoData.statusCode == 200) {
+                    var extension = imageInfoData.extension.toLowerCase();
+                    var imageInfo = {
+                        size: imageInfoData.size,
+                        extension: extension,
+                        name: imageInfoData.name,
+                        id: imageInfoData.id,
+                        message: null,
+                        image: tempFilePaths,
+                        creatorUserId: this.userId,
+                        avatar: this.userImage,
+                        creationTime: creationTime
+                    };
+                    this.fileInfo.unshift(imageInfo);
+                    this.getScroll();
+                    this.$apply();
+                } else {
+                    wx.showToast({
+                        title: '服务器异常',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false
+                    });
+                }
+            } else if (choose == 'video') {
+                var videoInfoData = JSON.parse(infoData.data).result;
+                console.log(videoInfoData);
+                if (infoData.statusCode == 200) {
+                    var extension = videoInfoData.extension.toLowerCase();
+                    var vidieoInfo = {
+                        size: videoInfoData.size,
+                        extension: extension,
+                        name: videoInfoData.name,
+                        id: videoInfoData.id,
+                        message: null,
+                        image: cover,
+                        creatorUserId: this.userId,
+                        avatar: this.userImage,
+                        creationTime: creationTime,
+                        icon: 'icon-shipinwenjian',
+                        color: '#fc5959'
+                    };
+                    this.fileInfo.unshift(vidieoInfo);
+                    this.getScroll();
+                    this.$apply();
+                } else {
+                    wx.showToast({
+                        title: '服务器异常',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false
+                    });
+                }
+            }
+            if(infoData.statusCode == 200){
+                var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2]; //上一个页面
+                    if (prevPage) {
+                        prevPage.isRefresh();
+                    }
+            }
+        }
+        //是否参与
+        async ConfirmTaskParticipant(isAccept) {
+            wx.showLoading({
+                title: '加载中,请稍等!',
+                mask: true
+            });
+            var data = {
+                projectId: this.taskData.projectId,
+                stageId: this.taskData.stageId,
+                taskId: this.taskData.id,
+                isAccept: isAccept,
+                remark: this.refuseRemark
+            };
+            var resData = await ajax.getData(
+                '/api/services/web/taskParticipant/ConfirmTaskParticipant',
+                'post',
+                data
+            );
+            console.log(resData)
+            if (resData.statusCode == 200) {
+                this.participateView = false;
+                wx.navigateBack({
+                    delta: 1
+                });
+            } else {
+                wx.showToast({
+                    title: '提交失败',
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false
+                });
+            }
+            this.$apply();
+        }
+        //添加子任务
+        async CreateOrUpdateSubTask() {
+            wx.showLoading({
+                title: '加载中,请稍等!',
+                mask: true
+            });
+            if (this.taskData.isAccept == 'Y') {
+                var id = 'temp_' + this.taskData.checkItems.length;
+                var data = {
+                    id: id,
+                    isCompleted: "N",
+                    parentTaskId: this.taskData.id,
+                    projectId: this.taskData.projectId,
+                    sort: this.taskData.checkItems.length,
+                    stageId: this.taskData.stageId,
+                    title: this.childName
+                };
+                var resData = await ajax.getData(
+                    '/api/services/web/taskPlanning/CreateOrUpdateSubTask',
+                    'post',
+                    data
+                )
+                if (resData.statusCode == 200) {
+                    this.childName = '';
+                    this.childView = false;
+                    this.getTask();
+                } else {
+                    wx.showToast({
+                        title: '添加失败！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            }
+        }
+        //删除子任务
+        async DeleteSubTask(index) {
+            wx.showLoading({
+                title: '加载中,请稍等!',
+                mask: true
+            });
+            if (this.taskData.isAccept == 'Y') {
+                var data = {
+                    id: this.taskData.checkItems[index].id,
+                };
+                var resData = await ajax.getData(
+                    '/api/services/web/taskPlanning/DeleteSubTask',
+                    'post',
+                    data
+                )
+                if (resData.statusCode == 200) {
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2]; //上一个页面
+                    if (prevPage) {
+                        prevPage.isRefresh();
+                    }
+                    this.getTask();
+                } else {
+                    wx.showToast({
+                        title: '删除失败！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            }
+        }
+        //完成父级页面任务
+        async CompletedTaskParticipant(isCompleted) {
+            wx.showLoading({
+                title: '加载中,请稍等!',
+                mask: true,
+                success: () => {
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2]; //上一个页面
+                    console.log(prevPage);
+                    if (prevPage) {
+                        prevPage.isRefresh();
+                        wx.navigateBack({
+                            delta: 1,
+                        });
+                    }
+                }
+            });
+            var date = new Date();
+            var data = {
+                isMark: "Y",
+                isParticipant: "Y",
+                isRemind: "Y",
+                endTime: date,
+                id: this.taskData.id,
+                isCompleted: isCompleted,
+                projectId: this.taskData.projectId
+            };
+            var res = await ajax.getData(
+                '/api/services/web/taskParticipant/CompletedTaskParticipant',
+                'post',
+                data
+            )
+            if (res.data.success) {
+                if (res.statusCode == 200 && res.data.success) {
+                    console.log('完成')
+                } else {
+                    wx.showToast({
+                        title: '网络问题！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            }
+        }
+        //删除该项任务
+        async DeleteTask() {
+            wx.showLoading({
+                title: '加载中,请稍等!',
+                mask: true
+            });
+            var data = {
+                id: this.taskData.id
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/taskPlanning/DeleteTask',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                var pages = getCurrentPages();
+                var prevPage = pages[pages.length - 2]; //上一个页面
+                console.log(prevPage);
+                if (prevPage) {
+                    prevPage.isRefresh();
+                    wx.navigateBack({
+                        delta: 1,
+                    });
+                }
+            } else {
+                wx.showToast({
+                    title: resData.data.error.message,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
+            }
+        }
+        getInervalHour(startDate, endDate) {
+            startDate = new Date(startDate).getTime()
+            endDate= new Date(endDate).getTime()
+            var ms = endDate - startDate;
+            if (ms < 0) return 0;
+            return Math.floor(Number(ms / 3600000))
+        }
+        onLoad(options) {
+            this.id = options.id;
+            var userInfo = this.$parent.global.userInfo;
+            this.userImage = userInfo.userAvatar;
+            this.userId = userInfo.id;
+            this.getTask();
+            this.GetComments();
+            this.$apply();
+        }
+        onUnload() {}
+    }
+</script>

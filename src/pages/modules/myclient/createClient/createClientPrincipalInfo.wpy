@@ -1,0 +1,352 @@
+<!--  -->
+<style lang='scss'>
+  .pageTitle {
+    height: 104rpx;
+    line-height: 104rpx;
+    font-size: 48rpx;
+    padding-left: 28rpx;
+    border-bottom: 1px solid #dedede;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    z-index: 99;
+  }
+  .content {
+    margin: 149rpx 28rpx 0 28rpx;
+  }
+  .tui-picker-content {
+    margin-bottom: 36rpx;
+    picker {
+      padding: 20rpx 0;
+      border-bottom: 1px solid #dfdfdf;
+      .tui-picker-detail {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #7a7a7a;
+      }
+    }
+  }
+  .addImage {
+    width: 160rpx;
+    height: 160rpx;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 999999;
+  }
+</style>
+
+<template>
+  <view class='container'>
+    <view class="pageTitle">
+      <text wx:if="{{isShow}}">负责人信息</text>
+      <text wx:else>自然人</text>
+    </view>
+    <view class="content" wx:if="{{isShow}}">
+      <LegalPerson :options.sync="LegalPerson" :index.sync='LegalPersonIndex' :twoWayTitle="LegalPersonIndex" />
+      <Linker :input.sync="Linker" :inputValue.sync='LinkerValue' :twoWayTitle="LinkerValue" />
+      <LegalDuty :options.sync="LegalDuty" :index.sync='LegalDutyIndex' :twoWayTitle="LegalDutyIndex" />
+      <Landline :input.sync="Landline" :inputValue.sync='LandlineValue' :twoWayTitle="LandlineValue" />
+      <Fax :input.sync="Fax" :inputValue.sync='FaxValue' :twoWayTitle="FaxValue" />
+    </view>
+    <view class="content" wx:else>
+      <CardNo :input.sync="CardNo" :inputValue.sync='CardNoValue' :twoWayTitle="CardNoValue" />
+      <Nation :options.sync="Nation" :index.sync='NationIndex' :twoWayTitle="NationIndex" />
+      <view class="tui-picker-content">
+        <view>出生日期</view>
+        <picker id="Birthday" mode="date" value="{{submitData.Birthday}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
+          <view class="tui-picker-detail">
+            {{submitData.Birthday||'请选择'}}
+            <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+          </view>
+        </picker>
+      </view>
+      <Occupation :input.sync="Occupation" :inputValue.sync='OccupationValue' :twoWayTitle="OccupationValue" />
+    </view>
+    <view style="padding:0 28rpx 30rpx 28rpx">
+      <Email :input.sync="Email" :inputValue.sync='EmailValue' :twoWayTitle="EmailValue" />
+    </view>
+    <image src="{{'../../../../images/test.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;" @touchstart="touchStart" @touchend="touchEnd">
+    </image>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import ajax from '../../../../utils/cofig/ajax.js';
+  import Linker from '../../../../components/picker/input';
+  import LegalPerson from '../../../../components/picker/option';
+  import LegalDuty from '../../../../components/picker/option';
+  import Nation from '../../../../components/picker/option';
+  import Landline from '../../../../components/picker/input';
+  import Fax from '../../../../components/picker/input';
+  import Email from '../../../../components/picker/input';
+  import CardNo from '../../../../components/picker/input';
+  import Occupation from '../../../../components/picker/input';
+  export default class PrincipalInfo extends wepy.page {
+    config = {
+      navigationBarTitleText: "",
+    };
+    components = {
+      LegalPerson,
+      LegalDuty,
+      Nation,
+      Linker,
+      Landline,
+      Fax,
+      CardNo,
+      Occupation,
+      Email
+    };
+    data = {
+      addOpacity: 1,
+      submitData: {},
+      isShow: false,
+      //代表类型
+      LegalPerson: {
+        title: '代表类型',
+        name: 'LegalPerson',
+        value: [""],
+        displayText: ["请选择"],
+        warning: false
+      },
+      LegalPersonIndex: 0,
+      //客户联系人
+      Linker: {
+        title: '客户联系人',
+        name: 'Linker',
+        warning: false,
+        type: 'text',
+        options: false
+      },
+      LinkerValue: '',
+      //职位
+      LegalDuty: {
+        title: '职位',
+        name: 'LegalDuty',
+        value: [""],
+        displayText: ["请选择"],
+        warning: false
+      },
+      LegalDutyIndex: 0,
+      //座机
+      Landline: {
+        title: '座机',
+        name: 'Landline',
+        warning: false,
+        type: 'text',
+        options: false
+      },
+      LandlineValue: '',
+      //传真
+      Fax: {
+        title: '传真',
+        name: 'Fax',
+        warning: false,
+        type: 'text',
+        options: false
+      },
+      FaxValue: '',
+      //自然人
+      //身份证
+      CardNo: {
+        title: '身份证',
+        name: 'CardNo',
+        warning: true,
+        type: 'text',
+        options: false
+      },
+      CardNoValue: '',
+      //名族
+      Nation: {
+        title: '名族',
+        name: 'Nation',
+        value: [""],
+        displayText: ["请选择"],
+        warning: false
+      },
+      NationIndex: 0,
+      //职业
+      Occupation: {
+        title: '职业',
+        name: 'Occupation',
+        warning: false,
+        type: 'text',
+        options: false
+      },
+      OccupationValue: '',
+      Email: {
+        title: '邮箱',
+        name: 'Email',
+        warning: false,
+        type: 'text',
+        options: false
+      },
+      EmailValue: '',
+    };
+    methods = {
+      touchEnd() {
+        if (this.isShow || this.submitData.CardNo) {
+          this.CreateOrUpdateClientBasic(this.submitData);
+        } else {
+          this.CardNo.warning = true;
+          this.addOpacity = 1;
+          wx.showToast({
+            title: '请填写必填项！', //提示的内容,
+            icon: 'none', //图标,
+            duration: 2000, //延迟时间,
+            mask: true, //显示透明蒙层，防止触摸穿透,
+            success: res => {}
+          });
+        }
+        this.$apply();
+      },
+      touchStart() {
+        this.addOpacity = 0.6;
+        this.$apply();
+      },
+      bindDateChange(e) {
+        this.submitData.Birthday = e.detail.value;
+        this.$apply();
+      }
+    };
+    events = {};
+    watch = {
+      LegalPersonIndex(index) {
+        this.submitData.LegalPerson = this.LegalPerson.value[index];
+        this.$apply();
+      },
+      LegalDutyIndex(index) {
+        this.submitData.LegalDuty = this.LegalDuty.value[index];
+        this.$apply();
+      },
+      NationIndex(index) {
+        this.submitData.Nation = this.Nation.value[index];
+        this.$apply();
+      },
+      LinkerValue(value) {
+        this.submitData.Linker = value;
+        this.$apply();
+      },
+      LandlineValue(value) {
+        this.submitData.Landline = value;
+        this.$apply();
+      },
+      FaxValue(value) {
+        this.submitData.Fax = value;
+        this.$apply();
+      },
+      CardNoValue(value) {
+        this.submitData.CardNo = value;
+        this.$apply();
+      },
+      OccupationValue(value) {
+        this.submitData.Occupation = value;
+        this.$apply();
+      },
+      EmailValue(value) {
+        this.submitData.Email = value;
+        this.$apply();
+      }
+    };
+    computed = {};
+    async GetClientForEdit() {
+      var resData = await ajax.getData(
+        '/api/services/web/client/GetClientForEdit',
+        'post', {}
+      )
+      if (resData.statusCode == 200) {
+        var GetClientForEdit_data = resData.data.result;
+        //代表类型
+        var LegalPersonData = this.cacheData(GetClientForEdit_data.legalPersonCombobox)
+        this.LegalPerson.value = this.LegalPerson.value.concat(LegalPersonData.value);
+        this.LegalPerson.displayText = this.LegalPerson.displayText.concat(LegalPersonData.displayText);
+        // //职位
+        var LegalDutyData = this.cacheData(GetClientForEdit_data.legalDutyCombobox)
+        this.LegalDuty.value = this.LegalDuty.value.concat(LegalDutyData.value);
+        this.LegalDuty.displayText = this.LegalDuty.displayText.concat(LegalDutyData.displayText);
+        //民族
+        var NationData = this.cacheData(GetClientForEdit_data.nationCombobox)
+        this.Nation.value = this.Nation.value.concat(NationData.value);
+        this.Nation.displayText = this.Nation.displayText.concat(NationData.displayText);
+      }
+      this.$apply();
+    }
+    async CreateOrUpdateClientBasic(data) {
+      wx.showLoading({
+        title: '提交中，请稍等！', //提示的内容,
+        mask: true, //显示透明蒙层，防止触摸穿透,
+        success: () => {
+          this.addOpacity = 1;
+          this.$apply();
+        }
+      });
+      var resData = await ajax.getData(
+        '/api/services/web/client/CreateOrUpdateClientBasic',
+        'post',
+        data
+      )
+      if (resData.statusCode == 200) {
+        var pages = getCurrentPages();
+        var prevPage = pages[pages.length - 3]; //上两个页面
+        if (prevPage) {
+          prevPage.isDataRefresh(resData.data.result.id);
+          wx.navigateBack({
+            delta: 2 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+          });
+        }
+      } else {
+        wx.showToast({
+          title: resData.data.error.message, //提示的内容,
+          icon: 'none', //图标,
+          duration: 2000, //延迟时间,
+          mask: true, //显示透明蒙层，防止触摸穿透,
+          success: res => {}
+        });
+      }
+    }
+    cacheData(data) {
+      var value = [];
+      var displayText = [];
+      for (var index in data) {
+        value[index] = data[index].value;
+        displayText[index] = data[index].displayText;
+      }
+      var filterData = {
+        value,
+        displayText
+      }
+      return filterData
+    }
+    onLoad() {
+      wx.getStorage({
+        key: 'CLIENT_CREATE_DATA',
+        success: (res) => {
+          console.log(res.data)
+          this.submitData = res.data;
+          if (this.submitData.Category == '10' || this.submitData.Category == '100') {
+            this.isShow = false
+          } else {
+            this.isShow = true
+          }
+          this.$apply();
+        },
+        fail: () => {},
+        complete: () => {}
+      })
+      this.GetClientForEdit();
+    };
+    onUnload() {
+      wx.removeStorage({
+        key: 'CLIENT_CREATE_DATA',
+        success(res) {
+          console.log("===创建客户数据已清除======")
+        }
+      })
+    }
+  }
+</script>
+

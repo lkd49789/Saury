@@ -1,0 +1,1374 @@
+<style lang='less'>
+    .container {
+        position: relative;
+        .calendar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: -1;
+            transition: height .2s;
+            color: #fff;
+            .calendar_content {
+                margin: 44rpx 28rpx 0 0;
+                position: absolute;
+                z-index: 100;
+                top: 0;
+                width: 100%;
+                .picker {
+                    >view {
+                        margin-left: 28rpx;
+                    }
+                    .date-year {
+                        font-size: 32rpx;
+                        display: flex;
+                        align-items: center;
+                    }
+                    .date-mouth {
+                        display: flex;
+                        align-items: center;
+                        font-size: 50rpx;
+                    }
+                }
+                .date_header {
+                    display: flex;
+                    flex-wrap: nowrap;
+                    justify-content: space-around;
+                    margin-top: 20rpx;
+                }
+                .date-boxs {
+                    position: relative;
+                    .dateCenter {
+                        left: 0;
+                    }
+                    .dateLeft {
+                        left: -500px;
+                    }
+                    .dateRIght {
+                        left: 500px;
+                    }
+                    .date-box {
+                        height: 50%;
+                        margin-top: 10rpx;
+                        display: flex;
+                        flex-wrap: wrap;
+                        .date-head {
+                            height: 60rpx;
+                            width: 14.285%;
+                            text-align: center;
+                            line-height: 60rpx;
+                            font-size: 26rpx; // margin: 5px 0;
+                            position: relative;
+                        }
+                        .nowDay {
+                            width: 60rpx;
+                            border-radius: 50%;
+                            color: #fff;
+                            background-color: #5D73FA;
+                            margin: 0 auto;
+                        }
+                        .hasDay::after {
+                            content: "";
+                            position: absolute;
+                            bottom: 0;
+                            left: 50%;
+                            transform: translate(-50%, 0);
+                            width: 10rpx;
+                            height: 10rpx;
+                            border-radius: 50%;
+                            background: rgba(255, 255, 255, 0.5);
+                        }
+                    }
+                }
+                @keyframes opacity {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+                .animation {
+                    animation: opacity 1s linear;
+                }
+            }
+        }
+        .list-content {
+            transition: height .2s;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            background: #fff;
+            border-top-left-radius: 20rpx;
+            border-top-right-radius: 20rpx;
+            .time {
+                font-size: 28rpx;
+                color: #b2b2b2;
+                padding: 10rpx 28rpx;
+                border-bottom: 1px solid #dedede;
+            }
+        }
+        .schedule_content {
+            background: #ffffff;
+            margin: 0 auto;
+            margin-top: 46rpx;
+            box-shadow: 0rpx 8rpx 30rpx 0rpx rgba(65, 98, 213, 0.25);
+            border-radius: 20rpx;
+            padding: 30rpx 24rpx;
+            margin: 44rpx 28rpx;
+            &>view {
+                font-size: 28rpx;
+                color: #2a2a2a;
+            }
+            .task {
+                margin: 30rpx 0;
+                .task_fr {
+                    float: right;
+                }
+            }
+            .task-item {
+                height: 180rpx;
+                font-size: 28rpx;
+                background: #f4f4f4;
+                padding: 0rpx 28rpx;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                .task-item-top {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 20rpx;
+                    .task-item-right {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        .task-count {
+                            height: 30rpx;
+                            width: 30rpx;
+                            color: #ff9900;
+                            border: 1px solid #ff9900;
+                            margin-right: 30rpx;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            border-radius: 50%;
+                            padding: 6rpx;
+                        }
+                    }
+                }
+            }
+            .task-content-container {
+                padding: 0 28rpx;
+                font-size: 28rpx;
+                color: #2a2a2a;
+                .task-content {
+                    display: flex; // justify-content:
+                    align-items: center;
+                    position: relative; // .icon-position {
+                    //   position: absolute;
+                    //   right: -31rpx;
+                    //   top: -7rpx;
+                    // }
+                    .task-content-right {
+                        width: 85%;
+                        display: flex;
+                        flex-direction: column;
+                        padding: 30rpx 0;
+                        border-bottom: 1px solid #f4f4f4; // align-items: center;
+                        // justify-content: center;
+                        .task-content-right-top {
+                            margin-bottom: 14rpx;
+                            overflow: hidden;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                        }
+                        .task-content-right-bottom {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            .bottom-left {
+                                width: 67%;
+                                color: #7a7a7a;
+                                >text {
+                                    margin-left: 20rpx;
+                                }
+                            }
+                            .bottom-right {
+                                // width:31%;
+                                >text {
+                                    margin-left: 20rpx;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .plan {
+                .plan_left {
+                    float: left;
+                    padding-right: 28rpx;
+                    border-right: 1px solid #dedede;
+                    .plan_timeFirst {
+                        display: block;
+                        padding-bottom: 8rpx
+                    }
+                    .plan_timeLast {
+                        font-size: 24rpx;
+                        color: #b2b2b2;
+                        float: right;
+                        padding-bottom: 12rpx
+                    }
+                }
+                .plan_right {
+                    padding-left: 160rpx;
+                    .plan_firstLine {
+                        display: block;
+                        margin-bottom: 12rpx;
+                        display: flex;
+                        justify-content: space-between;
+                        >text:first-child {
+                            overflow: hidden;
+                            /*超出部分隐藏*/
+                            white-space: nowrap;
+                            /*不换行*/
+                            text-overflow: ellipsis;
+                            /*超出部分文字以...显示*/
+                            width: 62%;
+                        }
+                        .ifwait {
+                            float: right;
+                            .yellow {
+                                color: #ff9900;
+                            }
+                            .yellow {
+                                color: #069400;
+                            }
+                        }
+                        .yellow {
+                            color: #ff9900;
+                        }
+                        .green {
+                            color: #069400;
+                        }
+                    }
+                    .plan_lastLine {
+                        color: #b2b2b2;
+                        font-size: 26rpx; // display: block;
+                        display: flex;
+                        justify-content: space-between;
+                        >text:first-child {
+                            overflow: hidden;
+                            /*超出部分隐藏*/
+                            white-space: nowrap;
+                            /*不换行*/
+                            text-overflow: ellipsis;
+                            /*超出部分文字以...显示*/
+                            width: 62%;
+                        }
+                        .ifwait {
+                            float: right;
+                            color: #5d73fa;
+                        }
+                    }
+                }
+            }
+            .journal {
+                .journal_box {
+                    margin-bottom: 20rpx;
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                    .journal_timeFirst {}
+                    .journal_timeLast {
+                        float: right;
+                        color: #5d73fa
+                    }
+                    .journal_content {
+                        color: #b2b2b2;
+                    }
+                    .journal_name {}
+                    .journal_state {
+                        float: right;
+                    }
+                }
+            }
+            .count {
+                .count_box1 {
+                    margin-bottom: 26rpx;
+                    .count_last {
+                        float: right;
+                        color: #b2b2b2;
+                    }
+                }
+                .count_box2 {
+                    margin-bottom: 30rpx;
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                    .count_left {
+                        float: left;
+                        width: 50%;
+                        .count_first {
+                            margin-bottom: 12rpx;
+                            color: #b2b2b2;
+                        }
+                    }
+                    .count_right {
+                        .count_first {
+                            margin-bottom: 12rpx;
+                            color: #b2b2b2;
+                        }
+                    }
+                }
+            }
+            .court-info-container {
+                .iconfont {
+                    font-size: 30rpx;
+                    color: #ff9900;
+                    margin-right: 22rpx;
+                }
+                .court-item1 {
+                    display: flex;
+                    justify-content: space-between;
+                    align-content: baseline;
+                    margin-bottom: 22rpx;
+                    .item1-left {
+                        display: flex;
+                        align-items: baseline;
+                    } // .item1-right{}
+                }
+                .info-item {
+                    display: flex;
+                    flex-wrap: wrap; // > view:first-child {
+                    //   margin-top: 30rpx;
+                    // }
+                    >view {
+                        display: flex;
+                        flex-direction: column;
+                        margin-bottom: 30rpx;
+                        >text:first-child {
+                            margin-bottom: 20rpx;
+                            color: #7a7a7a;
+                        }
+                    }
+                    >view:nth-child(2n) {
+                        width: 60%;
+                    }
+                    >view:nth-child(2n+1) {
+                        width: 40%;
+                    }
+                }
+            }
+            .meeting {
+                .meeting_box {
+                    margin-bottom: 20rpx;
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                    .meeting_name {
+                        font-size: 28rpx
+                    }
+                    .meeting_ifTrue {
+                        float: right;
+                    }
+                    .meeting_time {
+                        color: #b2b2b2;
+                    }
+                    .meeting_content {
+                        color: #b2b2b2;
+                    }
+                    .meeting_timeFirst {
+                        color: #b2b2b2;
+                    }
+                    .meeting_timeLast {
+                        float: right;
+                        color: #5d73fa
+                    }
+                }
+            }
+            .leave {
+                .leave_box {
+                    margin-bottom: 20rpx;
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                    .leave_name {
+                        font-size: 28rpx;
+                        .leave_add {
+                            font-size: 28rpx;
+                            color: #b2b2b2;
+                        }
+                    }
+                    .leave_time {
+                        float: right;
+                        color: #ff9900
+                    }
+                    .leave_period {}
+                    .leave_content {
+                        color: #b2b2b2;
+                    }
+                    .leave_timeFirst {}
+                    .leave_timeLast {
+                        float: right;
+                        color: #069400;
+                        .leave_color {
+                            border: 1px solid;
+                            width: 15rpx;
+                            height: 15rpx;
+                            line-height: 28rpx;
+                            border-radius: 15rpx;
+                            margin-right: 10rpx;
+                            display: inline-block;
+                        }
+                    }
+                    .leave_red {
+                        color: #e20000;
+                        border-color: #e20000
+                    }
+                    .leave_yellow {
+                        color: #ff9900;
+                        border-color: #ff9900
+                    }
+                    .leave_green {
+                        color: #069400;
+                        border-color: #069400
+                    }
+                }
+            }
+        }
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99999;
+        }
+    }
+    swiper {
+        height: 200px;
+    }
+</style>
+
+<template>
+    <view class='container' bindtouchstart="handletouchtart" bindtouchmove="handletouchmove">
+        <view class="calendar">
+            <view class="calendar_content">
+                <picker mode="date" fields="month" bindchange="bindDateChange" start="{{startDate}}" end="{{endDate}}" value="{{nowDate_Year}}-{{nowDate_Month}}" style="width: 35%;">
+                    <view class="picker">
+                        <view class='date-year'>{{nowDate_Year}}</view>
+                        <view class='date-mouth'>
+                            <text>{{mouthCh}}月</text>
+                            <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;margin-left:8rpx"></icon>
+                        </view>
+                    </view>
+                </picker>
+                <view class='date_header'>
+                    <repeat for="{{date}}" key="index" index="index" item="item">
+                        <view>{{item}}</view>
+                    </repeat>
+                </view>
+                <view class="date-boxs {{ifDateSmall?'animation':''}}" wx:if="{{ifDateSmall}}">
+                    <view class="date-box">
+                        <repeat for="{{dateArrSmall}}" key="index" index="index" item="item">
+                            <view class="date-head">
+                                <view class="{{isToday == item.isToday ? 'nowDay' : item.hasData ? 'hasDay' : ''}}" catchtap="getToday('{{item.isToday}}')">
+                                    {{item.dateNum}}
+                                </view>
+                            </view>
+                        </repeat>
+                    </view>
+                </view>
+                <view class="date-boxs {{!ifDateSmall?'animation':''}}" wx:else="{{ifDateSmall}}">
+                    <swiper circular="{{circular}}" bindchange="handletouchtartX" bindanimationfinish="handletouchendX" bindtransition="handletouchmoveX">
+                        <swiper-item class="date-box">
+                            <repeat for="{{dateArr}}" key="index" index="index" item="item">
+                                <view class="date-head" catchtap="getToday('{{item.isToday}}')" @tap="getToday">
+                                    <view class="{{isToday == item.isToday ? 'nowDay' : item.hasData ? 'hasDay' : ''}}">{{item.dateNum}}</view>
+                                </view>
+                            </repeat>
+                        </swiper-item>
+                        <swiper-item class="date-box">
+                            <repeat for="{{dateArr}}" key="index" index="index" item="item">
+                                <view class="date-head" catchtap="getToday('{{item.isToday}}')" @tap="getToday">
+                                    <view class="{{isToday == item.isToday ? 'nowDay' : item.hasData ? 'hasDay' : ''}}">{{item.dateNum}}</view>
+                                </view>
+                            </repeat>
+                        </swiper-item>
+                    </swiper>
+                </view>
+            </view>
+            <image class="imgage" src="../../images/date.jpg" mode="aspectFill" lazy-load="false" style="width:100%; height:{{viewHeight}}px"></image>
+        </view>
+        <view class="list-content" style=" height: {{listHeight}}px">
+            <view class="fixed-navbars">
+                <navbar :navbars.sync="navbars" :currentTab.sync="currentTab" @currentTab.user="navbarChange" id="navbar" />
+                <view class="time" id="time">
+                    <text>{{isToday}}</text>
+                </view>
+            </view>
+            <scroll-view scroll-y="{{true}}" style="height:100%">
+                <view class="schedule_boxs" style="height:{{heightH}}px;overflow-y:scroll">
+                    <!-- 任务 -->
+                    <view style="margin-bottom:200rpx" hidden="{{currentTab==0?'':true}}">
+                        <view class="schedule_box">
+                            <repeat for="{{taskData}}" key="index" index="index" item="item">
+                                <view class="schedule_content">
+                                    <view class="task-content-container taskHeight">
+                                        <view class="task-content" @tap="intoDetails(task,'{{item.id}}')">
+                                            <view style="margin-right:30rpx" wx:if="{{item.isParticipant=='Y'&&item.isAccept=='Y'}}">
+                                                <checkbox value="{{item.title}}" catchtap="isCompleted('{{taskDataIndex}}','{{index}}','{{items.checked[index]}}')" checked="{{items.checked[index]}}" color="#5d73fa" />
+                                            </view>
+                                            <view class="task-content-right {{items.checked[index]==true?'loseColor':''}}" style="width:{{item.isParticipant=='Y'&&item.isAccept=='Y'?'86%':'100%'}}">
+                                                <view class="task-content-right-top">
+                                                    <text>{{item.title}}</text>
+                                                </view>
+                                                <view class="task-content-right-bottom">
+                                                    <view class="bottom-left">
+                                                        <icon class="iconfont icon-riqi" style="font-size:30rpx;color:#7a7a7a"></icon>
+                                                        <text style="color:{{items.checked[index]==true?'#f4f4f4':'#7a7a7a'}}">111</text>
+                                                    </view>
+                                                    <view class="bottom-right">
+                                                        <icon class="iconfont icon-fujian-copy" style="font-size:30rpx;color:#009DFF"></icon>
+                                                        <text>{{item.attachmentCount}}</text>
+                                                        <icon class="iconfont icon-zirenwu-copy" style="font-size:30rpx;color:#5D73FA;margin-left:20rpx"></icon>
+                                                        <text>{{item.checkItemCount}}</text>
+                                                    </view>
+                                                </view>
+                                            </view>
+                                        </view>
+                                    </view>
+                                </view>
+                            </repeat>
+                        </view>
+                        <!-- <image src="{{'../../../images/add.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" @tap="intoAdd(task)"></image> -->
+                    </view>
+                    <!-- 日程 -->
+                    <view style="margin-bottom:200rpx" hidden="{{currentTab==1?'':true}}">
+                        <view class="schedule_box">
+                            <repeat for="{{planData}}" key="index" index="index" item="item">
+                                <view class="schedule_content">
+                                    <view class="plan" @tap="intoDetails(plan,'{{item.id}}')">
+                                        <view class="plan_left">
+                                            <text class="plan_timeFirst">{{item.start}}</text>
+                                            <text class="plan_timeLast">{{item.end}}</text>
+                                        </view>
+                                        <view class="plan_right">
+                                            <view class="plan_firstLine">
+                                                <text>{{item.title}}</text> <text class="ifwait {{false?'green':'yellow'}}">{{item.statusText}}</text>
+                                            </view>
+                                            <view class="plan_lastLine"> <text>{{item.clientName}}</text> <text class="ifwait">工作｜{{item.eventTypeText}}</text></view>
+                                        </view>
+                                    </view>
+                                </view>
+                            </repeat>
+                        </view>
+                        <!-- <image src="{{addImage}}"  mode="scaleToFill" lazy-load="false" class="addImage"  @tap="intoAdd('plan')"></image> -->
+                    </view>
+                    <!-- 日志 -->
+                    <view style="margin-bottom:200rpx" hidden="{{currentTab==2?'':true}}">
+                        <view class="schedule_box">
+                            <repeat for="{{journalData}}" key="index" index="index" item="item">
+                                <view class="schedule_content">
+                                    <view class="journal" @tap="intoDetails(journal,'{{item.id}}')">
+                                        <view class="journal_box">
+                                            <text class="journal_timeFirst">{{item.start}}</text>
+                                            <text class="journal_timeLast">{{item.selfDuration}}h</text>
+                                        </view>
+                                        <view class="journal_box">
+                                            <text class="journal_content">{{item.description}}</text>
+                                        </view>
+                                        <view class="journal_box">
+                                            <text class="journal_name">{{item.employeeName}}</text>
+                                            <text class="journal_state">{{item.processStatusText}}</text>
+                                        </view>
+                                    </view>
+                                </view>
+                            </repeat>
+                        </view>
+                        <!-- <image src="{{addImage}}"  mode="scaleToFill" lazy-load="true" class="addImage"  @tap="intoAdd(journal)"></image> -->
+                    </view>
+                    <!-- 开庭 -->
+                    <view style="margin-bottom:200rpx" hidden="{{currentTab==3?'':true}}">
+                        <view class="schedule_box">
+                            <repeat for="{{courtData}}" key="index" index="index" item="item">
+                                <view class="schedule_content">
+                                    <view class="court-info-container">
+                                        <view class="court-item1">
+                                            <view class="item1-left">
+                                                <icon class="iconfont icon-fayuankaiting"></icon>
+                                                <text>{{item.courtText}}</text>
+                                            </view>
+                                            <view class="item1-right">
+                                                <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2" @tap="courtShow('{{index}}')"></icon>
+                                            </view>
+                                        </view>
+                                        <view class="court-item1">
+                                            <view class="item1-left">
+                                                <icon class="iconfont icon-tixingkaiting"></icon>
+                                                <text>提前{{item.warningTime}}天提醒 @{{item.warningLawyerName}}</text>
+                                            </view>
+                                            <view class="item1-right" style="display:flex;align-items:center">
+                                                <text style="width:30rpx;height:30rpx;border-radius:50%;background:{{item.singleColor}};margin-right:20rpx"></text>
+                                                <text style="color:#7a7a7a">{{item.categoryText}}</text>
+                                            </view>
+                                        </view>
+                                        <view class="court-item1">
+                                            <view class="item1-left">
+                                                <icon class="iconfont icon-riqi"></icon>
+                                                <text>{{item.start}} 至 {{item.end}}</text>
+                                            </view>
+                                        </view>
+                                        <view class="court-item1">
+                                            <view class="item1-left">
+                                                <icon class="iconfont icon-dizhi1"></icon>
+                                                <text>{{item.address}}</text>
+                                            </view>
+                                        </view>
+                                        <view class="info-item">
+                                            <view class="fayuan" style="width:100%;">
+                                                <text>法院</text>
+                                                <text>{{item.courtText}}</text>
+                                            </view>
+                                            <view>
+                                                <text>主审法官／指定仲裁员</text>
+                                                <text>{{item.courtPerson}}</text>
+                                            </view>
+                                            <view>
+                                                <text>法院简称</text>
+                                                <text>{{item.memo}}</text>
+                                            </view>
+                                            <view>
+                                                <text>座机</text>
+                                                <text>{{item.telPhone}}</text>
+                                            </view>
+                                            <view>
+                                                <text>手机号码</text>
+                                                <text>{{item.cellPhone}}</text>
+                                            </view>
+                                            <view style="width:100%">
+                                                <text>备注</text>
+                                                <text>{{item.remark}}</text>
+                                            </view>
+                                        </view>
+                                    </view>
+                                </view>
+                            </repeat>
+                        </view>
+                        <!-- <image src="{{'../../../images/add.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" @tap="intoAdd(count)"></image> -->
+                    </view>
+                    <!-- 议会 -->
+                    <view style="margin-bottom:200rpx" hidden="{{currentTab==4?'':true}}">
+                        <view class="schedule_box">
+                            <repeat for="{{meetingData}}" key="index" index="index" item="item">
+                                <view class="schedule_content">
+                                    <view class="meeting" @tap="intoDetails(meeting,'{{item.id}}')">
+                                        <view class="meeting_box">
+                                            <text class="meeting_name">{{item.title}}</text>
+                                            <text class="meeting_ifTrue">{{item.statusText}}</text>
+                                        </view>
+                                        <view class="meeting_box">
+                                            <text class="meeting_time">会议时间：{{item.start}}至{{item.end}}</text>
+                                        </view>
+                                        <view class="meeting_box">
+                                            <text class="meeting_content">{{item.description}}</text>
+                                        </view>
+                                        <view class="meeting_box">
+                                            <text class="meeting_timeFirst">必智会议室</text>
+                                            <text class="meeting_timeLast">主持人：{{item.employeeName}}</text>
+                                        </view>
+                                    </view>
+                                </view>
+                            </repeat>
+                        </view>
+                        <!-- <image src="{{addImage}}"  mode="scaleToFill" lazy-load="true" class="addImage" @tap="intoAdd(meeting)"></image> -->
+                    </view>
+                    <!-- 请假 -->
+                    <view style="margin-bottom:200rpx" hidden="{{currentTab==5?'':true}}">
+                        <view class="schedule_box">
+                            <repeat for="{{leaveData}}" key="index" index="index" item="item">
+                                <view class="schedule_content">
+                                    <view class="leave" @tap="intoDetails(leave,'{{item.id}}')">
+                                        <view class="leave_box">
+                                            <text class="leave_name">{{item.eName}}<text class="leave_add">｜{{item.eCategory}}</text></text>
+                                            <text class="leave_time">{{item.totalDay}}天</text>
+                                        </view>
+                                        <view class="leave_box">
+                                            <text class="leave_period">请假时间：{{item.start}}至{{item.end}}</text>
+                                        </view>
+                                        <view class="leave_box">
+                                            <text class="leave_content">{{item.description}}</text>
+                                        </view>
+                                        <view class="leave_box">
+                                            <text class="leave_timeFirst">{{item.tag}}</text>
+                                            <text class="leave_timeLast {{item.status=='W'?'leave_yellow':item.status=='A'?'leave_green':'leave_red'}}"><view class="leave_color "><view class="caseConflictBorder_radius"></view></view>{{item.statusText}}</text>
+                                        </view>
+                                    </view>
+                                </view>
+                            </repeat>
+                        </view>
+                    </view>
+                </view>
+            </scroll-view>
+        </view>
+        <image src="{{addImage}}" mode="scaleToFill" wx-if="{{isAddImage}}" lazy-load="true" class="addImage" catchtap="intoAdd"></image>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import navbar from '../../components/navbar';
+    import ajax from '../../utils/cofig/ajax.js';
+    import mixins from '../../utils/cofig/mixin.js';
+    import {myDistinct} from '../../utils/cofig/api.js';
+    import placeHolderImage from '../../components/placeHolderImage'
+    import {
+        formatTime
+    } from '../../utils/cofig/api.js'
+    export default class Index extends wepy.page {
+        data = {
+            addImage: '../../images/add.png',
+            currentTab: 0,
+            navbars: [ '任务','日程', '日志','开庭','会议', '请假'],
+            category: '',
+            //数据
+            taskData: [],
+            planData: [],
+            journalData: [],
+            courtData: [],
+            meetingData: [],
+            leaveData: [],
+            moveX: true,
+            circular: true,
+            viewHeight: 0,
+            listHeight: 0,
+            lastY: 0,
+            animationLeft: false,
+            startDate: '',
+            endDate: '',
+            nowDate_Year: '',
+            nowDate_Month: '',
+            nowDate_Day: '',
+            mouthCh: '',
+            date: ['日', '一', '二', '三', '四', '五', '六'],
+            isToday: '',
+            dateArr: [],
+            dateArrSmall: '',
+            ifDateSmall: true,
+            schedule_data: [],
+            isAddImage: false
+        };
+        components = {
+            placeHolderImage,
+            navbar: navbar
+        };
+        methods = {
+            navbarChange(id) {
+                this.currentTab = id
+                this.$apply()
+            },
+            bindDateChange(e) {
+                this.nowDate_Year = e.detail.value.split('-')[0]
+                this.nowDate_Month = e.detail.value.split('-')[1]
+                this.mouthC(this.nowDate_Month)
+                this.dateInit(this.nowDate_Year, this.nowDate_Month)
+                this.isToday = this.nowDate_Year + '-' + this.nowDate_Month + '-01';
+                for (var i = 0; i < this.dateArr.length; i++) {
+                    if (this.dateArr[i].isToday == this.isToday) {
+                        this.dateArrSmall = this.dateArr.slice(parseInt(i / 7) * 7, parseInt(i / 7) * 7 + 7)
+                    }
+                }
+                this.GetAllSchedule(this.isToday);
+                this.GetScheduleCenterForCalendar(this.category, this.isToday);
+                this.$apply()
+            },
+            handletouchtart(event) {
+                this.lastY = event.touches[0].pageY
+                this.$apply();
+            },
+            handletouchmove(event) {
+                let currentY = event.touches[0].pageY;
+                let ty = currentY - this.lastY;
+                if (Math.abs(ty) > 50) {
+                    if (ty < 0 && this.ifDateSmall == false) {
+                        this.ifDateSmall = true
+                        this.$apply();
+                    } else if (ty >= 0 && this.ifDateSmall == true) {
+                        this.ifDateSmall = false;
+                        this.$apply();
+                    }
+                    this.lastY = currentY
+                    this.$apply();
+                    this.getViewPoint()
+                }
+            },
+            handletouchtartX(event) {
+                this.$apply();
+            },
+            handletouchmoveX(event) {
+                // console.log(event);
+                if (this.moveX) {
+                    if (event.detail.dx > 200) {
+                        this.moveX = false
+                        this.nowDate_Month = Number(this.nowDate_Month)
+                        if (this.nowDate_Month + 1 == 13) {
+                            this.nowDate_Month = 1
+                            this.nowDate_Year = this.nowDate_Year + 1
+                        } else {
+                            this.nowDate_Month = this.nowDate_Month + 1
+                        }
+                    } else if (event.detail.dx < -200) {
+                        this.moveX = false
+                        this.nowDate_Month = Number(this.nowDate_Month)
+                        if (this.nowDate_Month - 1 == 0) {
+                            this.nowDate_Month = 12
+                            this.nowDate_Year = this.nowDate_Year - 1
+                        } else {
+                            this.nowDate_Month = this.nowDate_Month - 1
+                        }
+                    }
+                    if (this.nowDate_Month < 10) {
+                        this.nowDate_Month = '' + 0 + this.nowDate_Month
+                    }
+                    if (Math.abs(event.detail.dx) > 200) {
+                        this.mouthC(this.nowDate_Month)
+                        this.dateInit(this.nowDate_Year, this.nowDate_Month)
+                        this.isToday = this.nowDate_Year + '-' + this.nowDate_Month + '-01';
+                        for (var i = 0; i < this.dateArr.length; i++) {
+                            if (this.dateArr[i].isToday == this.isToday) {
+                                this.dateArrSmall = this.dateArr.slice(parseInt(i / 7) * 7, parseInt(i / 7) * 7 + 7)
+                            }
+                        }
+                        this.GetAllSchedule(this.isToday);
+                        this.GetScheduleCenterForCalendar(this.category, this.isToday);
+                        this.$apply();
+                    }
+                }
+            },
+            handletouchendX(event) {
+                this.moveX = true
+                this.$apply()
+            },
+            intoDetails(text, id) {
+                if (text == 'task') {
+                    wx.navigateTo({
+                        url: '../modules/myTaskCourse/taskStage/taskDetail/taskdetail?id=' + id
+                    })
+                } else if (text == 'plan') {
+                    wx.navigateTo({
+                        url: 'plan/details?id=' + id
+                    })
+                } else if (text == 'journal') {
+                    wx.navigateTo({
+                        url: '../modules/myRecord/myLogdetail/logdetail?id=' + id
+                    })
+                } else if (text == 'count') {} else if (text == 'meeting') {
+                    wx.navigateTo({
+                        url: '../modules/myMeeting/meetingDetail/meetingDetail?id=' + id
+                    })
+                } else if (text == 'leave') {
+                    wx.navigateTo({
+                        url: '../modules/myApplyList/myApplyDetail/myApplyDetail?id=' + id
+                    })
+                }
+            },
+            intoAdd(text) {
+                switch (this.currentTab) {
+                    case 1:
+                        var data = {
+                            isData: false
+                        }
+                        data = JSON.stringify(data);
+                        wx.navigateTo({
+                            url: 'plan/createDetails?data=' + data
+                        })
+                        break;
+                    case 2:
+                        var data = {
+                            isData: false
+                        }
+                        data = JSON.stringify(data);
+                        wx.navigateTo({
+                            url: '../modules/myRecord/creatWorkRecord/creatWorkRecord?data=' + data
+                        })
+                        break;
+                    case 4:
+                        wx.navigateTo({
+                            url: '../modules/myMeeting/creatMeeting/creatMeeting'
+                        })
+                        break;
+                    case 5:
+                        wx.navigateTo({
+                            url: '../modules/myApplyList/createApply/createApply'
+                        })
+                        break;
+                    default:
+                        break;
+                }
+            },
+            getToday(isToday) {
+                this.isToday = isToday
+                for (var i = 0; i < this.dateArr.length; i++) {
+                    if (this.dateArr[i].isToday == this.isToday) {
+                        this.dateArrSmall = this.dateArr.slice(parseInt(i / 7) * 7, parseInt(i / 7) * 7 + 7)
+                    }
+                }
+                this.GetScheduleCenterForCalendar(this.category, isToday);
+                this.$apply()
+            },
+        };
+        events = {};
+        watch = {
+            currentTab(newValue, oldValue) {
+                switch (newValue) {
+                    case 0:
+                        this.GetScheduleCenterForCalendar('Task', this.isToday);
+                        this.isAddImage = false;
+                        break;
+                    case 1:
+                        this.GetScheduleCenterForCalendar('Schedule', this.isToday);
+                        this.isAddImage = true;
+                        break;
+                    case 2:
+                        this.GetScheduleCenterForCalendar('WorkLog', this.isToday);
+                        this.isAddImage = true;
+                        break;
+                    case 3:
+                        this.GetScheduleCenterForCalendar('CaseCourt', this.isToday);
+                        this.isAddImage = false;
+                        break;
+                    case 4:
+                        this.GetScheduleCenterForCalendar('Meeting', this.isToday);
+                        this.isAddImage = true;
+                        break;
+                    case 5:
+                        this.GetScheduleCenterForCalendar('Vacation', this.isToday);
+                        this.isAddImage = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        computed = {};
+        getViewPoint() {
+            wx.getSystemInfo({
+                success: (res) => {
+                    this.viewHeight = res.windowHeight
+                    var that = this;
+                    var query = wx.createSelectorQuery();
+                    query.select('.calendar_content').boundingClientRect(function(rect) {
+                        that.listHeight = res.windowHeight - rect.height - 30
+                        that.$apply();
+                    }).exec();
+                }
+            })
+        }
+        mouthC(mouth) {
+            mouth = mouth.toString();
+            switch (mouth) {
+                case '01':
+                    this.mouthCh = '一';
+                    break;
+                case '02':
+                    this.mouthCh = '二';
+                    break;
+                case '03':
+                    this.mouthCh = '三';
+                    break;
+                case '04':
+                    this.mouthCh = '四';
+                    break;
+                case '05':
+                    this.mouthCh = '五';
+                    break;
+                case '06':
+                    this.mouthCh = '六';
+                    break;
+                case '07':
+                    this.mouthCh = '七';
+                    break;
+                case '08':
+                    this.mouthCh = '八';
+                    break;
+                case '09':
+                    this.mouthCh = '九';
+                    break;
+                case '10':
+                    this.mouthCh = '十';
+                    break;
+                case '11':
+                    this.mouthCh = '十一';
+                    break;
+                case '12':
+                    this.mouthCh = '十二';
+                    break;
+                default:
+                    break;
+            }
+        }
+        dateInit(setYear, setMonth) {
+            var dateArr = []
+            var arrLen = 0
+            var now = setYear ? new Date(setYear, setMonth) : new Date()
+            var year = setYear || now.getFullYear()
+            var month = setMonth || now.getMonth()
+            var startWeek = new Date(year + '/' + month + '/' + 1).getDay()
+            var dayNums = new Date(parseInt(year), parseInt(month), 0).getDate()
+            arrLen = startWeek + dayNums
+            var obj = {}
+            var num = 0
+            for (var i = 0; i < arrLen; i++) {
+                if (i >= startWeek) {
+                    num = i - startWeek + 1
+                    if (num < 10) {
+                        num = '0' + num
+                    }
+                    obj = {
+                        isToday: '' + year + '-' + month + '-' + num,
+                        dateNum: num,
+                    }
+                } else {
+                    obj = {}
+                }
+                dateArr[i] = obj
+            }
+            this.dateArr = dateArr
+            for (var i = 0; i < this.dateArr.length; i++) {
+                if (this.dateArr[i].isToday == this.isToday) {
+                    this.dateArrSmall = this.dateArr.slice(parseInt(i / 7) * 7, parseInt(i / 7) * 7 + 7)
+                }
+            }
+            this.$apply()
+        }
+        async GetAllSchedule(now_day) {
+            var date = Date.parse(new Date(now_day));
+            var startDate = new Date(date - 24 * 3600 * 1000 * 90);
+            var endDate = new Date(date + 24 * 3600 * 1000 * 90);
+            var data = {
+                dataNumber: 100,
+                dateRange: {
+                    startDate,
+                    endDate
+                },
+                isCurrent: true,
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/schedule/GetScheduleCenterForCalendar',
+                'post',
+                data
+            );
+            for (var i in this.dateArr) {
+                if (this.dateArr[i].isToday) {
+                    var timeStamp = new Date(this.dateArr[i].isToday).getTime() - 28800000
+                    var timeStamp2 = new Date(this.dateArr[i].isToday).getTime() + 57600000
+                    for (var j in resData.data.result.tasks) {
+                        var timeStart = new Date(resData.data.result.tasks[j].start).getTime()
+                        var timeEnd = new Date(resData.data.result.tasks[j].end).getTime()
+                        if (!((timeStart >= timeStamp2 || timeEnd < timeStamp))) {
+                            this.dateArr[i].hasData = true
+                            this.$apply()
+                        }
+                    }
+                    for (var j in resData.data.result.schedules) {
+                        var timeStart = new Date(resData.data.result.schedules[j].start).getTime()
+                        var timeEnd = new Date(resData.data.result.schedules[j].end).getTime()
+                        if (!((timeStart >= timeStamp2 || timeEnd < timeStamp))) {
+                            this.dateArr[i].hasData = true
+                            this.$apply()
+                        }
+                    }
+                    for (var j in resData.data.result.workLogs) {
+                        var timeStart = new Date(resData.data.result.workLogs[j].start).getTime()
+                        var timeEnd = new Date(resData.data.result.workLogs[j].end).getTime()
+                        if (!((timeStart >= timeStamp2 || timeEnd < timeStamp))) {
+                            this.dateArr[i].hasData = true
+                            this.$apply()
+                        }
+                    }
+                    for (var j in resData.data.result.caseCourts) {
+                        var timeStart = new Date(resData.data.result.caseCourts[j].start).getTime()
+                        var timeEnd = new Date(resData.data.result.caseCourts[j].end).getTime()
+                        if (!((timeStart >= timeStamp2 || timeEnd < timeStamp))) {
+                            this.dateArr[i].hasData = true
+                            this.$apply()
+                        }
+                    }
+                    for (var j in resData.data.result.meetings) {
+                        var timeStart = new Date(resData.data.result.meetings[j].start).getTime()
+                        var timeEnd = new Date(resData.data.result.meetings[j].end).getTime()
+                        if (!((timeStart >= timeStamp2 || timeEnd < timeStamp))) {
+                            this.dateArr[i].hasData = true
+                            this.$apply()
+                        }
+                    }
+                    for (var j in resData.data.result.vacations) {
+                        var timeStart = new Date(resData.data.result.vacations[j].start).getTime()
+                        var timeEnd = new Date(resData.data.result.vacations[j].end).getTime()
+                        if (!((timeStart >= timeStamp2 || timeEnd < timeStamp))) {
+                            this.dateArr[i].hasData = true
+                            this.$apply()
+                        }
+                    }
+                }
+            }
+        }
+        async GetScheduleCenterForCalendar(category, now_day) {
+            this.category = category
+            this.schedule_data = []
+            // console.log(now_day);
+            wx.showLoading({
+                title: '加载中，请稍等！', //提示的内容,
+                mask: false, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var date = Date.parse(new Date(now_day));
+            var startDate = new Date(date - 24 * 3600 * 1000 * 90);
+            var endDate = new Date(date + 24 * 3600 * 1000 * 90);
+            var timeStamp = new Date(this.isToday).getTime() - 28800000
+            var timeStamp2 = new Date(this.isToday).getTime() + 57600000
+            // var timeStamp = new Date(this.isToday).getTime()
+            // var timeStamp2 = new Date(this.isToday).getTime() + 24 * 3600
+            var data = {
+                CaseId: "",
+                CaseName: "",
+                ClientId: "",
+                ClientName: "",
+                end: '',
+                KeyWord: "",
+                start: '',
+                category: category,
+                creationTime: {
+                    startDate: "",
+                    endDate: "",
+                },
+                dataNumber: 100,
+                dateRange: {
+                    startDate,
+                    endDate
+                },
+                isCurrent: true,
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/schedule/GetScheduleCenterForCalendar',
+                'post',
+                data
+            );
+            switch (resData.statusCode) {
+                case 200:
+                    // if (resData.data.result.schedules.length !== 0) {
+                    //     var screeningData = []
+                    //     for (var i in resData.data.result.schedules) {
+                    //         var timeStart = new Date(resData.data.result.schedules[i].start).getTime()
+                    //         var timeEnd = new Date(resData.data.result.schedules[i].end).getTime()
+                    //         if (!(timeStart > timeStamp2 || timeEnd < timeStamp)) {
+                    //             screeningData.push(resData.data.result.schedules[i])
+                    //         }
+                    //     }
+                    //     console.log(screeningData)
+                    //     if (screeningData.length !== 0) {
+                    //         this.schedule_data = screeningData
+                    //     } else {
+                    //         // this.placeHolder.placeHolderImageIndex = 0;
+                    //         // this.placeHolder.placeHolderShow = true;
+                    //     }
+                    // } else {
+                    //     // this.placeHolder.placeHolderImageIndex = 0;
+                    //     // this.placeHolder.placeHolderShow = true;
+                    // }
+                    switch (category) {
+                        case 'Task':
+                            var screeningData = []
+                            for (var i in resData.data.result.tasks) {
+                                var timeStart = new Date(resData.data.result.tasks[i].start).getTime()
+                                var timeEnd = new Date(resData.data.result.tasks[i].end).getTime()
+                                if (!((timeStart >= timeStamp2 || timeEnd < timeStamp))) {
+                                    screeningData.push(resData.data.result.tasks[i])
+                                }
+                            }
+                            if (screeningData.length != 0) {
+                                this.taskData = screeningData;
+                            } else {
+                                this.taskData = []
+                                this.$apply()
+                            }
+                            break;
+                        case 'Schedule':
+                            var screeningData = []
+                            for (var i in resData.data.result.schedules) {
+                                var timeStart = new Date(resData.data.result.schedules[i].start).getTime()
+                                var timeEnd = new Date(resData.data.result.schedules[i].end).getTime()
+                                if (!(timeStart >= timeStamp2 || timeEnd < timeStamp)) {
+                                    screeningData.push(resData.data.result.schedules[i])
+                                }
+                            }
+                            if (screeningData.length != 0) {
+                                for (var i in screeningData) {
+                                    screeningData[i].start = new Date(screeningData[i].start).toTimeString().split('GMT')[0]
+                                    screeningData[i].end = new Date(screeningData[i].end).toTimeString().split('GMT')[0]
+                                }
+                                this.planData = screeningData;
+                            } else {
+                                this.planData = []
+                            }
+                            break;
+                        case 'WorkLog':
+                            var screeningData = []
+                            for (var i in resData.data.result.workLogs) {
+                                var timeStart = new Date(resData.data.result.workLogs[i].start).getTime()
+                                var timeEnd = new Date(resData.data.result.workLogs[i].end).getTime()
+                                if (!(timeStart >= timeStamp2 || timeEnd < timeStamp)) {
+                                    screeningData.push(resData.data.result.workLogs[i])
+                                }
+                            }
+                            if (screeningData.length != 0) {
+                                for (var i in screeningData) {
+                                    screeningData[i].start = formatTime(screeningData[i].start)
+                                }
+                                this.journalData = screeningData;
+                                // this.placeHolder.placeHolderShow = false;
+                            } else {
+                                this.journalData = []
+                                this.$apply()
+                            }
+                            break;
+                        case 'CaseCourt':
+                            var screeningData = []
+                            for (var i in resData.data.result.caseCourts) {
+                                var timeStart = new Date(resData.data.result.caseCourts[i].start).getTime()
+                                var timeEnd = new Date(resData.data.result.caseCourts[i].end).getTime()
+                                if (!(timeStart >= timeStamp2 || timeEnd < timeStamp)) {
+                                    screeningData.push(resData.data.result.caseCourts[i])
+                                }
+                            }
+                            if (screeningData.length != 0) {
+                                for (var i in screeningData) {
+                                    screeningData[i].start = formatTime(screeningData[i].start)
+                                    screeningData[i].end = formatTime(screeningData[i].end)
+                                }
+                                this.courtData = screeningData;
+                            } else {
+                                this.courtData = []
+                                this.$apply()
+                            }
+                            break;
+                        case 'Meeting':
+                            var screeningData = []
+                            for (var i in resData.data.result.meetings) {
+                                var timeStart = new Date(resData.data.result.meetings[i].start).getTime()
+                                var timeEnd = new Date(resData.data.result.meetings[i].end).getTime()
+                                if (!(timeStart >= timeStamp2 || timeEnd < timeStamp)) {
+                                    screeningData.push(resData.data.result.meetings[i])
+                                }
+                            }
+                            if (screeningData.length != 0) {
+                                for (var i in screeningData) {
+                                    screeningData[i].start = formatTime(screeningData[i].start)
+                                    screeningData[i].end = formatTime(screeningData[i].end)
+                                }
+                                this.meetingData = screeningData;
+                                // this.placeHolder.placeHolderShow = false;
+                            } else {
+                                this.meetingData = []
+                                this.$apply()
+                            }
+                            break;
+                        case 'Vacation':
+                            var screeningData = []
+                            for (var i in resData.data.result.vacations) {
+                                var timeStart = new Date(resData.data.result.vacations[i].start).getTime()
+                                var timeEnd = new Date(resData.data.result.vacations[i].end).getTime()
+                                if (!(timeStart >= timeStamp2 || timeEnd < timeStamp)) {
+                                    screeningData.push(resData.data.result.vacations[i])
+                                }
+                            }
+                            if (screeningData.length != 0) {
+                                for (var i in screeningData) {
+                                    screeningData[i].start = formatTime(screeningData[i].start)
+                                    screeningData[i].end = formatTime(screeningData[i].end)
+                                }
+                                this.leaveData = screeningData;
+                            } else {
+                                this.leaveData = []
+                                this.$apply()
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+            this.$apply();
+        }
+        // //功能权限
+        // async GetFunctionItems() {
+        //     var id = {
+        //         id: this.$parent.global.currentUserId
+        //     }
+        //     var resData = await ajax.getData(
+        //         '/api/services/app/function/GetFunctionItems',
+        //         'post',
+        //         id
+        //     )
+        //     // if (resData.statusCode == 200) {
+        //     //     var GetFunctionItemsData = resData.data.result.items
+        //     //     for (var index in GetFunctionItemsData) {
+        //     //         switch (GetFunctionItemsData[index].name) {
+        //     //             case 'Pages.Works.Log.MyWorklog':
+        //     //                 break;
+        //     //             // case 'Pages.Business.Cases.MyProcesses':
+        //     //                 // this.navbars.push('任务')
+        //     //             //     break;
+        //     //             // case 'Pages.Works.Meeting.MyMeeting':
+        //     //             //     this.navbars.push('会议')
+        //     //             //     break;
+        //     //             // case 'Pages.HumanResource.Attendance.MyApplyList':
+        //     //             //     this.navbars.push('请假')
+        //     //             //     break;
+        //     //         }
+        //     //     }
+        //     //     myDistinct( this.navbars);
+        //     //     this.$apply();
+        //     // }
+        // }
+        onLoad() {
+            let now_Date = new Date();
+            this.nowDate_Year = now_Date.getFullYear();
+            this.nowDate_Month = now_Date.getMonth() + 1;
+            this.startDate = now_Date.getFullYear() - 50;
+            this.endDate = now_Date.getFullYear() + 50;
+            if (this.nowDate_Month < 10) {
+                this.nowDate_Month = '' + 0 + this.nowDate_Month
+            }
+            this.nowDate_Day = now_Date.getDate()
+            if (this.nowDate_Day < 10) {
+                this.nowDate_Day = '' + 0 + this.nowDate_Day
+            }
+            this.isToday = this.nowDate_Year + '-' + this.nowDate_Month + '-' + this.nowDate_Day
+            this.mouthC(this.nowDate_Month);
+            this.dateInit(this.nowDate_Year, this.nowDate_Month);
+            this.GetScheduleCenterForCalendar('Task', now_Date)
+            this.getViewPoint();
+            this.$apply();
+        };
+        onShow() {
+            this.GetScheduleCenterForCalendar(this.category, this.isToday);
+            // this.GetFunctionItems();
+        };
+    }
+</script>

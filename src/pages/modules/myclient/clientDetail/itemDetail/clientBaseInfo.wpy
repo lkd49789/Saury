@@ -1,0 +1,340 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 99;
+        }
+        .main {
+            margin-top: 149rpx;
+            font-size: 28rpx;
+            color: #2a2a2a;
+            >view:first-child {
+                >view {
+                    padding: 0 28rpx 30rpx 28rpx;
+                    >view:not(:last-child) {
+                        margin-bottom: 26rpx;
+                    }
+                    >view:first-child {
+                        margin-bottom: 30rpx;
+                        font-weight: bold;
+                        font-size: 30rpx;
+                    }
+                    >view:nth-child(2) {
+                        >view {
+                            display: flex;
+                            justify-content: space-between;
+                            >text:first-child{
+                                width:88%;
+                            }
+                        }
+                    }
+                    >view:nth-child(4) {
+                        display: flex;
+                        >view {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            border-radius: 30rpx;
+                            border: 1px solid #5d73fa;
+                            color: #5d73fa;
+                            padding: 10rpx 20rpx;
+                        }
+                        >view:not(:last-child) {
+                            margin-right: 30rpx;
+                        }
+                    }
+                    >view:nth-child(5) {
+                        display: flex;
+                        align-items: baseline;
+                    }
+                    >view:nth-child(6) {
+                        display: flex;
+                        flex-direction: column;
+                        >text:first-child {
+                            margin-bottom: 26rpx;
+                        }
+                    }
+                }
+            }
+            >view:not(:first-child) {
+                >view {
+                    padding: 30rpx 28rpx;
+                }
+            }
+            >view:nth-child(2) {
+                >view {
+                    >view:not(:last-child) {
+                        margin-bottom: 26rpx;
+                    }
+                    >view {
+                        display: flex;
+                        align-items: center;
+                        color: #7a7a7a;
+                    }
+                }
+            }
+            >view:nth-child(3){
+                >view{
+                    >view:not(:last-child){
+                        margin-bottom:36rpx;
+                    }
+                    >view{
+                        display: flex;
+                        flex-direction: column;
+                        >text:first-child{
+                            margin-bottom: 20rpx;
+                            color:#7a7a7a;
+                        }
+                    }
+                }
+            }
+            >view:nth-child(4){
+                >view{
+                    >view:not(:last-child){
+                        margin-bottom:36rpx;
+                    }
+                    >view{
+                        display: flex;
+                        flex-direction: column;
+                        >text:first-child{
+                            margin-bottom: 20rpx;
+                            color:#7a7a7a;
+                        }
+                    }
+                }
+            }
+            >view:nth-child(5){
+                >view{
+                    >view:not(:last-child){
+                        margin-bottom:36rpx;
+                    }
+                    >view{
+                        display: flex;
+                        flex-direction: column;
+                        >text:first-child{
+                            margin-bottom: 20rpx;
+                            color:#7a7a7a;
+                           
+                        }
+                    }
+                }
+            }
+            >view:not(:last-child)::after {
+                display: block;
+                content: '';
+                width: 100%;
+                height: 7px;
+                background: #f4f4f4;
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <text>客户基本信息</text>
+        </view>
+        <view class='main'>
+            <view>
+                <view>
+                    <view>
+                        <text>{{clientBaseData.name||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <view>
+                            <text>{{clientBaseData.enName||'未填写'}}</text>
+                            <text style="font-weight: bold;color:#7a7a7a">{{clientBaseData.shortName||'未填写'}}</text>
+                        </view>
+                    </view>
+                    <view>
+                        <text style="color:#7a7a7a">{{clientBaseData.id||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <view>
+                            <text>{{clientBaseData.clientTypeText||'未填写'}}</text>
+                        </view>
+                        <view>
+                            <text>{{clientBaseData.importLevelText||'未填写'}}</text>
+                        </view>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-dizhi" style="color:#5d73fa;font-size:30rpx;margin-right:20rpx"></icon>
+                        <text>{{clientBaseData.regionText||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <text style="color:#7a7a7a">业务类别</text>
+                        <text>{{clientBaseData.categoryText||'未填写'}}</text>
+                    </view>
+                </view>
+            </view>
+            <view wx:if="{{clientBaseData.categoryText!=='公民个人'}}">
+                <view>
+                    <view style="margin-bottom: 36rpx">
+                        <text style="font-size:30rpx;color:#2a2a2a">客户负责人/法定代表人信息</text>
+                    </view>
+                    <view>
+                        <text style="padding-right:10rpx;border-right:1px solid #7a7a7a;margin-right:10rpx">{{clientBaseData.legalDutyText||'未填写'}}</text>
+                        <text style="color:#5d73fa">{{clientBaseData.legalPersonText||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-dizhi" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                        <text>{{clientBaseData.linker||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-dianhua" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                        <text>{{clientBaseData.landline||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-youxiang" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                        <text>{{clientBaseData.email||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-chuanzhen" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                        <text>{{clientBaseData.fax||'未填写'}}</text>
+                    </view>
+                </view>
+            </view>
+            <view wx:else>
+                <view>
+                    <view>
+                        <text style="font-size:30rpx;color:#2a2a2a">自然人</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-shenfenzheng" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                        <text>{{clientBaseData.cardNo||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-minzu" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                        <text >{{clientBaseData.nationText||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-chushengriqi" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                        <text >{{clientBaseData.birthday||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-zhiye" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                        <text>{{clientBaseData.occupation||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-youxiang" style="font-size:40rpx;margin-right:20rpx;color:#ff9900"></icon>
+                        <text >{{clientBaseData.email||'未填写'}}</text>
+                    </view>
+                </view>
+            </view>
+            <view>
+                <view>
+                    <view>
+                        <text>企业公司注册编号</text>
+                        <text>{{clientBaseData.registeredNo||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <text>企业工商注册名称</text>
+                        <text>{{clientBaseData.registeredName||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <text>客户行业</text>
+                        <text>{{clientBaseData.industryTypeText||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <text>组织结构</text>
+                        <text>{{clientBaseData.organizationUnitText||'未填写'}}</text>
+                    </view>
+                </view>
+            </view>
+            <view>
+                <view>
+                    <view>
+                        <text>客户地址</text>
+                        <text>{{clientBaseData.address||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <text>邮编号码</text>
+                        <text>{{clientBaseData.post||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <text>主页</text>
+                        <text>{{clientBaseData.homePage||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <text>客户来源</text>
+                        <text>{{clientBaseData.originText||'未填写'}}</text>
+                    </view>
+                </view>
+            </view>
+            <view>
+                <view>
+                    <view>
+                        <text>描述</text>
+                        <text>{{clientBaseData.description||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <text>备注</text>
+                        <text>{{clientBaseData.remark||'未填写'}}</text>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <placeHolderImage :placeHolder.sync="placeHolder" />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../../utils/cofig/ajax.js'
+    import mixins from '../../../../../utils/cofig/mixin.js';
+    import placeHolderImage from '../../../../../components/placeHolderImage';
+    export default class clientBaseInfo extends wepy.page {
+        components = {
+            placeHolderImage
+        };
+        data = {
+            clientBaseData: {}
+        };
+        methods = {};
+        mixins = [mixins];
+         //获取客户信息
+        async GetClient(id){
+        var resData=await ajax.getData(
+            '/api/services/web/client/GetClient',
+            'post',
+            {id}
+        )
+        if(resData.statusCode==200){
+            this.clientBaseData=resData.data.result;
+            this.$apply();
+        }
+        }
+        onLoad(options) {
+            if(options.id){
+                this.GetClient(options.id)
+            }else{
+                 var clientBaseData = wx.getStorageSync('clientData').clientBaseInfoData;
+                 this.clientBaseData = clientBaseData;
+                 if(this.clientBaseData.birthday!==null){
+                     this.clientBaseData.birthday=this.clientBaseData.birthday.split('T')[0];
+                 }
+            }
+            this.$apply();
+        }
+        onUnload() {
+            wx.removeStorage({
+                key: 'clientData',
+                success(res) {
+                console.log("===客户数据已清除======")
+                }
+            })
+        }
+    }
+</script>

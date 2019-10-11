@@ -1,0 +1,88 @@
+Page {
+  /* background: #1baceb; */
+  position: absolute;
+  font-size: 36rpx;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #fafafa;
+  overflow-y: hidden;
+}
+Page .extra-word {
+  height: 100%;
+}
+.body {
+  height: 100%;
+}
+.body .container-title {
+  height: 104rpx;
+  font-size: 48rpx;
+  padding: 28rpx;
+  color: #2a2a2a;
+  line-height: 104rpx;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #dedede;
+}
+.body .conflictinterest-detail-container {
+  padding: 44rpx 28rpx 0 28rpx;
+  font-size: 28rpx;
+  color: #2a2a2a;
+}
+.body .conflictinterest-detail-container .detail-item {
+  box-shadow: 0 8px 30px rgba(65, 98, 213, 0.25);
+  border-radius: 20rpx;
+  padding: 30rpx 22rpx;
+  margin-bottom: 44rpx;
+}
+.body .conflictinterest-detail-container .detail-item > view {
+  display: flex;
+  align-items: center;
+  margin-bottom: 22rpx;
+}
+.commodity_attr_box {
+  height: 196rpx;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 2000;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.commodity_attr_box .box {
+  margin: 0 28rpx;
+  width: 694rpx;
+  color: #7a7a7a;
+  font-size: 34rpx;
+}
+.commodity_attr_box .box .box1 {
+  height: 98rpx;
+  width: 100%;
+  border-bottom: 1px solid #bfbfbf;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.commodity_attr_box .box .box2 {
+  height: 98rpx;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.commodity_screen {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000;
+  opacity: 0.6;
+  z-index: 1000;
+}

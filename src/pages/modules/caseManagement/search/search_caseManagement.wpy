@@ -1,0 +1,611 @@
+<!--  -->
+<style lang='less'>
+    .container {
+        margin: 44rpx 28rpx;
+        .keyword-search {
+            .search_top {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .search_input {
+                    width: 100%; // border:1px solid #dfdfdf;
+                    padding: 10rpx 20rpx;
+                    border-radius: 100rpx;
+                    background: #f4f4f4;
+                    display: flex;
+                    align-items: center;
+                    margin-right: 14rpx;
+                    >icon {
+                        margin-right: 14rpx;
+                    }
+                    >input {
+                        width: 100%;
+                    }
+                }
+                .top_right_btn {
+                    // width: 15%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+            .search_history {
+                margin-top: 28rpx;
+                .history_title {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+                .history_content {
+                    margin-top: 10rpx;
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    >view {
+                        background: #f4f4f4;
+                        padding: 10rpx 20rpx;
+                        border-radius: 50rpx;
+                        color: #7a7a7a;
+                        margin: 14rpx;
+                        position: relative;
+                        >icon {
+                            // animation: item_delet_icon 1s linear;
+                            position: absolute;
+                            top: -30rpx;
+                            right: -10rpx;
+                        }
+                    }
+                }
+            }
+        }
+        .advanced-search-input-panel {
+            .advanced-search-title {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                >text {
+                    font-size: 40rpx;
+                }
+            }
+            .advanced-search-content {
+                margin: 30rpx 0 40rpx 0;
+            }
+        }
+        .tui-picker-content {
+            margin-bottom: 36rpx;
+            picker {
+                padding: 20rpx 0;
+                border-bottom: 1px solid #dfdfdf;
+                .tui-picker-detail {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    color: #7a7a7a;
+                }
+            }
+            .checkbox {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                .checkboxItem {
+                    margin: 20rpx 20rpx 0 0;
+                }
+            }
+        }
+        .checkedBox {
+            margin-bottom: 36rpx;
+            border-bottom: 1px solid #dedede;
+            .checkbox-group {
+                padding-top: 22rpx; // height: 106rpx;
+                display: flex;
+                align-items: center; // justify-content: center;
+                flex-wrap: wrap;
+                width: 100%;
+                .label {
+                    padding-bottom: 22rpx;
+                    width: 50%;
+                    align-items: center;
+                    display: flex;
+                }
+            }
+        }
+        .checkedRadioBox {
+            // padding: 0 28rpx 22rpx 28rpx;
+            margin-bottom: 36rpx;
+            border-bottom: 1px solid #dedede;
+            .radio-group {
+                height: 106rpx;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: nowrap;
+                width: 100%;
+                .radio {
+                    align-items: center;
+                    flex: 1;
+                    display: flex;
+                    justify-content: center;
+                }
+            }
+        }
+        .btn-sub {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99;
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="keyword-search" wx:if="{{showPage}}">
+            <view class="search_top">
+                <view class="search_input">
+                    <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"></icon>
+                    <input value="{{searchKeyWords}}" type="text" confirm-type="search" placeholder="案件名称、客户名称" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
+                    </input>
+                </view>
+                <view class="top_right_btn">
+                    <icon class="iconfont icon-gaojisousuo" style="color:#5d73fa;font-size:35px;" @tap="showPage"></icon>
+                </view>
+            </view>
+            <view class="search_history">
+                <view class="history_title">
+                    <text>历史搜索</text>
+                    <icon class="iconfont icon-shanchu2" style="color:#7a7a7a;font-size:35rpx;" catchtap="deletItemAll" wx:if="{{History_KeyWord.length!==0}}"></icon>
+                </view>
+                <view class="history_content">
+                    <repeat for="{{History_KeyWord}}" key="index" index="index" item="item">
+                        <view @tap="history('{{item}}')" bindlongpress="longTap('{{index}}')">
+                            <text>{{item}}</text>
+                            <icon class="iconfont icon-zirenwushanchu" style="color:#dfdfdf;font-size:30rpx;" wx:if="{{isShowArray[index]}}" catchtap="deletItem('{{index}}')"></icon>
+                        </view>
+                    </repeat>
+                </view>
+            </view>
+        </view>
+        <view class="advanced-search-input-panel" wx:else="{{showPage}}">
+            <view class="advanced-search-title">
+                <text>高级搜索</text>
+                <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
+            </view>
+            <view class="advanced-search-content">
+                <Id :input.sync="Id" :inputValue.sync='IdValue' :twoWayTitle="IdValue" />
+                <Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
+                <ClientId :input.sync="ClientId" :inputValue.sync='ClientIdValue' :twoWayTitle="ClientIdValue" />
+                <ClientName :input.sync="ClientName" :inputValue.sync='ClientNameValue' :twoWayTitle="ClientNameValue" />
+                <AcceptDate :pickerData="AcceptDate" :twoWayTitle="AcceptDate" />
+                <OrganizationUnitId :options.sync="OrganizationUnitId" :index.sync='OrganizationUnitIdIndex' :twoWayTitle="OrganizationUnitIdIndex" />
+                <SecretLevel :options.sync="SecretLevel" :index.sync='SecretLevelIndex' :twoWayTitle="SecretLevelIndex" />
+                <Language :options.sync="Language" :index.sync='LanguageIndex' :twoWayTitle="LanguageIndex" />
+                <ImportLevel :options.sync="ImportLevel" :index.sync='ImportLevelIndex' :twoWayTitle="ImportLevelIndex" />
+                <IsForeign :options.sync="IsForeign" :index.sync='IsForeignIndex' :twoWayTitle="IsForeignIndex" />
+                <IsLegal :options.sync="IsLegal" :index.sync='IsLegalIndex' :twoWayTitle="IsLegalIndex" />
+            </view>
+            <view class="checkedBox">
+                <view class="title">
+                    案件类型
+                </view>
+                <checkbox-group @change="checkboxChange" class="checkbox-group">
+                    <label wx:for="{{Category}}" wx:key="index" index="index" item="item " class="label">
+                                        <checkbox value="{{item.value}}" checked="{{item.isSelected}}" name="id"  color="#5d73fa"/> {{item.displayText}}
+                                </label>
+                </checkbox-group>
+            </view>
+            <view class="checkedRadioBox">
+                <view class="title">
+                    状态
+                </view>
+                <radio-group class="radio-group" @change="radioChange">
+                    <label class="radio" wx:for="{{Status}}" wx:key="index" index="index" item="item ">
+                            <radio value="{{item.value}}" checked="{{item.isSelected}}" color="#5d73fa" /> {{item.displayText}}
+                          </label>
+                </radio-group>
+            </view>
+            <view class="checkedBox" wx:if="{{isProcessStatus}}">
+                <view class="title">
+                    立案流程状态
+                </view>
+                <checkbox-group @change="checkboxChangeProcessStatus" class="checkbox-group">
+                    <label wx:for="{{ProcessStatus}}" wx:key="index" index="index" item="item " class="label">
+                            <checkbox value="{{item.value}}" checked="{{item.isSelected}}" name="id"  color="#5d73fa"/> {{item.displayText}}
+                    </label>
+                </checkbox-group>
+            </view>
+        </view>
+        <image wx:if="{{!showPage}}" class="btn-sub" src="../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearchSubmit" />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import {
+        myDistinct
+    } from '../../../../utils/cofig/api.js';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import {
+        formatDate
+    } from '../../../../utils/cofig/api.js';
+    import Id from '../../../../components/picker/input';
+    import Name from '../../../../components/picker/input';
+    import ClientId from '../../../../components/picker/input';
+    import ClientName from '../../../../components/picker/input';
+    import OrganizationUnitId from '../../../../components/picker/pickerOption';
+    import AcceptDate from '../../../../components/picker/pickerDate';
+    import SecretLevel from '../../../../components/picker/pickerOption';
+    import Language from '../../../../components/picker/pickerOption';
+    import ImportLevel from '../../../../components/picker/pickerOption';
+    import IsLegal from '../../../../components/picker/pickerOption';
+    import IsForeign from '../../../../components/picker/pickerOption';
+    export default class searchRegister extends wepy.page {
+        components = {
+            Id,
+            Name,
+            ClientId,
+            ClientName,
+            AcceptDate,
+            OrganizationUnitId,
+            SecretLevel,
+            Language,
+            ImportLevel,
+            IsLegal,
+            IsForeign
+        }
+        data = {
+            AcceptDate: {
+                title: '收案时间',
+                startDateData: '',
+                endDateData: ''
+            },
+            searchData: {},
+            History_KeyWord: [],
+            searchKeyWords: '',
+            showPage: true,
+            isShowArray: [],
+            Id: {
+                title: '案件编号',
+                name: 'Id',
+                warning: false,
+            },
+            IdValue: '',
+            Name: {
+                title: '案件名称',
+                name: 'Name',
+                warning: false,
+            },
+            NameValue: '',
+            ClientName: {
+                title: '客户名称',
+                name: 'ClientName',
+                warning: false,
+            },
+            ClientNameValue: '',
+            ClientId: {
+                title: '客户编号',
+                name: 'ClientId',
+                warning: false,
+            },
+            ClientIdValue: '',
+            OrganizationUnitId: {
+                title: '组织结构',
+                key: 'displayName',
+                name: 'OrganizationUnitId',
+                data: [],
+                warning: false
+            },
+            OrganizationUnitIdIndex: -1,
+            // 保密级别
+            SecretLevel: {
+                title: '保密级别',
+                key: 'displayText',
+                name: 'SecretLevel',
+                data: [],
+                warning: false
+            },
+            SecretLevelIndex: -1,
+            // 语言
+            Language: {
+                title: '书写语言',
+                key: 'displayText',
+                name: 'Language',
+                data: [],
+                warning: false
+            },
+            LanguageIndex: -1,
+            // 重要级别
+            ImportLevel: {
+                title: '重要级别',
+                key: 'displayText',
+                name: 'ImportLevel',
+                data: [],
+                warning: false
+            },
+            ImportLevelIndex: -1,
+            // 是否涉外
+            IsForeign: {
+                title: '是否涉外',
+                key: 'displayText',
+                name: 'IsForeign',
+                data: [],
+                warning: false
+            },
+            IsForeignIndex: -1,
+            // 是否援助
+            IsLegal: {
+                title: '是否援助',
+                key: 'displayText',
+                name: 'IsLegal',
+                data: [],
+                warning: false
+            },
+            IsLegalIndex: -1,
+            //案件类别
+            Category: [],
+            //状态
+            Status: [],
+            isProcessStatus: false,
+            //立案流程状态
+            ProcessStatusData: [],
+            ProcessStatus: [],
+        };
+        methods = {
+            checkboxChangeProcessStatus(e) {
+                if (e.detail.value.length !== 0) {
+                    this.searchData.ProcessStatus = e.detail.value.join(',')
+                } else {
+                    this.searchData.ProcessStatus = ''
+                }
+                this.$apply();
+            },
+            radioChange(e) {
+                this.isProcessStatus = true;
+                this.searchData.Status = e.detail.value;
+                this.statusFilter(e.detail.value);
+                this.$apply();
+            },
+            checkboxChange(e) {
+                if (e.detail.value.length !== 0) {
+                    this.searchData.Category = e.detail.value.join(',')
+                } else {
+                    this.searchData.Category = ''
+                }
+                this.$apply();
+            },
+            advancedSearchSubmit() {
+                if (Object.keys(this.searchData).length !== 0) {
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2]; //上一个页面
+                    if (prevPage) {
+                        if (Object.keys(this.searchData).length > 0) {
+                            prevPage.isRefresh(this.searchData);
+                            wx.navigateBack({
+                                delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                            });
+                        } else {
+                            wx.showToast({
+                                title: '搜索为空,请重试！', //提示的内容,
+                                icon: 'none', //图标,
+                                duration: 2000, //延迟时间,
+                                mask: true, //显示透明蒙层，防止触摸穿透,
+                                success: res => {}
+                            });
+                        }
+                    }
+                } else {
+                    wx.showToast({
+                        title: '没有搜索内容！', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: false, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                }
+            },
+            showPage() {
+                this.showPage = !this.showPage;
+                this.$apply();
+            },
+            deletItemAll() {
+                wx.showModal({
+                    title: '确认是否删除！', //提示的标题,
+                    content: '全部历史记录', //提示的内容,
+                    showCancel: true, //是否显示取消按钮,
+                    cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
+                    cancelColor: '#7a7a7a', //取消按钮的文字颜色,
+                    confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
+                    confirmColor: '#5d73fa', //确定按钮的文字颜色,
+                    success: res => {
+                        if (res.confirm) {
+                            this.History_KeyWord = [];
+                            var history = wx.getStorageSync('HISTORY_KEYWORD_CASEMANAGEMENT');
+                            history = [];
+                            wx.setStorageSync('HISTORY_KEYWORD_CASEMANAGEMENT', history);
+                            this.$apply();
+                        }
+                    }
+                });
+            },
+            deletItem(index) {
+                this.History_KeyWord.splice(index, 1);
+                var history = wx.getStorageSync('HISTORY_KEYWORD_CASEMANAGEMENT');
+                history.splice(index, 1);
+                wx.setStorageSync('HISTORY_KEYWORD_CASEMANAGEMENT', history);
+            },
+            longTap(index) {
+                this.isShowArray = this.isShowArray.map(item => {
+                    item = false;
+                    return item
+                })
+                this.isShowArray[index] = true;
+                this.$apply();
+            },
+            history(item) {
+                this.searchKeyWords = item;
+                this.$apply();
+            },
+            submitSearch(e) {
+                var value = e.detail.value.replace(/(^\s*)|(\s*$)/g, "");
+                if (value) {
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2]; //上一个页面
+                    this.searchData.keyWord = value;
+                    if (prevPage) {
+                        prevPage.isRefresh(this.searchData);
+                        wx.navigateBack({
+                            delta: 1, //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                            success: () => {
+                                var History_KeyWord = wx.getStorageSync('HISTORY_KEYWORD_CASEMANAGEMENT');
+                                if (History_KeyWord.length >= 20) {
+                                    History_KeyWord.splice(History_KeyWord.length - 1, 1);
+                                }
+                                History_KeyWord.unshift(value);
+                                History_KeyWord = myDistinct(History_KeyWord);
+                                wx.setStorageSync('HISTORY_KEYWORD_CASEMANAGEMENT', History_KeyWord)
+                            }
+                        });
+                    }
+                    this.$apply();
+                } else {
+                    wx.showToast({
+                        title: '搜索为空,请重试！', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                }
+            }
+        };
+        watch = {
+            AcceptDate(data) {
+                if (!this.searchData.AcceptDate) {
+                    this.searchData.AcceptDate = {};
+                }
+                this.searchData.AcceptDate.StartDate = data.startDateData;
+                this.searchData.AcceptDate.EndDate = data.endDateData;
+                this.$apply();
+            },
+            IdValue(value) {
+                this.searchData.Id = value;
+                this.$apply();
+            },
+            NameValue(value) {
+                this.searchData.Name = value;
+                this.$apply();
+            },
+            ClientNameValue(value) {
+                this.searchData.ClientName = value;
+                this.$apply();
+            },
+            ClientIdValue(value) {
+                this.searchData.ClientId = value;
+                this.$apply();
+            },
+            OrganizationUnitIdIndex(index) {
+                this.searchData.OrganizationUnitId = this.OrganizationUnitId.data[index].id;
+                this.$apply();
+            },
+            SecretLevelIndex(index) {
+                this.searchData.SecretLevel = this.SecretLevel.data[index].value;
+                this.$apply();
+            },
+            LanguageIndex(index) {
+                this.searchData.Language = this.Language.data[index].value;
+                this.$apply();
+            },
+            IsForeignIndex(index) {
+                this.searchData.IsForeign = this.IsForeign.data[index].value;
+                this.$apply();
+            },
+            ImportLevelIndex(index) {
+                this.searchData.ImportLevel = this.ImportLevel.data[index].value;
+                this.$apply();
+            },
+            IsLegalIndex(index) {
+                this.searchData.IsLegal = this.IsLegal.data[index].value;
+                this.$apply();
+            },
+        };
+        // 判断初始化历史数据
+        isHistory() {
+            var History_KeyWord = wx.getStorageSync('HISTORY_KEYWORD_CASEMANAGEMENT');
+            if (!History_KeyWord) {
+                History_KeyWord = [];
+                wx.setStorageSync('HISTORY_KEYWORD_CASEMANAGEMENT', History_KeyWord)
+            } else {
+                this.History_KeyWord = History_KeyWord;
+                for (var index in this.History_KeyWord) {
+                    this.isShowArray[index] = false;
+                }
+            }
+            this.$apply();
+        }
+        //获取代编辑数据
+        async GetCaseApplyListSearchInput() {
+            var resData = await ajax.getData(
+                '/api/services/web/caseApplication/GetCaseApplyListSearchInput',
+                'post'
+            )
+            if (resData.statusCode == 200) {
+                var CaseApplyListSearchInputDatas = resData.data.result;
+                this.Category = CaseApplyListSearchInputDatas.categoryList;
+                this.Status = CaseApplyListSearchInputDatas.statusList;
+                this.ProcessStatusData = CaseApplyListSearchInputDatas.processStatusList;
+            }
+            this.$apply();
+        }
+        //案件待编辑基础数据
+        async GetCaseGeneralInfo() {
+            var resData = await ajax.getData(
+                '/api/services/web/case/GetCaseGeneralInfo',
+                'post', {
+                    Id: ''
+                }
+            )
+            if (resData.statusCode == 200) {
+                var caseGeneralInfoData = resData.data.result;
+                //书面语言
+                this.Language.data = caseGeneralInfoData.caseWrittenLanguageCombobox;
+                //保密级别
+                this.SecretLevel.data = caseGeneralInfoData.secretLevelCombobox;
+                // //是否涉外
+                this.IsForeign.data = caseGeneralInfoData.whetherCombobox;
+                // //是否法律援助
+                this.IsLegal.data = caseGeneralInfoData.whetherCombobox;
+                // //是否重要
+                this.ImportLevel.data = caseGeneralInfoData.importLevelCombobox;
+            }
+            this.$apply();
+        }
+        //获取隶属组织架构
+        async GetOrganizations() {
+            var resData = await ajax.getData(
+                '/api/services/web/common/GetOrganizations',
+                'post'
+            )
+            if (resData.statusCode == 200) {
+                var GetOrganizationsData = resData.data.result;
+                this.OrganizationUnitId.data = GetOrganizationsData;
+            }
+            this.$apply();
+        }
+        //状态数据过滤
+        statusFilter(status) {
+            var ProcessStatusData = this.ProcessStatusData;
+            this.ProcessStatus = ProcessStatusData.filter((item) => {
+                return item.value.substr(0, 1) == status
+            })
+        }
+        onLoad() {
+            this.isHistory();
+            this.GetCaseApplyListSearchInput();
+            this.GetCaseGeneralInfo();
+            this.GetOrganizations();
+        };
+        onShow() {};
+    }
+</script>
+

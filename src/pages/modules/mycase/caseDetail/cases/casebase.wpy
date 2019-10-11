@@ -1,0 +1,252 @@
+<!--  -->
+<style lang="less">
+.body {
+  height: 100%;
+  .container-title {
+    height: 104rpx;
+    font-size: 48rpx;
+    padding: 0 28rpx;
+    color: #2a2a2a;
+    line-height: 104rpx;
+    border-bottom: 1px solid #dedede;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .casebase-container-title {
+    padding: 44rpx 28rpx;
+    .casebase-title-content {
+      display: flex;
+      flex-direction: column;
+      font-size: 28rpx;
+      color: #2a2a2a;
+      > view:not(:last-child) {
+        margin-bottom: 26rpx;
+      }
+    }
+  }
+  .border-line {
+    width: 100%;
+    height: 14rpx;
+    background: #f4f4f4;
+  }
+  .casebase-middle {
+    padding: 30rpx 28rpx;
+    font-size: 28rpx;
+    > view:not(:first-child) {
+      display: flex;
+      flex-direction: column;
+    }
+    > view:not(:last-child) {
+      margin-bottom: 36rpx;
+    }
+    > view:first-child {
+      > view {
+        display: flex;
+        flex-direction: column;
+        > text:first-child {
+          color: #7a7a7a;
+          margin-bottom: 20rpx;
+        }
+      }
+    }
+    > view {
+      > text:first-child {
+        color: #7a7a7a;
+        margin-bottom: 20rpx;
+      }
+    }
+  }
+  .casebase-bottom {
+    padding: 30rpx 28rpx;
+    font-size: 28rpx;
+
+    > view:nth-child(2n + 1) {
+      color: #7a7a7a;
+      margin-bottom: 20rpx;
+    }
+    > view:not(:last-child):nth-child(2n) {
+      // color: #7a7a7a;
+      margin-bottom: 36rpx;
+    }
+    .agency-authority {
+      // display: flex;
+      color: #5d73fa;
+      margin-top: 36rpx;
+      // width: 80%;
+      > view {
+        margin-bottom: 46rpx;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        > text {
+          border: 1px solid #5d73fa;
+          border-radius: 30rpx;
+          margin-right: 30rpx;
+          padding: 10rpx 20rpx;
+          margin-bottom: 20rpx;
+          // display: flex;
+          // flex-direction: row;
+          // flex-wrap: nowrap;
+        }
+      }
+      // > view{
+      //   margin-bottom: 46rpx;
+      // }
+    }
+  }
+}
+</style>
+
+<template>
+    <!-- <view></view> -->
+    <!-- <text></text> -->
+    <view class="body">
+        <view class="container-title">
+            <text class="title-text">案件基本信息</text>
+            <!-- <icon class="iconfont icon-bianji" style="font-size:60rpx;color:#5d73fa"></icon> -->
+        </view>
+        <view wx:if="{{caseData!==null}}">
+           <view class="casebase-container-title">
+                <view class="casebase-title-content">
+                  <view>
+                    <text style="font-size:32rpx;font-weight: bold">{{caseData.name}}</text>
+                  </view>
+                  <view>
+                    <text class="color">{{caseData.clientId}}</text>
+                  </view>
+                  <view>
+                     <text>{{caseData.categoryText||'未填写'}}</text>
+                  </view>
+                  <view style="display:flex;justify-content:space-between;">
+                    <text class="color">{{caseData.importLevelText||'未填写'}}</text>
+                    <text>{{caseData.secretLevelText||'未填写'}}</text>
+                  </view>
+                  <view style="display:flex;justify-content:space-between;color:#7a7a7a">
+                    <text>{{caseData.isForeign=="Y"?"涉外":"不涉外"}}</text>
+                    <text>{{caseData.isLegal=='Y'?"需要法律援助":"不需要法律援助"}}</text>
+                  </view>
+                  <view>
+                  <text style="color:#ff9900">{{caseData.processStatusText}}</text>
+                  </view>
+                </view>
+              </view>
+              <view class="border-line">
+              </view>
+              <view class="casebase-middle">
+                <view style="display:flex;">
+                    <view style="width:50%">
+                      <text>案件业务划分</text>
+                      <text>{{caseData.partitionText||'未填写'}}</text>
+                    </view>
+                    <view style="width:50%">
+                      <text>案件阶段</text>
+                      <text>{{caseData.stageText||'未填写'}}</text>
+                    </view>
+                </view>
+                <view>
+                  <text>组织机构</text>
+                  <text>{{caseData.organizationUnitText||"未填写"}}</text>
+                </view>
+                <view>
+                  <text>收案日期</text>
+                  <text>{{caseData.acceptDateText||'未填写'}}</text>
+                </view>
+                <view wx:if="{{categoryText1}}">
+                  <text>合同日期</text>
+                  <text wx:if="{{caseData.startDateText!==null}}">{{caseData.startDateText}}至{{caseData.endDateText}}</text>
+                  <text wx:else="{{caseData.startDateText==null}}">未填写</text>
+                </view>
+                <view>
+                  <text>书写语言</text>
+                  <text>{{caseData.languageText||'未填写'}}</text>
+                </view>
+              </view>
+              <view class="border-line" wx:if='{{categoryText2}}'>
+              </view>
+              <view class="casebase-bottom" wx:if='{{categoryText2}}'>
+                <view>
+                  <text>案由分类</text>
+                </view>
+                <view>
+                  <text>{{caseData.reasonText||'未填写'}}</text>
+                </view>
+                <view>
+                  <text>补充案由</text>
+                </view>
+                <view>
+                  <text>{{caseData.reasonSupplement||'未填写'}}</text>
+                </view>
+                <view>
+                  <text>代理权限</text>
+                </view>
+                <view class="agency-authority">
+                  <view >
+                  <repeat for="{{agencyAuthorityData}}" key="index" index="index" item="item">
+                      <text>{{item}}</text>
+                  </repeat>
+                  </view>
+                </view>
+              </view>
+        </view>
+
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import ajax from '../../../../../utils/cofig/ajax.js';
+// import navbar from '../../../components/navbar';
+export default class casebase extends wepy.page {
+  components = {
+    // navbar
+  };
+  data = {
+    id: 0,
+    caseData: {},
+    categoryText1: false,
+    categoryText2: false,
+    agencyAuthorityData: ['未填写']
+  };
+  methods = {};
+  async getCaseData() {
+    var id = { id: this.id };
+    // console.log(id);
+    var caseData = await ajax.getData(
+      '/api/services/web/case/GetCaseInfo',
+      'POST',
+      id
+    );
+    // console.log(caseData);
+    if(caseData.statusCode==200){
+        this.caseData = caseData.data.result;
+      if (this.caseData.categoryText.indexOf('常年') !== -1) {
+        this.categoryText1 = true;
+      }
+      if (this.caseData.categoryText.indexOf('诉讼') !== -1) {
+        this.categoryText2 = true;
+      }
+      // console.log(caseData.result.agencyAuthority )
+      if (this.caseData.agencyAuthority&&this.caseData.agencyAuthority.length>0) {
+        this.agencyAuthorityData  = caseData.data.result.agencyAuthority.split(',');
+      }
+      this.$apply();
+    }else{
+      wx.showToast({
+        title: '网络故障！',
+        icon: 'none',
+        duration: 1500,
+        mask: false,
+      });
+      this.caseData=null
+    }
+  }
+  onLoad(options) {
+    // console.log(options.id);
+    this.id = options.id;
+  }
+  onShow() {
+    this.getCaseData();
+  }
+}
+</script>

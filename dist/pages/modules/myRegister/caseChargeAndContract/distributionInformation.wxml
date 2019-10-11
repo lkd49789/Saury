@@ -1,0 +1,34 @@
+
+  <view class="container">
+    <view class="page-title">费用分配信息</view>
+    <view class="main">
+      <view class="checkbooxs">
+        <view>分配模式</view>
+        <radio-group class="radio-group" bindchange="radioChange">
+          <label class="radio"  wx:for="{{allocStyleListData}}" wx:key="index" wx:index="index" wx:item="item">
+                      <radio color="#5d73fa" value="{{item.value}}" checked="{{item.isSelected}}"/>{{item.displayText}}
+                  </label>
+        </radio-group>
+        <view class="limitStatus"  wx:if="{{AllocStyle=='4'}}">
+          <view>限额按比例分配 分配额度标准</view><input type="number" value="{{AllocBaseAmount}}" bindblur="AllocBaseAmount"/>元以内
+          <view>按比例分账，超出部分不再分账.</view>
+        </view>
+      </view>
+      <view class="lawyerChargeList">
+        <block wx:for="{{lawyerChargeList}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+          <view class="rateItems">
+            <view class="lawyerInfo">
+              <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false"/>
+              <text>{{item.employeeName}}</text>
+              <text style="color:#7a7a7a">{{item.lawyerRoleText}}</text>
+            </view>
+            <view class="rightInput">
+              <view style="color:#7a7a7a">{{AllocStyle=='2'?'CNY':''}}</view>
+              <input value="{{item.allocRatio}}" type="number" placeholder-class="placeholder" maxlength="12" bindblur="UpdateLawyerCharge" data-wpyupdatelawyercharge-a="{{item}}" data-wpyupdatelawyercharge-b="{{index}}"/><view style="color:#7a7a7a">{{AllocStyle==3?'CNY/H':AllocStyle==2?'':'%'}}</view>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+    <image src="{{'../../../../images/test.png'}}" mode="scaleToFill" lazy-load="true" class="subBtn" bindtouchend="submitData"/>
+  </view>

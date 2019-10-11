@@ -1,0 +1,393 @@
+<!--  -->
+<style lang="less">
+.body {
+  .placeHolderImage {
+            height: 85%;
+            top: 187rpx;
+        }
+  .self-title {
+    height: 104rpx;
+    line-height: 104rpx;
+    font-size: 48rpx;
+    margin-left: 28rpx;
+  }
+  .mod-icon {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 160rpx;
+    height: 160rpx;
+  }
+  .container {
+    padding: 40rpx 28rpx;
+    .bg-container {
+      font-size: 26rpx;
+      color: #7a7a7a;
+      .container-top {
+        display: flex;
+        align-items: baseline;
+        .content {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+      .container-main {
+        margin: 32rpx 0rpx 40rpx 70rpx;
+        border-bottom: 1px solid #bfbfbf;
+        .one-line {
+          // display: flex;
+          // justify-content: space-between;
+          // flex-wrap: wrap;
+          .education-degree{
+            >text:first-child{
+              padding-right:20rpx;
+              border-right:1px solid #bfbfbf;
+            }
+            >text:last-child{
+              padding-left:20rpx;
+              color:#5d73fa;
+            }
+          }
+        }
+        .two-line {
+          width: 100%;
+        }
+        .three-line {
+          margin: 20rpx 0 40rpx 0;
+          white-space: normal;
+          width: 100%;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+  } //底部模态框
+  .commodity_attr_box {
+    height: 196rpx;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 2000;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    .box {
+      margin: 0 28rpx;
+      width: 694rpx;
+      color: #7a7a7a;
+      font-size: 34rpx;
+      .box1 {
+        height: 98rpx;
+        width: 100%;
+        border-bottom: 1px solid #bfbfbf;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .box2 {
+        height: 98rpx;
+        width: 100%; // border-bottom: 1px solid #bfbfbf;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    } // padding: 10rpx;
+  } //背景模糊
+
+}
+</style>
+
+<template>
+    <view class="body">
+      <view class="self-title">
+        <text class="self-text">个人简历</text>
+      </view>
+      <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" />
+          <view class="container " wx:if="{{currentTab==0}}">
+            <repeat for="{{educationsData}}" key="index" index="index" item="item">
+                <view class="bg-container">
+                  <view class="container-top">
+                    <view class="icon">
+                      <text class="iconfont icon-shijian" style="color:#ffcb46;font-size:40rpx ;margin-right:30rpx"></text>
+                    </view>
+                    <view class="content">
+                      <text>{{item.startDate||'未填写'}} 至 {{item.endDate||'未填写'}}</text>
+                      <!-- <text class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="color:#7a7a7a;font-size:30rpx;" @tap="chooseSezi"></text> -->
+                    </view>
+                  </view>
+                  <view class="container-main">
+                    <view class="one-line">
+                      <text style="color:#2a2a2a;font-size:28rpx">{{item.school||'未填写'}}</text>
+                      <view class="education-degree">
+                        <text>{{item.education||'未填写'}}</text>
+                        <text>{{item.degree||'未填写'}}</text>
+                      </view>
+                    </view>
+                    <view class="two-line">
+                      <text>{{item.speciality||'未填写'}}</text>
+                    </view>
+                    <view class="three-line">
+                      <text>{{item.memo||'未填写'}}</text>
+                    </view>
+                  </view>
+                  <!-- 固定定位修改图标 -->
+                  <!-- 向上弹出框 -->
+                </view>
+            </repeat>
+           
+          </view>
+          <view class="container " wx:if="{{currentTab == 1}}">
+            <repeat for="{{workExperiencesData}}" key="index" index="index" item="item">
+              <view class="bg-container">
+                <view class="container-top">
+                  <view class="icon">
+                    <text class="iconfont icon-shijian" style="color:#ffcb46;font-size:40rpx ;margin-right:30rpx"></text>
+                  </view>
+                  <view class="content">
+                    <text>{{item.startDate||'未填写'}} 至 {{item.endDate||'未填写'}}</text>
+                    <!-- <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="color:#7a7a7a;font-size:30rpx;" @tap="chooseSezi"></icon> -->
+                  </view>
+                </view>
+                <view class="container-main">
+                  <view class="one-line">
+                    <view><text style="color:#2a2a2a;font-size:28rpx">{{item.workUnits||'未填写'}}</text></view>
+                    <view style="margin-top:20rpx;"><text style="color:#5d74fa;">{{item.jobContent||'未填写'}}</text></view>
+                  </view>
+                  <view class="two-line">
+                    <text>{{item.duty||'未填写'}}</text>
+                  </view>
+                  <view class="three-line">
+                    <text class="iconfont icon-beizhu" style="color:#5d73fa;font-size:40rpx ;margin-right:30rpx"></text>
+                    <text>{{item.memo||'未填写'}}</text>
+                  </view>
+                </view>
+              </view>
+            </repeat>
+            
+          </view>
+          <view class="container " wx:if="{{currentTab==2}}">
+            <repeat for="{{projectExperiences}}" key="index" index="index" item="item">
+              <view class="bg-container">
+                <view class="container-top">
+                  <view class="icon">
+                    <text class="iconfont icon-shijian" style="color:#ffcb46;font-size:40rpx ;margin-right:30rpx"></text>
+                  </view>
+                  <view class="content">
+                    <text>{{item.startDate||'未填写'}} 至 {{item.endDate||'未填写'}}</text>
+                    <!-- <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="color:#7a7a7a;font-size:30rpx;" @tap="chooseSezi"></icon> -->
+                  </view>
+                </view>
+                <view class="container-main">
+                  <view class="one-line">
+                    <view><text style="color:#2a2a2a;font-size:28rpx">{{item.projectName||'未填写'}}</text></view>
+                    <!-- <view><text style="color:#7a7a7a;">{{item.statusText||'未填写'}}</text></view> -->
+                  </view>
+                  <view class="two-line" style="margin-top:20rpx;">
+                    <text>{{item.projectSource||'未填写'}}</text>
+                  </view>
+                  <view class="three-line">
+                    <icon class="iconfont icon-beizhu" style="color:#5d73fa;font-size:40rpx ;margin-right:30rpx"></icon>
+                    <text>{{item.memo||'未填写'}}</text>
+                  </view>
+                </view>
+                <!-- 固定定位修改图标 -->
+                <!-- 向上弹出框 -->
+              </view>
+            </repeat>
+          
+          </view>
+          <view class="container " wx:if="{{currentTab==3}}">
+            <repeat for="{{socialDuites}}" key="index" index="index" item="item">
+              <view class="bg-container">
+                <view class="container-top">
+                  <view class="icon">
+                    <text class="iconfont icon-shijian" style="color:#ffcb46;font-size:40rpx ;margin-right:30rpx"></text>
+                  </view>
+                  <view class="content">
+                    <text>{{item.startDate||'未填写'}} 至 {{item.endDate||'未填写'}}</text>
+                    <!-- <text class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="color:#7a7a7a;font-size:30rpx;" @tap="chooseSezi"></text> -->
+                  </view>
+                </view>
+                <view class="container-main">
+                  <view class="one-line">
+                    <text style="color:#ff9900;font-size:28rpx">{{item.category||'未填写'}}</text>
+                    <text style="color:#7a7a7a;padding-left:40rpx;margin-left:10rpx;color:#5d73fa">{{item.societyName||'未填写'}}</text>
+                  </view>
+                  <view class="two-line">
+                    <text>{{item.content||'未填写'}}</text>
+                  </view>
+                  <view class="three-line">
+                    <icon class="iconfont icon-beizhu" style="color:#5d73fa;font-size:40rpx ;margin-right:30rpx"></icon>
+                    <text >{{item.memo||'未填写'}}</text>
+                  </view>
+                </view>
+                <!-- 固定定位修改图标 -->
+                <!-- 向上弹出框 -->
+              </view>
+            </repeat>
+            
+          </view>
+      <placeHolderImage :placeHolder.sync="placeHolder" :twoWayTitle="placeHolder" />
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import navbar from '../../../components/navbar';
+import ajax from '../../../utils/cofig/ajax.js';
+import placeHolderImage from '../../../components/placeHolderImage';
+ import mixins from '../../../utils/cofig/mixin.js';
+export default class extends wepy.page {
+  components = {
+    navbar,
+    placeHolderImage
+  };
+  data = {
+    //滑动
+    currentTab: 0,
+    navbars: ['教育背景', '工作经历', '项目经验','社团兼职'],
+    educationsData:[],//教育背景
+    workExperiencesData:[],//工作经历
+    projectExperiences:[],//项目经验
+    socialDuites:[]//社团兼职
+  };
+  mixins = [mixins];
+  methods = {
+    // 跳转至编辑页面
+    tocurrent() {
+      if (this.currentTab == 0) {
+        wepy.navigateTo({
+          url: '../myrecord/add-record/bg'
+        });
+      }
+      if (this.currentTab == 1) {
+        wepy.navigateTo({
+          url: '../myrecord/add-record/work-experience'
+        });
+      }
+      if (this.currentTab == 2) {
+        wepy.navigateTo({
+          url: '../myrecord/add-record/project-experience'
+        });
+      }
+    },
+  };
+  watch={
+    currentTab(cur){
+      switch (cur) {
+        case 0:
+          if(this.educationsData.length==0){
+             this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
+            this.placeHolder.placeHolderShow = true;
+          }else{
+            this.placeHolder.placeHolderShow = false;
+          }
+          break;
+        case 1:
+          if(this.workExperiencesData.length==0){
+             this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_1;
+            this.placeHolder.placeHolderShow = true;
+          }else{
+            this.placeHolder.placeHolderShow = false;
+          }
+          break;
+        case 2:
+          if(this.projectExperiences.length==0){
+             this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_2;
+            this.placeHolder.placeHolderShow = true;
+          }else{
+            this.placeHolder.placeHolderShow = false;
+          }
+          break;
+        case 3:
+          if(this.socialDuites.length==0){
+             this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_3;
+            this.placeHolder.placeHolderShow = true;
+          }else{
+            this.placeHolder.placeHolderShow = false;
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  async GetResume(){
+    var userId={
+      id:this.userId
+    }
+    var resumeData=await ajax.getData(
+      '/api/services/web/employeeResume/GetResume',
+      'post',
+      userId
+    )
+    var resumeData=resumeData.data.result;
+    //教育背景
+    var educations =resumeData.educations
+     for(var index in educations){
+      educations[index].startDate=educations[index].startDate.split('T')[0];
+      educations[index].endDate=educations[index].endDate.split('T')[0];
+    }
+    if(educations.length!==0){
+      this.educationsData=educations;
+    }else{
+       this.placeHolderImageIndex_0 = 0;
+       this.placeHolder.placeHolderImageIndex=0;
+       this.placeHolder.placeHolderShow = true;
+    }
+    //工作经历
+   var workExperiences= resumeData.workExperiences;
+    for(var index in workExperiences){
+      workExperiences[index].startDate=workExperiences[index].startDate.split('T')[0];
+      workExperiences[index].endDate=workExperiences[index].endDate.split('T')[0];
+    }
+    if(workExperiences.length!==0){
+      this.workExperiencesData=workExperiences;
+    }else{
+       this.placeHolderImageIndex_1 = 0;
+    }
+    //项目经历
+    var firmProjectExperiences=resumeData.firmProjectExperiences;
+    var projectExperiences=resumeData.projectExperiences;
+    for(let index in firmProjectExperiences){
+      firmProjectExperiences[index]['statusText']='本所';
+      firmProjectExperiences[index].startDate=firmProjectExperiences[index].startDate.split('T')[0];
+      firmProjectExperiences[index].endDate=firmProjectExperiences[index].endDate.split('T')[0];
+    }
+    for(let index in projectExperiences){
+      projectExperiences[index]['statusText']='非本所';
+      projectExperiences[index].startDate=projectExperiences[index].startDate.split('T')[0];
+      projectExperiences[index].endDate=projectExperiences[index].endDate.split('T')[0];
+    }
+    if(firmProjectExperiences.length!==0&&projectExperiences.length!==0){
+       this.projectExperiences=firmProjectExperiences.concat(projectExperiences);
+    }else{
+       this.placeHolderImageIndex_2 = 0;
+    }
+    //社团兼职
+    var socialDuites=resumeData.socialDuites;
+    for(var index in socialDuites){
+      socialDuites[index].startDate=socialDuites[index].startDate.split('T')[0];
+      socialDuites[index].endDate=socialDuites[index].endDate.split('T')[0];
+    }
+    this.socialDuites=socialDuites;
+    if(socialDuites.length!==0){
+       this.socialDuites=socialDuites;
+    }else{
+       this.placeHolderImageIndex_3 =0;
+    }
+    this.$apply();
+  }
+  onLoad(options) {
+    this.userId =options.id;
+    this.GetResume()
+    this.$apply()
+  }
+}
+</script>

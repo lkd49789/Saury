@@ -1,0 +1,311 @@
+<!--  -->
+<style lang='scss'>
+    .container {
+        .shadowBox {
+            box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+            border-radius: 20rpx;
+            padding: 30rpx 24rpx;
+            margin-bottom: 44rpx;
+        }
+        .main {
+            margin: 149rpx 28rpx 44rpx 28rpx;
+            .searchBox {
+                >view:nth-child(2) {
+                    margin-bottom: 14rpx;
+                    border-bottom: 1px solid #dedede;
+                    color: #7a7a7a;
+                    padding: 28rpx 0;
+                }
+                >view:nth-child(3) {
+                    display: flex;
+                    align-items: center;
+                    flex-direction: row-reverse;
+                    color: #5d73fa;
+                    >view {
+                        width: 10%;
+                        padding: 10rpx 30rpx;
+                        border: 1px solid #5d73fa;
+                        border-radius: 100rpx;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                }
+            }
+            .keywordBox {
+                display: flex;
+                .keywordItems {
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    flex: 1;
+                    >view {
+                        background: #dedede;
+                        padding: 10rpx 50rpx 10rpx 20rpx;
+                        border-radius: 100rpx;
+                        position: relative;
+                        margin: 10rpx;
+                        >icon {
+                            position: absolute;
+                            top: -4rpx;
+                            bottom: 0;
+                            right: 10rpx;
+                        }
+                    }
+                }
+            }
+            .searchResultBox {
+                >view:not(:first-child) {
+                    color: #7a7a7a;
+                }
+                >view:first-child {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 20rpx;
+                    justify-content: space-between; 
+                    position: relative;
+                    >view:last-child {
+                        // font-size: 23rpx;
+                        // background: #e20000;
+                        // border-radius: 100rpx;
+                        // padding: 5rpx 10rpx;
+                        // color: #ffff;
+                        // position: absolute;
+                        // top:-25rpx;
+                        // right:0;
+                    }
+                }
+                >view:nth-child(2) {
+                    margin-bottom: 14rpx;
+                }
+                >view:nth-child(3) {
+                    margin-bottom: 20rpx;
+                }
+                >view:nth-child(4) {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    >view:last-child {
+                        display: flex;
+                        align-items: center;
+                        >view:first-child {
+                            border-radius: 50%;
+                            border: 1px solid #ff9900;
+                            height: 20rpx;
+                            width: 20rpx;
+                            margin-right: 14rpx;
+                        }
+                    }
+                }
+            }
+            .lawyerList{
+                color:#7a7a7a;
+                >view{
+                    padding-bottom:20rpx;
+                    border-bottom:1px solid #dfdfdf;
+                    margin-bottom: 20rpx;
+                    >view:not(:last-child){
+                        margin-bottom: 14rpx;
+                    }
+                }
+                
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="page-title">
+            利益冲突预检
+        </view>
+        <view class="main">
+            <view class="shadowBox searchBox">
+                <view>检索关键字</view>
+                <view>
+                    <input value="{{keyWord}}" type="text" placeholder="请输入关键字" maxlength="30" bindinput="keyWordValue" />
+                </view>
+                <view>
+                    <view @tap="searchKeyWord">检索</view>
+                </view>
+            </view>
+            <view class="shadowBox keywordBox" style="padding: 20rpx 24rpx;" wx:if="{{keyWordArray.length>0}}">
+                <view>检索关键字：</view>
+                <view class="keywordItems">
+                    <repeat for="{{keyWordArray}}" key="index" index="index" item="item">
+                        <view>
+                            <view>{{item}}</view>
+                            <icon class="iconfont icon-guanbi" style="font-size:20rpx;color:#7a7a7a;" @tap="deleteItem('{{index}}')"/>
+                        </view>
+                    </repeat>
+                </view>
+            </view>
+            <view wx:if="{{ConflictCaseListData.length>0}}">
+                <view style="margin-bottom:20rpx;">检索结果</view>
+                <repeat for="{{ConflictCaseListData}}" key="inConflictCaseListData_indexdex" index="ConflictCaseListData_index" item="ConflictCaseListData_item">
+                    <view class="shadowBox searchResultBox" style="margin-bottom: {{ConflictCaseListData_item.lawyerList.length>0&&ConflictCaseListData_item.isUnfoldData?'0rpx':'44rpx'}};">
+                        <view>
+                            <view>{{ConflictCaseListData_item.clientName}}</view>
+                            <view wx:if="{{ConflictCaseListData_item.lawyerList.length>0}}" catchtap="toggleBtn('{{ConflictCaseListData_item}}','{{ConflictCaseListData_index}}')"> 
+                                <icon  wx:if="{{ConflictCaseListData_item.isUnfoldData}}"  class="iconfont icon-zhankaishi" style="color:#7a7a7a;font-size:30rpx"></icon>
+                                <icon wx:else class="iconfont icon-gengduoneirongdianjichakanxiangqing" style="color:#7a7a7a;font-size:30rpx"></icon>
+                            </view>
+                        </view>
+                        <view>{{ConflictCaseListData_item.clientEnName||'未填写'}}</view>
+                        <view>{{ConflictCaseListData_item.name}}</view>
+                        <view>
+                            <view>{{ConflictCaseListData_item.acceptDate}}</view>
+                            <view>
+                                <view></view>
+                                <view>{{ConflictCaseListData_item.statusText}}</view>
+                            </view>
+                        </view>
+                    </view>
+                    <view class="shadowBox lawyerList" style="margin:0 20rpx 44rpx 20rpx" wx:if="{{ConflictCaseListData_item.lawyerList.length>0&&ConflictCaseListData_item.isUnfoldData}}">
+                        <repeat for="{{ConflictCaseListData_item.lawyerList}}" key="lawyerList_index" index="lawyerList_index" item="lawyerList_item">
+                            <view>
+                                <view>{{lawyerList_item.lawyerRoleText||'未填写'}}</view>
+                                <view>{{lawyerList_item.employeeName||'未填写'}}</view>
+                            </view>
+                        </repeat>
+                    </view>
+                </repeat>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../utils/cofig/ajax.js';
+    import {myDistinct} from '../../../utils/cofig/api.js';
+    export default class ConflictInterestPreflight extends wepy.page {
+        config = {
+      enablePullDownRefresh: false,
+      backgroundTextStyle: 'dark',
+    //   backgroundColorTop: '#f4f4f4',
+      backgroundColorBottom: '#f4f4f4',
+    };
+        data = {
+            keyWord: '',
+            pageNumber: 1,
+            totalCount: 0,
+            keyWordArray: [],
+            ConflictCaseListData: [],
+        };
+        components = {};
+        methods = {
+            toggleBtn(item,index){
+                this.ConflictCaseListData[index].isUnfoldData=!item.isUnfoldData
+                this.$apply();
+            },
+            deleteItem(index){
+                this.keyWordArray.splice(index,1);
+                this.pageNumber=1;
+                this.ConflictCaseListData=[];
+                this.GetPreConflictCaseList();
+            },
+            keyWordValue(e) {
+                this.keyWord = e.detail.value;
+                this.$apply();
+            },
+            searchKeyWord() {
+                if(this.keyWord.length>0){
+                    this.pageNumber=1;
+                    this.keyWordArray=[];
+                    this.ConflictCaseListData=[];
+                    this.GetPreConflictCaseList();
+                    this.$apply();
+                }else{
+                    wx.showToast({
+                      title: '请输入检索关键词！', //提示的内容,
+                      icon: 'none', //图标,
+                      duration: 2000, //延迟时间,
+                      mask: false, //显示透明蒙层，防止触摸穿透,
+                      success: res => {}
+                    });
+                }
+                
+            },
+        };
+        events = {};
+        watch = {
+        };
+    // 上拉加载
+      onReachBottom() {
+          if (this.totalCount / 10 > this.pageNumber && this.$parent.global.netWorkString) {
+              this.pageNumber += 1;
+              this.GetPreConflictCaseList();
+          } else {
+              if (this.$parent.global.netWorkString) {
+                  wx.showToast({
+                      title: '我们是有底线的！',
+                      icon: 'none',
+                      duration: 1500,
+                      mask: false,
+                  });
+                   
+              } else {
+                  wx.showToast({
+                      title: '网络连接失败！',
+                      icon: 'none',
+                      duration: 1500,
+                      mask: false,
+                  });
+              }
+          }
+      }
+        async GetPreConflictCaseList() {
+            wx.showLoading({
+              title: 'Loading...', //提示的内容,
+              mask: true, //显示透明蒙层，防止触摸穿透,
+              success: res => {
+                  this.keyWord='';
+                  this.$apply();
+              }
+            });
+            var data = {
+                KeyWord:this.keyWordArray[this.keyWordArray.length-1],
+                pageNumber: this.pageNumber,
+                pageSize: 10,
+            }
+            data.KeyWord=this.keyWordArray[this.keyWordArray.length-1]||this.keyWord;
+            var resData = await ajax.getData(
+                '/api/services/web/case/GetPreConflictCaseList',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200&&resData.data.result.totalCount>0) {
+                this.totalCount = resData.data.result.totalCount;
+                var ConflictCaseListData = resData.data.result.items;
+                for (var index in ConflictCaseListData) {
+                    ConflictCaseListData[index].acceptDate = ConflictCaseListData[index].acceptDate.split('T')[0];
+                    ConflictCaseListData[index].isUnfoldData=false;
+                }
+                if(this.keyWordArray.length==0){
+                    var keyWordArray=[];
+                    for (var index in ConflictCaseListData) {
+                        var keyWord=ConflictCaseListData[index].keyWord.split(',');
+                        keyWordArray.push(...keyWord)
+                    }
+                    this.keyWordArray=myDistinct(keyWordArray);
+                }
+                this.ConflictCaseListData.push(...ConflictCaseListData);
+            }else{ 
+                if(resData.data.result.totalCount==0){
+                    wx.showToast({
+                      title: '没有找到检索相关信息！', //提示的内容,
+                      icon: 'none', //图标,
+                      duration: 2000, //延迟时间,
+                      mask: false, //显示透明蒙层，防止触摸穿透,
+                      success: res => {}
+                    });
+                }
+
+            }
+            this.$apply();
+        }
+        onLoad() {};
+        onShow() {};
+    }
+</script>

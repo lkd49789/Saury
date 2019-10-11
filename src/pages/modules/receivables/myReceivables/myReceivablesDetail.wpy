@@ -1,0 +1,312 @@
+<style lang="less">
+    .bill {
+        .bill_title {
+            height: 104rpx;
+            line-height: 104rpx;
+            padding-left: 28rpx;
+            font-size: 48rpx;
+            position: relative;
+            border-bottom: 1px solid #dedede;
+        }
+        .bill_content {
+            background: #ffffff;
+            margin: 0 auto;
+            padding: 44rpx 28rpx 34rpx 28rpx;
+            font-size: 28rpx;
+            overflow: auto;
+            border-bottom: 20rpx solid #f2f2f2;
+            &:last-child {
+                border-bottom: 0
+            }
+            .caseConflictBorder_radius {
+                border: 1px solid;
+                width: 15rpx;
+                height: 15rpx;
+                line-height: 28rpx;
+                border-radius: 15rpx;
+                margin-right: 10rpx;
+                display: inline-block;
+            }
+            .bill_box {
+                margin: 20rpx 0;
+                .bill_view {
+                    line-height: 42rpx;
+                }
+            }
+            .bill_box2 {
+                line-height: 42rpx;
+                width: 50%;
+            }
+            image {
+                width: 80rpx;
+                height: 80rpx;
+                border-radius: 100%
+            }
+            .bill_x {
+                padding: 24rpx 28rpx 24rpx 28rpx;
+                background: #f2f2f2;
+                margin: 15rpx 0;
+                border-radius: 20rpx;
+            }
+            .bill_gray {
+                color: #7a7a7a;
+                border-color: #7a7a7a
+            }
+            .bill_blue {
+                color: #009dff;
+                border-color: #009dff
+            }
+            .bill_red {
+                color: #e20000;
+                border-color: #e20000
+            }
+            .bill_yellow {
+                color: #ff9900;
+                border-color: #ff9900
+            }
+            .bill_green {
+                color: #069400;
+                border-color: #069400
+            }
+            .bill_state {
+                float: right;
+                position: relative;
+            }
+        }
+        .flex {
+            display: flex;
+            margin-bottom: 15rpx;
+        }
+        .right {
+            text-align: right;
+        }
+        .left {
+            text-align: left;
+        }
+        .bill_btns {
+            height: 98rpx;
+            width: 100%;
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+        .bill_btn {
+            border-radius: 0;
+            width: 50%;
+            text-align: center;
+            background: #5d73fa;
+            color: #fff;
+            line-height: 98rpx;
+            font-size: 32rpx
+        }
+    }
+</style>
+
+<template>
+    <view class="bill">
+        <view class="bill_title">
+            <text class="title">收款确认</text>
+        </view>
+        <view class="bill_content">
+            <view class="bill_box">
+                <view class="bill_view bill_blue">{{receivablesData.receiptCase.name||'未填写'}}</view>
+                <view class="bill_view bill_gray">{{receivablesData.receiptCase.serialId||'未填写'}}</view>
+            </view>
+            <view class="bill_box">
+                <view class="bill_view bill_blue">{{receivablesData.receiptCase.clientName||'未填写'}}</view>
+                <view class="bill_view bill_gray">{{receivablesData.receiptCase.clientId||'未填写'}}</view>
+            </view>
+        </view>
+        <view class="bill_content">
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">发票编号</view>
+                    <view class="bill_view">{{receivablesData.invoice.invoiceNo||'未填写'}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">发票金额</view>
+                    <view class="bill_view">{{receivablesData.invoice.invoiceAmount||'未填写'}}</view>
+                </view>
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">收款日期</view>
+                    <view class="bill_view">{{receivablesData.creationTime||'未填写'}}</view>
+                </view>
+            </view>
+            <view class="flex">
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">收款金额</view>
+                    <view class="bill_view">{{receivablesData.payAmount||'未填写'}}</view>
+                </view>
+                <view class="bill_box2">
+                    <view class="bill_view bill_gray">支付币种</view>
+                    <view class="bill_view">{{receivablesData.payCurrencyName||'未填写'}}</view>
+                </view>
+            </view>
+            <view class="bill_btns" wx:if="{{receivablesData.status=='WaitForConfirmed'}}">
+                <button class="bill_btn" catchtap="toAuditing('{{0}}')">退回</button>
+                <button class="bill_btn" catchtap="toAuditing('{{1}}')">确认</button>
+            </view>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import {
+        formatTime
+    } from '../../../../utils/cofig/api.js';
+    import {
+        getUserAvatar
+    } from '../../../../utils/cofig/ajax.js';
+    export default class Index extends wepy.page {
+        components = {};
+        data = {
+            receivablesData: {},
+            id: '',
+            avatar: []
+        };
+        methods = {
+            toAuditing(type) {
+                if (type == '0') {
+                    this.return(this.id)
+                } else {
+                    this.approval(this.id)
+                }
+            }
+        };
+        onLoad(options) {
+            this.id = options.id;
+            this.$apply();
+        };
+        onShow() {
+            this.getbill();
+        }
+        //
+        async getbill(num) {
+            wx.showLoading({
+                title: 'Loading...', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: res => {}
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/financialReceipt/GetReceipt',
+                'post', {
+                    id: this.id
+                }
+            );
+            console.log(resData);
+            switch (resData.statusCode) {
+                case 200:
+                    console.log(resData);
+                    this.receivablesData = resData.data.result;
+                    this.receivablesData.creationTime = this.receivablesData.creationTime.split('T')[0]
+                    // for (var index in this.costData.invoiceBillings) {
+                    //     this.costData.invoiceBillings[index].creationTime = formatTime(this.costData.invoiceBillings[index].creationTime)
+                    // }
+                    // for (var index in this.costData.workflows) {
+                    //     this.costData.workflows[index].creationTime = formatTime(this.costData.workflows[index].creationTime)
+                    //     var http = "/api/services/web/personal/GetEmployeePhoto?id=" + this.costData.workflows[index].creatorUserId
+                    //     var avatar = await ajax.getAavatar(http);
+                    //     this.avatar[index] = avatar;
+                    //     this.$apply();
+                    // }
+                    this.$apply();
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+        }
+        async return(id) {
+            wx.showLoading({
+                title: '提交中，请稍等！', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: () => {
+                    this.$apply();
+                }
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/financialReceipt/ReturnReceipt',
+                'post', {
+                    Id: id
+                }
+            );
+            console.log(resData);
+            switch (resData.statusCode) {
+                case 200:
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2];
+                    prevPage.data.refresh = true;
+                    wx.navigateBack({
+                        delta: 1
+                    });
+                    this.$apply();
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+        }
+        async approval(id) {
+            wx.showLoading({
+                title: '提交中，请稍等！', //提示的内容,
+                mask: true, //显示透明蒙层，防止触摸穿透,
+                success: () => {
+                    this.addOpacity = 1;
+                    this.$apply();
+                }
+            });
+            var resData = await ajax.getData(
+                '/api/services/web/financialReceipt/ConfirmReceipt',
+                'post', {
+                    Id: id
+                }
+            );
+            console.log(resData);
+            switch (resData.statusCode) {
+                case 200:
+                var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2];
+                    prevPage.data.refresh = true;
+                    wx.navigateBack({
+                        delta: 1
+                    });
+                    this.$apply();
+                    break;
+                case 403:
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break
+                default:
+                    break;
+            }
+        }
+    }
+</script>

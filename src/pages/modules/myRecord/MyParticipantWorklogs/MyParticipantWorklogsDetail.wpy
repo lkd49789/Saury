@@ -1,0 +1,159 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top:0;
+            left:0;
+            width:100%;
+            background:#fff;
+            z-index:99;
+        }
+        .main{
+            margin:149rpx 28rpx 0 28rpx;
+            font-size:28rpx;
+            color:#2a2a2a;
+            .items-container{
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius:20rpx;
+                padding:30rpx 24rpx;
+                margin-bottom: 44rpx;
+                >view:not(:first-child){
+                    margin-bottom: 20rpx
+                }
+                >view:first-child{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 36rpx;
+                }
+                >view:last-child{
+                    display: flex;
+                    align-items: center;
+                }
+
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <text>待转化参与日志</text>
+        </view>
+        <view class='main'>
+            <repeat for="{{MPWorklogsDetailData}}" key="index" index="index" item="item">
+                <view class="items-container" @tap="toLogDetail('{{item.id}}')">
+                    <view>
+                        <view>
+                            <text>{{item.startTime.Y}} </text>
+                            <text>{{item.startTime.M}}-</text>
+                            <text wx:if="{{item.startTime.Y!==item.endTime.Y}}">{{item.endTime.Y}} </text>
+                            <text>{{item.endTime.M}}</text>
+                        </view>
+                        <text style="color:#5d73fa">{{item.selfDuration}}.0h</text>
+                    </view>
+                    <view>
+                        <text>{{item.description}}</text>
+                    </view>
+                    <view>
+                        <icon class="iconfont icon-xiaotouxiang" style="font-size:40rpx;color:#5d73fa;margin-right:20rpx"></icon>
+                        <text>{{item.employeeName||'未填写'}}</text>
+                    </view>
+                </view>
+            </repeat>
+            
+            
+        </view>
+        <placeHolderImage :placeHolder.sync="placeHolder" />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import mixins from '../../../../utils/cofig/mixin.js';
+    import {formatDate} from '../../../../utils/cofig/api.js';
+    import placeHolderImage from '../../../../components/placeHolderImage';
+    export default class clientDetail extends wepy.page {
+        components = {
+            placeHolderImage
+        };
+        data = {
+            MPWorklogsDetailData:{}
+        };
+        methods = {
+            toLogDetail(id){
+                wx.navigateTo({
+                    url: "../myLogdetail/logdetail?id="+id+"&chooseMe=true"
+                });
+            }
+        };
+        mixins = [mixins ];
+        Date(data){
+            var dateTime=data;
+            var sT=formatDate(dateTime.startTime);
+            var eT=formatDate(dateTime.startTime)
+            dateTime.startTime={
+            Y:sT[0]+'/'+sT[1]+'/'+sT[2],
+            M:sT[3]+':'+sT[4]
+            }
+            dateTime.endTime={
+            Y:eT[0]+'/'+eT[1]+'/'+eT[2],
+            M:eT[3]+':'+eT[4]
+            }
+            return dateTime;
+        }
+        // 获取日志提醒参与信息
+        async GetMyParticipantWorklogs(){
+            var GetMyParticipantWorklogs =await ajax.getData(
+            '/api/services/web/worklog/GetMyParticipantWorklogs',
+            'post'
+            )
+            switch (GetMyParticipantWorklogs.statusCode) {
+                case 200:
+                    if(GetMyParticipantWorklogs.data.result.length!==0){
+                        var MPWorklogsDetailData= GetMyParticipantWorklogs.data.result;
+                        for(var index in  MPWorklogsDetailData){
+                        MPWorklogsDetailData[index]=this.Date(MPWorklogsDetailData[index])
+                        }
+                        this.MPWorklogsDetailData=MPWorklogsDetailData;
+                    }else{
+                        var isRefresh=wx.getStorageSync('isRefresh');
+                            isRefresh.isRefresh=true;
+                            wx.setStorageSync('isRefresh',isRefresh);
+                        wx.navigateBack({
+                            delta: 1
+                        });
+                    }
+                     this.$apply();
+                    break;
+                 case 403:
+                        console.log('您没有权限'); 
+                        this.placeHolder.placeHolderImageIndex=3;
+                        this.placeHolder.placeHolderShow=true;
+                         this.$apply();
+                    break;
+                case 500:
+                    console.log('数据请求错误')
+                    this.placeHolder.placeHolderImageIndex=1;
+                    this.placeHolder.placeHolderShow=true;
+                     this.$apply();
+                default:
+                    break;      
+            }
+            
+          this.$apply();
+        }
+        onShow(){
+         this.GetMyParticipantWorklogs()
+        }
+    }
+</script>

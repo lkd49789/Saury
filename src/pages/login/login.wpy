@@ -1,0 +1,332 @@
+<style lang="less">
+  .body {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0rpx;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    >image {
+      height: 100%;
+      width: 100%;
+    }
+    >view {
+      position: absolute;
+    }
+    .logo-container {
+      margin-top: -50rpx;
+      margin-bottom: 80rpx;
+      .bc-gd {
+        width: 176rpx;
+        height: 176rpx;
+        background: #fff;
+        border-radius: 20rpx;
+        box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.35);
+        position: relative;
+        margin: 0 auto;
+        .logo {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
+    .login-box {
+      // margin: 0 68rpx 120rpx 68rpx;
+      padding: 30rpx 64rpx 64rpx 64rpx;
+      box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.35);
+      border-radius: 20rpx;
+      background: #fff;
+      width: 488rpx;
+      margin: auto;
+      .domain {
+        margin-top: 43rpx;
+      }
+      .username {
+        margin-top: 70rpx;
+        height: 100rpx;
+      }
+      .password {
+        margin-top: 70rpx;
+      }
+      .hint {
+        height: 50rpx;
+        font-size: 26rpx;
+        color: #e20000;
+        flex-direction: row;
+        width: 100%;
+        .text-logo {
+          height: 60rpx;
+          width: 198rpx;
+        }
+      }
+      .login-bottom {
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        font-size: 28rpx;
+        align-items: center;
+        position: relative;
+        .forgate {
+          width: 100%;
+          >text {
+            float: right;
+          }
+        }
+        .btn-register {
+          height: 86rpx;
+          width: 350rpx;
+          position: absolute;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          margin-top: 125rpx;
+          background: #5d73fa;
+          box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+          line-height: 86rpx;
+          border-top-left-radius: 20px;
+          border-top-right-radius: 20px;
+          border-bottom-right-radius: 20px;
+          border-bottom-left-radius: 20px;
+        }
+        .btn-text {
+          color: #fff;
+          width: 100%;
+          display: inline-block;
+          text-align: center;
+        }
+      }
+      .input {
+        border-bottom: 1px solid #bfbfbf;
+        padding-bottom: 36rpx;
+        color: #2a2a2a;
+      }
+      .color {
+        color: #b2b2b2;
+        font-size: 28rpx;
+      }
+    }
+  } //更改input占位符的颜色
+  .third {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  .border-left {
+    border-top: 1px solid #dedede;
+    width: 35%;
+  }
+  .border-right {
+    border-top: 1px solid #dedede;
+    width: 35%;
+    float: right;
+  }
+  .text-hint {
+    font-size: 28rpx;
+    color: #b2b2b2;
+    display: inline-block; // background: rgba(alpha);
+    padding: 0 20rpx;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .thrid-logo {
+    margin-top: 44rpx;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .icon-logo {
+    margin: 0 auto;
+  }
+  .QQ,
+  .wechat,
+  .weibo,
+  .twiter {
+    height: 90rpx;
+    width: 90rpx;
+  }
+</style>
+
+<template>
+  <view class="body" style="">
+    <image src="{{loginImage}}" mode="scaleToFill" lazy-load="true">
+    </image>
+    <view>
+      <view class="logo-container">
+        <view class="bc-gd">
+          <icon class="logo iconfont icon-ailogo" style="font-size:118rpx; color:#5d73fa"></icon>
+        </view>
+      </view>
+      <view class="login-box">
+        <form bindsubmit="formSubmit" bindreset="formReset">
+          <!-- <view class="login-top"> -->
+          <!-- <image class="text-logo" src="../../images/text-logo.png"></image> -->
+          <view class="domain">
+            <input class="input" placeholder="律所标识" placeholder-class="color" type="text" name="domain" value=""></input>
+          </view>
+          <view class="username">
+            <input class="input" placeholder="用户名或邮箱地址" placeholder-class="color" type="text" name="username" value=""></input>
+          </view>
+          <view class="password">
+            <input class="input" placeholder="密码" placeholder-class="color" type="password" name="password" value=""></input>
+          </view>
+          <!-- </view> -->
+          <view class="hint">
+            <text class="hint-msg" wx:if="{{err}}">您输入的密码有误!</text>
+          </view>
+          <view class="login-bottom">
+            <view class="forgate">
+              <text style="color:#5d73fa" @tap="toforgate">忘记密码？</text>
+            </view>
+            <button formType="submit" class="btn-register btn-text">登录</button>
+          </view>
+        </form>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import ajax from '../../utils/cofig/ajax.js';
+  export default class login extends wepy.page {
+    config = {
+      backgroundTextStyle: 'dark',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: '律智荟',
+      navigationBarTextStyle: 'black'
+    };
+    // mixins = [TestMixin ];
+    data = {
+      loginImage: '../../images/login.jpg',
+      err: false,
+      token: 0,
+      openId: '',
+      unionId: ''
+    };
+    methods = {
+      toforgate() {
+        wepy.navigateTo({
+          url: '../login/forgetPassword'
+        });
+      },
+      formSubmit(e) {
+        wx.request({
+          url: 'https://www.ailinkedlaw.com/api/Account/GetAccessToken',
+          method: 'post',
+          data: {
+            tenancyName: e.detail.value.domain,
+            usernameOrEmailAddress: e.detail.value.username,
+            password: e.detail.value.password
+          },
+          success: res => {
+            if (res.statusCode==200) {
+              var accessToken = res.data.result.accessToken
+              if (this.openId && this.unionId) {
+                var data = {
+                  openId: this.openId,
+                  unionId: this.unionId,
+                  loginProvider: 'WechatMini',
+                }
+                wx.request({
+                  url: 'https://www.ailinkedlaw.com/api/services/web/userExternalLogin/AddWechatUserLogin',
+                  method: 'POST',
+                  header: {
+                    Authorization: 'Bearer ' + accessToken,
+                  },
+                  data: data,
+                  success: resData => {
+                    if (resData.data.success) {
+                      this.storage(accessToken);
+                    } else {
+                      wx.showModal({
+                        title: '警告',
+                        content: resData.data.error.message,
+                        showCancel: true,
+                        confirmText: '确定',
+                        success: res=> {
+                            if (res.confirm) {
+                                this.storage(accessToken);
+                            }
+                        }
+                    })
+                    }
+                  },
+                  fail: err => {
+                    console.log(err);
+                  },
+                  complete: () => {
+                  }
+                });
+                // this.AddWechatUserLogin();
+              } else {
+                this.storage(accessToken);
+              }
+            }else{
+              wx.showToast({
+                title: '登陆失败！',
+                icon: 'none',
+                image: '',
+                duration: 1500,
+                mask: false,
+                success: (result)=>{
+                  
+                },
+                fail: ()=>{},
+                complete: ()=>{}
+              });
+            }
+          },
+          fail: err => {
+              console.log(err);
+          },
+        });
+      }
+    };
+    // onShow() {
+    //   wx.hideTabBar({
+    //     animation: false //是否需要过渡动画
+    //   });
+    // }
+    storage(accessToken) {
+      try {
+        wx.setStorageSync('access', accessToken)
+      } catch (err) {
+        console.log(err);
+      }
+      wx.switchTab({
+        url: '../main/index'
+      })
+    }
+    // async AddWechatUserLogin() {
+    //   var data = {
+    //     openId: this.openId,
+    //     unionId: this.unionId,
+    //     loginProvider: 'WechatMini',
+    //   }
+    //   var resData = await ajax.getData(
+    //     '/api/services/web/userExternalLogin/AddWechatUserLogin',
+    //     'POST',
+    //     data
+    //   )
+    //   console.log(resData);
+    //   // console.log(resData.error.message);
+    // }
+    onLoad(options) {
+      if (Object.keys(options).length !== 0) {
+        this.openId = options.openId;
+        this.unionId = options.unionId;
+      }
+      this.$apply();
+    }
+  }
+</script>

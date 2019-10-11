@@ -1,0 +1,425 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        position: relative;
+        .top-title {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 10000;
+            .flex {
+                height: 104rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 48rpx;
+                border-bottom: 1px solid #dedede;
+            }
+            .filter {
+                left: 0;
+                width: 100%;
+                background: #fff;
+                z-index: 99999;
+                padding: 20rpx 28rpx 0 28rpx;
+                >view {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 10rpx 0;
+                }
+            }
+        }
+        .addImage {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99999;
+        }
+        .main {
+            margin: 149rpx 28rpx 0 28rpx;
+            font-size: 28rpx;
+            color: #2a2a2a;
+            position: relative;
+            .records-remind {
+                display: flex;
+                align-items: baseline;
+                position: fixed;
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                padding: 30rpx 24rpx;
+                position: fixed;
+                top: 149rpx;
+                left: 28rpx;
+                right: 28rpx;
+                z-index: 9999;
+                background: #fff
+            }
+            >view:nth-child(2) {
+                >view {
+                    box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                    border-radius: 20rpx;
+                    padding: 30rpx 24rpx;
+                }
+                >view:not(:last-child) {
+                    margin-bottom: 44rpx;
+                }
+                .records-item {
+                    .item-onLine {
+                        margin-bottom: 36rpx;
+                        display: flex;
+                        justify-content: space-between
+                    }
+                    .item-twoLine {
+                        margin-bottom: 20rpx;
+                    }
+                    .item-threeLine {
+                        margin-bottom: 20rpx;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        >view {
+                            display: flex;
+                            align-items: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <view class="flex">
+                <view style="margin-left:28rpx">
+                    <text>工作日志</text>
+                </view>
+                <view style="margin-right:28rpx">
+                    <icon class="iconfont icon-sousuo1 " style="font-size:60rpx;color:#5d73fa;margin-right:14rpx" @tap="toSearch"></icon>
+                    <icon class="iconfont icon-shaixuan1" style="font-size:60rpx;color:#5d73fa" @tap="ishowFilter"></icon>
+                </view>
+            </view>
+            <view class="filter animation" wx:if="{{isShow}}">
+                <view catchtap="filter('cteateTime')">创建时间排序</view>
+                <view catchtap="filter('recordTime')">日志时间排序</view>
+                <view catchtap="filter('case')">案件排序</view>
+            </view>
+        </view>
+        <view class='main'>
+            <view class="records-remind" wx:if="{{MyParticipantWorklogsCount}}" @tap="toMPworkLogsDetail">
+                <icon class="iconfont icon-xuanxiang" style="font-size:30rpx;color:#5d73fa;margin-right:10rpx"></icon>
+                <text>您好！最近有{{MyParticipantWorklogsCount}}条工作日志将您设为了参与人</text>
+            </view>
+            <view style="margin-top:{{MyParticipantWorklogsCount?'300rpx':'0'}}">
+                <repeat for="{{MyWorklogsData}}" key="index" index="index" item="item">
+                    <view class="records-item" @tap="toLogDetail('{{item.id}}')">
+                        <view class="item-onLine">
+                            <view>
+                                <text>{{item.sTime.Y}} {{item.sTime.M}}-</text>
+                                <text><text wx:if="{{item.sTime.Y!==item.eTime.Y}}">{{item.eTime.Y}} </text>{{item.eTime.M}}</text>
+                            </view>
+                            <text style="color:#5d73fa">{{item.selfDuration||'未填写'}}h</text>
+                        </view>
+                        <view class="item-twoLine" style="color:#7a7a7a">
+                            <text>{{item.description||'未填写'}}</text>
+                        </view>
+                        <view class="item-threeLine">
+                            <view>
+                                <icon class="iconfont icon-xiaotouxiang" style="font-size:40rpx;color:#5d73fa;margin-right:10rpx;margin-right:20rpx"></icon>
+                                <text>{{item.employeeName||'未填写'}}</text>
+                            </view>
+                            <view>
+                                <view style="height:20rpx;width:20rpx;border-radius:50%;border:1px solid {{item.statusColor}};margin-right:20rpx">
+                                </view>
+                                <text>{{item.processStatusText||'未填写'}}</text>
+                            </view>
+                        </view>
+                    </view>
+                </repeat>
+            </view>
+        </view>
+        <image src="{{'../../../images/add.png'}}" mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;" @touchstart="touchStart" @touchend="touchEnd">
+        </image>
+        <placeHolderImage :placeHolder.sync="placeHolder" />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../utils/cofig/ajax.js'
+    import mixins from '../../../utils/cofig/mixin.js';
+    import {
+        formatDate
+    } from '../../../utils/cofig/api.js';
+    import placeHolderImage from '../../../components/placeHolderImage';
+    export default class workRecord extends wepy.page {
+        config = {
+            enablePullDownRefresh: true,
+            backgroundTextStyle: 'dark',
+            backgroundColorTop: '#f4f4f4',
+            backgroundColorBottom: '#f4f4f4',
+        };
+        components = {
+            placeHolderImage
+        };
+        data = {
+            isSearchRefresh: false,
+            refresh: false,
+            queryStream: {},
+            addOpacity: 1,
+            MyParticipantWorklogsCount: 0,
+            MyWorklogsData: [],
+            pageNumber: 1,
+            totalCount: 0,
+            isShow: false,
+            sorting: ''
+        };
+        methods = {
+            filter(name) {
+                this.MyWorklogsData = [];
+                this.pageNumber = 1;
+                switch (name) {
+                    case 'cteateTime':
+                        this.GetMyWorklogs('CreationTime desc')
+                        break;
+                    case 'recordTime':
+                        this.GetMyWorklogs('StartTime desc')
+                        break;
+                    case 'case':
+                        this.GetMyWorklogs('CaseName desc')
+                        break;
+                    default:
+                        break;
+                }
+            },
+            ishowFilter() {
+                this.isShow = !this.isShow
+                this.$apply();
+            },
+            toSearch() {
+                wx.navigateTo({
+                    url: './search/search_record'
+                });
+            },
+            touchStart() {
+                this.addOpacity = 0.6;
+                this.$apply();
+            },
+            touchEnd() {
+                var data = {
+                    isData: false
+                }
+                data = JSON.stringify(data);
+                wx.navigateTo({
+                    url: './creatWorkRecord/creatWorkRecord?data=' + data,
+                    success: () => {
+                        this.addOpacity = 1;
+                        this.$apply();
+                    }
+                });
+            },
+            toCreatWorkRecord() {
+                var data = {
+                    isData: false
+                }
+                data = JSON.stringify(data);
+                wx.navigateTo({
+                    url: './creatWorkRecord/creatWorkRecord?data=' + data
+                });
+            },
+            toStatisticsDetail() {
+                wx.navigateTo({
+                    url: './logsStatistics/statisticsDetail'
+                });
+            },
+            toLogDetail(id) {
+                wx.navigateTo({
+                    url: './myLogdetail/logdetail?id=' + id
+                });
+            },
+            //转换日志列表
+            toMPworkLogsDetail() {
+                wx.navigateTo({
+                    url: './MyParticipantWorklogs/MyParticipantWorklogsDetail'
+                });
+            }
+        };
+        mixins = [mixins];
+        watch = {
+            totalCount(count) {
+                if (count == 0) {
+                    this.placeHolder.placeHolderImageIndex = 0;
+                    this.placeHolder.placeHolderShow = true;
+                } else {
+                    this.placeHolder.placeHolderShow = false;
+                }
+            },
+            MyParticipantWorklogsCount(count) {
+                if (count == 0) {
+                    this.placeHolder.placeHolderImageIndex = 0;
+                    this.placeHolder.placeHolderShow = true;
+                } else {
+                    this.placeHolder.placeHolderShow = false;
+                }
+            }
+        }
+        // 下拉刷新
+        onPullDownRefresh() {
+            this.MyWorklogsData = [];
+            this.pageNumber = 1;
+            this.MyParticipantWorklogsCount = 0;
+            this.queryStream = {};
+            this.GetMyParticipantWorklogs();
+            this.GetMyWorklogs();
+            wx.hideNavigationBarLoading(); //完成停止加载
+            wx.stopPullDownRefresh(); //停止下拉刷新
+            this.$apply();
+        }
+        // 上拉加载
+        onReachBottom() {
+            if (this.totalCount / 10 > this.pageNumber && this.$parent.global.netWorkString) {
+                this.pageNumber += 1;
+                this.GetMyWorklogs();
+            } else {
+                if (this.$parent.global.netWorkString) {
+                    wx.showToast({
+                        title: '我们是有底线的！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                } else {
+                    wx.showToast({
+                        title: '网络连接失败！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            }
+            this.$apply();
+        }
+        async GetMyParticipantWorklogs() {
+            var GetMyParticipantWorklogs = await ajax.getData(
+                '/api/services/web/worklog/GetMyParticipantWorklogs',
+                'post'
+            )
+            if (GetMyParticipantWorklogs.statusCode == 200 && GetMyParticipantWorklogs.data.result.length !== 0) {
+                var MyParticipantWorklogsData = GetMyParticipantWorklogs.data.result;
+                this.MyParticipantWorklogsCount = MyParticipantWorklogsData.length;
+                var isRefresh = {
+                    isRefresh: false
+                }
+                wx.setStorageSync('isRefresh', isRefresh);
+                // console.log(MyParticipantWorklogsData);
+            } else {
+                if (GetMyParticipantWorklogs.data.result.length == 0) {
+                    this.MyParticipantWorklogsCount = 0
+                }
+            }
+            this.$apply()
+        }
+        async GetMyWorklogs(sort) {
+            this.sorting = sort ? sort : this.sorting;
+            var KeyWord = this.queryStream.KeyWord ? this.queryStream.KeyWord : '';
+            var data = {
+                EmployeeId: this.$parent.global.userInfo.id,
+                pageNumber: this.pageNumber,
+                pageSize: 10,
+                KeyWord: KeyWord,
+                sorting: this.sorting
+            }
+            var MyWorklogsData = await ajax.getData(
+                '/api/services/web/worklog/GetMyWorklogs',
+                'post',
+                data
+            )
+            switch (MyWorklogsData.statusCode) {
+                case 200:
+                    this.totalCount = MyWorklogsData.data.result.totalCount;
+                    if (MyWorklogsData.data.result.items.length !== 0) {
+                        var getData = MyWorklogsData.data.result;
+                        this.formatData(getData.items);
+                    } else {
+                        this.placeHolder.placeHolderImageIndex = 0;
+                        this.placeHolder.placeHolderShow = true;
+                    }
+                    this.$apply();
+                    break;
+                case 403:
+                    console.log('您没有权限');
+                    this.placeHolder.placeHolderImageIndex = 3;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                    break;
+                case 500:
+                    console.log('数据请求错误')
+                    this.placeHolder.placeHolderImageIndex = 1;
+                    this.placeHolder.placeHolderShow = true;
+                    this.$apply();
+                default:
+                    break;
+            }
+        }
+        formatData(data) {
+            var logsData = data;
+            for (var index in logsData) {
+                var startTime = logsData[index].startTime;
+                var endTime = logsData[index].endTime;
+                var sT = formatDate(startTime);
+                var eT = formatDate(endTime);
+                logsData[index]['sTime'] = {
+                    Y: sT[0] + '/' + sT[1] + '/' + sT[2],
+                    M: sT[3] + ':' + sT[4]
+                }
+                logsData[index]['eTime'] = {
+                    Y: eT[0] + '/' + eT[1] + '/' + eT[2],
+                    M: eT[3] + ':' + eT[4]
+                }
+                switch (logsData[index].processStatus) {
+                    case "A":
+                        logsData[index]['statusColor'] = "#069400"
+                        break;
+                    case "R":
+                        logsData[index]['statusColor'] = "#e20000"
+                        break;
+                    case "N":
+                        logsData[index]['statusColor'] = "#ff9900"
+                        break;
+                    default:
+                        break;
+                }
+                logsData[index].selfDuration = logsData[index].selfDuration.toFixed(1);
+            }
+            this.MyWorklogsData = this.MyWorklogsData.concat(logsData);
+        }
+        onLoad() {
+            this.GetMyParticipantWorklogs();
+            this.GetMyWorklogs();
+        }
+        isRefresh() {
+            this.MyParticipantWorklogsCount = 0;
+            this.MyWorklogsData = [];
+            this.pageNumber = 1;
+            this.GetMyWorklogs();
+            this.GetMyParticipantWorklogs();
+            this.$apply();
+        }
+        onShow() {
+            var pages = getCurrentPages();
+            var prevPage = pages[pages.length - 1]; //上一个页面
+            this.queryStream = prevPage.data.queryStream;
+            var isRefresh = wx.getStorageSync('isRefresh');
+            if (prevPage.data.refresh || isRefresh.isRefresh) {
+                prevPage.data.refresh = false;
+                this.isRefresh();
+            }
+            this.$apply();
+        }
+    }
+</script>

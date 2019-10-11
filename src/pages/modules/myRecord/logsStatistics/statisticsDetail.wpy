@@ -1,0 +1,279 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .top-title {
+            height:20%;
+            background:#5d73fa;
+            color:#fff;
+            padding:44rpx 28rpx;
+            margin-bottom:44rpx;
+            >view:first-child{
+                display:flex;
+                justify-content: space-between;
+                align-items: center;
+                >view:last-child{
+                    display:flex;
+                    align-items: center;
+                }
+                .picker{
+                    display: flex;
+                    align-items: baseline;
+                }
+
+            }
+            >view:last-child{
+                display: flex;
+                justify-content: center;
+                margin-top:44rpx;
+                >view{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    width:33%;
+                    >text:last-child{
+                        font-size:44rpx;
+                    }
+                }
+            }
+        }
+        .main{
+            margin:0 28rpx;
+            >view:first-child{
+                display:flex;
+                // justify-content: space-between;
+                flex-direction: row-reverse;
+                color:#7a7a7a;
+                >view:last-child{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    >text{
+                        width:25%;
+                        text-align: center;
+                    }
+                }
+            }
+            .items-container{
+                >view{
+                    display:flex;
+                    >view:first-child{
+                         display: flex;  
+                           width:20%; 
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                       
+                    }
+                    >view:last-child{
+                        width:80%;
+                        display:flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding:60rpx 0;
+                        border-bottom: 1px solid #dfdfdf;
+                        >text{
+                         text-align: center;
+                          width:25%;
+                        }
+                        >text:first-child{
+                            text-align:left;
+                            
+                        }
+                        
+                         
+                    }
+                    
+                }
+            }
+
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <view>
+                <view class="section">
+                    <picker mode="date" value="{{nowTime}}"  end="{{nowTime}}" bindchange="bindDateChange" fields="month" color="#5d73fa">
+                        <view class="picker" >
+                            <text style="margin-right:20rpx;">{{nowTime}}</text>
+                            <icon class="iconfont icon-gengduoneirongdianjichakanxiangqing"></icon>
+                        </view>
+                    </picker>
+                </view>
+                <view @tap="tostaticsRecord">
+                    <icon class="iconfont icon-tubiao" style="font-size:50rpx;margin-right:20rpx"></icon>
+                    <text>分析图表</text>
+                </view>
+            </view>
+            <view>
+                <view>
+                    <text>1213</text>
+                    <text>21321</text>
+                </view>
+                <view>
+                    <text>12321</text>
+                    <text>213213213</text>
+                </view>
+                <view>
+                    <text>21321</text>
+                    <text>213213213</text>
+                </view>
+            </view>
+        </view>
+        <view class='main'>
+            <view>
+                <view style="width:80%">
+                    <text></text>
+                    <text>自报时长</text>
+                     <text>账单时长</text>
+                    <text>业务时长</text>
+                </view> 
+            </view>
+            <!-- <repeat for="{{WorklogsForScheduleData}}" key="index" index="index" item="item"> -->
+                <view class="items-container">
+                    <view>
+                        <view>
+                                <image src="{{userAvatar}}" mode="scaleToFill"
+                            lazy-load="false" style="height:80rpx;width:80rpx;border-radius: 50%;">
+                                </image>
+                        </view>
+                        <view>
+                            <text>1</text>
+                            <text>1</text>
+                            <text>2</text>
+                            <text>3</text>
+                        </view> 
+                    </view>
+                </view>
+            <!-- </repeat> -->
+            
+        </view>
+        <placeHolderImage :placeHolder.sync="placeHolder" />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import mixins from '../../../../utils/cofig/mixin.js';
+    import placeHolderImage from '../../../../components/placeHolderImage';
+    export default class statisticsDetail extends wepy.page {
+        components = {
+            placeHolderImage
+        };
+        data = {
+            userAvatar:'',
+            nowTime:'',
+            endDate:'',
+            startDate:'',
+            WorklogsForScheduleData:[]
+        };
+        methods = {
+            bindDateChange(e){
+                this.nowTime=e.detail.value;
+                console.log(e.detail.value)
+                this.getStartDate(e.detail.value);
+                this.getEndDate(e.detail.value);
+                this.GetWorklogsForSchedule();
+                this.$apply();
+            },
+            tostaticsRecord(){
+                wx.navigateTo({ url: './statisticsCovers/statisticsRecord' });
+            }
+        };
+        mixins = [mixins ];
+       async GetWorklogsForSchedule(){
+            var data={
+                year: 2018,
+                month: 10,
+                // EmployeeId: this.$parent.global.userInfo.id,
+                pageNumber: 1,
+                pageSize: 10,
+                // workTime:{
+                //     endDate: this.endDate,
+                //     startDate: this.startDate
+                // }
+            }
+            var WorklogsForScheduleData=await ajax.getData(
+                '/api/services/web/worklogAnalysis/GetWorklogStatistics',
+                'post',
+                data
+            )
+            switch (WorklogsForScheduleData.statusCode) {
+                case 200:
+                    if(WorklogsForScheduleData.data.result.items.length!==0){            
+                        this.WorklogsForScheduleData=WorklogsForScheduleData.data.result.items;
+                        this.placeHolder.placeHolderShow=false;   
+                        console.log(WorklogsForScheduleData.data.result.items) ;
+                    }else{
+                        console.log('数据为空'); 
+                        this.placeHolder.placeHolderImageIndex=0;
+                        this.placeHolder.placeHolderShow=true;
+                    }
+                     this.$apply();
+                    break;
+                 case 403:
+                        console.log('您没有权限'); 
+                        this.placeHolder.placeHolderImageIndex=3;
+                        this.placeHolder.placeHolderShow=true;
+                         this.$apply();
+                    break;
+                case 500:
+                    console.log('数据请求错误')
+                    this.placeHolder.placeHolderImageIndex=1;
+                    this.placeHolder.placeHolderShow=true;
+                     this.$apply();
+                default:
+                    break;      
+            }
+        };
+        getEndDate(date){
+            var month=new Date(date).getMonth() + 1;
+            var year = new Date(date).getFullYear();
+            month+=1
+            if(month>12){
+                year+=2;
+                month=1
+            }
+            this.endDate=year+'-'+this.formatNumber(month) 
+        }
+        getStartDate(date){
+            var month=new Date(date).getMonth()+1;
+            var year = new Date(date).getFullYear();
+           month=month-1
+            if(month===0){
+                year-=1;
+                month=12
+            }
+            console.log(month)
+            this.startDate=year+'-'+this.formatNumber(month) 
+        }
+        getNowTime(){
+            var date=new Date()
+            this.getStartDate(date);
+            this.getEndDate(date);
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            month=month<10?'0'+month:month;
+            var day = date.getDate()
+            day=day<10?'0'+day:day;
+            var nowTime=year+'-'+month;
+            this.nowTime=nowTime;
+            this.$apply();
+        }
+        formatNumber(num){
+            num=num.toString()
+            return num[1]?num:'0'+num
+        }
+        onLoad() {
+            this.userAvatar=this.$parent.global.userInfo.userAvatar;
+            this.getNowTime();
+            this.GetWorklogsForSchedule();
+            this.$apply();
+        }
+    }
+</script>

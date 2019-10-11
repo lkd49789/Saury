@@ -1,0 +1,343 @@
+<!--  -->
+<style lang="less">
+    text{
+            word-break:break-all
+        }
+    .body {
+        height: 100%;
+       
+        .placeHolderText{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#7a7a7a;
+            font-size:28rpx;
+        }
+        .top-title {
+            height: 104rpx;
+            line-height: 104rpx;
+            font-size: 48rpx;
+            padding-left: 28rpx;
+            border-bottom: 1px solid #dedede;
+            position: fixed;
+            top:0;
+            left:0;
+            width:100%;
+            background:#fff;
+            z-index:99;
+        }
+        .main{
+            margin:149rpx 28rpx 0 28rpx;
+            font-size: 28rpx;
+            color:#2a2a2a;
+            >view{
+                box-shadow:0 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius:20rpx;
+                padding:30rpx 22rpx;
+                margin-bottom:44rpx;
+                >view:first-child{
+                    margin-bottom: 32rpx;
+                }  
+                >view:not(:first-child):not(:last-child){
+                    margin-bottom: 22rpx;
+                }
+            }
+            .client-detail{
+                >view:first-child{
+                    display:flex;
+                    justify-content: space-between;
+                    align-items:baseline;
+                    >text{
+                        width:93%;
+                    }
+                }
+                >view:last-child{
+                    display:flex;
+                    align-items:center;
+                    >text>{
+                        margin-left:20rpx
+                    }
+                }
+            }
+            .client-avatar{
+                // position: relative;
+                >view:first-child{
+                    display:flex;
+                    justify-content: space-between;
+                    align-items: baseline;
+                }
+                .avatarList{
+                    position: relative;
+                    height:60rpx;
+                    .avatar{                
+                        position: absolute;
+                        top:0;
+                    }
+                }
+                .client-one{
+                    display: flex;
+                    align-items: center;
+                    >view{
+                        margin-left:20rpx;
+                        color:#7a7a7a;
+                    }
+                }
+            }
+            .link-project{
+                >view:first-child{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: baseline;
+                }
+                // >view:last-child{
+
+                // }
+            }
+            .client-records{
+                >view:first-child{
+                    display:flex;
+                    justify-content: space-between;
+                    align-items: baseline;
+                    color:#7a7a7a;
+                }
+                >view:last-child{
+                   display:flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    >view:first-child{
+                        display: flex;
+                        align-items: center;
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="top-title">
+            <text>客户信息</text>
+        </view>
+        <view class='main'>
+            <view class="client-detail" @tap="toClientBaseInfo">
+                <view >
+                    <text>{{clientData.name||'未填写'}}</text>
+                    <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#7a7a7a"></icon>
+                </view>
+                <view>
+                    <text style="color:#7a7a7a">{{clientData.id||'未填写'}}</text>
+                </view>
+                <view>
+                    <text>{{clientData.industryTypeText||'未填写'}}</text>
+                </view>
+                <view>
+                    <icon class="iconfont icon-dizhi" style="font-size:40rpx;color:#5d73fa"></icon>
+                    <text>{{clientData.address||'未填写'}}</text>
+                </view>
+            </view>
+            <view class="client-avatar" wx:if="{{contactsListData.length>0}}" @tap="toClientLinkman">
+                <view>
+                    <text style="color:#7a7a7a">客户联系人</text>
+                    <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#7a7a7a"></icon>
+                </view>
+                <view wx:if="{{contactsListData.length>1}}" class="avatarList">
+                    <repeat for="{{contactsListData}}" key="index" index="index" item="item">
+                        <view class="avatar" style="z-index:{{index+1}};left:{{index*35}}rpx">
+                            <image src="{{item.avatar}}" mode="scaleToFill"
+                            lazy-load="false" style="height:60rpx;width:60rpx;border-radius: 50%;"/>
+                        </view>
+                    </repeat>
+                </view>
+                <view wx:else class="client-one">
+                     <image src="{{contactsListData[0].avatar}}" mode="scaleToFill"
+                            lazy-load="false" style="height:60rpx;width:60rpx;border-radius: 50%;"/>
+                    <view>
+                        <view>
+                            <text style="color:#2a2a2a">{{contactsListData[0].name||'未填写'}} | </text>
+                            <text>{{contactsListData[0].dutyText||'未填写'}}</text>
+                        </view>
+                        <view>{{contactsListData[0].enName||'未填写'}}</view>
+                    </view>
+                </view>
+            </view>
+            <view class="placeHolderText" wx:else>
+                    <text>暂无客户联系人</text>
+            </view>
+            <view class="link-project" wx:if="{{CaseManageTotalCount!==0}}" @tap="toClientCaseMange">
+                <view>
+                    <text style="color:#7a7a7a">关联项目</text>
+                    <icon class="iconfont icon-gengduo" style="font-size:30rpx;color:#7a7a7a"></icon>
+                </view> 
+                <view style="color:#5d73fa">
+                    <text>共有{{CaseManageTotalCount}}个关联案件</text>
+                </view> 
+            </view>
+            <view class="placeHolderText" wx:else="{{CaseManageTotalCount!==0}}">
+                <text>暂无关联项目</text>
+            </view>
+            <view class="client-records" wx:if="{{RecordsDataCount!==0}}" @tap="toRecordsList">
+                <view>
+                    <text>拜访记录</text>
+                     <icon class="iconfont icon-gengduo" style="font-size:30rpx;"></icon>
+                </view>
+                <view>
+                    <text>{{RecordsDate.startDate}}</text>至<text>{{RecordsDate.endDate}}</text>
+                </view>
+                <view>
+                    <view>
+                         <view style="height:20rpx;width:20rpx;border-radius:50%;border:1px solid #5d73fa;margin-right:20rpx">
+                        </view>
+                        <text>社交软件</text>
+                    </view>
+                   <view>
+                       <text style="color:#ff9900">共{{RecordsDataCount}}条记录</text>
+                   </view>
+                </view>
+            </view>
+            <view class="placeHolderText" wx:else="{{RecordsDataCount!==0}}">
+                <text>暂无拜访记录</text>
+            </view>
+        </view> 
+        <placeHolderImage :placeHolder.sync="placeHolder" />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import mixins from '../../../../utils/cofig/mixin.js';
+    import placeHolderImage from '../../../../components/placeHolderImage';
+    export default class clientDetail extends wepy.page {
+        components = {
+            placeHolderImage
+        };
+        data = {
+            clientId:'',
+            clientData:{},
+            contactsListData:[],
+            // CaseManageData:[],
+            CaseManageTotalCount:0,
+            RecordsDataCount:0,
+            RecordsDate:{}
+        };
+        methods = {
+            toClientBaseInfo(){
+                wx.navigateTo({
+                    url: '../clientDetail/itemDetail/clientBaseInfo'
+                });
+            },
+            toClientLinkman(){
+                wx.navigateTo({
+                    url: '../clientDetail/itemDetail/clientLinkman?id='+this.clientId
+                });
+            },
+            toClientCaseMange(){
+                wx.navigateTo({
+                    url: '../clientDetail/itemDetail/clientCaseMange?id='+this.clientId
+                });
+            },
+            toRecordsList(){
+                wx.navigateTo({
+                    url: '../clientDetail/itemDetail/recordsList'
+                });
+            }
+        };
+        mixins = [mixins ];
+        //获取客户联系人；
+        async GetClientContactsList(){
+            var data={
+                ClientId:this.clientId,
+                pageNumber: 1,
+                pageSize: 10,
+            }
+            var ContactsListData=await ajax.getData(
+                '/api/services/web/clientContacts/GetClientContactsList',
+                'post',
+                data
+            )
+            if(ContactsListData.statusCode==200&&ContactsListData.data.result.items.length!==0){
+                var ContactsListData=ContactsListData.data.result.items;
+                wx.showLoading({
+                  title: 'Loading...', //提示的内容,
+                  mask: true, //显示透明蒙层，防止触摸穿透,
+                  success: res => {}
+                });
+                for(var index in ContactsListData){
+                    var http='/api/services/web/clientContacts/GetClientContactAvatar?id='+ContactsListData[index].id;
+                    var contactAvatar=await ajax.getUserAvatar(http);
+                    if(contactAvatar.statusCode==200){
+                        ContactsListData[index].avatar=contactAvatar.tempFilePath;
+                    }
+                    this.$apply();
+                }
+                this.contactsListData=ContactsListData;
+                var clientData = wx.getStorageSync('clientData');
+                clientData['ContactsListData']=ContactsListData;
+                wx.setStorageSync('clientData', clientData);
+                this.$apply();
+            } 
+        }
+        //获取关联案件
+        async GetCaseManage(){
+             var data={
+                ClientId: this.clientId,
+                pageNumber: 1,
+                pageSize: 10
+            }
+            var CaseManageData=await ajax.getData(
+                '/api/services/web/caseManage/GetCaseManage',
+                'post',
+                data
+            )
+            if(CaseManageData.statusCode==200&&CaseManageData.data.result.items.length!==0){
+                this.CaseManageTotalCount=CaseManageData.data.result.totalCount;
+                var clientData=wx.getStorageSync('clientDatas');
+                clientData['CaseManageData']=CaseManageData.data.result;
+                wx.setStorageSync('clientDatas', clientData); 
+            }
+            this.$apply();
+        }
+        //获取拜访记录
+        async  GetVisitRecords(){
+            var data={
+                ClientId: this.clientId,
+                pageNumber: 1,
+                pageSize: 10
+            }
+            var VisitRecordsDatas=await ajax.getData(
+                '/api/services/web/clientVisitServiceRecords/GetVisitRecords',
+                'post',
+                data
+            )
+            if(VisitRecordsDatas.statusCode==200&&VisitRecordsDatas.data.result.items.length!==0){
+                this.RecordsDataCount=VisitRecordsDatas.data.result.totalCount;
+                var  RecordsDate={};
+                RecordsDate['startDate']=VisitRecordsDatas.data.result.items[0].startDateText.replace(/-/g, '/');
+                RecordsDate['endDate']=VisitRecordsDatas.data.result.items[0].endDateText.replace(/-/g, '/');
+                this.RecordsDate=RecordsDate;
+                var  RecordsDatas=VisitRecordsDatas.data.result
+                for(var index in RecordsDatas.items){
+                    RecordsDatas.items[index].startDateText=RecordsDatas.items[index].startDateText.replace(/-/g, '/');
+                    RecordsDatas.items[index].startDateText=RecordsDatas.items[index].startDateText.replace(/-/g, '/');
+                }
+                var clientData = wx.getStorageSync('clientData');
+                clientData['RecordsDatas']=RecordsDatas;
+                wx.setStorageSync('clientData', clientData);
+                this.$apply();
+            }
+        }
+        onLoad(options) {
+            this.clientData=wx.getStorageSync('clientDatas').clientDetailDatas[options.index];
+            this.clientId=wx.getStorageSync('clientDatas').clientDetailDatas[options.index].id;
+            var clientData={
+                clientBaseInfoData:this.clientData
+            };
+            wx.setStorageSync('clientData', clientData);
+            this.GetClientContactsList();
+            this.GetCaseManage();
+            this.GetVisitRecords();
+            this.$apply();
+        }
+    }
+</script>

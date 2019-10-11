@@ -1,0 +1,398 @@
+<!--  -->
+<style lang='less'>
+  .container {
+    margin: 44rpx 28rpx;
+    .keyword-search {
+      .search_top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .search_input {
+          width: 100%; // border:1px solid #dfdfdf;
+          padding: 10rpx 20rpx;
+          border-radius: 100rpx;
+          background: #f4f4f4;
+          display: flex;
+          align-items: center;
+          margin-right: 14rpx;
+          >icon {
+            margin-right: 14rpx;
+          }
+          >input {
+            width: 100%;
+          }
+        }
+        .top_right_btn {
+          // width: 15%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+      .search_history {
+        margin-top: 28rpx;
+        .history_title {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .history_content {
+          margin-top: 10rpx;
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          >view {
+            background: #f4f4f4;
+            padding: 10rpx 20rpx;
+            border-radius: 50rpx;
+            color: #7a7a7a;
+            margin: 14rpx;
+            position: relative;
+            >icon {
+              // animation: item_delet_icon 1s linear;
+              position: absolute;
+              top: -30rpx;
+              right: -10rpx;
+            }
+          }
+        }
+      }
+    }
+     .advanced-search-input-panel {
+      .advanced-search-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        >text {
+          font-size: 40rpx;
+        }
+      }
+      .advanced-search-content {
+        margin: 30rpx 0;
+        .caseSearchInput{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          >view:first-child{
+            width:90%;
+          }
+          >view:last-child{
+            background: #5d73fa;
+            height:60rpx;
+            width:60rpx;
+            line-height:60rpx;
+            text-align: center;
+              >icon{
+                font-size:40rpx;
+                color:#ffffff;
+              }
+          }
+          
+        }
+      }
+      .btn-sub {
+      width: 160rpx;
+      height: 160rpx;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      z-index: 99;
+    }
+    }
+  }
+</style>
+
+<template>
+  <view class='container'>
+    <view class="keyword-search" wx:if="{{!showPage}}">
+      <view class="search_top">
+        <view class="search_input">
+          <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"></icon>
+          <input value="{{searchClentValue}}" type="text" confirm-type="search" placeholder="项目名称" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
+          </input>
+        </view>
+         <view class="top_right_btn">
+          <icon class="iconfont icon-gaojisousuo" style="color:#5d73fa;font-size:35px;" catchtap="isShowPage"></icon>
+        </view>
+      </view>
+      <view class="search_history">
+        <view class="history_title">
+          <text>历史搜索</text>
+          <icon class="iconfont icon-shanchu2" style="color:#7a7a7a;font-size:35rpx;" catchtap="deletItemAll" wx:if="{{history_keyWord_case.length!==0}}"></icon>
+        </view>
+        <view class="history_content">
+          <repeat for="{{history_keyWord_case}}" key="index" index="index" item="item">
+            <view @tap="history('{{item}}')" bindlongpress="longTap('{{index}}')">
+              <text>{{item}}</text>
+              <icon class="iconfont icon-zirenwushanchu" style="color:#dfdfdf;font-size:30rpx;" wx:if="{{isShowArray[index]}}" catchtap="deletItem('{{index}}')"></icon>
+            </view>
+          </repeat>
+        </view>
+      </view>
+    </view>
+     <view class="advanced-search-input-panel" wx:else>
+      <view class="advanced-search-title">
+        <text>高级搜索</text>
+        <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" catchtap="isShowPage"></icon>
+      </view>
+      <view class="advanced-search-content">
+        <view class="caseSearchInput">
+            <CaseName :input.sync="CaseName" :inputValue.sync='CaseNameValue' :twoWayTitle="CaseNameValue" />
+            <view>
+              <icon class="iconfont icon-sousuo1" @tap="toCaseSearchPage"></icon>
+            </view>
+        </view>
+        <ClientName :input.sync="ClientName" :inputValue.sync='ClientNameValue' :twoWayTitle="ClientNameValue" />
+        <Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
+        <creationTime :pickerData="creationTime" :twoWayTitle="creationTime" />
+        <Category :options.sync="Category" :index.sync='CategoryIndex' :twoWayTitle="CategoryIndex" />
+        <IsArchive :options.sync="IsArchive" :index.sync='IsArchiveIndex' :twoWayTitle="IsArchiveIndex" />
+      </view>
+       <image class="btn-sub" src="../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearch" />
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  import {
+    myDistinct
+  } from '../../../../utils/cofig/api.js';
+  import ajax from '../../../../utils/cofig/ajax.js';
+  import {
+    formatDate
+  } from '../../../../utils/cofig/api.js';
+  import CaseName from '../../../../components/picker/input'
+  import ClientName from '../../../../components/picker/input'
+  import Name from '../../../../components/picker/input'
+  import creationTime from '../../../../components/picker/pickerDate'
+  import Category from '../../../../components/picker/pickerOption'
+  import IsArchive from '../../../../components/picker/pickerOption'
+  export default class searchTask extends wepy.page {
+    components={
+      CaseName,
+      ClientName,
+      creationTime,
+      Category,
+      IsArchive,
+      Name
+    }
+    data = {
+      IsArchive:{
+        title: '是否归档',
+        key: 'displayText',
+        name: 'IsArchive',
+        data: [{value: "Y", displayText: "是", isSelected: false}, 
+       {value: "N", displayText: "否", isSelected: false} ],
+        warning: false
+      },
+      IsArchiveIndex:-1,
+      Category: {
+          title: '类别',
+          key: 'name',
+          name: 'Category',
+          data: [],
+          warning: false
+      },
+      CategoryIndex: -1,
+      creationTime:{
+        title: '开始时间',
+        startDateData: '',
+        endDateData: ''
+      },
+      Name: {
+          title: '项目名称',
+          name: 'Name',
+          warning: false,
+        },
+        NameValue: '',
+      CaseName: {
+          title: '案件名称',
+          name: 'CaseName',
+          warning: false,
+          disabled:true
+        },
+        CaseNameValue: '',
+      ClientName: {
+          title: '客户名称',
+          name: 'ClientName',
+          warning: false,
+        },
+      ClientNameValue: '',
+      searchData: {},
+      history_keyWord_case: [],
+      searchClentValue: '',
+      isShowArray: [],
+      showPage:false,
+    };
+    methods = {
+      advancedSearch(){
+         var pages = getCurrentPages();
+          var prevPage = pages[pages.length - 2]; //上一个页面
+          if(prevPage){
+            prevPage.advancedSearchBackData(this.searchData);
+            wx.navigateBack({
+              delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+            });
+          }
+      },
+      toCaseSearchPage(){
+        wx.navigateTo({ url: '../../receivables/manageReceivables/manageReceivablesExamine' });
+        this.$apply();        
+      },
+      isShowPage(){
+        this.showPage=!this.showPage;
+        this.$apply();
+      },
+      deletItemAll() {
+        wx.showModal({
+          title: '确认是否删除！', //提示的标题,
+          content: '全部历史记录', //提示的内容,
+          showCancel: true, //是否显示取消按钮,
+          cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
+          cancelColor: '#7a7a7a', //取消按钮的文字颜色,
+          confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
+          confirmColor: '#5d73fa', //确定按钮的文字颜色,
+          success: res => {
+            if (res.confirm) {
+              this.history_keyWord_case = [];
+              var history = wx.getStorageSync('HISTORY_KEYWORD_TASK');
+              history = [];
+              wx.setStorageSync('HISTORY_KEYWORD_TASK', history);
+              this.$apply();
+            }
+          }
+        });
+      },
+      deletItem(index) {
+        this.history_keyWord_case.splice(index, 1);
+        var history = wx.getStorageSync('HISTORY_KEYWORD_TASK');
+        history.splice(index, 1);
+        wx.setStorageSync('HISTORY_KEYWORD_TASK', history);
+      },
+      longTap(index) {
+        this.isShowArray = this.isShowArray.map(item => {
+          item = false;
+          return item
+        })
+        this.isShowArray[index] = true;
+        this.$apply();
+      },
+      history(item) {
+        this.searchClentValue = item;
+        this.$apply();
+      },
+      submitSearch(e) {
+        var value = e.detail.value.replace(/(^\s*)|(\s*$)/g, "");
+        if (value) {
+          var pages = getCurrentPages();
+          var prevPage = pages[pages.length - 2]; //上一个页面
+          if(prevPage){
+          prevPage.isRefresh(e.detail.value);
+          wx.navigateBack({
+            delta: 1, //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+            success: () => {
+              var History_KeyWord_Task = wx.getStorageSync('HISTORY_KEYWORD_TASK');
+              if (History_KeyWord_Task.length >= 20) {
+                History_KeyWord_Task.splice(History_KeyWord_Task.length - 1, 1);
+              }
+              History_KeyWord_Task.unshift(value);
+              History_KeyWord_Task = myDistinct(History_KeyWord_Task);
+              wx.setStorageSync('HISTORY_KEYWORD_TASK', History_KeyWord_Task)
+            }
+          });
+          this.$apply();
+          }
+          
+        } else {
+          wx.showToast({
+            title: '搜索为空,请重试！', //提示的内容,
+            icon: 'none', //图标,
+            duration: 2000, //延迟时间,
+            mask: true, //显示透明蒙层，防止触摸穿透,
+            success: res => {}
+          });
+        }
+      }
+    };
+    watch = {
+      IsArchiveIndex(index){
+        this.searchData.IsArchive=this.IsArchive.data[index].value;
+        this.$apply();
+      },
+      CategoryIndex(index){
+        this.searchData.Category=this.Category.data[index].id;
+        this.$apply();
+      },
+       creationTime(data) {
+          if (!this.searchData.creationTime) {
+              this.searchData.creationTime = {};
+          }
+          this.searchData.creationTime.StartDate = data.startDateData;
+          this.searchData.creationTime.EndDate = data.endDateData;
+          this.$apply();
+      },
+      NameValue(value){
+        this.searchData.Name=value;
+        this.$apply();
+      },
+      ClientNameValue(value){
+        this.searchData.ClientName=value;
+        this.$apply();
+      },
+    };
+    // 判断初始化历史数据
+    isHistory() {
+      var pages = getCurrentPages();
+      var prevPage = pages[pages.length - 2]; //上一个页面
+      prevPage.data.queryStream = {};
+      prevPage.data.refresh = false;
+      var History_KeyWord_Task = wx.getStorageSync('HISTORY_KEYWORD_TASK');
+      if (!History_KeyWord_Task) {
+        History_KeyWord_Task = [];
+        wx.setStorageSync('HISTORY_KEYWORD_TASK', History_KeyWord_Task)
+      } else {
+        this.history_keyWord_case = History_KeyWord_Task;
+        for (var index in this.history_keyWord_case) {
+          this.isShowArray[index] = false;
+        }
+      }
+      this.$apply();
+    }
+    async GetGeneralCodeComboOutput(){
+      var resData=await ajax.getData(
+        '/api/services/web/common/GetGeneralCodeComboOutput',
+        'post',
+        {
+            class: "TPCT",
+        }
+      )
+      if(resData.statusCode==200){
+        this.Category.data=resData.data.result;
+        this.$apply();
+      }else{
+        wx.showToast({
+          title: '网络错误！', //提示的内容,
+          icon: 'none', //图标,
+          duration: 2000, //延迟时间,
+          mask: false, //显示透明蒙层，防止触摸穿透,
+          success: res => {}
+        });
+      }
+    }
+    isRefresh(caseInfoData){
+      this.CaseNameValue=caseInfoData.name;
+      this.searchData.CaseName=caseInfoData.name;
+      this.searchData.CaseId=caseInfoData.id;
+      this.ClientNameValue=caseInfoData.clientName;
+      this.searchData.ClientName=caseInfoData.clientName;
+      this.searchData.ClientId=caseInfoData.clientId;
+      this.$apply();
+    }
+    onLoad() {
+      this.isHistory();
+      this.GetGeneralCodeComboOutput();
+    };
+    onShow() {};
+  }
+</script>
+

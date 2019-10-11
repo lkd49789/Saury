@@ -1,0 +1,183 @@
+<!--  -->
+
+<style lang='scss'>
+    .container {
+        height: 100%;
+        .main {
+            margin: 149rpx 0 44rpx 0;
+            .first-block {
+                .clientName {
+                    padding: 0 28rpx 20rpx 28rpx;
+                    >view:last-child {
+                        margin-top: 20rpx;
+                        color: #7a7a7a;
+                    }
+                }
+            }
+            >view:not(:last-child)::after {
+                content: '';
+                display: block;
+                height: 15rpx;
+                background: #f4f4f4;
+            }
+            .second-block {
+                margin-top: 20rpx;
+                .conflict-record {
+                    padding: 0 28rpx 20rpx 28rpx;
+                    >view:not(:last-child) {
+                        margin-bottom: 20rpx;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                    }
+                    .one-row {
+                        color:#e20000;
+                        >view:first-child {
+                            display: flex;
+                            align-items: center;
+                            >view:first-child {
+                                height: 30rpx;
+                                width: 30rpx;
+                                border-radius: 50%;
+                                margin-right: 14rpx
+                            }
+                        }
+                        >view:last-child {
+                            color: #5d73fa;
+                        }
+                        .NoConflict{
+                            color: #069400;
+                        }
+                        .HasConflict{
+                            color:#e20000;
+                        }
+                        .CreationRefuse{
+                            color:#e20000;
+                        }
+                    }
+                    .two-row {
+                        >view:last-child {
+                            color: #7a7a7a;
+                        }
+                    }
+                    .three-row {
+                        >view:first-child {
+                            margin-bottom: 20rpx;
+                            color: #7a7a7a;
+                        }
+                    }
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class='container'>
+        <view class="page-title">
+            案件检索结果
+        </view>
+        <view class="main">
+            <view class="first-block">
+                <view class="clientName">
+                    <view>{{caseInfoData.name||'未填写'}}</view>
+                    <view>{{caseInfoData.clientName||'未填写'}}</view>
+                </view>
+            </view>
+            <view class="second-block">
+                <view class="conflict-record">
+                    <view class="one-row">
+                        <view>
+                            <view style="border:1px solid {{OrderItemData.conflictCondition.statusColor}}"></view>
+                            <view>{{OrderItemData.creationResult.resultText}}</view>
+                        </view>
+                        <view @tap="toAuditedResultDetail('{{OrderItemData.id}}')">{{OrderItemData.conflictResults.length || 0  }}条冲突结果</view>
+                    </view>
+                    <view class="two-row">
+                        <view>{{OrderItemData.updationUserName||'未填写'}}</view>
+                        <view>{{OrderItemData.completeTime||'未填写'}}</view>
+                    </view>
+                    <view class="three-row">
+                        <view>备注</view>
+                        <view>{{OrderItemData.remark||'未填写'}}</view>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js';
+    import {
+        formatTimeSymbol
+    } from '../../../../utils/cofig/api.js';
+    export default class auditedResults extends wepy.page {
+        config = {
+            navigationBarTitleText: "",
+        };
+        data = {
+            caseInfoData: {},
+            OrderItemData: {},
+        };
+        components = {};
+        methods = {
+            toAuditedResultDetail(id){
+                wx.navigateTo({ url: './auditedResultDetail?id='+id });
+            }
+        };
+        events = {};
+        watch = {};
+        computed = {};
+        //检索结果
+        async GetOrderItem(id) {
+            var resData = await ajax.getData(
+                '/api/services/web/caseOrder/GetOrderItem',
+                'post', {
+                    id
+                }
+            )
+            console.log(resData.data.result);
+            if (resData.statusCode == 200) {
+                var OrderItemData = resData.data.result;
+                //完成时间 completeTime
+                OrderItemData.completeTime = OrderItemData.completeTime?OrderItemData.completeTime.split('T')[0]:'';
+                // switch (OrderItemData.conflictCondition.result) {
+                //     case 'NoConflict':
+                //         OrderItemData.conflictCondition.statusColor='#069400'
+                //         break;
+                //     case 'HasConflict':
+                //         OrderItemData.conflictCondition.statusColor='#e20000'
+                //         break;
+                //     case 'CreationRefuse':
+                //         OrderItemData.conflictCondition.statusColor='#e20000'
+                //         break;
+                //     default:
+                //         OrderItemData.conflictCondition.statusColor='#e20000'
+                //         break;
+                // }
+                this.OrderItemData = OrderItemData;
+                this.$apply();
+            }
+        }
+        //案件信息
+        async GetCaseInfo(caseId) {
+            var resData = await ajax.getData(
+                '/api/services/web/case/GetCaseInfo',
+                'post', {
+                    id: caseId
+                }
+            )
+            if (resData.statusCode == 200) {
+                this.caseInfoData = resData.data.result;
+            }
+            this.$apply();
+        }
+        onLoad(options) {
+            this.GetCaseInfo(options.caseId);
+            this.GetOrderItem(options.id);
+        };
+        onShow() {};
+    }
+</script>

@@ -1,0 +1,164 @@
+<style lang='less'>
+    .container {
+        height: 100%;
+        width: 100%;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 0rpx;
+        left: 0;
+        right: 0;
+        bottom: 0; // background-repeat: no-repeat;
+        // background-size: cover;
+        // background-image: url('../../images/minapp_startup_bg6.jpg');
+        .icon {
+            position: absolute;
+            top: 150rpx;
+        }
+        >view:last-child {
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            bottom: 180rpx;
+            .wx {
+                // background: #03af01;
+                height: 100%;
+                width: 100%;
+                color: #fff;
+                margin-bottom: 30rpx;
+                >button {
+                    width: 100%;
+                    color: #fff;
+                    border-radius: 0;
+                    font-size: 32rpx;
+                }
+            }
+            .lzh {
+                height: 100%;
+                width: 100%;
+                margin-bottom: 30rpx;
+                .lzhLogin {
+                    background: #fff;
+                    width: 100%;
+                    font-size: 32rpx;
+                    border-radius: 0;
+                }
+                .lzhLogin::after {
+                    border-radius: 0;
+                }
+            }
+        }
+    }
+</style>
+
+<!--  -->
+<template>
+    <view class='container'>
+        <image src="{{bgImage}}" mode="scaleToFill" lazy-load="false" style="height:100%;width:100%">
+        </image>
+        <view class="icon">
+            <icon class="iconfont icon-lvzhihuilogo" style="font-size:400rpx;color:#fff"></icon>
+        </view>
+        <view>
+            <view class="wx">
+                <button wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" type='primary' size="default">
+                    <icon class="iconfont icon-gongzhonghao" style="font-size:34rpx;color:#ffff">   微信登陆</icon>
+                 </button>
+            </view>
+            <view class="lzh">
+                <!-- <icon class="iconfont icon-ailogo" style="font-size:32rpx;color:#5d73fa"></icon>
+                                                                <text>律智荟登录</text> -->
+                <button size="default" class="lzhLogin" @tap="toLogin">
+                    <icon class="iconfont icon-genggaimima1" style="font-size:34rpx;color:#5d73fa">  <text style="color:#7a7a7a">  账密登陆</text></icon>
+                 </button>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../utils/cofig/ajax.js'
+    export default class chooseLogin extends wepy.page {
+        config = {
+            backgroundTextStyle: 'dark',
+            navigationBarBackgroundColor: '#fff',
+            navigationBarTitleText: '律智荟',
+            navigationBarTextStyle: 'black'
+        };
+        data = {
+            bgImage: '../../images/minapp_startup_bg12.jpg',
+            canIUse: wx.canIUse('button.open-type.getUserInfo'),
+            code: '',
+        };
+        components = {};
+        methods = {
+            bindGetUserInfo(res) {
+                if (res.detail.userInfo) {
+                    wx.request({
+                        url: 'https://www.ailinkedlaw.com/api/Account/GetWechatUserInfo', //接口地址
+                        data: {
+                            code: this.code,
+                            encryptedData: res.detail.encryptedData,
+                            iv: res.detail.iv,
+                            rawData: res.detail.rawData,
+                            signature: res.detail.signature
+                        },
+                        method: "POST",
+                        header: {
+                            'content-type': 'application/json' //默认值
+                        },
+                        success: res => {
+                            if (res.data.result.accessToken) {
+                                wx.switchTab({
+                                    url: '../main/index'
+                                })
+                                try {
+                                    wx.setStorageSync('access', res.data.result.accessToken);
+                                } catch (err) {
+                                    console.log(err);
+                                }
+                            } else {
+                                wx.navigateTo({
+                                    url: './login?openId=' + res.data.result.openId + '&unionId=' + res.data.result.unionId
+                                });
+                            }
+                        },
+                    })
+                } else {
+                    //用户按了拒绝按钮
+                    wx.showModal({
+                        title: '警告',
+                        content: '您点击了拒绝授权，将无法快捷进入小程序，请授权之后再进入!!!',
+                        showCancel: false,
+                        confirmText: '返回授权',
+                        success: function(res) {
+                            if (res.confirm) {
+                                console.log('用户点击了“返回授权”')
+                            }
+                        }
+                    })
+                }
+            },
+            toLogin() {
+                wx.navigateTo({
+                    url: './login'
+                });
+            }
+        };
+        onShow() {
+            wx.login({
+                success: res => {
+                    var code = res.code;
+                    this.code = res.code;
+                    this.$apply();
+                },
+                fail: () => {},
+                complete: () => {}
+            });
+        };
+    }
+</script>

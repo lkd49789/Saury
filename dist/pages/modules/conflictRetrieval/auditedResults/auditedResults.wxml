@@ -1,0 +1,33 @@
+
+    <view class="container">
+        <view class="page-title">
+            案件检索结果
+        </view>
+        <view class="main">
+            <view class="first-block">
+                <view class="clientName">
+                    <view>{{caseInfoData.name||'未填写'}}</view>
+                    <view>{{caseInfoData.clientName||'未填写'}}</view>
+                </view>
+            </view>
+            <view class="second-block">
+                <view class="conflict-record">
+                    <view class="one-row">
+                        <view>
+                            <view style="border:1px solid {{OrderItemData.conflictCondition.statusColor}}"/>
+                            <view>{{OrderItemData.creationResult.resultText}}</view>
+                        </view>
+                        <view bindtap="toAuditedResultDetail" data-wpytoauditedresultdetail-a="{{OrderItemData.id}}">{{OrderItemData.conflictResults.length || 0  }}条冲突结果</view>
+                    </view>
+                    <view class="two-row">
+                        <view>{{OrderItemData.updationUserName||'未填写'}}</view>
+                        <view>{{OrderItemData.completeTime||'未填写'}}</view>
+                    </view>
+                    <view class="three-row">
+                        <view>备注</view>
+                        <view>{{OrderItemData.remark||'未填写'}}</view>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>

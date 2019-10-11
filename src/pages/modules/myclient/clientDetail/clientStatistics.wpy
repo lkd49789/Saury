@@ -1,0 +1,396 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .fixed-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 999;
+            .case-top {
+                height: 104rpx;
+                line-height: 104rpx;
+                padding: 0 28rpx;
+                font-size: 48rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        .main {
+            margin-top: 230rpx;
+            .canvas-content {
+                >view:first-child {
+                    padding: 0rpx 28rpx 0rpx 28rpx; // margin-bottom: 30rpx;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    >view {
+                        width: 40%;
+                        margin-bottom: 0;
+                        .picker {
+                            >view {
+                                width: 100%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: #5d73fa;
+                            }
+                        }
+                    }
+                }
+                >view:last-child {
+                    //  padding: 0rpx 28rpx 30rpx 0;
+                    //  margin-top: -150rpx;
+                    .canvas {
+                        // position:absolute;
+                    }
+                }
+            }
+            .interval-chunk {
+                width: 100%;
+                height: 15rpx;
+                background: #f4f4f4;
+            }
+            .amount {
+                padding: 30rpx 28rpx;
+                >view {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 20rpx;
+                    >view:first-child {
+                        padding: 5rpx 20rpx;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: #fff;
+                    }
+                }
+                // >view:not(:last-child) {
+                //     margin-bottom: 20rpx
+                // }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="fixed-view">
+            <!-- <scroll-view class='extra-word' scroll-y='{{isScroll}}'> -->
+            <view class="case-top">
+                <text class="title">客户统计</text>
+            </view>
+            <!-- 案件导航 -->
+            <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" />
+            <!-- </scroll-view> -->
+        </view>
+        <view class='main' wx:if="{{currentTab==0}}">
+            <view class="canvas-content">
+                <view>
+                    <year :options.sync="year" :index.sync='yearIndex' :twoWayTitle="yearIndex" />
+                    <category :options.sync="category" :index.sync='categoryIndex' :twoWayTitle="categoryIndex" />
+                </view>
+                <view style="height:900rpx;display:flex;align-items:center">
+                    <canvas class="canvas" canvas-id="clientCanvas" style="height:700rpx;width:100%;" bindtouchstart="touchHandler" bindtouchmove="bindscroll" bindtouchend="touchEnd" disable-scroll="false"></canvas>
+                </view>
+            </view>
+            <view class="interval-chunk">
+            </view>
+            <view class="amount">
+                <repeat for="{{seriesData}}" key="index" index="index" item="item">
+                    <view>
+                        <view style="background:{{item.color}}">
+                            <text>{{item.name}}</text>
+                        </view>
+                        <view>
+                            <text>客户总数：<text style="color:{{item.color}}">{{item.sum}}</text></text>
+                        </view>
+                    </view>
+                </repeat>
+            </view>
+        </view>
+        <view class='main' wx:if="{{currentTab==1}}">
+            <view class="canvas-content">
+                <view>
+                    <categorys :options.sync="categorys" :index.sync='categorysIndex' :twoWayTitle="categorysIndex" />
+                    <years :options.sync="years" :index.sync='yearsIndex' :twoWayTitle="yearsIndex" />
+                </view>
+                <view style="height:900rpx;display:flex;align-items:center">
+                    <canvas class="canvas" canvas-id="clientYearsCanvas" style="height:700rpx;width:100%;" bindtouchstart="touchHandler"></canvas>
+                </view>
+            </view>
+            <view class="interval-chunk">
+            </view>
+            <view class="amount">
+                <!-- <repeat for="{{pieSeriesData}}" key="index" index="index" item="item"> -->
+                    <view>
+                        <view style="background:#ff9900">
+                            <text>{{categorys.displayText[categorysIndex]}}</text>
+                        </view>
+                        <view>
+                            <text>客户总数：<text style="color:#ff9900">{{pieSeriesCount}}</text></text>
+                        </view>
+                    </view>
+                <!-- </repeat> -->
+            </view>
+        </view>
+        <placeHolderImage :placeHolder.sync="placeHolder" :twoWayTitle="placeHolder" />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import ajax from '@/utils/cofig/ajax.js'
+    import mixins from '@/utils/cofig/mixin.js';
+    import navbar from '@/components/navbar';
+    import placeHolderImage from '@/components/placeHolderImage';
+    import year from '@/components/picker/option';
+    import category from '@/components/picker/option';
+    import years from '@/components/picker/option';
+    import categorys from '@/components/picker/option';
+    import wxCharts from '@/utils/cofig/wxcharts.js';
+    import {
+        getSum
+    } from '@/utils/cofig/api.js';
+    export default class clientStatistics extends wepy.page {
+        components = {
+            placeHolderImage,
+            navbar,
+            year,
+            category,
+            years,
+            categorys,
+        };
+        data = {
+            currentTab: 0,
+            navbars: ['增长统计图', '客户年度统计图', ],
+            year: {
+                title: '同比：',
+                name: 'year',
+                value: [],
+                displayText: [],
+                warning: false,
+                // type:'digit',
+            },
+            yearIndex: 1,
+            category: {
+                title: '图标类型',
+                name: 'category',
+                value: ['line', 'column'],
+                displayText: ['折线图', '柱状图'],
+                warning: false,
+                // type:'digit',
+            },
+            categoryIndex: 0,
+            years: {
+                title: '统计年：',
+                name: 'years',
+                value: [],
+                displayText: [],
+                warning: false,
+                // type:'digit',
+            },
+            yearsIndex: 0,
+            categorys: {
+                title: '图标类型',
+                name: 'categorys',
+                value: ["casecategory", 'category', "region", "origin"],
+                displayText: ["案件类别", "客户类型", "客户地区", "客户来源"],
+                warning: false,
+                // type:'digit',
+            },
+            categorysIndex: 0,
+            seriesData: {},
+            pieSeriesData:{},
+            lineChart: null,
+            pieSeriesCount:0
+        };
+        methods = {
+            touchHandler(e) {
+                this.lineChart.showToolTip(e, {
+                    format: function(item, category) {
+                        // console.log(e);
+                        return category + ' ' + '合计数量：' + item.data
+                    }
+                });
+                this.lineChart.scrollStart(e);
+            },
+            bindscroll(e) {
+                this.lineChart.scroll(e)
+            },
+            touchEnd(e) {
+                this.lineChart.scrollEnd(e)
+            }
+        };
+        mixins = [mixins];
+        watch = {
+            currentTab(current) {
+                if (current == 0) {
+                    this.GetClientTotalStatistics();
+                } else if (current == 1) {
+                    this.GetYearClientStatistics();
+                }
+            },
+            yearIndex() {
+                this.GetClientTotalStatistics()
+            },
+            categoryIndex() {
+                this.GetClientTotalStatistics()
+            },
+            yearsIndex() {
+                this.GetYearClientStatistics();
+            },
+            categorysIndex() {
+                this.GetYearClientStatistics();
+            }
+        }
+        async GetClientTotalStatistics() {
+            var data = {
+                comparisonRange: this.year.value[this.yearIndex],
+                filter: "",
+                filterName: "",
+                modeValue: 0,
+                statisticsMode: 0,
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/clientStatistics/GetClientBasicTotal',
+                'post',
+                data
+            )
+            if (resData.statusCode == 200) {
+                console.log(resData.data.result);
+                var ClientTotalStatistics = resData.data.result;
+                this.canvas(ClientTotalStatistics.categorys, ClientTotalStatistics.seriesData);
+                for (var index in ClientTotalStatistics.seriesData) {
+                    ClientTotalStatistics.seriesData[index].data
+                    ClientTotalStatistics.seriesData[index]['sum'] = getSum(ClientTotalStatistics.seriesData[index].data);
+                }
+                this.seriesData = ClientTotalStatistics.seriesData.reverse();
+                this.$apply();
+            } else {
+                wx.showToast({
+                    title: resData.message,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
+            }
+            this.$apply();
+        }
+        async GetYearClientStatistics() {
+            var data = {
+                Year: this.years.value[this.yearsIndex],
+                category: this.categorys.value[this.categorysIndex],
+                categoryName: this.categorys.displayText[this.categorysIndex],
+                comparisonRange: 2,
+                filter: "",
+                filterName: "",
+                modeValue: 0,
+                statisticsMode: 0,
+            }
+            var resData= await ajax.getData(
+                '/api/services/web/clientStatistics/GetClientYearTotal',
+                'post',
+                data
+            )
+            if(resData.statusCode==200){
+                var seriesData=resData.data.result.seriesData;
+                var pieSeriesCount=0
+                for(var index in seriesData){
+                    seriesData[index]['data']= Number(seriesData[index].value);
+                    seriesData[index].value=null;
+                    pieSeriesCount+=seriesData[index].data;
+                }
+                 this.pieSeriesCount=pieSeriesCount;
+                if(this.pieSeriesCount==0){
+                    seriesData=[{
+                        data:100,
+                        name:'暂无数据！'
+                    }]
+                this.pieSeriesData=seriesData;
+                }
+                this.pieSeriesData=seriesData;
+                this.piecanvas(seriesData);
+                this.$apply();
+            }else{
+                wx.showToast({
+                    title: resData.message,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
+            }
+        }
+        canvas(categories, series) {
+            let windowWidth = 320;
+            try {
+                let res = wx.getSystemInfoSync();
+                windowWidth = res.windowWidth;
+                console.log(windowWidth)
+            } catch (e) {
+                // do something when get system info failed
+            }
+            if (this.category.value[this.categoryIndex] == 'line') {
+                var dataLabel = false
+            } else {
+                var dataLabel = true
+            }
+            this.lineChart = new wxCharts({
+                width: windowWidth,
+                height: 300,
+                animation: true,
+                canvasId: 'clientCanvas',
+                type: this.category.value[this.categoryIndex],
+                disablePieStroke: false,
+                dataLabel: dataLabel,
+                legend: true,
+                categories: categories,
+                series: series,
+                dataPointShape: true,
+                enableScroll: true,
+            });
+            this.$apply()
+        }
+        piecanvas(series) {
+            let windowWidth = 320;
+            try {
+                let res = wx.getSystemInfoSync();
+                windowWidth = res.windowWidth;
+                console.log(windowWidth)
+            } catch (e) {
+                // do something when get system info failed
+            }
+            new wxCharts({
+                width: windowWidth,
+                height: 300,
+                animation: true,
+                canvasId: 'clientYearsCanvas',
+                type: 'pie',
+                // disablePieStroke: false,
+                dataLabel: true,
+                // legend: true,
+                series: series,
+            });
+            this.$apply()
+        }
+        onLoad() {
+            for (var i = 6; i > 0; i--) {
+                this.year.value.unshift(i);
+                this.year.displayText.unshift(i + '年');
+            }
+            var date = new Date().getFullYear();
+            for (var i = 0; i < 10; i++) {
+                this.years.value.push(date - i);
+                this.years.displayText.push(date - i);
+            }
+            this.GetClientTotalStatistics();
+            
+            // this.canvas();
+            this.$apply();
+        }
+    }
+</script>

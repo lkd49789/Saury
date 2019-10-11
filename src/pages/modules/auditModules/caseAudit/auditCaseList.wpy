@@ -1,0 +1,370 @@
+<!--  -->
+<style lang="less">
+    .body {
+        height: 100%;
+        .fixed-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 9999;
+            .case-top {
+                height: 104rpx;
+                line-height: 104rpx;
+                padding: 0 28rpx;
+                font-size: 48rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        .main {
+            margin: 230rpx 28rpx 0 28rpx;
+            >view {
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                padding: 30rpx 24rpx;
+                margin-bottom: 44rpx;
+                >view:first-child {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
+                    margin-bottom: 36rpx;
+                }
+                >view:nth-child(2){
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    margin-bottom: 20rpx;
+                    color:#7a7a7a;
+                }
+                >view:last-child{
+                    display: flex;
+                    align-items: center;
+                    justify-content:space-between;
+                    color:#7a7a7a;
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="body">
+        <view class="fixed-view">
+            <!-- <scroll-view class='extra-word' scroll-y='{{isScroll}}'> -->
+            <view class="case-top">
+                <text class="title">案件审核</text>
+                <icon class="iconfont icon-sousuo1 " style="font-size:60rpx;color:#5d73fa" @tap="toSearch"></icon>
+            </view>
+            <!-- 案件导航 -->
+            <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" />
+            <!-- </scroll-view> -->
+        </view>
+        <view class='main' wx:if="{{currentTab==0}}">
+            <repeat for="{{waitCreationsData.items}}" key="index" index="index" item="item">
+                <view @tap="toCaseDetailAudit('{{item.id}}')">
+                    <view>
+                        <text>{{item.caseName||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <text>{{item.clientName||'未填写'}}</text>
+                    </view>
+                    <view>
+                        <view>
+                            <text>{{item.caseCategoryText||'未填写'}}</text>
+                        </view>
+                        <view>
+                            <text>{{item.acceptDateText||'未填写'}}</text>
+                        </view>
+                    </view>
+                </view>
+            </repeat>
+        </view>
+        <view class='main' wx:if="{{currentTab==1}}">
+            <repeat for="{{alreadyCreationsData.items}}" key="index" index="index" item="item">
+                <view @tap="toCaseDetailAudit('{{item.id}}')">
+                    <view>
+                        <text>{{item.caseName}}</text>
+                    </view>
+                    <view>
+                        <text>{{item.clientName}}</text>
+                    </view>
+                    <view>
+                        <view>
+                            <text>{{item.caseCategoryText}}</text>
+                        </view>
+                        <view>
+                            <text>{{item.acceptDateText}}</text>
+                        </view>
+                    </view>
+                </view>
+            </repeat>
+        </view>
+        <placeHolderImage :placeHolder.sync="placeHolder" :twoWayTitle="placeHolder"/>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import navbar from '../../../../components/navbar';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import mixins from '../../../../utils/cofig/mixin.js';
+    import placeHolderImage from '../../../../components/placeHolderImage';
+    export default class autitCaseList extends wepy.page {
+        config = {
+            enablePullDownRefresh: true,
+            backgroundTextStyle: 'dark',
+            backgroundColorTop: '#f4f4f4',
+            backgroundColorBottom: '#f4f4f4',
+        };
+        components = {
+            placeHolderImage,
+            navbar
+        };
+        data = {
+            refresh: false,
+            isSearchRefresh:false,
+            queryStream: {},
+            currentTab: 0,
+            navbars: ['待审核',],
+            pageNumber: [1, 1],
+            waitCreationsData: {},
+            alreadyCreationsData: {},
+        };
+        watch={
+            currentTab(current){
+                 wx.pageScrollTo({
+                        scrollTop: 0,
+                        duration: 0,
+                });
+                if(current==0){
+                    if (!this.waitCreationsData.totalCount) {
+                        this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
+                        this.placeHolder.placeHolderShow = true;
+                    } else {
+                        this.placeHolder.placeHolderShow = false;
+                    }
+                    this.$apply();
+                }
+                if(current==1){
+                     if (!this.alreadyCreationsData.totalCount) {
+                        this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_1;
+                        this.placeHolder.placeHolderShow = true;
+                    } else {
+                        this.placeHolder.placeHolderShow = false;
+                    }
+                    this.$apply();
+                }
+            }
+        }
+        // 下拉刷新
+         onPullDownRefresh() {
+            this.placeHolder.placeHolderShow = false;
+            if(this.currentTab==0){
+                this.pageNumber[0]= 1,
+                this.waitCreationsData={};
+                this.GetWaitCaseCreations();  
+            }else if(this.currentTab==1){
+                 this.pageNumber[1]= 1,
+                this.alreadyCreationsData={};
+                this.GetAlreadyCaseCreations();
+            }
+            this.$apply();
+            wx.hideNavigationBarLoading(); //完成停止加载
+            wx.stopPullDownRefresh(); //停止下拉刷新
+        }
+        // 上拉加载
+        onReachBottom() {
+            if(this.currentTab==0){
+                 if (this.waitCreationsData.totalCount / 10 > this.pageNumber[0] && this.$parent.global.netWorkString) {
+                this.pageNumber[0] += 1;
+                this.GetWaitCaseCreations();
+            } else {
+                if (this.$parent.global.netWorkString) {
+                    wx.showToast({
+                        title: '我们是有底线的！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                } else {
+                    wx.showToast({
+                        title: '网络连接失败！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            }
+            }
+            if(this.currentTab==1){
+                if (this.alreadyCreationsData.totalCount / 10 > this.pageNumber[1] && this.$parent.global.netWorkString) {
+                this.pageNumber[1] += 1;
+                 this.GetAlreadyCaseCreations();
+            } else {
+                if (this.$parent.global.netWorkString) {
+                    wx.showToast({
+                        title: '我们是有底线的！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                } else {
+                    wx.showToast({
+                        title: '网络连接失败！',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
+                }
+            }
+            }
+            this.$apply();
+        }
+        methods = {
+            toSearch(){
+                wx.navigateTo({ url: './search/searchCase_audit' });
+            },
+            toCaseDetailAudit(orderId){
+                wx.navigateTo({
+                    url: './caseDetailAudit/caseDetailAudit?id='+orderId
+                });
+            }
+        };
+        mixins = [mixins];
+        async GetWaitCaseCreations(...arg) {
+            var keyWord=arg[0]?arg[0].KeyWord:'';
+            var data = {
+                keyWord,
+                status: '',
+                sorting: 'AcceptDate desc',
+                pageNumber: this.pageNumber[0],
+                pageSize: 10
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/caseCreation/GetCaseCreations',
+                'post',
+                data
+            )
+            switch (resData.statusCode) {
+                case 200:
+                    this.waitCreationsData['totalCount'] = resData.data.result.totalCount;
+                    if (resData.data.result.items.length !== 0) {
+                        var waitCreationsData = resData.data.result.items;
+                        if(this.waitCreationsData.items){
+                            this.waitCreationsData.items =this.waitCreationsData.items.concat(waitCreationsData);
+                        }else{
+                            this.waitCreationsData['items'] = waitCreationsData;
+                        }
+                        var  isRefresh={
+                             isRefresh:false
+                        }
+                        wx.setStorageSync('isRefresh', isRefresh);
+                    } else {
+                        this.placeHolder.placeHolderImageIndex = 0;
+                        this.placeHolder.placeHolderShow = true;
+                        this.placeHolderImageIndex_0=0;
+                    }
+                    this.$apply();
+                    break;
+                case 403:
+                    console.log('您没有权限');
+                    this.placeHolder.placeHolderImageIndex = 3;
+                     this.placeHolder.placeHolderShow = true;
+                     this.placeHolderImageIndex_0=3;
+                    this.$apply();
+                    break;
+                case 500:
+                    console.log('数据请求错误')
+                    this.placeHolder.placeHolderImageIndex = 1;
+                     this.placeHolder.placeHolderShow = true;
+                     this.placeHolderImageIndex_0=1;
+                    this.$apply();
+                default:
+                    break;
+            }
+        }
+        async GetAlreadyCaseCreations(...arg) {
+            var keyWord=arg[0]?arg[0].KeyWord:'';
+            wx.showLoading({
+                title: '加载中，请稍等！',
+                mask: true,
+            });
+            var data = {
+                keyWord,
+                status: '1',
+                sorting: "",
+                pageNumber: this.pageNumber[1],
+                pageSize: 10
+            }
+            var resData = await ajax.getData(
+                '/api/services/web/caseCreation/GetCaseCreations',
+                'post',
+                data
+            )
+            switch (resData.statusCode) {
+                case 200:
+                    this.alreadyCreationsData['totalCount'] = resData.data.result.totalCount;
+                    if (resData.data.result.items.length !== 0) {
+                        var alreadyCreationsData = resData.data.result.items;
+                        console.log(alreadyCreationsData);
+                        if(this.alreadyCreationsData.items){
+                            this.alreadyCreationsData.items =this.alreadyCreationsData.items.concat(alreadyCreationsData) ;
+                        }else{
+                            this.alreadyCreationsData['items']=alreadyCreationsData
+                        }
+                        this.$apply();
+                    } else {
+                        this.placeHolderImageIndex_1 = 0;
+                    }
+                    this.$apply();
+                    break;
+                case 403:
+                    console.log('您没有权限');
+                     this.placeHolderImageIndex_1 = 3;
+                    this.$apply();
+                    break;
+                case 500:
+                    console.log('数据请求错误')
+                    this.placeHolderImageIndex_1 = 1;
+                    this.$apply();
+                default:
+                    break;
+            }
+        }
+        isRefresh(...key_word){
+            this.refresh=false;
+            this.pageNumber= [1, 1],
+            this.waitCreationsData={};
+            this.alreadyCreationsData={};
+            this.currentTab=0;
+            this.GetWaitCaseCreations(key_word[0]);
+            this.GetAlreadyCaseCreations(key_word[0]);
+            this.$apply();
+        }
+        onLoad() {
+            this.GetWaitCaseCreations();
+            this.GetAlreadyCaseCreations();
+        }
+        onShow(){
+            var pages = getCurrentPages();
+            var prevPage = pages[pages.length - 1]; //上一个页面
+            var queryStream = prevPage.data.queryStream;
+            var isRefresh= wx.getStorageSync('isRefresh');
+            if(prevPage.data.refresh){
+                prevPage.data.refresh=false;
+                this.isRefresh(queryStream);
+            }else{
+                if(isRefresh.isRefresh){
+                    this.isRefresh();
+                }
+            }
+            this.$apply();
+        }
+        
+    }
+</script>

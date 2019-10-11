@@ -1,0 +1,371 @@
+<!--  -->
+<style lang='scss'>
+  .container {
+    height: 100%;
+    .page-title {
+      height: 104rpx;
+      line-height: 104rpx;
+      font-size: 48rpx;
+      padding-left: 28rpx;
+      border-bottom: 1px solid #dedede;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      z-index: 999;
+    }
+    .main {
+      padding: 149rpx 28rpx 0 28rpx;
+      position: relative;
+      >view {
+        box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+        border-radius: 20rpx;
+        padding: 30rpx 24rpx;
+        margin-bottom: 44rpx;
+      }
+      .audit-record {
+        color: #5d73fa;
+        display: flex;
+        align-items: center;
+      }
+      .caseInfo {
+        >view:not(:last-child) {
+          margin-bottom: 14rpx;
+        }
+        >view:last-child {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+      }
+      .search-condition {
+        .search-btn {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 20rpx;
+          .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+        .search-object {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
+          margin-bottom: 30rpx;
+          >view:not(:last-child) {
+            margin-bottom: 14rpx;
+          }
+          >view:first-child {
+            color: #7a7a7a;
+          }
+          .conflictCheck {
+            border-bottom: 1px solid #dfdfdf;
+            padding-bottom: 30rpx;
+            >view:first-child {
+              margin-bottom: 20rpx;
+            }
+            .conflictCheck-input {
+              display: flex;
+              flex-wrap: wrap;
+              align-items: center;
+              border: 1px solid #dfdfdf;
+              .input-text {
+                display: flex;
+                flex-wrap: wrap;
+                flex: 1;
+                >view {
+                  margin: 14rpx;
+                  padding: 5rpx 10rpx;
+                  background: #dedede;
+                  display: flex;
+                  align-items: center;
+                  margin-right: 16rpx;
+                  position: relative;
+                  .fixed-icon {
+                    margin-left: 14rpx;
+                    font-size: 25rpx;
+                    position: absolute;
+                    top: -35rpx;
+                    right: -17rpx;
+                  }
+                }
+                .input {
+                  background: #fff;
+                  border-bottom: 1px solid #dfdfdf;
+                  width: 100%;
+                  >input {
+                    width: 100%;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .auditBth {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #5d73fa;
+      color: #fff;
+      height: 98rpx;
+      font-size: 40rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+  }
+</style>
+
+<template>
+  <view class='container'>
+    <view class="page-title">
+      案件冲突检索
+    </view>
+    <view class="main">
+      <view class="audit-record" wx:if="{{false}}">
+        <icon class="iconfont icon-tishi" style="font-size:50rpx;margin-right:14rpx"></icon>
+        <text>是否查看上一次的审核记录</text>
+      </view>
+      <view class="caseInfo" @tap="toCaseDetailPage">
+        <view>{{caseInfoData.name}}</view>
+        <view>{{caseInfoData.clientName}}</view>
+        <view>
+          <view>{{caseInfoData.categoryText}}</view>
+          <text>{{caseInfoData.organizationUnitText}}</text>
+        </view>
+      </view>
+      <view class="search-condition">
+        <view class="search-btn">
+          <view>检索条件</view>
+          <view class="btn">
+            <text style="margin-right:20rpx">分词检索</text>
+            <switch checked bindchange="switchChange" style="zoom:0.7" color="#5d73fa" />
+          </view>
+        </view>
+        <repeat for="{{conflictCheckListDatas}}" key="index" index="index" item="item">
+          <view class="search-object">
+            <view>{{item.category}}</view>
+            <view>{{item.name}}</view>
+            <view>{{item.enName}}</view>
+            <view class="conflictCheck">
+              <view class="conflictCheck-input">
+                <view class="input-text">
+                  <repeat for="{{conflictCheckListDatas[index].searchName}}" key="index" index="Name_index" item="item">
+                    <view>
+                      <text>{{item}}</text>
+                      <icon class="iconfont icon-zirenwushanchu fixed-icon" @tap="deletCK('{{index}}','{{Name_index}}')"></icon>
+                    </view>
+                  </repeat>
+                  <view class="input" wx:if="{{switch||conflictCheckListDatas[index].searchName.length==0}}">
+                    <input value="{{chineseKeyword}}" type="text" confirm-type="done" placeholder="" placeholder-class="placeholder" maxlength="140" bindconfirm="subCK('{{index}}')" />
+                  </view>
+                </view>
+              </view>
+              <view class="conflictCheck-input">
+                <view class="input-text">
+                  <repeat for="{{conflictCheckListDatas[index].searchEnName}}" key="index" index="EnName_index" item="item">
+                    <view>
+                      <text>{{item}}</text>
+                      <icon class="iconfont icon-zirenwushanchu fixed-icon" @tap="deletEK('{{index}}','{{EnName_index}}')"></icon>
+                    </view>
+                  </repeat>
+                  <view class="input" wx:if="{{switch||conflictCheckListDatas[index].searchEnName.length==0}}">
+                    <input value="{{englishKeyword}}" type="text" confirm-type="done" placeholder="" placeholder-class="placeholder" maxlength="140" bindconfirm="subEK('{{index}}')" />
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </repeat>
+      </view>
+    </view>
+    <view class="auditBth" wx:if="{{isAudit}}" @touchend="search">
+      <text>检索</text>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import ajax from '../../../../utils/cofig/ajax.js';
+  import {
+    myDistinct
+  } from '../../../../utils/cofig/api.js';
+  export default class conflictRetrievalDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: "",
+    };
+    data = {
+      caseInfoData: {},
+      caseId: '',
+      conflictId: '',
+      conflictCheckTotalCount: 0,
+      conflictCheckListDatas: [],
+      chineseKeyword: '',
+      englishKeyword: '',
+      switch: true,
+      isAudit: false,
+    };
+    components = {};
+    methods = {
+      search() {
+        let conflictCheckListDatas = this.conflictCheckListDatas;
+        if (conflictCheckListDatas.length > 0) {
+          let searchResult = {
+            caseId: this.caseId,
+            caseCheckList: []
+          }
+          for (let i = 0, len = conflictCheckListDatas.length; i < len; i++) {
+            let caseCheckList = {};
+            caseCheckList.checkType = conflictCheckListDatas[i].checkType;
+            caseCheckList.keywordCN = conflictCheckListDatas[i].searchName.join(',');
+            caseCheckList.keywordEN = conflictCheckListDatas[i].searchEnName.join(',');
+            searchResult.caseCheckList.push(caseCheckList);
+          }
+          let result = JSON.stringify(searchResult);
+          wx.navigateTo({
+            url: './searchResult?jsonResult=' + result
+          });
+        } else {
+          wx.navigateTo({
+            url: './subSearchResult'
+          });
+        }
+        let Create_ConflictCheck_Data = {
+          id: this.conflictId,
+          caseId: this.caseId,
+          result: "",
+          remark: "",
+          conflictList: conflictCheckListDatas,
+          checkResults: []
+        }
+        wx.setStorage({
+          key: 'CREATE_CONFLICTCHECK_DATA',
+          data: Create_ConflictCheck_Data
+        });
+        this.$apply();
+      },
+      switchChange(e) {
+        this.switch = e.detail.value;
+        this.$apply();
+      },
+      deletCK(index, keyIndex) {
+        this.conflictCheckListDatas[index].searchName.splice(keyIndex, 1)
+        this.$apply();
+      },
+      deletEK(index, keyIndex) {
+        this.conflictCheckListDatas[index].searchEnName.splice(keyIndex, 1)
+        this.$apply();
+      },
+      subCK(index, e) {
+        this.chineseKeyword = e.detail.value;
+        this.conflictCheckListDatas[index].searchName.push(e.detail.value);
+        myDistinct(this.conflictCheckListDatas[index].searchName);
+        this.$apply();
+      },
+      subEK(index, e) {
+        this.englishKeyword = e.detail.value;
+        this.conflictCheckListDatas[index].searchEnName.push(e.detail.value);
+        myDistinct(this.conflictCheckListDatas[index].searchEnName);
+        this.$apply();
+      },
+      toCaseDetailPage() {
+        wx.navigateTo({
+          url: '../../mycase/caseDetail/casedetail?id=' + this.caseId + '&clientId=' + this.caseInfoData.clientId
+        });
+      }
+    };
+    events = {};
+    watch = {
+      conflictCheckListDatas(item) {
+        if (item.length == this.conflictCheckTotalCount) {
+          this.isAudit = true;
+        }
+      },
+      switch (newChecked, oldChecked) {
+        if (newChecked !== oldChecked) {
+          this.GetConflictCheckList(this.conflictId)
+        }
+      },
+      chineseKeyword(newVlue, oldValue) {
+        if (newVlue !== oldValue) {
+          this.chineseKeyword = oldValue;
+          this.$apply;
+        }
+      },
+      englishKeyword(newVlue, oldValue) {
+        if (newVlue !== oldValue) {
+          this.englishKeyword = oldValue;
+          this.$apply;
+        }
+      }
+    };
+    computed = {};
+    async GetCaseInfo(caseId) {
+      var resData = await ajax.getData(
+        '/api/services/web/case/GetCaseInfo',
+        'post', {
+          id: caseId
+        }
+      )
+      if (resData.statusCode == 200) {
+        this.caseInfoData = resData.data.result;
+      }
+      this.$apply();
+    }
+    //检索关键词
+    async GetConflictCheckList(conflictId) {
+      wx.showLoading({
+        title: 'Loading...', //提示的内容,
+        mask: true, //显示透明蒙层，防止触摸穿透,
+        success: res => {}
+      });
+      var resData = await ajax.getData(
+        '/api/services/web/caseCheck/GetConflictCheckList',
+        'post', {
+          id: conflictId
+        }
+      )
+      if (resData.statusCode == 200) {
+        this.conflictCheckTotalCount = resData.data.result.totalCount;
+        var conflictCheckListDatas = resData.data.result.items;
+        this.conflictCheckListDatas = conflictCheckListDatas;
+        for (var i = 0, len = this.conflictCheckListDatas.length; i < len; i++) {
+          if (this.switch) {
+            this.conflictCheckListDatas[i].searchName = this.conflictCheckListDatas[i].searchName.split(',').filter(item => item);
+            this.conflictCheckListDatas[i].searchEnName = this.conflictCheckListDatas[i].searchEnName.split(',').filter(item => item);
+          } else {
+            this.conflictCheckListDatas[i].searchName = this.conflictCheckListDatas[i].searchName.split(',').filter(item => item).slice(0, 1);
+            this.conflictCheckListDatas[i].searchEnName = this.conflictCheckListDatas[i].searchEnName.split(',').filter(item => item).slice(0, 1);
+          }
+        }
+      } else {
+        wx.showToast({
+          title: resData.data.error.message, //提示的内容,
+          icon: 'none', //图标,
+          duration: 2000, //延迟时间,
+          mask: false, //显示透明蒙层，防止触摸穿透,
+          success: res => {
+            this.isAudit = true;
+            this.$apply();
+          }
+        });
+      }
+      this.$apply();
+    }
+    onLoad(options) {
+      this.caseId = options.caseId;
+      this.conflictId = options.id;
+      this.GetConflictCheckList(this.conflictId)
+      this.GetCaseInfo(this.caseId);
+    };
+    onShow() {};
+  }
+</script>

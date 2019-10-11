@@ -1,0 +1,4 @@
+
+  <view class="container">
+      <map id="myMap" show-location="show-location" style="width: 100%; height: {{viewSize}}px"/>
+  </view>

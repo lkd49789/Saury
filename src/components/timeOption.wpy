@@ -1,0 +1,121 @@
+<style lang="less">
+    .border-bottom-focus {
+        border-bottom: 1px solid #5d73fa;
+    }
+    .border-bottom-blur {
+        border-bottom: 1px solid #bfbfbf;
+    }
+    .option {
+        position: relative;
+        font-size: 28rpx;
+        .title {
+            font-size: 26rpx;
+        }
+        .title-container {
+            margin-bottom: 14rpx;
+        }
+        .show .picker {
+            display: flex;
+            justify-content: space-between;
+        }
+        .picker {
+            padding-bottom: 8rpx;
+        }
+        .updown {
+            font-size: 28rpx;
+            position: absolute;
+            right: 12rpx;
+            top: -5rpx;
+        }
+    } // 组件二
+    .option1 {
+        font-size: 28rpx;
+        color: #7a7a7a;
+        position: relative;
+        height: 130rpx;
+        .show1 {
+            position: absolute;
+            left: 0;
+            bottom: 0rpx;
+            width: 100%;
+            .title1-container {
+                font-size: 26rpx;
+                margin-bottom: 14rpx;
+            }
+            .picker1 {
+                font-size: 28rpx;
+                padding-bottom: 8rpx;
+                display: flex;
+                justify-content: space-between;
+            }
+            .updown1-container {
+                position: absolute;
+                right: 0;
+                .updown1 {
+                    font-size: 28rpx;
+                    position: absolute;
+                    right: 12rpx;
+                    top: -15rpx;
+                }
+            }
+        }
+    }
+</style>
+
+<template>
+    <view class="option-container">
+        <view class="option1 {{show?'border-bottom-focus':'border-bottom-blur'}}">
+            <view class="show1">
+                <view class="title1-container" style="color:{{show?'#5d73fa':''}}" hidden="{{cur}}">
+                    <text class="title1">{{timeOption.title}}</text>
+                </view>
+                <picker mode="multiSelector" value="{{dateTime}}" @change="changeDateTime" range="{{dateTimeArray}}" name="{{timeOption.name}}">
+                    <view class="picker1">
+                        <view class="show-text1">
+                            <text hidden="{{!cur}}">{{timeOption.title}}</text>
+                            <text hidden="{{cur}}">{{dateTimeArray[0][dateTime[0]]}}-{{dateTimeArray[1][dateTime[1]]}}-{{dateTimeArray[2][dateTime[2]]}} {{dateTimeArray[3][dateTime[3]]}}:{{dateTimeArray[4][dateTime[4]]}}</text>
+                            <!-- :{{dateTimeArray[5][dateTime[5]]}} -->
+                        </view>
+                        <view class="updown1-container">
+                            <icon class="updown1 iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:42rpx;color:#7a7a7a"></icon>
+                        </view>
+                    </view>
+                </picker>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    var dateTimePicker = require('../utils/cofig/dateTimePicker.js')
+    export default class test extends wepy.component {
+        props = {
+            timeOption: {
+                type: Object
+            }
+        };
+        data = {
+            cur: true,
+            show: false,
+            dateTimeArray: null,
+            dateTime: null,
+        };
+        methods = {
+            changeDateTime(e) {
+                this.dateTime = e.detail.value;
+                if (e.active) {
+                    this.cur = false
+                    this.show = true
+                }
+            },
+        };
+        onLoad() {
+            // 获取完整的年月日 时分秒，以及默认显示的数组
+            var obj = dateTimePicker.dateTimePicker(this.data.startYear, this.data.endYear);
+            this.dateTime = obj.dateTime
+            this.dateTimeArray = obj.dateTimeArray
+            this.$apply()
+        }
+    }
+</script>

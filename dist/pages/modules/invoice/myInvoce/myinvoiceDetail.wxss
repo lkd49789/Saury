@@ -1,0 +1,95 @@
+.bill .bill_title {
+  height: 104rpx;
+  line-height: 104rpx;
+  padding-left: 28rpx;
+  font-size: 48rpx;
+  position: relative;
+  border-bottom: 1px solid #dedede;
+}
+.bill .bill_content {
+  background: #ffffff;
+  margin: 0 auto;
+  padding: 44rpx 28rpx 34rpx 28rpx;
+  font-size: 28rpx;
+  overflow: auto;
+  border-bottom: 20rpx solid #f2f2f2;
+}
+.bill .bill_content:last-child {
+  border-bottom: 0;
+}
+.bill .bill_content .caseConflictBorder_radius {
+  border: 1px solid;
+  width: 15rpx;
+  height: 15rpx;
+  line-height: 28rpx;
+  border-radius: 15rpx;
+  margin-right: 10rpx;
+  display: inline-block;
+}
+.bill .bill_content .bill_box {
+  margin: 20rpx 0;
+}
+.bill .bill_content .bill_box .bill_view {
+  line-height: 42rpx;
+}
+.bill .bill_content .bill_box2 {
+  line-height: 42rpx;
+  width: 50%;
+}
+.bill .bill_content image {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 100%;
+}
+.bill .bill_content .bill_x {
+  padding: 24rpx 28rpx 24rpx 28rpx;
+  background: #f2f2f2;
+  margin: 15rpx 0;
+  border-radius: 20rpx;
+}
+.bill .bill_content .bill_gray {
+  color: #7a7a7a;
+  border-color: #7a7a7a;
+}
+.bill .bill_content .bill_blue {
+  color: #009dff;
+  border-color: #009dff;
+}
+.bill .bill_content .bill_red {
+  color: #e20000;
+  border-color: #e20000;
+}
+.bill .bill_content .bill_yellow {
+  color: #ff9900;
+  border-color: #ff9900;
+}
+.bill .bill_content .bill_green {
+  color: #069400;
+  border-color: #069400;
+}
+.bill .bill_content .bill_state {
+  float: right;
+  position: relative;
+}
+.bill .flex {
+  display: flex;
+  margin-bottom: 15rpx;
+}
+.bill .right {
+  text-align: right;
+}
+.bill .left {
+  text-align: left;
+}
+.bill .bill_btn {
+  border-radius: 0;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  height: 98rpx;
+  background: #5d73fa;
+  color: #fff;
+  line-height: 98rpx;
+  text-align: center;
+  font-size: 32rpx;
+}

@@ -1,0 +1,265 @@
+<style lang="less">
+    .bill {
+        .bill_title {
+            height: 104rpx;
+            line-height: 104rpx;
+            padding-left: 28rpx;
+            font-size: 48rpx;
+            position: relative;
+            border-bottom: 1px solid #dedede;
+        }
+        .bill_content {
+            background: #ffffff;
+            margin: 0 auto;
+            padding: 44rpx 0;
+            font-size: 28rpx;
+            overflow: auto;
+            .caseConflictBorder_radius {
+                border: 1px solid;
+                width: 15rpx;
+                height: 15rpx;
+                line-height: 28rpx;
+                border-radius: 15rpx;
+                margin-right: 10rpx;
+                display: inline-block;
+            }
+            .bill_box {
+                padding: 30rpx 0;
+                margin: 0 28rpx;
+                border-bottom: 1px solid #bfbfbf;
+                .bill_view {
+                    line-height: 45rpx;
+                }
+            }
+            .bill_box2 {
+                line-height: 42rpx;
+                width: 50%;
+            }
+            .bill_gray {
+                color: #7a7a7a;
+                border-color: #7a7a7a
+            }
+            .bill_blue {
+                color: #009dff;
+                border-color: #009dff
+            }
+            .bill_red {
+                color: #e20000;
+                border-color: #e20000
+            }
+            .bill_yellow {
+                color: #ff9900;
+                border-color: #ff9900
+            }
+            .bill_green {
+                color: #069400;
+                border-color: #069400
+            }
+            .bill_state {
+                float: right;
+                position: relative;
+            }
+            .bill_right {
+                text-align: right;
+                margin: 30rpx 28rpx
+            }
+            .bill_line {
+                height: 24rpx;
+                width: 100%;
+                background: #f4f4f4;
+                margin: -1rpx 0
+            }
+        }
+        .flex {
+            display: flex;
+            margin-bottom: 15rpx;
+        }
+    }
+</style>
+
+<template>
+    <view class="bill">
+        <view class="bill_title">
+            <text class="title">{{typeId=='1'?'合同金额信息':typeId=='2'?'日志清单':'费用清单'}}</text>
+        </view>
+        <view class="bill_content">
+            <view wx:if="{{typeId=='1'}}">
+                <navbar :navbars="navbars" :currentTab.sync="currentTab" @currentTab.user="navbarChange" id="navbar" />
+                <view style="margin-bottom:200rpx" hidden="{{currentTab==0?'':true}}">
+                    <repeat for="{{billDataDetail.casePays.normalChargeList}}" key="index" index="index" item="item">
+                        <view class="bill_box">
+                            <view class="bill_view"><text class="bill_gray">收费金额｜</text>¥{{item.payAmount}}<text class="bill_state bill_gray">{{item.payDate}}</text> </view>
+                            <view class="bill_view"><text class="bill_gray">{{item.useBill?'使用账单':'不使用账单'}}</text><text class="bill_state {{item.isBill?'bill_green':'bill_red'}}">{{item.isBill?'可开账单':'不可开账单'}}</text> </view>
+                            <view class="bill_view" style="margin-top:15rpx;">备注: {{item.remark}}</view>
+                        </view>
+                    </repeat>
+                     <!-- <view class="bill_right">总计｜<span class="bill_blue">{{billDataDetail.casePays.normalChargeList.totalCount}}</span> </view> -->
+                </view>
+                <view style="margin-bottom:200rpx" hidden="{{currentTab==1?'':true}}">
+                    <repeat for="{{billDataDetail.casePays.riskChargeList}}" key="index" index="index" item="item">
+                        <view class="bill_box">
+                            <view class="bill_view"><text class="bill_gray">收费金额｜</text>¥{{item.payAmount}}<text class="bill_gray bill_state">{{item.useBill?'使用账单':'不使用账单'}}</text></view>
+                            <view class="bill_view"><text class="bill_gray">基本金额｜</text>¥{{item.riskBasicAmount}}<text class="bill_state {{item.isBill?'bill_green':'bill_red'}}">{{item.isBill?'可开账单':'不可开账单'}}</text> </view>
+                            <view class="bill_view" style="margin-top:15rpx;">风险达成条件: {{item.remark}}</view>
+                            <view class="bill_view"><text class="bill_state bill_gray">{{item.payDate}}</text> </view>
+                        </view>
+                    </repeat>
+                     <!-- <view class="bill_right">总计｜<span class="bill_blue">{{billDataDetail.casePays.riskChargeList.totalCount}}</span> </view> -->
+                </view>
+            </view>
+            <view wx:if="{{typeId=='2'}}">
+                <repeat for="{{billDataDetail.logList.items}}" key="index" index="index" item="item">
+                    <view class="bill_box">
+                        <view class="bill_view">{{item.employeeName}}<text class="bill_state bill_gray">{{item.startTime}}</text></view>
+                        <view class="bill_view">自报｜{{item.selfDuration}}h 账单｜{{item.billDuration}}h <text class="bill_state">{{item.categoryText}}</text></view>
+                        <view class="bill_view" style="margin-top:15rpx;">备注: {{item.description}}</view>
+                    </view>
+                </repeat>
+                <view class="bill_line"></view>
+                <view class="bill_box">日志汇总</view>
+                <repeat for="{{billDataDetail.logItems}}" key="index" index="index" item="item">
+                    <view class="bill_box">
+                        <view class="bill_view">{{item.employeeId}}<text class="bill_state">¥{{item.totalAmount}}</text></view>
+                        <view class="bill_view">合计小时｜{{item.totalCount}}h<text class="bill_state">律师费率｜{{item.chargeRatio}}</text></view>
+                    </view>
+                </repeat>
+            </view>
+            <view wx:if="{{typeId=='3'}}">
+                <repeat for="{{billDataDetail.items}}" key="index" index="index" item="item">
+                    <view class="bill_box">
+                        <view class="bill_view">{{item.empName}}<text class="bill_state bill_gray">{{item.chargeDate}}</text></view>
+                        <view class="bill_view">{{item.chargeTypeName}}<text class="bill_state">{{item.chargeAmount}} ({{item.chargeCurrency}})</text></view>
+                    </view>
+                </repeat>
+                <view class="bill_right">总计｜<span class="bill_blue">{{billDataDetail.totalCount}}</span> </view>
+            </view>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import ajax from '../../../../utils/cofig/ajax.js'
+    import navbar from '../../../../components/navbar';
+    import {
+        formatTime
+    } from '../../../../utils/cofig/api.js';
+    export default class Index extends wepy.page {
+        components = {
+            navbar: navbar
+        };
+        data = {
+            id: '',
+            billId: '',
+            typeId: 1,
+            billDataDetail: {},
+            navbars: ['定额收费', '风险收费'],
+            currentTab: 0,
+        };
+        methods = {};
+        onLoad(e) {
+            this.Id = e.id;
+            this.caseId = e.caseId;
+            this.typeId = e.type
+            this.getbill();
+        };
+        //获取账单
+        async getbill() {
+            if (this.typeId == 1) {
+                var resData = await ajax.getData(
+                    '/api/services/web/financialBilling/GetCasePaySummary',
+                    'post', {
+                        billingId: this.Id,
+                        id: this.caseId,
+                    }
+                );
+                console.log(resData);
+                switch (resData.statusCode) {
+                    case 200:
+                        console.log(resData);
+                        this.billDataDetail = resData.data.result;
+                        for (var index in this.billDataDetail.casePays.normalChargeList) {
+                            this.billDataDetail.casePays.normalChargeList[index].payDate = formatTime(this.billDataDetail.casePays.normalChargeList[index].payDate)
+                        }
+                        this.$apply();
+                        break;
+                    case 403:
+                        this.placeHolder.placeHolderImageIndex = 3;
+                        this.placeHolder.placeHolderShow = true;
+                        this.$apply();
+                        break;
+                    case 500:
+                        this.placeHolder.placeHolderImageIndex = 1;
+                        this.placeHolder.placeHolderShow = true;
+                        this.$apply();
+                        break
+                    default:
+                        break;
+                }
+            } else if (this.typeId == 2) {
+                var resData = await ajax.getData(
+                    '/api/services/web/financialBilling/GetBillinglogSummary',
+                    'post', {
+                        billingId: this.Id,
+                        caseId: this.caseId,
+                        pageNumber: 1,
+                        pageSize: 10
+                    }
+                );
+                switch (resData.statusCode) {
+                    case 200:
+                        console.log(resData);
+                        this.billDataDetail = resData.data.result
+                        for (var index in this.billDataDetail.logList.items) {
+                            this.billDataDetail.logList.items[index].startTime = formatTime(this.billDataDetail.logList.items[index].startTime)
+                        }
+                        break;
+                    case 403:
+                        this.placeHolder.placeHolderImageIndex = 3;
+                        this.placeHolder.placeHolderShow = true;
+                        this.$apply();
+                        break;
+                    case 500:
+                        this.placeHolder.placeHolderImageIndex = 1;
+                        this.placeHolder.placeHolderShow = true;
+                        this.$apply();
+                        break
+                    default:
+                        break;
+                }
+                this.$apply();
+            } else if (this.typeId == 3) {
+                var resData = await ajax.getData(
+                    '/api/services/web/financialBilling/GetChargeSummary',
+                    'post', {
+                        billingId: this.Id,
+                        caseId: this.caseId,
+                        pageNumber: 1,
+                        pageSize: 10
+                    }
+                );
+                switch (resData.statusCode) {
+                    case 200:
+                        console.log(resData);
+                        this.billDataDetail = resData.data.result.chargeList
+                        for (var index in this.billDataDetail.items) {
+                            this.billDataDetail.items[index].chargeDate = formatTime(this.billDataDetail.items[index].chargeDate)
+                        }
+                        break;
+                    case 403:
+                        this.placeHolder.placeHolderImageIndex = 3;
+                        this.placeHolder.placeHolderShow = true;
+                        this.$apply();
+                        break;
+                    case 500:
+                        this.placeHolder.placeHolderImageIndex = 1;
+                        this.placeHolder.placeHolderShow = true;
+                        this.$apply();
+                        break
+                    default:
+                        break;
+                }
+                this.$apply();
+            }
+        }
+    }
+</script>

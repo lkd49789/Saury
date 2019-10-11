@@ -1,0 +1,120 @@
+@import "./../../../components/navbar.wxss";
+.body {
+  height: 100%;
+}
+.bd {
+  padding: 0 28rpx;
+  height: 104rpx;
+  line-height: 104rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+.bd-title {
+  font-size: 48rpx;
+  color: #2a2a2a;
+}
+.modifi-icon {
+  font-size: 50rpx;
+}
+.personal-container {
+  padding: 44rpx 28rpx 30rpx 28rpx;
+  border-bottom: 20rpx solid #f4f4f4;
+  font-size: 28rpx;
+  color: #2a2a2a;
+}
+.base {
+  margin-bottom: 12rpx;
+}
+.base .cname {
+  font-size: 30rpx;
+  font-weight: bold;
+}
+.base .partner,
+.base .prefssion {
+  color: #7a7a7a;
+}
+.base .partner {
+  padding: 0 20rpx;
+  border-right: 1px solid #bfbfbf;
+}
+.base .prefssion {
+  padding: 0 20rpx;
+}
+.ename-gender {
+  color: #7a7a7a;
+  margin-bottom: 24rpx;
+}
+.gender-icon {
+  width: 30rpx;
+  height: 30rpx;
+  margin-left: 20rpx;
+}
+.company-substation {
+  margin-bottom: 24rpx;
+}
+.company-substation .company {
+  padding-right: 20rpx;
+  border-right: 1px solid;
+}
+.company-substation .substation {
+  padding: 0 20rpx;
+}
+.reputation-address .reputation {
+  padding-right: 20rpx;
+  border-right: 1px solid;
+}
+.reputation-address .address {
+  padding-left: 20rpx;
+}
+.background {
+  padding: 30rpx 28rpx 30rpx 28rpx;
+  font-size: 28rpx;
+  color: #2a2a2a;
+}
+.background view {
+  margin-bottom: 24rpx;
+}
+.background view text {
+  display: inline-block;
+  width: 100%;
+}
+.background view > text:first-child {
+  color: #7a7a7a;
+  margin-bottom: 10rpx;
+}
+.communication {
+  padding: 44rpx 28rpx 30px 28rpx;
+  font-size: 28rpx;
+  color: #2a2a2a;
+  position: relative;
+}
+.communication view {
+  margin-bottom: 24rpx;
+}
+.communication view text {
+  display: inline-block;
+  width: 100%;
+}
+.communication view > text:first-child {
+  margin-bottom: 10rpx;
+  color: #7a7a7a;
+}
+.service {
+  padding: 44rpx 28rpx 30px 28rpx;
+  font-size: 28rpx;
+  color: #2a2a2a;
+  position: relative;
+}
+.service view {
+  margin-bottom: 24rpx;
+}
+.service view text {
+  display: inline-block;
+  width: 100%;
+}
+.service view > text:first-child {
+  margin-bottom: 10rpx;
+  color: #7a7a7a;
+}
