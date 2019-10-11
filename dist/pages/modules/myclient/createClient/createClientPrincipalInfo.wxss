@@ -1,3 +1,0 @@
-@import "./../../../../components/picker/input.wxss";
-@import "./../../../../components/picker/option.wxss";
-.pageTitle{height:104rpx;line-height:104rpx;font-size:48rpx;padding-left:28rpx;border-bottom:1px solid #dedede;position:fixed;top:0;left:0;width:100%;background:#fff;z-index:99}.content{margin:149rpx 28rpx 0 28rpx}.tui-picker-content{margin-bottom:36rpx}.tui-picker-content picker{padding:20rpx 0;border-bottom:1px solid #dfdfdf}.tui-picker-content picker .tui-picker-detail{display:flex;align-items:center;justify-content:space-between;color:#7a7a7a}.addImage{width:160rpx;height:160rpx;position:fixed;bottom:0;right:0;z-index:999999}
