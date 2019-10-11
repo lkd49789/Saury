@@ -24,6 +24,7 @@ export default class testMixin extends wepy.mixin {
     this.$apply();
   };
   onLoad() { 
+    
     // if (!this.$parent.global.netWorkString) {
     //   this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
     //   this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_1;

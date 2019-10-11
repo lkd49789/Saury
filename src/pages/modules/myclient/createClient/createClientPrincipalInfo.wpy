@@ -76,16 +76,16 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '../../../../utils/cofig/ajax.js';
-  import Linker from '../../../../components/picker/input';
-  import LegalPerson from '../../../../components/picker/option';
-  import LegalDuty from '../../../../components/picker/option';
-  import Nation from '../../../../components/picker/option';
-  import Landline from '../../../../components/picker/input';
-  import Fax from '../../../../components/picker/input';
-  import Email from '../../../../components/picker/input';
-  import CardNo from '../../../../components/picker/input';
-  import Occupation from '../../../../components/picker/input';
+  import ajax from '@/utils/cofig/ajax.js';
+  import Linker from '@/components/picker/input';
+  import LegalPerson from '@/components/picker/option';
+  import LegalDuty from '@/components/picker/option';
+  import Nation from '@/components/picker/option';
+  import Landline from '@/components/picker/input';
+  import Fax from '@/components/picker/input';
+  import Email from '@/components/picker/input';
+  import CardNo from '@/components/picker/input';
+  import Occupation from '@/components/picker/input';
   export default class PrincipalInfo extends wepy.page {
     config = {
       navigationBarTitleText: "",

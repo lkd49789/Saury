@@ -69,11 +69,11 @@ function dateTimePicker(startYear,endYear,date) {
   });
  
   return {
-    dateTimeArray: dateTimeArray,
-    dateTime: dateTime
+    dateTimeArray,
+    dateTime
   }
 }
 module.exports = {
-  dateTimePicker: dateTimePicker,
-  getMonthDay: getMonthDay
+  dateTimePicker,
+  getMonthDay
 }

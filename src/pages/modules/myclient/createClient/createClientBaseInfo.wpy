@@ -88,7 +88,7 @@
             <OrganizationUnitId :options.sync="OrganizationUnitId" :index.sync='OrganizationUnitIdIndex' :twoWayTitle="OrganizationUnitIdIndex" />
             <view class="tui-picker-content">
                 <view>客户类型</view>
-                <picker mode="multiSelector" value="{{CategoryIndex}}" @tap="getData('Category')" @change="change('Category')" bindcolumnchange="bindMultiPickerColumnChangeCategory" range="{{Category}}" range-key="name">
+                <picker mode="multiSelector" value="{{CategoryIndex}}" @tap="getData('Category')"  @change="change('Category')" bindcolumnchange="bindMultiPickerColumnChangeCategory" range="{{Category}}" range-key="name">
                     <view class="tui-picker-detail">
                         {{getCategoryArr.length!==0?getCategoryArr:'请选择'}}
                         <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
@@ -130,18 +130,18 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js';
-    import Name from '../../../../components/picker/input';
-    import EnName from '../../../../components/picker/input';
-    import pyName from '../../../../components/picker/input';
-    import Address from '../../../../components/picker/input';
-    import Post from '../../../../components/picker/input';
-    import RegisteredName from '../../../../components/picker/input';
-    import RegisteredNo from '../../../../components/picker/input';
-    import HomePage from '../../../../components/picker/input';
-    import Description from '../../../../components/picker/input';
-    import OrganizationUnitId from '../../../../components/picker/option';
-    import Origin from '../../../../components/picker/option';
+    import ajax from '@/utils/cofig/ajax.js';
+    import Name from '@/components/picker/input';
+    import EnName from '@/components/picker/input';
+    import pyName from '@/components/picker/input';
+    import Address from '@/components/picker/input';
+    import Post from '@/components/picker/input';
+    import RegisteredName from '@/components/picker/input';
+    import RegisteredNo from '@/components/picker/input';
+    import HomePage from '@/components/picker/input';
+    import Description from '@/components/picker/input';
+    import OrganizationUnitId from '@/components/picker/option';
+    import Origin from '@/components/picker/option';
     export default class createClient extends wepy.page {
         config = {
             navigationBarTitleText: "",
@@ -257,7 +257,6 @@
                 []
             ],
             CategoryIndex: [0,0],
-            CategoryTrue: true,
             getTradeArr: [],
             IndustryType: [
                 [],
@@ -359,26 +358,31 @@
                 this.$apply();
             },
             getData(type) {
-                if (type == "Category") {
-                    this.Category = [
-                        [],
-                        [],
-                        []
-                    ]
-                    this.$apply()
+                if(type == "Category" && this.Category[0].length === 0){
                     this.GetGeneralCodeComboOutput('CLKL', 0, '');
-                    this.CategoryTrue = false
-                } else if (type == "IndustryType") {
-                    this.IndustryType = [
-                        [],
-                        [],
-                        [],
-                        []
-                    ]
-                    this.$apply()
+                }else if(type == "IndustryType" && this.IndustryType[0].length === 0){
                     this.GetGeneralCodeComboOutput('CLIDT', 0, '');
-                    this.tradeTrue = false
                 }
+                // if (type == "Category") {
+                //     this.Category = [
+                //         [],
+                //         [],
+                //         []
+                //     ]
+                //     this.$apply()
+                //     this.GetGeneralCodeComboOutput('CLKL', 0, '');
+                //     this.CategoryTrue = false
+                // } else if (type == "IndustryType") {
+                //     this.IndustryType = [
+                //         [],
+                //         [],
+                //         [],
+                //         []
+                //     ]
+                //     this.$apply()
+                //     this.GetGeneralCodeComboOutput('CLIDT', 0, '');
+                //     this.tradeTrue = false
+                // }
             },
             change(type) {
                 console.log(type);
@@ -606,8 +610,8 @@
         onLoad() {
             this.GetClientForEdit();
             this.GetOrganizations();
-            this.GetGeneralCodeComboOutput("CLKL",0,0);
-            this.GetGeneralCodeComboOutput("CLIDT",0,0);
+            this.GetGeneralCodeComboOutput("CLKL",0,'');
+            this.GetGeneralCodeComboOutput("CLIDT",0,'');
         };
     }
 </script>

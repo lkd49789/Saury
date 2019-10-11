@@ -220,8 +220,7 @@
         async getbill(state,sort) {
             wx.showLoading({
                 title: 'Loading...', //提示的内容,
-                mask: true, //显示透明蒙层，防止触摸穿透,
-                success: res => {}
+                mask: true //显示透明蒙层，防止触摸穿透,
             });
             if (this.state !== state) {
                 this.pageNumber = 1

@@ -1,3 +1,4 @@
+//微信提示框
 // 时间格式化
 var formatTime = (dateTime) => {
   var time = new Date(dateTime).getTime()- 8 * 3600000;
