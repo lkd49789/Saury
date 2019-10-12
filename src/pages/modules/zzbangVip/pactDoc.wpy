@@ -25,7 +25,7 @@
     import wepy from 'wepy';
     import {
         text
-    } from '../../../utils/cofig/pactDoc.js';
+    } from '@/utils/cofig/pactDoc.js';
     export default class pactDoc extends wepy.page {
         data = {
             nodes: '',

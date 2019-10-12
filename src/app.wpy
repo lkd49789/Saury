@@ -87,7 +87,7 @@
 <script>
   import wepy from 'wepy';
   import 'wepy-async-function';
-  import ajax from './utils/cofig/ajax.js';
+  import ajax from '@/utils/cofig/ajax.js';
   export default class extends wepy.app {
     config = {
       "pages": [
@@ -613,9 +613,9 @@
                   }
                 });
               }else if(!accessToken || !res.authSetting['scope.userInfo']){
-                 wx.redirectTo({
-                      url: '/pages/login/choosePageLogin'
-                  });
+                //  wx.redirectTo({
+                //       url: '/pages/login/choosePageLogin'
+                //   });
               }
             }
           })

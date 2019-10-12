@@ -96,11 +96,11 @@
   import wepy from 'wepy';
   import {
     myDistinct
-  } from '../../../../../utils/cofig/api.js';
-  import ajax from '../../../../../utils/cofig/ajax.js';
+  } from '@/utils/cofig/api.js';
+  import ajax from '@/utils/cofig/ajax.js';
   import {
     formatDate
-  } from '../../../../../utils/cofig/api.js';
+  } from '@/utils/cofig/api.js';
   export default class searchCaseAudit extends wepy.page {
     data = {
       searchData: {},

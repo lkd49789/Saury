@@ -197,13 +197,13 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js'
+    import ajax from '@/utils/cofig/ajax.js'
     import {
         formatDate
-    } from '../../../../utils/cofig/api.js';
+    } from '@/utils/cofig/api.js';
     import {
         getUserAvatar
-    } from '../../../../utils/cofig/ajax.js';
+    } from '@/utils/cofig/ajax.js';
     export default class Index extends wepy.page {
         components = {};
         data = {

@@ -73,10 +73,10 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js';
-    import RiskBasicAmount from '../../../../components/picker/input';
-    import PayAmount from '../../../../components/picker/input';
-    import Remark from '../../../../components/picker/input';
+    import ajax from '@/utils/cofig/ajax.js';
+    import RiskBasicAmount from '@/components/picker/input';
+    import PayAmount from '@/components/picker/input';
+    import Remark from '@/components/picker/input';
     export default class createRiskCharge extends wepy.page {
         components = {
             RiskBasicAmount,

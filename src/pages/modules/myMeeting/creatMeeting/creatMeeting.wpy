@@ -198,20 +198,20 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js';
-    import {myDistinct} from '../../../../utils/cofig/api.js';
-    import StartTime from '../../../../components/Date/nowDateTimePicker';
-    import EndTime from '../../../../components/Date/endDateTimePicker';
-    import Title from '../../../../components/picker/input';
-    import Visitor from '../../../../components/picker/input';
-    import Remark from '../../../../components/picker/input';
-    import Prepare from '../../../../components/picker/input';
-    import Category from '../../../../components/picker/pickerOption';
-    import Subject from '../../../../components/picker/input';
-    import ClientId from '../../../../components/picker/pickerOption';
-    import CaseId from '../../../../components/picker/pickerOption';
-    import Moderator from '../../../../components/picker/pickerOption';
-    import Linker from '../../../../components/picker/pickerOption';
+    import ajax from '@/utils/cofig/ajax.js';
+    import {myDistinct} from '@/utils/cofig/api.js';
+    import StartTime from '@/components/Date/nowDateTimePicker';
+    import EndTime from '@/components/Date/endDateTimePicker';
+    import Title from '@/components/picker/input';
+    import Visitor from '@/components/picker/input';
+    import Remark from '@/components/picker/input';
+    import Prepare from '@/components/picker/input';
+    import Category from '@/components/picker/pickerOption';
+    import Subject from '@/components/picker/input';
+    import ClientId from '@/components/picker/pickerOption';
+    import CaseId from '@/components/picker/pickerOption';
+    import Moderator from '@/components/picker/pickerOption';
+    import Linker from '@/components/picker/pickerOption';
     export default class clientDetail extends wepy.page {
         components = {
             StartTime,

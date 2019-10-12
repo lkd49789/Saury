@@ -107,10 +107,10 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js'
+    import ajax from '@/utils/cofig/ajax.js'
     import {
         formatDate,formatTime
-    } from '../../../../utils/cofig/api.js';
+    } from '@/utils/cofig/api.js';
     export default class Index extends wepy.page {
         components = {};
         data = {

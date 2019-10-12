@@ -145,7 +145,7 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js';
+    import ajax from '@/utils/cofig/ajax.js';
     export default class searchCaseClient extends wepy.page {
         data = {
             searchData: {},

@@ -181,16 +181,16 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../utils/cofig/thirdParty_ajax.js';
-    import Name from '../../../components/picker/input';
-    import PhoneNo from '../../../components/picker/input';
-    import Email from '../../../components/picker/input';
-    import CertificateNo from '../../../components/picker/input';
-    import Address from '../../../components/picker/input';
-    import IdCardNo from '../../../components/picker/input';
+    import ajax from '@/utils/cofig/thirdParty_ajax.js';
+    import Name from '@/components/picker/input';
+    import PhoneNo from '@/components/picker/input';
+    import Email from '@/components/picker/input';
+    import CertificateNo from '@/components/picker/input';
+    import Address from '@/components/picker/input';
+    import IdCardNo from '@/components/picker/input';
     //其他
-    import LawFirm from '../../../components/picker/input';
-    import Introduce from '../../../components/picker/input';
+    import LawFirm from '@/components/picker/input';
+    import Introduce from '@/components/picker/input';
     export default class register extends wepy.page {
         components = {
             Name,

@@ -308,11 +308,11 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '../../../../utils/cofig/ajax.js';
+  import ajax from '@/utils/cofig/ajax.js';
   import {
     formatDate,formatTime
-  } from '../../../../utils/cofig/api.js';
-  // import navbar from '../../../components/navbar';
+  } from '@/utils/cofig/api.js';
+  // import navbar from '@/components/navbar';
   export default class logdetail extends wepy.page {
     components = {};
     data = {

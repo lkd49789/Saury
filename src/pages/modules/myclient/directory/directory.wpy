@@ -172,8 +172,8 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js';
-    import Pinyin from '../../../../utils/cofig/pinyin.js';
+    import ajax from '@/utils/cofig/ajax.js';
+    import Pinyin from '@/utils/cofig/pinyin.js';
     export default class directory extends wepy.page {
         props = {};
         data = {

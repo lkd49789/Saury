@@ -106,10 +106,10 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js'
-    import mixins from '../../../../utils/cofig/mixin.js';
-    import navbar from '../../../../components/navbar';
-    import placeHolderImage from '../../../../components/placeHolderImage';
+    import ajax from '@/utils/cofig/ajax.js'
+    import mixins from '@/utils/cofig/mixin.js';
+    import navbar from '@/components/navbar';
+    import placeHolderImage from '@/components/placeHolderImage';
     export default class applyAuditList extends wepy.page {
         config = {
             enablePullDownRefresh: true,

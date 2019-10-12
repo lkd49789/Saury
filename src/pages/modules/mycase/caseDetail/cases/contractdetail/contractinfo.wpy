@@ -166,7 +166,7 @@
   import wepy from 'wepy';
   import {
     formatTimeSymbol
-  } from '../../../../../../utils/cofig/api.js';
+  } from '@/utils/cofig/api.js';
   export default class contractinfo extends wepy.page {
     components = {};
     data = {

@@ -214,10 +214,10 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js'
+    import ajax from '@/utils/cofig/ajax.js'
     import {
         formatTimeSymbol
-    } from '../../../../utils/cofig/api.js';
+    } from '@/utils/cofig/api.js';
     export default class clientDetail extends wepy.page {
         config = {
             enablePullDownRefresh: true,

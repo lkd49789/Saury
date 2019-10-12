@@ -167,13 +167,13 @@
     import wepy from 'wepy';
     import {
         myDistinct
-    } from '../../../../utils/cofig/api.js';
-    import ajax from '../../../../utils/cofig/ajax.js';
+    } from '@/utils/cofig/api.js';
+    import ajax from '@/utils/cofig/ajax.js';
     import {
         formatDate
-    } from '../../../../utils/cofig/api.js';
-    import Status from '../../../../components/picker/option';
-    import VacationType from '../../../../components/picker/option';
+    } from '@/utils/cofig/api.js';
+    import Status from '@/components/picker/option';
+    import VacationType from '@/components/picker/option';
     export default class searchApply extends wepy.page {
         components={
             Status,

@@ -251,8 +251,8 @@
 
 <script>
 import wepy from 'wepy';
-import navbar from '../../../components/navbar';
-import ajax from '../../../utils/cofig/ajax.js'
+import navbar from '@/components/navbar';
+import ajax from '@/utils/cofig/ajax.js'
 export default class baseData extends wepy.page {
   components = {
     navbar

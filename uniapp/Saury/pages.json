@@ -1,0 +1,41 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "uni-app"
+			}
+		}
+	],
+	"globalStyle": {
+		"backgroundTextStyle": "light",
+		"navigationBarBackgroundColor": "#5d73fa",
+		"navigationBarTitleText": "律智荟",
+		"navigationBarTextStyle": "white"
+	},
+	"tabBar": {
+        "color": "#7a7a7a",
+        "selectedColor": "#5d73fa",
+        "backgroundColor": "#fff",
+        // borderStyle: 'black',
+        "list": [{
+            "iconPath": "./images/home.png",
+            "selectedIconPath": "./images/homeSelect.png",
+            "pagePath": "pages/main/index",
+            "text": "首页"
+          },
+          {
+            "iconPath": "./images/schedule.png",
+            "selectedIconPath": "./images/scheduleSelect.png",
+            "pagePath": "pages/schedule/index",
+            "text": "日程"
+          },
+          {
+            "iconPath": "./images/mine.png",
+            "selectedIconPath": "./images/mineSelect.png",
+            "pagePath": "pages/mine/index",
+            "text": "我的"
+          }
+        ]
+      }
+}

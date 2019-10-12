@@ -103,8 +103,8 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js';
-    import myDistinct from '../../../../utils/cofig/api.js'
+    import ajax from '@/utils/cofig/ajax.js';
+    import myDistinct from '@/utils/cofig/api.js'
     export default class clientCaseLinkerChosen extends wepy.page {
         data = {
             subCaseInfoData:{},

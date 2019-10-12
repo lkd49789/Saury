@@ -138,11 +138,11 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js'
-    import navbar from '../../../../components/navbar';
+    import ajax from '@/utils/cofig/ajax.js'
+    import navbar from '@/components/navbar';
     import {
         formatTime
-    } from '../../../../utils/cofig/api.js';
+    } from '@/utils/cofig/api.js';
     export default class Index extends wepy.page {
         components = {
             navbar: navbar

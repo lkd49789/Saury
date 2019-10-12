@@ -224,22 +224,22 @@
     import wepy from 'wepy';
     import {
         myDistinct
-    } from '../../../../utils/cofig/api.js';
-    import ajax from '../../../../utils/cofig/ajax.js';
+    } from '@/utils/cofig/api.js';
+    import ajax from '@/utils/cofig/ajax.js';
     import {
         formatDate
-    } from '../../../../utils/cofig/api.js';
-    import Id from '../../../../components/picker/input';
-    import Name from '../../../../components/picker/input';
-    import ClientId from '../../../../components/picker/input';
-    import ClientName from '../../../../components/picker/input';
-    import OrganizationUnitId from '../../../../components/picker/pickerOption';
-    import AcceptDate from '../../../../components/picker/pickerDate';
-    import SecretLevel from '../../../../components/picker/pickerOption';
-    import Language from '../../../../components/picker/pickerOption';
-    import ImportLevel from '../../../../components/picker/pickerOption';
-    import IsLegal from '../../../../components/picker/pickerOption';
-    import IsForeign from '../../../../components/picker/pickerOption';
+    } from '@/utils/cofig/api.js';
+    import Id from '@/components/picker/input';
+    import Name from '@/components/picker/input';
+    import ClientId from '@/components/picker/input';
+    import ClientName from '@/components/picker/input';
+    import OrganizationUnitId from '@/components/picker/pickerOption';
+    import AcceptDate from '@/components/picker/pickerDate';
+    import SecretLevel from '@/components/picker/pickerOption';
+    import Language from '@/components/picker/pickerOption';
+    import ImportLevel from '@/components/picker/pickerOption';
+    import IsLegal from '@/components/picker/pickerOption';
+    import IsForeign from '@/components/picker/pickerOption';
     export default class searchRegister extends wepy.page {
         components = {
             Id,

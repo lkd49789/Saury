@@ -1,6 +1,6 @@
 <!--  -->
 <style lang="less">
-  .body {
+  .body { 
     height: 100%;
     .labor-title {
       font-size: 48rpx;
@@ -19,7 +19,6 @@
       flex-wrap: wrap;
       font-size: 32rpx;
       .item1 {
-        width: 100%;
         margin-bottom: 36rpx;
         .item1-title {
           color: #2a2a2a;
@@ -31,31 +30,10 @@
           color: #7a7a7a;
         } //   flex: 1;;;
       }
-      .item2 {
+      .w50 {
         width: 50%;
       }
-      .item3 {
-        width: 50%;
-      }
-      .item4 {
-        width: 50%;
-      }
-      .item5 {
-        width: 50%;
-      }
-      .item6 {
-        width: 50%;
-      }
-      .item7 {
-        width: 50%;
-      }
-      .item8 {
-        width: 100%;
-      }
-      .item9 {
-        width: 100%;
-      }
-      .item10 {
+      .w100 {
         width: 100%;
       }
       view {
@@ -115,46 +93,17 @@
       <text class="labor">劳动关系</text>
     </view>
     <view class="middle-container">
-      <view class="item1">
+      <view class="item1 w100">
         <text class="item1-title">{{LaborRelationData.duty||'未填写'}}</text>
         <text class="item1-content">{{LaborRelationData.inserviceStatus||'未填写'}}</text>
       </view>
-      <view class="item2 item-flex">
-        <text>合同类别</text>
-        <text>{{LaborRelationData.category||'未填写'}}</text>
-      </view>
-      <view class="item3 item-flex">
-        <text>工资</text>
-        <text>{{LaborRelationData.salary||'未填写'}}</text>
-      </view>
-      <view class="item4 item-flex">
-        <text>薪酬级别</text>
-        <text>{{LaborRelationData.salaryLevel||'未填写'}}</text>
-      </view>
-      <view class="item5 item-flex">
-        <text>录用日期</text>
-        <text>{{LaborRelationData.signDate||'未填写'}}</text>
-      </view>
-      <view class="item6 item-flex">
-        <text>转正日期</text>
-        <text>{{LaborRelationData.positiveDate||'未填写'}}</text>
-      </view>
-      <view class="item7 item-flex">
-        <text>关系来源</text>
-        <text>{{LaborRelationData.relationSource||'未填写'}}</text>
-      </view>
-      <view class="item8 item-flex">
-        <text>合同期限</text>
-        <text>{{contractDate||'未填写'}}</text>
-      </view>
-      <view class="item9 item-flex">
-        <text>社会保障号</text>
-        <text>{{LaborRelationData.socialSecurityNo||'未填写'}}</text>
-      </view>
-      <view class="item10 item-flex">
-        <text>社会保障基数</text>
-        <text>{{LaborRelationData.socialSecurityRate||'未填写'}}</text>
-      </view>
+      <repeat for="{{LaborRelationDataList}}" key="index" index="index" item="item">
+        <view class="{{index < 7 ? 'w50' : 'w100' }} item-flex">
+          <text>{{item.name}}</text>
+          <text wx:if="{{item.name != 'contractDate'}}">{{LaborRelationData[index][key]||'未填写'}}</text>
+          <text wx:else>{{contractDate}}</text>
+        </view>
+      </repeat>
     </view>
     <view class="border-blur" style="height:30rpx;background:#F4F4F4">
     </view>
@@ -194,12 +143,49 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '../../../utils//cofig/ajax.js'
+  import ajax from '@/utils//cofig/ajax.js'
   export default class index extends wepy.page {
     data = {
       LaborRelationData: {},
       contractDate: '',
-      icon: []
+      icon: [],
+      LaborRelationDataList:[
+        {
+          name:'合同类别',
+          key:'category'
+        },
+        {
+          name:'工资',
+          key:'salary'
+        },
+        {
+          name:'薪酬级别',
+          key:'salaryLevel'
+        },
+        {
+          name:'录用日期',
+          key:'signDate'
+        },
+        {
+          name:'转正日期',
+          key:'positiveDate'
+        },
+        {
+          name:'关系来源',
+          key:'relationSource'
+        },
+        {
+          name:'合同期限'    //5
+        },
+        {
+          name:'社会保障号',
+          key:'socialSecurityNo'
+        },
+        {
+          name:'社会保障基数',
+          key:'socialSecurityRate'
+        }
+        ],
     };
     methods = {
       preview(name, fileId, fileName) {
@@ -247,56 +233,42 @@
       }
     }
     setIcon(fileClass, index) {
+      let iconfont = {};
       switch (fileClass) {
         case 'pdf':
-          var iconfont = {};
           iconfont['icon'] = 'icon-pdfpng1';
           iconfont['color'] = '#e20000';
-          this.icon[index] = iconfont;
           break;
         case 'png':
-          var iconfont = {};
           iconfont['icon'] = 'icon-pdfpng1';
           iconfont['color'] = '#e20000';
-          this.icon[index] = iconfont;
           break;
         case 'docx':
-          var iconfont = {};
           iconfont['icon'] = 'icon-wold1';
           iconfont['color'] = '#009dff';
-          this.icon[index] = iconfont;
           break;
         case 'doc':
-          var iconfont = {};
           iconfont['icon'] = 'icon-wold1';
           iconfont['color'] = '#009dff';
-          this.icon[index] = iconfont;
           break;
         case 'xls':
-          var iconfont = {};
           iconfont['icon'] = 'icon-exl1';
           iconfont['color'] = '#069400';
-          this.icon[index] = iconfont;
           break;
         case 'xlsx':
-          var iconfont = {};
           iconfont['icon'] = 'icon-exl1';
           iconfont['color'] = '#069400';
-          this.icon[index] = iconfont;
           break;
         case 'jpg':
-          var iconfont = {};
           iconfont['icon'] = 'icon-jpggeshi';
           iconfont['color'] = '#ff9900';
-          this.icon[index] = iconfont;
           break;
         default:
-          var iconfont = {};
           iconfont['icon'] = 'icon-weizhiwenjiangeshi';
           iconfont['color'] = '#7a7a7a';
-          this.icon[index] = iconfont;
           break;
       }
+      this.icon[index] = iconfont;
     }
     onLoad() {
       this.GetLaborRelation()

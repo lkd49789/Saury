@@ -111,7 +111,7 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '../../../../utils/cofig/ajax.js'
+  import ajax from '@/utils/cofig/ajax.js'
   export default class distributionInformation extends wepy.page {
     data = {
       submitData:{},

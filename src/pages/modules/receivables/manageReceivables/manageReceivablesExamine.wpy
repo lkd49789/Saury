@@ -165,15 +165,15 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js';
-    import placeHolderImage from '../../../../components/placeHolderImage';
-    import mixins from '../../../../utils/cofig/mixin.js';
+    import ajax from '@/utils/cofig/ajax.js';
+    import placeHolderImage from '@/components/placeHolderImage';
+    import mixins from '@/utils/cofig/mixin.js';
     import {
         formatTime
-    } from '../../../../utils/cofig/api.js';
-    import acceptDateRange from '../../../../components/picker/pickerDate'
-    import organizationUnitId from '../../../../components/picker/pickerOption'
-    import category from '../../../../components/picker/pickerOption'
+    } from '@/utils/cofig/api.js';
+    import acceptDateRange from '@/components/picker/pickerDate'
+    import organizationUnitId from '@/components/picker/pickerOption'
+    import category from '@/components/picker/pickerOption'
     export default class manageReceivablesExamine extends wepy.page {
         config = {
             enablePullDownRefresh: true,

@@ -213,11 +213,11 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '../../../utils/cofig/ajax.js';
-  import Name from '../../../components/picker/input';
-  import Description from '../../../components/picker/input';
-  import Privacy from '../../../components/picker/pickerOption';
-  import TemplateId from '../../../components/picker/pickerOption';
+  import ajax from '@/utils/cofig/ajax.js';
+  import Name from '@/components/picker/input';
+  import Description from '@/components/picker/input';
+  import Privacy from '@/components/picker/pickerOption';
+  import TemplateId from '@/components/picker/pickerOption';
   export default class createProject extends wepy.page {
     components = {
       Name,

@@ -239,10 +239,10 @@
 
 <script>
 import wepy from 'wepy';
-import navbar from '../../../components/navbar';
-import ajax from '../../../utils/cofig/ajax.js';
-import placeHolderImage from '../../../components/placeHolderImage';
- import mixins from '../../../utils/cofig/mixin.js';
+import navbar from '@/components/navbar';
+import ajax from '@/utils/cofig/ajax.js';
+import placeHolderImage from '@/components/placeHolderImage';
+ import mixins from '@/utils/cofig/mixin.js';
 export default class extends wepy.page {
   components = {
     navbar,
@@ -265,13 +265,11 @@ export default class extends wepy.page {
         wepy.navigateTo({
           url: '../myrecord/add-record/bg'
         });
-      }
-      if (this.currentTab == 1) {
+      }else if(this.currentTab == 1) {
         wepy.navigateTo({
           url: '../myrecord/add-record/work-experience'
         });
-      }
-      if (this.currentTab == 2) {
+      }else if (this.currentTab == 2) {
         wepy.navigateTo({
           url: '../myrecord/add-record/project-experience'
         });
@@ -282,7 +280,7 @@ export default class extends wepy.page {
     currentTab(cur){
       switch (cur) {
         case 0:
-          if(this.educationsData.length==0){
+          if(this.educationsData.length == 0){
              this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
             this.placeHolder.placeHolderShow = true;
           }else{
@@ -290,7 +288,7 @@ export default class extends wepy.page {
           }
           break;
         case 1:
-          if(this.workExperiencesData.length==0){
+          if(this.workExperiencesData.length == 0){
              this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_1;
             this.placeHolder.placeHolderShow = true;
           }else{
@@ -298,7 +296,7 @@ export default class extends wepy.page {
           }
           break;
         case 2:
-          if(this.projectExperiences.length==0){
+          if(this.projectExperiences.length == 0){
              this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_2;
             this.placeHolder.placeHolderShow = true;
           }else{
@@ -306,7 +304,7 @@ export default class extends wepy.page {
           }
           break;
         case 3:
-          if(this.socialDuites.length==0){
+          if(this.socialDuites.length == 0){
              this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_3;
             this.placeHolder.placeHolderShow = true;
           }else{
@@ -327,62 +325,52 @@ export default class extends wepy.page {
       'post',
       userId
     )
-    var resumeData=resumeData.data.result;
+    let { educations, workExperiences, firmProjectExperiences, projectExperiences, socialDuites } = resumeData.data.result;
+
     //教育背景
-    var educations =resumeData.educations
-     for(var index in educations){
-      educations[index].startDate=educations[index].startDate.split('T')[0];
-      educations[index].endDate=educations[index].endDate.split('T')[0];
-    }
-    if(educations.length!==0){
-      this.educationsData=educations;
+    this.forEachDate(educations)
+    if(educations.length !== 0){
+      this.educationsData = educations;
     }else{
        this.placeHolderImageIndex_0 = 0;
-       this.placeHolder.placeHolderImageIndex=0;
+       this.placeHolder.placeHolderImageIndex = 0;
        this.placeHolder.placeHolderShow = true;
     }
     //工作经历
-   var workExperiences= resumeData.workExperiences;
-    for(var index in workExperiences){
-      workExperiences[index].startDate=workExperiences[index].startDate.split('T')[0];
-      workExperiences[index].endDate=workExperiences[index].endDate.split('T')[0];
-    }
-    if(workExperiences.length!==0){
-      this.workExperiencesData=workExperiences;
+    this.forEachDate(workExperiences)
+    if(workExperiences.length !== 0){
+      this.workExperiencesData = workExperiences;
     }else{
        this.placeHolderImageIndex_1 = 0;
     }
+
     //项目经历
-    var firmProjectExperiences=resumeData.firmProjectExperiences;
-    var projectExperiences=resumeData.projectExperiences;
-    for(let index in firmProjectExperiences){
-      firmProjectExperiences[index]['statusText']='本所';
-      firmProjectExperiences[index].startDate=firmProjectExperiences[index].startDate.split('T')[0];
-      firmProjectExperiences[index].endDate=firmProjectExperiences[index].endDate.split('T')[0];
-    }
-    for(let index in projectExperiences){
-      projectExperiences[index]['statusText']='非本所';
-      projectExperiences[index].startDate=projectExperiences[index].startDate.split('T')[0];
-      projectExperiences[index].endDate=projectExperiences[index].endDate.split('T')[0];
-    }
-    if(firmProjectExperiences.length!==0&&projectExperiences.length!==0){
-       this.projectExperiences=firmProjectExperiences.concat(projectExperiences);
+    this.forEachDate(firmProjectExperiences,{key:'statusText',value:'本所'})
+    this.forEachDate(projectExperiences,{key:'statusText',value:'非本所'})
+    if(firmProjectExperiences.length !== 0 && projectExperiences.length !== 0){
+       this.projectExperiences = firmProjectExperiences.concat(projectExperiences);
     }else{
        this.placeHolderImageIndex_2 = 0;
     }
+
     //社团兼职
-    var socialDuites=resumeData.socialDuites;
-    for(var index in socialDuites){
-      socialDuites[index].startDate=socialDuites[index].startDate.split('T')[0];
-      socialDuites[index].endDate=socialDuites[index].endDate.split('T')[0];
-    }
-    this.socialDuites=socialDuites;
-    if(socialDuites.length!==0){
+    this.forEachDate(socialDuites)
+    this.socialDuites = socialDuites;
+    if(socialDuites.length !== 0){
        this.socialDuites=socialDuites;
     }else{
        this.placeHolderImageIndex_3 =0;
     }
     this.$apply();
+  }
+  forEachDate(arr,obj){
+    arr.forEach( item =>{
+      if(obj){
+        item[obj.key] = obj.value
+      }
+      item.startDate = item.startDate.split('T')[0];
+      item.endDate = item.endDate.split('T')[0];
+    })
   }
   onLoad(options) {
     this.userId =options.id;

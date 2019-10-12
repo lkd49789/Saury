@@ -54,18 +54,18 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js';
-    import Name from '../../../../components/picker/input';
-    import ENName from '../../../../components/picker/input';
-    import Duty from '../../../../components/picker/option';
-    import Sex from '../../../../components/picker/option';
-    import WorkPhone from '../../../../components/picker/input';
-    import Landline from '../../../../components/picker/input';
-    import WorkEmail from '../../../../components/picker/input';
-    import Fax from '../../../../components/picker/input';
-    import Company from '../../../../components/picker/input';
-    import Address from '../../../../components/picker/input';
-    import PersonDescription from '../../../../components/picker/input';
+    import ajax from '@/utils/cofig/ajax.js';
+    import Name from '@/components/picker/input';
+    import ENName from '@/components/picker/input';
+    import Duty from '@/components/picker/option';
+    import Sex from '@/components/picker/option';
+    import WorkPhone from '@/components/picker/input';
+    import Landline from '@/components/picker/input';
+    import WorkEmail from '@/components/picker/input';
+    import Fax from '@/components/picker/input';
+    import Company from '@/components/picker/input';
+    import Address from '@/components/picker/input';
+    import PersonDescription from '@/components/picker/input';
     export default class createClientLinker extends wepy.page {
         components = {
             Name,

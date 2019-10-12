@@ -242,15 +242,15 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js'
-    import input1 from '../../../../components/picker/input';
-    import input2 from '../../../../components/picker/input';
+    import ajax from '@/utils/cofig/ajax.js'
+    import input1 from '@/components/picker/input';
+    import input2 from '@/components/picker/input';
     import {
         formatTime
-    } from '../../../../utils/cofig/api.js';
+    } from '@/utils/cofig/api.js';
     import {
         getUserAvatar
-    } from '../../../../utils/cofig/ajax.js';
+    } from '@/utils/cofig/ajax.js';
     export default class Index extends wepy.page {
         components = {
             lawyerFee: input1,

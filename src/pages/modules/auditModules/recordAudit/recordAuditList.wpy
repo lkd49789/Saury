@@ -101,13 +101,13 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js'
-    import mixins from '../../../../utils/cofig/mixin.js';
-    import navbar from '../../../../components/navbar';
-    import placeHolderImage from '../../../../components/placeHolderImage';
+    import ajax from '@/utils/cofig/ajax.js'
+    import mixins from '@/utils/cofig/mixin.js';
+    import navbar from '@/components/navbar';
+    import placeHolderImage from '@/components/placeHolderImage';
     import {
         formatDate
-    } from '../../../../utils/cofig/api.js';
+    } from '@/utils/cofig/api.js';
     export default class recordAuditList extends wepy.page {
         config = {
             enablePullDownRefresh: true,

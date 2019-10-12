@@ -69,8 +69,8 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../../utils/cofig/ajax.js'
-    import remark from '../../../../../components/picker/input'
+    import ajax from '@/utils/cofig/ajax.js'
+    import remark from '@/components/picker/input'
     export default class auditCase extends wepy.page {
         components = {
             remark

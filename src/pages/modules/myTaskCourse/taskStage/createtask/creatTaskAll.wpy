@@ -67,13 +67,13 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../../utils/cofig/ajax.js';
-    import Estimate from '../../../../../components/picker/input';
-    import StageId from '../../../../../components/picker/option';
-    import RemindTime from '../../../../../components/picker/option';
-    import StartTime from'../../../../../components/Date/DateTimePicker';
-    import EndTime from'../../../../../components/Date/DateTimePicker';
-    import Priority from '../../../../../components/picker/option'; 
+    import ajax from '@/utils/cofig/ajax.js';
+    import Estimate from '@/components/picker/input';
+    import StageId from '@/components/picker/option';
+    import RemindTime from '@/components/picker/option';
+    import StartTime from'@/components/Date/DateTimePicker';
+    import EndTime from'@/components/Date/DateTimePicker';
+    import Priority from '@/components/picker/option'; 
     export default class creatTaskAll extends wepy.page {
         components = {
             StageId,

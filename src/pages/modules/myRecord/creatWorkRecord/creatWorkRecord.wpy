@@ -207,12 +207,12 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js'
+    import ajax from '@/utils/cofig/ajax.js'
     import {
         myDistinct
-    } from '../../../../utils/cofig/api.js';
-    import StartTime from '../../../../components/Date/DateTimePicker';
-    import EndTime from '../../../../components/Date/DateTimePicker';
+    } from '@/utils/cofig/api.js';
+    import StartTime from '@/components/Date/DateTimePicker';
+    import EndTime from '@/components/Date/DateTimePicker';
     export default class clientDetail extends wepy.page {
         components = {
             StartTime,

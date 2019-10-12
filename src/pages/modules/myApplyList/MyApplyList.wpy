@@ -125,9 +125,9 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../utils/cofig/ajax.js'
-    import mixins from '../../../utils/cofig/mixin.js';
-    import placeHolderImage from '../../../components/placeHolderImage';
+    import ajax from '@/utils/cofig/ajax.js'
+    import mixins from '@/utils/cofig/mixin.js';
+    import placeHolderImage from '@/components/placeHolderImage';
     export default class myApplyList extends wepy.page {
         config = {
             enablePullDownRefresh: true,

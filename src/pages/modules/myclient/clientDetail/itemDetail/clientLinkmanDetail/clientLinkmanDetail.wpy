@@ -133,7 +133,7 @@
 
 <script>
 import wepy from 'wepy';
-// import navbar from '../../../components/navbar';
+// import navbar from '@/components/navbar';
 export default class clientlinkmandetail extends wepy.page {
   data = {
     linker: []

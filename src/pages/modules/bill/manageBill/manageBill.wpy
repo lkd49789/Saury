@@ -114,10 +114,10 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js';
-    import navbar from '../../../../components/navbar'
-    import placeHolderImage from '../../../../components/placeHolderImage';
-    import mixins from '../../../../utils/cofig/mixin.js';
+    import ajax from '@/utils/cofig/ajax.js';
+    import navbar from '@/components/navbar'
+    import placeHolderImage from '@/components/placeHolderImage';
+    import mixins from '@/utils/cofig/mixin.js';
     export default class manageBill extends wepy.page {
         config = {
             enablePullDownRefresh: true,

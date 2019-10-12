@@ -76,8 +76,8 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js';
-    import {formatTime} from '../../../../utils/cofig/api.js'
+    import ajax from '@/utils/cofig/ajax.js';
+    import {formatTime} from '@/utils/cofig/api.js'
     export default class auditResultsDetail extends wepy.page {
         data = {
             approvalList: []

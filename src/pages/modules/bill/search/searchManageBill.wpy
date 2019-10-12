@@ -168,14 +168,14 @@
     import wepy from 'wepy';
     import {
         myDistinct
-    } from '../../../../utils/cofig/api.js';
-    import ajax from '../../../../utils/cofig/ajax.js';
+    } from '@/utils/cofig/api.js';
+    import ajax from '@/utils/cofig/ajax.js';
     import {
         formatDate
-    } from '../../../../utils/cofig/api.js';
-    import CaseName from '../../../../components/picker/input';
-    import ClientName from '../../../../components/picker/input';
-    import Currency from '../../../../components/picker/option';
+    } from '@/utils/cofig/api.js';
+    import CaseName from '@/components/picker/input';
+    import ClientName from '@/components/picker/input';
+    import Currency from '@/components/picker/option';
     export default class searchMyBill extends wepy.page {
         components = {
             CaseName,

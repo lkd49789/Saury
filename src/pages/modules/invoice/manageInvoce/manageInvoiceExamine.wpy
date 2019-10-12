@@ -74,12 +74,12 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js'
-    import input1 from '../../../../components/picker/input'
-    import input2 from '../../../../components/picker/input'
-    import input3 from '../../../../components/picker/input'
-    import input4 from '../../../../components/picker/input'
-    import option from '../../../../components/picker/option'
+    import ajax from '@/utils/cofig/ajax.js'
+    import input1 from '@/components/picker/input'
+    import input2 from '@/components/picker/input'
+    import input3 from '@/components/picker/input'
+    import input4 from '@/components/picker/input'
+    import option from '@/components/picker/option'
     export default class Index extends wepy.page {
         components = {
             returnInvoice: input1,

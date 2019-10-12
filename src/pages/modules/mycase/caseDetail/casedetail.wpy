@@ -13,9 +13,9 @@
       >image {
         width: 325rpx;
         width: 325rpx;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        // display: flex;
+        // align-items: center;
+        // justify-content: center;
       }
     }
     .addimage {
@@ -675,22 +675,6 @@
   }
   .document {
     position: relative;
-    .placeholderImage {
-      position: fixed;
-      top: 0;
-      height: 100%;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      >image {
-        width: 325rpx;
-        width: 325rpx;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
   }
   .loseColor {
     color: #7a7a7a !important;
@@ -1263,9 +1247,9 @@
 <script>
   import wepy from 'wepy';
   import 'wepy-async-function';
-  import navbar from '../../../../components/navbar';
-  import ajax from '../../../../utils/cofig/ajax.js';
-  import api from '../../../../utils/cofig/api.js';
+  import navbar from '@/components/navbar';
+  import ajax from '@/utils/cofig/ajax.js';
+  import api from '@/utils/cofig/api.js';
   export default class caseDetail extends wepy.page {
     components = {
       navbar
@@ -1553,9 +1537,9 @@
           );
           this.getDocumentData(id, docClass);
         }else{
-           this.caseDetailData.documentDatas.filePath=[];
-           this.caseDetailData.documentDatas.lastPathClass=[];
-           this.caseDetailData.documentDatas.lastPathId=[];
+           this.caseDetailData.documentDatas.filePath = [];
+           this.caseDetailData.documentDatas.lastPathClass = [];
+           this.caseDetailData.documentDatas.lastPathId = [];
            this.getDocumentData(this.id, 'M1');
         }
          
@@ -1683,7 +1667,7 @@
       // 跳转到合同详情页面
       tocontractinfo() {
         wx.navigateTo({
-          url: './cases/contractdetail/contractinfo?'
+          url: './cases/contractdetail/contractinfo'
         });
       },
       //跳转至客户基本信息页
@@ -2058,30 +2042,31 @@
       if (GetTasksDatas.data.result.items.length !== 0) {
         var TasksData = GetTasksDatas.data.result
         var childChecked = [];
-        for (var i in TasksData.items) {
-          if (TasksData.items[i].isCompleted == 'Y') {
-            TasksData.items[i]['checked'] = true
+        console.log('111')
+        TasksData.items.forEach( item =>{
+          if (item.isCompleted == 'Y') {
+            item['checked'] = true
           } else {
-            TasksData.items[i]['checked'] = false
+            item['checked'] = false
           }
-          if (TasksData.items[i].isCompleted == 'D') {
-            TasksData.items[i]['childTask'] = false
+          if (item.isCompleted == 'D') {
+            item['childTask'] = false
           } else {
-            TasksData.items[i]['childTask'] = true
+            item['childTask'] = true
           }
-          if (TasksData.items[i].endTime) {
-            // TasksData.items[i].endTime = api.formatTimeSymbol(TasksData.items[i].endTime, '/');
-            var hourTime=new Date(TasksData.items[i].endTime).getHours();
-                if(hourTime>7&&hourTime<25){
-                    var millTime=new Date(TasksData.items[i].endTime).getTime()-(8*60*60*1000);
-                    TasksData.items[i].endTime=new Date(millTime);
+          if (item.endTime) {
+            // item.endTime = api.formatTimeSymbol(item.endTime, '/');
+            var hourTime = new Date(item.endTime).getHours();
+                if(hourTime > 7 && hourTime < 25){
+                    var millTime = new Date(item.endTime).getTime() - (8 * 60 * 60 * 1000);
+                    item.endTime = new Date(millTime);
                 }else{
-                    var millTime=(16*60*60*1000)+new Date(TasksData.items[i].endTime).getTime();
-                   TasksData.items[i].endTime=new Date(millTime);
+                    var millTime = (16 * 60 * 60 * 1000) + new Date(item.endTime).getTime();
+                   item.endTime = new Date(millTime);
                 }
-              TasksData.items[i].endTime = api.formatTimeSymbol(TasksData.items[i].endTime, '-')
+              item.endTime = api.formatTimeSymbol(item.endTime, '-')
           }
-        }
+        })
         this.caseDetailData.taskDatas.TasksDatas[index] = TasksData;
         this.caseDetailData.taskDatas.viewHeight[index] += TasksData.items.length * 175;
       } else {
@@ -2217,52 +2202,46 @@
       ) {
         // this.caseDetailData.documentDatas.searchDocValue='';
         // this.caseDetailData.documentDatas.isValue=false;
-        this.caseDetailData.documentDatas.documentData =documentData.data.result.items;
+        this.caseDetailData.documentDatas.documentData = documentData.data.result.items;
         var document = documentData.data.result.items;
         //图标 颜色
-        for (var index in document) {
-          //  this.caseDetailData.documentDatas.pathText.push(text)
-          var iconClass = document[index].fileExtension.toLowerCase();
+        document.forEach( (item,index) =>{
+          let iconClass = item.fileExtension.toLowerCase();
+          let icon = '';
+          let color = '';
           switch (iconClass) {
             case '.pdf':
-              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-pdfpng1';
-              this.caseDetailData.documentDatas.fileColor[index] = '#e20000';
-              break;
             case '.png':
-              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-pdfpng1';
-              this.caseDetailData.documentDatas.fileColor[index] = '#e20000';
+              icon = 'icon-pdfpng1';
+              color = '#e20000';
               break;
             case '.xls':
-              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-exl1';
-              this.caseDetailData.documentDatas.fileColor[index] = '#069400';
-              break;
             case '.xlsx':
-              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-exl1';
-              this.caseDetailData.documentDatas.fileColor[index] = '#069400';
+              icon = 'icon-exl1';
+              color = '#069400';
               break;
             case '.docx':
-              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-wold1';
-              this.caseDetailData.documentDatas.fileColor[index] = '#009dff';
-              break;
             case '.doc':
-              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-wold1';
-              this.caseDetailData.documentDatas.fileColor[index] = '#009dff';
+              icon = 'icon-wold1';
+              color = '#009dff';
               break;
             case '.jpg':
-              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-jpggeshi';
-              this.caseDetailData.documentDatas.fileColor[index] = '#ff9900';
+              icon = 'icon-jpggeshi';
+              color = '#ff9900';
               break;
             case 'folder':
-              this.caseDetailData.documentDatas.fileIcon[index] = 'icon-wendang';
-              this.caseDetailData.documentDatas.fileColor[index] = '#ff9900';
+              icon = 'icon-wendang';
+              color = '#ff9900';
               break;
             default:
-              this.caseDetailData.documentDatas.fileIcon[index] =
+              icon =
                 'icon-weizhiwenjiangeshi';
-              this.caseDetailData.documentDatas.fileColor[index] = '#7a7a7a';
+              color = '#7a7a7a';
               break;
           }
-        }
+          this.caseDetailData.documentDatas.fileIcon[index] = icon;
+          this.caseDetailData.documentDatas.fileColor[index] = color;
+        })
       } else {
         if (documentData.statusCode !== 200) {
           this.caseDetailData.documentDatas.documentData = [];
@@ -2301,10 +2280,7 @@
         this.caseDetailData.workLogsDatas.workLogData =
           workLogsData.data.result.items;
         var workLogData = workLogsData.data.result.items;
-        this.caseDetailData.workLogsDatas.selfDuration=workLogData.reduce((pre,cur)=>{
-             console.log(cur)
-            return cur.selfDuration+pre;
-        },)
+        this.caseDetailData.workLogsDatas.selfDuration = workLogData.reduce((pre,cur) => cur.selfDuration + pre )
         for (var index in workLogData) {
           // this.caseDetailData.workLogsDatas.selfDuration += Number(
           //   workLogData[index].selfDuration.toFixed(2)
@@ -2345,19 +2321,21 @@
             });
           }
           //审核状态
+          let color = '';
           switch (workLogData[index].processStatus) {
             case 'A':
-              this.caseDetailData.workLogsDatas.processStatus[index] = '#339933';
+              color = '#339933';
               break;
             case 'N':
-              this.caseDetailData.workLogsDatas.processStatus[index] = '#009dff';
+              color = '#009dff';
               break;
             case 'R':
-              this.caseDetailData.workLogsDatas.processStatus[index] = '#e20000';
+              color = '#e20000';
               break;
             default:
               break;
           }
+          this.caseDetailData.workLogsDatas.processStatus[index] = color;
         }
       } else {
         if (workLogsData.statusCode !== 200) {
@@ -2391,36 +2369,24 @@
       // console.log(CourtsDatas)
       // // CourtsDatas.statusData=100;
       // CourtsDatas.data.result.items=[]
-      if (
-        CourtsDatas.statusCode == 200 &&
-        CourtsDatas.data.result.items.length !== 0
-      ) {
-        this.caseDetailData.CourtsDatas.CourtsData =
-          CourtsDatas.data.result.items;
+      if ( CourtsDatas.statusCode == 200 && CourtsDatas.data.result.items.length !== 0 ) {
+        this.caseDetailData.CourtsDatas.CourtsData = CourtsDatas.data.result.items;
         var CourtsDatas = CourtsDatas.data.result.items;
-        for (var index in CourtsDatas) {
-          this.caseDetailData.CourtsDatas.endYear[index] = CourtsDatas[
-              index
-            ].endTime
+        CourtsDatas.forEach( (item,index) =>{
+          this.caseDetailData.CourtsDatas.endYear[index] = item.endTime
             .split('T')[0]
             .replace(/-/g, '/');
-          this.caseDetailData.CourtsDatas.endHour[index] = CourtsDatas[
-              index
-            ].endTime
+          this.caseDetailData.CourtsDatas.endHour[index] = item.endTime
             .split('T')[1]
             .replace('Z', ' ');
-          this.caseDetailData.CourtsDatas.startYear[index] = CourtsDatas[
-              index
-            ].startTime
+          this.caseDetailData.CourtsDatas.startYear[index] = item.startTime
             .split('T')[0]
             .replace(/-/g, '/');
-          this.caseDetailData.CourtsDatas.startHour[index] = CourtsDatas[
-              index
-            ].startTime
+          this.caseDetailData.CourtsDatas.startHour[index] = item.startTime
             .split('T')[1]
             .replace('Z', ' ');
           // console.log(CourtsDatas[index].endTime.split('T')[1].replace('Z', ' '));
-        }
+        })
       } else {
         if (CourtsDatas.statusCode !== 200) {
           wx.showToast({
@@ -2471,24 +2437,24 @@
           this.caseDetailData.AmountDatas.UserCaseBillingHeight +=
             UserCaseBillingItem.data.result.items.length * 200;
           var UserCaseBillingItem = UserCaseBillingItem.data.result.items;
-          for (var index in UserCaseBillingItem) {
-            switch (UserCaseBillingItem[index].processStatusText) {
+          UserCaseBillingItem.forEach( item =>{
+            switch (item.processStatusText) {
               case '预开账单':
-                UserCaseBillingItem[index]['textColor'] = '#009DFF';
+                item['textColor'] = '#009DFF';
                 break;
               case '等待审核':
-                UserCaseBillingItem[index]['textColor'] = '#ff9900';
+                item['textColor'] = '#ff9900';
                 break;
               case '审核退回':
-                UserCaseBillingItem[index]['textColor'] = '#e20000';
+                item['textColor'] = '#e20000';
                 break;
               case '审核通过':
-                UserCaseBillingItem[index]['textColor'] = '#069400';
+                item['textColor'] = '#069400';
                 break;
               default:
                 break;
             }
-          }
+          })
           this.caseDetailData.AmountDatas.UserCaseBillingItem = this.caseDetailData.AmountDatas.UserCaseBillingItem.concat(
             UserCaseBillingItem
           );
@@ -2552,34 +2518,34 @@
           this.caseDetailData.AmountDatas.UserInvoicesItemHeight +=
             UserInvoicesItem.length * 250;
           var date = [];
-          for (var index in UserInvoicesItem) {
-            date[index] = UserInvoicesItem[index].creationTime.split('T')[0];
-            switch (UserInvoicesItem[index].statusName) {
+          UserInvoicesItem.forEach( (item,index) =>{
+            date[index] = item.creationTime.split('T')[0];
+            switch (item.statusName) {
               case '已领取':
-                UserInvoicesItem[index]['statusColor'] = '#069400';
+                item['statusColor'] = '#069400';
                 break;
               case '未提交':
-                UserInvoicesItem[index]['statusColor'] = '#5d73fa';
+                item['statusColor'] = '#5d73fa';
                 break;
               case '待处理':
-                UserInvoicesItem[index]['statusColor'] = '#ff9900';
+                item['statusColor'] = '#ff9900';
                 break;
               case '已退回':
-                UserInvoicesItem[index]['statusColor'] = '#e20000';
+                item['statusColor'] = '#e20000';
                 break;
               case '已开票':
-                UserInvoicesItem[index]['statusColor'] = '#009dff';
+                item['statusColor'] = '#009dff';
               case '已到账':
-                UserInvoicesItem[index]['statusColor'] = '#069400';
+                item['statusColor'] = '#069400';
               case '未到账':
-                UserInvoicesItem[index]['statusColor'] = '#e20000';
+                item['statusColor'] = '#e20000';
               case '部分到账':
-                UserInvoicesItem[index]['statusColor'] = '#009dff';
+                item['statusColor'] = '#009dff';
                 break;
               default:
                 break;
             }
-          }
+          })
           this.caseDetailData.AmountDatas.UserInvoicesDate = this.caseDetailData.AmountDatas.UserInvoicesDate.concat(
             date
           );
@@ -2634,31 +2600,31 @@
           this.caseDetailData.AmountDatas.UserReceiptsItemHeight +=
             UserReceiptsItem.length * 250;
           var date = [];
-          for (var index in UserReceiptsItem) {
-            date[index] = UserReceiptsItem[index].creationTime.split('T')[0];
-            switch (UserReceiptsItem[index].statusName) {
+          UserReceiptsItem.forEach( (item,index) =>{
+            date[index] = item.creationTime.split('T')[0];
+            switch (item.statusName) {
               case '已领取':
-                UserReceiptsItem[index]['statusColor'] = '#069400';
+                item['statusColor'] = '#069400';
                 break;
               case '未领取':
-                UserReceiptsItem[index]['statusColor'] = '#ff9900';
+                item['statusColor'] = '#ff9900';
                 break;
               case '待确认':
-                UserReceiptsItem[index]['statusColor'] = '#ff9900';
+                item['statusColor'] = '#ff9900';
                 break;
               case '待分配':
-                UserReceiptsItem[index]['statusColor'] = '#ff9900';
+                item['statusColor'] = '#ff9900';
                 break;
               case '未提交':
-                UserReceiptsItem[index]['statusColor'] = '#5d73fa';
+                item['statusColor'] = '#5d73fa';
                 break;
               case '已分配':
-                UserReceiptsItem[index]['statusColor'] = '#069400';
+                item['statusColor'] = '#069400';
                 break;
               default:
                 break;
             }
-          }
+          })
           this.caseDetailData.AmountDatas.UserReceiptsDate = this.caseDetailData.AmountDatas.UserReceiptsDate.concat(
             date
           );
@@ -2722,22 +2688,22 @@
           this.caseDetailData.AmountDatas.UserChargesItemHeight +=
             UserChargesItem.length * 250;
           var date = [];
-          for (var index in UserChargesItem) {
-            date[index] = UserChargesItem[index].creationTime.split('T')[0];
-            switch (UserChargesItem[index].statusName) {
+          UserChargesItem.forEach( (item,index) =>{
+            date[index] = item.creationTime.split('T')[0];
+            switch (item.statusName) {
               case '待审核':
-                UserChargesItem[index]['statusColor'] = '#ff9900';
+                item['statusColor'] = '#ff9900';
                 break;
               case '已审核':
-                UserChargesItem[index]['statusColor'] = '#069400';
+                item['statusColor'] = '#069400';
                 break;
               case '已退回':
-                UserChargesItem[index]['statusColor'] = '#e20000';
+                item['statusColor'] = '#e20000';
                 break;
               default:
                 break;
             }
-          }
+          })
           this.caseDetailData.AmountDatas.UserChargesDate = this.caseDetailData.AmountDatas.UserChargesDate.concat(
             date
           );

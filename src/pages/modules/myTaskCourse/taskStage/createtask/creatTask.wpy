@@ -188,14 +188,14 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../../utils/cofig/ajax.js';
+    import ajax from '@/utils/cofig/ajax.js';
     import {
         myDistinct
-    } from '../../../../../utils/cofig/api.js';
-    import Title from '../../../../../components/picker/input';
-    import Description from '../../../../../components/picker/input';
-    import EmployeeId from '../../../../../components/picker/option';
-    import Address from '../../../../../components/picker/input';
+    } from '@/utils/cofig/api.js';
+    import Title from '@/components/picker/input';
+    import Description from '@/components/picker/input';
+    import EmployeeId from '@/components/picker/option';
+    import Address from '@/components/picker/input';
     export default class creatTask extends wepy.page {
         components = {
             Title,

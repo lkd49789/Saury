@@ -174,13 +174,13 @@
   import wepy from 'wepy';
   import {
     myDistinct
-  } from '../../../../utils/cofig/api.js';
-  import ajax from '../../../../utils/cofig/ajax.js';
+  } from '@/utils/cofig/api.js';
+  import ajax from '@/utils/cofig/ajax.js';
   import {
     formatDate
-  } from '../../../../utils/cofig/api.js';
-  import lawyerName from '../../../../components/picker/input';
-  import categoryList from '../../../../components/picker/option';
+  } from '@/utils/cofig/api.js';
+  import lawyerName from '@/components/picker/input';
+  import categoryList from '@/components/picker/option';
   export default class searchClient extends wepy.page {
     components = {
       lawyerName,

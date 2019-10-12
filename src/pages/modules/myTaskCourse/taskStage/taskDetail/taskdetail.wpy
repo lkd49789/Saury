@@ -869,9 +869,9 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../../utils/cofig/ajax.js';
-    import navbar from '../../../../../components/navbar';
-    import api from '../../../../../utils/cofig/api.js';
+    import ajax from '@/utils/cofig/ajax.js';
+    import navbar from '@/components/navbar';
+    import api from '@/utils/cofig/api.js';
     export default class taskdetail extends wepy.page {
         components = {
             navbar

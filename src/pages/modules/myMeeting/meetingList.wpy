@@ -150,12 +150,12 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../utils/cofig/ajax.js'
-    import mixins from '../../../utils/cofig/mixin.js';
-    import placeHolderImage from '../../../components/placeHolderImage';
+    import ajax from '@/utils/cofig/ajax.js'
+    import mixins from '@/utils/cofig/mixin.js';
+    import placeHolderImage from '@/components/placeHolderImage';
     import {
         formatDate
-    } from '../../../utils/cofig/api.js'
+    } from '@/utils/cofig/api.js'
     export default class clientDetail extends wepy.page {
         config = {
             enablePullDownRefresh: true,

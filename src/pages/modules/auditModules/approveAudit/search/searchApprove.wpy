@@ -169,15 +169,15 @@
     import wepy from 'wepy';
     import {
         myDistinct
-    } from '../../../../../utils/cofig/api.js';
-    import ajax from '../../../../../utils/cofig/ajax.js';
+    } from '@/utils/cofig/api.js';
+    import ajax from '@/utils/cofig/ajax.js';
     import {
         formatDate
-    } from '../../../../../utils/cofig/api.js';
-    import caseName from '../../../../../components/picker/input';
-    import serialId from '../../../../../components/picker/input';
-    import clientUser from '../../../../../components/picker/input';
-    import Status from '../../../../../components/picker/option';
+    } from '@/utils/cofig/api.js';
+    import caseName from '@/components/picker/input';
+    import serialId from '@/components/picker/input';
+    import clientUser from '@/components/picker/input';
+    import Status from '@/components/picker/option';
     export default class searchApplyAudit extends wepy.page {
         components={
             caseName,

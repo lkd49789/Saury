@@ -131,11 +131,11 @@
 
 <script>
   import wepy from 'wepy';
-  import navbar from '../../../components/navbar';
-  import ajax from '../../../utils/cofig/thirdParty_ajax.js';
+  import navbar from '@/components/navbar';
+  import ajax from '@/utils/cofig/thirdParty_ajax.js';
   import {
     tranNumber
-  } from '../../../utils/cofig/api.js';
+  } from '@/utils/cofig/api.js';
   export default class getCasePageList extends wepy.page {
     config = {
       enablePullDownRefresh: true,
@@ -248,34 +248,37 @@
       if (resData.data.state == 200) {
         this.totalCount = resData.data.data.totalCount;
         var casePageListDatas = resData.data.data.caseData;
-        for (var index in casePageListDatas) {
-          casePageListDatas[index].Fee = tranNumber(casePageListDatas[index].Fee, 0);
-          switch (casePageListDatas[index].CaseLevel) {
+        console.log(1111);
+        casePageListDatas.forEach( item =>{
+          let text = item.CaseLevel
+          item.Fee = tranNumber(item.Fee, 0)
+          switch (item.CaseLevel) {
             case 1:
-              casePageListDatas[index].CaseLevel = 'A+级'
+              text = 'A+级'
               break;
             case 2:
-              casePageListDatas[index].CaseLevel = 'A级'
+              text = 'A级'
               break;
             case 3:
-              casePageListDatas[index].CaseLevel = 'A-级'
+              text = 'A-级'
               break;
             case 4:
-              casePageListDatas[index].CaseLevel = 'B+级'
+              text = 'B+级'
               break;
             case 5:
-              casePageListDatas[index].CaseLevel = 'B级'
+              text = 'B级'
               break;
             case 6:
-              casePageListDatas[index].CaseLevel = 'B-级'
+              text = 'B-级'
               break;
             case 7:
-              casePageListDatas[index].CaseLevel = 'C级'
+              text = 'C级'
               break;
             default:
               break;
           }
-        }
+          item.CaseLevel = text
+        })
         this.casePageListDatas.push(...casePageListDatas);
       } else {
         wx.showToast({

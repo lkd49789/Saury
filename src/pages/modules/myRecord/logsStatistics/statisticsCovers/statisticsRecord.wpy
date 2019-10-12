@@ -143,18 +143,18 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../../utils/cofig/ajax.js'
-    import mixins from '../../../../../utils/cofig/mixin.js';
-    import navbar from '../../../../../components/navbar';
-    import placeHolderImage from '../../../../../components/placeHolderImage';
-    import year from '../../../../../components/picker/option';
-    import category from '../../../../../components/picker/option';
-    import years from '../../../../../components/picker/option';
-    import categorys from '../../../../../components/picker/option';
-    import wxCharts from '../../../../../utils/cofig/wxcharts.js';
+    import ajax from '@/utils/cofig/ajax.js'
+    import mixins from '@/utils/cofig/mixin.js';
+    import navbar from '@/components/navbar';
+    import placeHolderImage from '@/components/placeHolderImage';
+    import year from '@/components/picker/option';
+    import category from '@/components/picker/option';
+    import years from '@/components/picker/option';
+    import categorys from '@/components/picker/option';
+    import wxCharts from '@/utils/cofig/wxcharts.js';
     import {
         getSum
-    } from '../../../../../utils/cofig/api.js';
+    } from '@/utils/cofig/api.js';
     export default class recordStatistics extends wepy.page {
         components = {
             placeHolderImage,

@@ -211,21 +211,21 @@
     import wepy from 'wepy';
     import {
         myDistinct
-    } from '../../../../utils/cofig/api.js'
-    import ajax from '../../../../utils/cofig/ajax.js';
-    import Name from '../../../../components/picker/input';
-    import ReasonSupplement from '../../../../components/picker/input';
-    import MattersEntrusted from '../../../../components/picker/input';
-    import Description from '../../../../components/picker/input';
-    import Category from '../../../../components/picker/option';
-    import Partition from '../../../../components/picker/option';
-    import OrganizationUnitId from '../../../../components/picker/option';
-    import Language from '../../../../components/picker/option';
-    import SecretLevel from '../../../../components/picker/option';
-    import Stage from '../../../../components/picker/option';
-    import AgencyAuthority from '../../../../components/picker/option';
-    import Agent from '../../../../components/picker/option';
-    import ImportLevel from '../../../../components/picker/pickerOption';
+    } from '@/utils/cofig/api.js'
+    import ajax from '@/utils/cofig/ajax.js';
+    import Name from '@/components/picker/input';
+    import ReasonSupplement from '@/components/picker/input';
+    import MattersEntrusted from '@/components/picker/input';
+    import Description from '@/components/picker/input';
+    import Category from '@/components/picker/option';
+    import Partition from '@/components/picker/option';
+    import OrganizationUnitId from '@/components/picker/option';
+    import Language from '@/components/picker/option';
+    import SecretLevel from '@/components/picker/option';
+    import Stage from '@/components/picker/option';
+    import AgencyAuthority from '@/components/picker/option';
+    import Agent from '@/components/picker/option';
+    import ImportLevel from '@/components/picker/pickerOption';
     export default class caseInfo extends wepy.page {
         components = {
             Name,

@@ -194,10 +194,10 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '../../../../utils/cofig/ajax.js';
+  import ajax from '@/utils/cofig/ajax.js';
   import {
     myDistinct
-  } from '../../../../utils/cofig/api.js';
+  } from '@/utils/cofig/api.js';
   export default class conflictRetrievalDetail extends wepy.page {
     config = {
       navigationBarTitleText: "",

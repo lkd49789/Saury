@@ -109,12 +109,12 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js';
-    import mixins from '../../../../utils/cofig/mixin.js';
-    import navbar from '../../../../components/navbar';
+    import ajax from '@/utils/cofig/ajax.js';
+    import mixins from '@/utils/cofig/mixin.js';
+    import navbar from '@/components/navbar';
     import {
         formatTime
-    } from '../../../../utils/cofig/api.js';
+    } from '@/utils/cofig/api.js';
     export default class Index extends wepy.page {
         config = {
             enablePullDownRefresh: true,

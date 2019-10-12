@@ -80,10 +80,10 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js';
-    import input1 from '../../../../components/picker/input';
-    import input2 from '../../../../components/picker/input';
-    import input3 from '../../../../components/picker/input';
+    import ajax from '@/utils/cofig/ajax.js';
+    import input1 from '@/components/picker/input';
+    import input2 from '@/components/picker/input';
+    import input3 from '@/components/picker/input';
     export default class recordAudit extends wepy.page {
         components = {
             businessDuration: input1,

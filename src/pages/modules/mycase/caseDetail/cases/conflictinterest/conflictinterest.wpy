@@ -129,7 +129,7 @@ Page {
 
 <script>
 import wepy from 'wepy';
-// import navbar from '../../../components/navbar';
+// import navbar from '@/components/navbar';
 export default class conflictinterest extends wepy.page {
   components = {};
   data = {

@@ -235,7 +235,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../utils/cofig/thirdParty_ajax.js'
+    import ajax from '@/utils/cofig/thirdParty_ajax.js'
     export default class caseDetailPage extends wepy.page {
         data = {
             CaseType: '',

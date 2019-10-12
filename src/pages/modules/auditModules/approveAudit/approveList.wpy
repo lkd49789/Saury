@@ -123,10 +123,10 @@
 
 <script>
     import wepy from 'wepy';
-    import navbar from '../../../../components/navbar';
-    import ajax from '../../../../utils/cofig/ajax.js';
-     import mixins from '../../../../utils/cofig/mixin.js';
-    import placeHolderImage from '../../../../components/placeHolderImage';
+    import navbar from '@/components/navbar';
+    import ajax from '@/utils/cofig/ajax.js';
+     import mixins from '@/utils/cofig/mixin.js';
+    import placeHolderImage from '@/components/placeHolderImage';
     export default class approveList extends wepy.page {
         config = {
             enablePullDownRefresh: true,

@@ -189,17 +189,17 @@
     import wepy from 'wepy';
     import {
         myDistinct
-    } from '../../../../utils/cofig/api.js';
-    import ajax from '../../../../utils/cofig/ajax.js';
+    } from '@/utils/cofig/api.js';
+    import ajax from '@/utils/cofig/ajax.js';
     import {
         formatDate
-    } from '../../../../utils/cofig/api.js';
-    import Subject from '../../../../components/picker/input';
-    import Title from '../../../../components/picker/input';
-    import Status from '../../../../components/picker/option';
-    import Category from '../../../../components/picker/option';
-    import Level from '../../../../components/picker/option';
-    import MeetingRoomId from '../../../../components/picker/option';
+    } from '@/utils/cofig/api.js';
+    import Subject from '@/components/picker/input';
+    import Title from '@/components/picker/input';
+    import Status from '@/components/picker/option';
+    import Category from '@/components/picker/option';
+    import Level from '@/components/picker/option';
+    import MeetingRoomId from '@/components/picker/option';
     export default class searchMeeting extends wepy.page {
         components = {
             Subject,
@@ -299,16 +299,16 @@
                }
                switch (e.target.id) {
                    case 'startMeetingDate':
-                       this.searchData.MeetingTime.StartDate=date;
+                       this.searchData.MeetingTime.StartDate = date;
                        break;
                    case 'endMeetingDate':
-                       this.searchData.MeetingTime.EndDate=date;
+                       this.searchData.MeetingTime.EndDate = date;
                        break;
                    case 'startCreateDate':
-                       this.searchData.CreationTime.StartDate=date;
+                       this.searchData.CreationTime.StartDate = date;
                        break;
                    case 'endCreateDate':
-                       this.searchData.CreationTime.EndDate=date;
+                       this.searchData.CreationTime.EndDate = date;
                        break;
                }
                this.$apply();
@@ -397,7 +397,7 @@
             },
             //会议室
             MeetingRoomIdIndex(index) {
-                this.searchData.MeetingRoomId= this.MeetingRoomId.value[index-1];
+                this.searchData.MeetingRoomId = this.MeetingRoomId.value[index-1];
                 this.$apply();
             },
             LevelIndex(index) {
@@ -440,30 +440,27 @@
                 'POST',
                 data_id
             )
-            if(resData.statusCode==200){
-                var GetGeneralCodeComboboxItemsData= resData.data.result;
+            if(resData.statusCode == 200){
+                var GetGeneralCodeComboboxItemsData = resData.data.result;
+                let key = ''
                 switch (id) {
                     case 'MILEVEL':
-                    for(var index in GetGeneralCodeComboboxItemsData){
-                        this.Level.value.push(GetGeneralCodeComboboxItemsData[index].value);
-                        this.Level.displayText.push(GetGeneralCodeComboboxItemsData[index].displayText);
-                    }
+                        key = 'Level'
                         break;
                     case 'MICT':
-                        for(var index in GetGeneralCodeComboboxItemsData){
-                        this.Category.value.push(GetGeneralCodeComboboxItemsData[index].value);
-                        this.Category.displayText.push(GetGeneralCodeComboboxItemsData[index].displayText);
-                    }
+                        key = 'Category'
                         break;
                     case 'MISTATUS':
-                    for(var index in GetGeneralCodeComboboxItemsData){
-                        this.Status.value.push(GetGeneralCodeComboboxItemsData[index].value);
-                        this.Status.displayText.push(GetGeneralCodeComboboxItemsData[index].displayText);
-                    }
-                        
+                        key = 'Status'                    
                         break;
                     default:
                         break;
+                }
+                if(key){
+                     GetGeneralCodeComboboxItemsData.forEach( item =>{
+                        this[key].value.push(item.value);
+                        this[key].displayText.push(item.displayText);
+                    })
                 }
                 this.$apply();
             }

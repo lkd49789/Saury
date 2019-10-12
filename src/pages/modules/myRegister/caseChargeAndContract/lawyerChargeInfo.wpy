@@ -151,16 +151,16 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js'
-    import PaidParty from '../../../../components/picker/option';
-    import ChargeLimit from '../../../../components/picker/input';
-    import Currency from '../../../../components/picker/option';
-    import ExchangeRate from '../../../../components/picker/option';
-    import ExchangeRateValue from '../../../../components/picker/input';
-    import TargetAmount from '../../../../components/picker/input';
-    import TargetProrate from '../../../../components/picker/input';
-    import CostLimit from '../../../../components/picker/input';
-    import FreeHours from '../../../../components/picker/input';
+    import ajax from '@/utils/cofig/ajax.js'
+    import PaidParty from '@/components/picker/option';
+    import ChargeLimit from '@/components/picker/input';
+    import Currency from '@/components/picker/option';
+    import ExchangeRate from '@/components/picker/option';
+    import ExchangeRateValue from '@/components/picker/input';
+    import TargetAmount from '@/components/picker/input';
+    import TargetProrate from '@/components/picker/input';
+    import CostLimit from '@/components/picker/input';
+    import FreeHours from '@/components/picker/input';
     export default class lawyerChargeInfo extends wepy.page {
         components = {
             PaidParty,

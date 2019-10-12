@@ -156,17 +156,17 @@
   import wepy from 'wepy';
   import {
     myDistinct
-  } from '../../../../utils/cofig/api.js';
-  import ajax from '../../../../utils/cofig/ajax.js';
+  } from '@/utils/cofig/api.js';
+  import ajax from '@/utils/cofig/ajax.js';
   import {
     formatDate
-  } from '../../../../utils/cofig/api.js';
-  import CaseName from '../../../../components/picker/input'
-  import ClientName from '../../../../components/picker/input'
-  import Name from '../../../../components/picker/input'
-  import creationTime from '../../../../components/picker/pickerDate'
-  import Category from '../../../../components/picker/pickerOption'
-  import IsArchive from '../../../../components/picker/pickerOption'
+  } from '@/utils/cofig/api.js';
+  import CaseName from '@/components/picker/input'
+  import ClientName from '@/components/picker/input'
+  import Name from '@/components/picker/input'
+  import creationTime from '@/components/picker/pickerDate'
+  import Category from '@/components/picker/pickerOption'
+  import IsArchive from '@/components/picker/pickerOption'
   export default class searchTask extends wepy.page {
     components={
       CaseName,

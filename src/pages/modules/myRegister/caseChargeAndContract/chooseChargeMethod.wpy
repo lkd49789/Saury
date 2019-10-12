@@ -321,13 +321,13 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../../../utils/cofig/ajax.js';
-    import PayPeriod from '../../../../components/picker/input';
-    import LimitFee from '../../../../components/picker/input';
-    import LimitHour from '../../../../components/picker/input';
+    import ajax from '@/utils/cofig/ajax.js';
+    import PayPeriod from '@/components/picker/input';
+    import LimitFee from '@/components/picker/input';
+    import LimitHour from '@/components/picker/input';
     import {
         formatDate
-    } from '../../../../utils/cofig/api.js';
+    } from '@/utils/cofig/api.js';
     export default class chooseChargeMethod extends wepy.page {
         components = {
             PayPeriod,

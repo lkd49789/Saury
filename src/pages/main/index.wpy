@@ -568,127 +568,127 @@
       )
       if (resData.statusCode == 200) {
         var UserNotifications_Data = resData.data.result.items;
-        for (var index=0,len=UserNotifications_Data.length;index<len;index++) {
-          UserNotifications_Data[index].notification.creationTime = beautify_time(UserNotifications_Data[index].notification.creationTime)
-          switch (UserNotifications_Data[index].notification.notificationName) {
+        UserNotifications_Data.forEach( item =>{
+          item.notification.creationTime = beautify_time(item.notification.creationTime)
+          switch (item.notification.notificationName) {
             case 'App.Financial.Billings.Returned':
-              UserNotifications_Data[index].TextTile = '账单-已退回';
+              item.TextTile = '账单-已退回';
               break;
             case 'App.Works.Task.Confirmed':
-              UserNotifications_Data[index].TextTile = '任务-已参与';
+              item.TextTile = '任务-已参与';
               break;
             case 'App.Works.Task.Comment.Created':
-              UserNotifications_Data[index].TextTile = '任务-新消息';
+              item.TextTile = '任务-新消息';
               break;
             case 'App.Works.Log.Returned':
-              UserNotifications_Data[index].TextTile = '工作日志-已退回';
+              item.TextTile = '工作日志-已退回';
               break;
             case 'App.HumanResource.Attendance.Approved':
-              UserNotifications_Data[index].TextTile = '请假-已审核';
+              item.TextTile = '请假-已审核';
               break
             case 'App.Works.Task.WaitForConfirmed':
-              UserNotifications_Data[index].TextTile = '任务-待确认'
+              item.TextTile = '任务-待确认'
               break
             case 'App.Works.Meeting.Rejected':
-              UserNotifications_Data[index].TextTile = '会议-已拒绝'
+              item.TextTile = '会议-已拒绝'
               break
             case 'App.HumanResource.Attendance.Created':
-              UserNotifications_Data[index].TextTile = '请假-待审核'
+              item.TextTile = '请假-待审核'
               break
             case 'App.HumanResource.Attendance.Returned':
-              UserNotifications_Data[index].TextTile = '请假-已退回'
+              item.TextTile = '请假-已退回'
               break
             case 'App.HumanResource.Attendance.Returned':
-              UserNotifications_Data[index].TextTile = '请假-已退回'
+              item.TextTile = '请假-已退回'
               break
             case 'App.Financial.Billings.Approved':
-              UserNotifications_Data[index].TextTile = '账单-已审核';
+              item.TextTile = '账单-已审核';
               break;
             case 'App.Financial.Invoice.WaitForClaimed':
-              UserNotifications_Data[index].TextTile = '发票-待领取';
+              item.TextTile = '发票-待领取';
               break;
             case 'App.Financial.Billings.Created':
-              UserNotifications_Data[index].TextTile = '账单-待处理';
+              item.TextTile = '账单-待处理';
               break;
             case 'App.Financial.Invoice.Returned':
-              UserNotifications_Data[index].TextTile = '发票-已退回';
+              item.TextTile = '发票-已退回';
               break;
             case 'App.Works.Meeting.Confirmed':
-              UserNotifications_Data[index].TextTile = '会议-已参与';
+              item.TextTile = '会议-已参与';
               break;
             case 'App.Works.Meeting.StartRemind':
-              UserNotifications_Data[index].TextTile = '会议-即将开始';
+              item.TextTile = '会议-即将开始';
               break;
             case 'App.Financial.Charge.WaitForApproved':
-              UserNotifications_Data[index].TextTile = '费用-待审核';
+              item.TextTile = '费用-待审核';
               break;
             case 'App.Works.Task.Archived':
-              UserNotifications_Data[index].TextTile = '任务-已归档';
+              item.TextTile = '任务-已归档';
               break;
             case 'App.Financial.Invoice.Canceled':
-              UserNotifications_Data[index].TextTile = '发票-已作废';
+              item.TextTile = '发票-已作废';
               break;
             case 'App.Works.Meeting.MeetingMinutesCompleted':
-              UserNotifications_Data[index].TextTile = '会议-纪要-已完成';
+              item.TextTile = '会议-纪要-已完成';
               break;
             case 'App.Works.Log.Approved':
-              UserNotifications_Data[index].TextTile = '工作日志-已审核';
+              item.TextTile = '工作日志-已审核';
               break;
             case 'App.Works.Meeting.Reminded':
-              UserNotifications_Data[index].TextTile = '会议-预设提醒';
+              item.TextTile = '会议-预设提醒';
               break;
             case 'App.Financial.Receipt.WaitForConfirmed':
-              UserNotifications_Data[index].TextTile = '收款-待确认';
+              item.TextTile = '收款-待确认';
               break;
             case 'App.Financial.Receipt.WaitForClaimed':
-              UserNotifications_Data[index].TextTile = '收款-待认领';
+              item.TextTile = '收款-待认领';
               break;
             case 'App.Financial.Charge.Returned':
-              UserNotifications_Data[index].TextTile = '费用-已退回';
+              item.TextTile = '费用-已退回';
               break;
             case 'App.Works.Log.Created':
-              UserNotifications_Data[index].TextTile = '工作日志-已参与';
+              item.TextTile = '工作日志-已参与';
               break;
             case 'App.Financial.Charge.Approved':
-              UserNotifications_Data[index].TextTile = '费用-已审核';
+              item.TextTile = '费用-已审核';
               break;
             case 'App.Works.Task.Rejected':
-              UserNotifications_Data[index].TextTile = '任务-已拒绝';
+              item.TextTile = '任务-已拒绝';
               break;
             case 'App.Works.Meeting.Created':
-              UserNotifications_Data[index].TextTile = '会议-新会议';
+              item.TextTile = '会议-新会议';
               break;
             case 'App.Works.Meeting.WaitApproved':
-              UserNotifications_Data[index].TextTile = '会议-待参与';
+              item.TextTile = '会议-待参与';
               break;
             case 'App.Works.Task.Completed':
-              UserNotifications_Data[index].TextTile = '任务-已完成';
+              item.TextTile = '任务-已完成';
               break;
             case 'App.Works.Log.WaitApproved':
-              UserNotifications_Data[index].TextTile = '工作日志-待审核';
+              item.TextTile = '工作日志-待审核';
               break;
             case 'App.Financial.Invoice.WaitForRegistered':
-              UserNotifications_Data[index].TextTile = '发票-待开票';
+              item.TextTile = '发票-待开票';
               break;
             case 'App.Business.CaseCreation.Created':
-              UserNotifications_Data[index].TextTile = '立案-待审核';
+              item.TextTile = '立案-待审核';
               break;
             case 'App.Business.StampFiles.Returned':
-              UserNotifications_Data[index].TextTile = '文书报审-已退回';
+              item.TextTile = '文书报审-已退回';
               break;
             case 'App.Business.StampFiles.Created':
-              UserNotifications_Data[index].TextTile = '文书报审-待审核';
+              item.TextTile = '文书报审-待审核';
               break;
             case 'App.Business.StampFiles.Approved':
-              UserNotifications_Data[index].TextTile = '文书报审-已审核';
+              item.TextTile = '文书报审-已审核';
               break;
             case 'App.Business.StampFiles.Approved':
-              UserNotifications_Data[index].TextTile = '文书报审-已审核';
+              item.TextTile = '文书报审-已审核';
               break;
             default:
               break;
           }
-        }
+        })
         this.GetUserNotifications_data = UserNotifications_Data;
       } else {
         this.GetUserNotifications_data = [];
@@ -708,11 +708,11 @@
       if (resData.statusCode == 200) {
         var GetFunctionItemsData = resData.data.result.items
         var itemsData = [];
-        for (var index=0,len=GetFunctionItemsData.length;index<len;index++) {
-          switch (GetFunctionItemsData[index].name) {
+        GetFunctionItemsData.forEach( item =>{
+          switch (item.name) {
             case 'Pages.Business.Cases.MyCases':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-wodeanjian',
                 color: '#5d73fa',
                 link: '../modules/mycase/mycase',
@@ -721,7 +721,7 @@
               break;
             case 'Pages.Customers.MyCustomers.Manage':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-wodekehu',
                 color: '#e20000',
                 link: '../modules/myclient/myClientList',
@@ -730,7 +730,7 @@
               break;
             case 'Pages.Works.Log.MyWorklog':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-woderizhi',
                 color: '#009dff',
                 link: '../modules/myRecord/workRecord',
@@ -739,7 +739,7 @@
               break;
             case 'Pages.Works.Task':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-wodejincheng',
                 color: '#ff9900',
                 link: '../modules/myTaskCourse/taskProject',
@@ -749,7 +749,7 @@
               break;
             case 'Pages.Works.Meeting.MyMeeting':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-huiyi-copy',
                 color: '#ff9900',
                 link: '../modules/myMeeting/meetingList',
@@ -759,7 +759,7 @@
               break;
             case 'Pages.HumanResource.Attendance.MyApplyList':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-wodeqingjia',
                 color: '#ff9900',
                 link: '../modules/myApplyList/MyApplyList',
@@ -769,7 +769,7 @@
               break;
             case 'Pages.Financial.Billings.MyBillings':
               itemsData.push({
-                displayName:GetFunctionItemsData[index].displayName,
+                displayName:item.displayName,
                 icon: 'icon-wodezhangdan',
                 color: '#ff9900',
                 link: '../modules/bill/myBill/myBill',
@@ -779,7 +779,7 @@
               break;
             case 'Pages.Financial.Billings.Manage':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-zhangdanguanli',
                 color: '#ff9900',
                 link: '../modules/bill/manageBill/manageBill',
@@ -789,7 +789,7 @@
               break;
             case 'Pages.Financial.Invoices.MyApplyInvoices':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-wodefapiao',
                 color: '#e20000',
                 link: '../modules/invoice/myInvoce/myinvoice',
@@ -799,7 +799,7 @@
               break;
             case 'Pages.Financial.Invoices.Manage':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-fapiaoguanli',
                 color: '#e20000',
                 link: '../modules/invoice/manageInvoce/manageInvoice',
@@ -809,7 +809,7 @@
               break;
             case 'Pages.Financial.Charge.MyCharges':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-wodefeiyong',
                 color: '#e20000',
                 link: '../modules/cost/myCost/myCost',
@@ -819,7 +819,7 @@
               break;
             case 'Pages.Financial.Charge.Manage':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-feiyongguanli',
                 color: '#e20000',
                 link: '../modules/cost/manageCost/manageCost',
@@ -829,7 +829,7 @@
               break;
             case 'Pages.Financial.Receipts.MyReceipts':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-wodeshoukuan',
                 color: '#ff9900',
                 link: '../modules/receivables/myReceivables/myReceivables',
@@ -839,7 +839,7 @@
               break;
             case 'Pages.Financial.Receipts':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-shoukuanguanli',
                 color: '#ff9900',
                 link: '../modules/receivables/manageReceivables/manageReceivables',
@@ -849,7 +849,7 @@
               break;
             case 'Pages.Business.CaseApplications.MyApplyCases':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-wodelian',
                 color: '#5d73fa',
                 link: '../modules/myRegister/myRegisterList',
@@ -859,7 +859,7 @@
               break;
             case 'Pages.Business.CaseApplications.Check':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-chongtujiansuo',
                 color: '#e20000',
                 link: '../modules/conflictRetrieval/conflictRetrievalList',
@@ -869,7 +869,7 @@
               break;
             case 'Pages.Business.CaseApplications.CheckCustomers':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-liyichongtuyujian',
                 color: '#e20000',
                 link: '../modules/ConflictInterestPreflight/ConflictInterestPreflight',
@@ -879,7 +879,7 @@
               break;
               case 'Pages.Business.Cases.Manage':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-anjianguanli',
                 color: '#5d73fa',
                 link: '../modules/caseManagement/caseManagement',
@@ -889,7 +889,7 @@
               break;
               case 'Pages.Business.Cases.Create':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-lianshenqing',
                 color: '#5d73fa',
                 link: '../modules/myRegister/register',
@@ -899,7 +899,7 @@
               break;
               case 'Pages.Customers.MyCustomers':
               itemsData.push({
-                displayName: GetFunctionItemsData[index].displayName,
+                displayName: item.displayName,
                 icon: 'icon-kehuguanli',
                 color: '#5d73fa',
                 link: "../modules/myclient/myClientList?IsAll=true",
@@ -908,7 +908,7 @@
               })
               break;
           }
-        }
+        })
         // this.setData({
         //   functionData:itemsData
         // })
