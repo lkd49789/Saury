@@ -222,11 +222,11 @@
             this.$apply();
         }
         onLoad() {
-            var meetingRoomData=wx.getStorageSync('meetingRoomData');
-            this.submitData=wx.getStorageSync('creatMeetingData');
+            var meetingRoomData = wx.getStorageSync('meetingRoomData');
+            this.submitData = wx.getStorageSync('creatMeetingData');
             for(var index in meetingRoomData){
-                this.meetingRoomCombobox.value[index]=meetingRoomData[index].value;
-                this.meetingRoomCombobox.displayText[index]=meetingRoomData[index].displayText;
+                this.meetingRoomCombobox.value[index] = meetingRoomData[index].value;
+                this.meetingRoomCombobox.displayText[index] = meetingRoomData[index].displayText;
             }
             this.$apply();
         }

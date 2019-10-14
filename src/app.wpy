@@ -582,24 +582,19 @@
               if (res.authSetting['scope.userInfo']) {
                 wx.getUserInfo({
                   withCredentials: true,
-                  success: res => {
-                    wx.request({
-                      url: 'https://www.ailinkedlaw.com/api/Account/GetWechatUserInfo', //接口地址
-                      data: {
+                  success: async res => {
+                    let resData = await ajax.getData('/api/Account/GetWechatUserInfo',
+                    "POST",                  
+                      {
                         code: code,
                         encryptedData: res.encryptedData,
                         iv: res.iv,
                         rawData: res.rawData,
                         signature: res.signature
-                      },
-                      method: "POST",
-                      header: {
-                        'content-type': 'application/json' //默认值
-                      },
-                      success: res => {
-                        if (res.data.result.accessToken) {
+                      })
+                      if (resData.data.result.accessToken) {
                           try {
-                            wx.setStorageSync('access', res.data.result.accessToken);
+                            wx.setStorageSync('access', resData.data.result.accessToken);
                           } catch (err) {
                             console.log(err);
                           }
@@ -608,8 +603,6 @@
                             url: '/pages/login/choosePageLogin'
                           });
                         }
-                      }
-                    })
                   }
                 });
               }else if(!accessToken || !res.authSetting['scope.userInfo']){

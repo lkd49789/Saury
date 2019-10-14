@@ -81,7 +81,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '../../utils/cofig/ajax.js'
+    import ajax from '@/utils/cofig/ajax.js'
     export default class chooseLogin extends wepy.page {
         config = {
             backgroundTextStyle: 'dark',
@@ -96,38 +96,32 @@
         };
         components = {};
         methods = {
-            bindGetUserInfo(res) {
+            async bindGetUserInfo(res) {
                 if (res.detail.userInfo) {
-                    wx.request({
-                        url: 'https://www.ailinkedlaw.com/api/Account/GetWechatUserInfo', //接口地址
-                        data: {
+                    let resData = await ajax.request('/api/Account/GetWechatUserInfo',
+                    'POST',
+                    {
                             code: this.code,
                             encryptedData: res.detail.encryptedData,
                             iv: res.detail.iv,
                             rawData: res.detail.rawData,
                             signature: res.detail.signature
-                        },
-                        method: "POST",
-                        header: {
-                            'content-type': 'application/json' //默认值
-                        },
-                        success: res => {
-                            if (res.data.result.accessToken) {
+                        }
+                    )
+                    if (resData.data.result.accessToken) {
                                 wx.switchTab({
                                     url: '../main/index'
                                 })
                                 try {
-                                    wx.setStorageSync('access', res.data.result.accessToken);
+                                    wx.setStorageSync('access', resData.data.result.accessToken);
                                 } catch (err) {
                                     console.log(err);
                                 }
                             } else {
                                 wx.navigateTo({
-                                    url: './login?openId=' + res.data.result.openId + '&unionId=' + res.data.result.unionId
+                                    url: './login?openId=' + resData.data.result.openId + '&unionId=' + resData.data.result.unionId
                                 });
                             }
-                        },
-                    })
                 } else {
                     //用户按了拒绝按钮
                     wx.showModal({

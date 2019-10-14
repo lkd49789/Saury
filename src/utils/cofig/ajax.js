@@ -1,16 +1,21 @@
 //微信获取后台数据
 var localhost = "https://www.ailinkedlaw.com";
+
+let urlArr = ['/api/Account/GetWechatUserInfo']  //不需要token的地址
 var getData = (http, method, data = '') => {
   return new Promise((resolve, reject) => {
     wx.getStorage({
       key: 'access',
       success: token => {
+        if(urlArr.includes(http)){
+          var header = { 'content-type': 'application/json' }
+        }else{
+          var header = { Authorization: 'Bearer ' + token.data }
+        }
         wx.request({
           url: localhost + http,
           method: method,
-          header: {
-            Authorization: 'Bearer ' + token.data,
-          },
+          header,
           data: data,
           success: res => {
             resolve(res);

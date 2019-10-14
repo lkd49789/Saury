@@ -312,9 +312,9 @@
             SelfDuration(){
                 var start = new Date(this.submitData.StartTime).getTime();
                 var end = new Date(this.submitData.EndTime).getTime();
-                var time=end-start;
-                var  hours=time/3600000<1?0:(time/3600000).toFixed(1);
-                var  minute=time%3600000/60000>0?(time%3600000/60000/60).toFixed(2):0;
+                var time = end - start;
+                var  hours = time / 3600000 < 1 ? 0 : (time / 3600000).toFixed(1);
+                var  minute = time % 3600000 / 60000 > 0 ? (time % 3600000 / 60000 / 60).toFixed(2) : 0;
                 var mistiming=(Number(hours)+Number(minute)).toFixed(2);
                 return  mistiming;
             }
@@ -325,7 +325,7 @@
                 this.$apply();
             },
             touchEnd() {
-                if(this.submitData.WorkType&&this.submitData.Description){
+                if(this.submitData.WorkType && this.submitData.Description){
                      this.CreateOrUpdateWorklog(this.submitData);    
                 }else{
                     this.addOpacity=1;
