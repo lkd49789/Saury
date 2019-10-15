@@ -168,7 +168,7 @@
                             <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
                         </view>
                     </picker> -->
-                    <picker mode="multiSelector" @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" value="{{region}}" range="{{multiArray}}">
+                    <picker mode="multiSelector" @tap="regionTap" @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" value="{{region}}" range="{{multiArray}}" >
                         <view class="tui-picker-detail">
                             {{regionText || '请选择'}}
                             <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
@@ -325,6 +325,7 @@
         };
         methods = {
             bindMultiPickerChange (e) {
+                console.log(e);
                 let one = this.multiArray[0][this.region[0]]     
                 let two = this.multiArray[1].length > 0 ? '/'+ this.multiArray[1][this.region[1]] : ''
                 let three = this.multiArray[2].length > 0 ? '/'+ this.multiArray[2][this.region[2]] : ''
@@ -342,8 +343,8 @@
                 if(e.detail.column < 3){
                     this.num = e.detail.column + 2
                     this.getRegion(e.detail.column + 2,this.multiArrayId[e.detail.column][e.detail.value])
-                    this.region[e.detail.column] = e.detail.value;
                 }
+                this.region[e.detail.column] = e.detail.value;
             },
             getData(type) {
                 if (type == "Category") {
@@ -682,6 +683,7 @@
         }
         /* 获取地区 */
         async getRegion(Depth = 1,ParentId = "100000"){
+            console.log(Depth)
              var { data } = await ajax.getData(
                 '/api/services/web/common/GetRegion',
                 'post',
@@ -708,6 +710,9 @@
             if(this.num < 5){
                 this.getRegion(this.num,this.multiArrayId[Depth - 1][0])
             }
+        }
+        regionTap(){
+            this.getRegion()
         }
         /* 高级搜索 */
         // search

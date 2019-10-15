@@ -139,8 +139,8 @@
                     <text>自报时长(小时)</text>
                 </view>
                 <view class="input-container" style="border-bottom:1px solid {{inputChecked[0]?'#5d73fa':'#dedede'}};color:#7a7a7a">
-                    <input id="SelfDuration" name="SelfDuration" bindfocus="bindfocus('{{0}}')" bindblur="bindblur('{{0}}')" placeholder="请输入自报时长" bindinput="bindinput" type="digit" value="{{EndTime[3]-StartTime[3]>0&&EndTime[2]==StartTime[2]&&EndTime[1]==StartTime[1]&&EndTime[0]==StartTime[0]?EndTime[3]-StartTime[3]+'.0':SelfDuration}}"
-                    />
+                    <input id="SelfDuration" name="SelfDuration" bindfocus="bindfocus('{{0}}')" bindblur="bindblur('{{0}}')" placeholder="请输入自报时长" bindinput="bindinput" type="digit" value="{{  SelfDuration }}" />
+                    <!-- EndTime[3] - StartTime[3] > 0 && EndTime[2] == StartTime[2] && EndTime[1] == StartTime[1] && EndTime[0] == StartTime[0] ? EndTime[3]-StartTime[3] + '.0' :SelfDuration -->
                 </view>
                 <view class="warming" wx:if="{{warning[3]}}">
                     <text>自报时长必须在0和24之间</text>
@@ -286,7 +286,7 @@
             },
             EndTime: '',
             // 自报时长
-            SelfDuration: '',
+            SelfDuration: 0,
             //工作类别
             WorkType: {
                 value: [],
@@ -315,7 +315,26 @@
                 this.submitData.EndTime = end[0] + '/' + end[1] + '/' + end[2] + ' ' + end[3] + ':' + end[4] + ':' + end[5]
                 this.$apply();
             },
+            SelfDuration(value){
+                 if(value>24){
+                    this.warning[3] = true;
+                 }else{
+                     this.warning[3] = false
+                    this.submitData.SelfDuration = value;
+                 }
+            }
         };
+        computed={
+            SelfDuration(){
+                var start = new Date(this.submitData.StartTime).getTime();
+                var end = new Date(this.submitData.EndTime).getTime();
+                var time = end - start;
+                var  hours = time / 3600000 < 1 ? 0 : (time / 3600000).toFixed(1);
+                var  minute = time % 3600000 / 60000 > 0 ? (time % 3600000 / 60000 / 60).toFixed(2) : 0;
+                var mistiming=(Number(hours)+Number(minute)).toFixed(2);
+                return  mistiming;
+            }
+        }
         methods = {
             touchStart(){
                 this.addOpacity = 0.6;
@@ -448,7 +467,6 @@
             )
             if (resData.statusCode == 200) {
                 var WorklogForEditData = resData.data.result;
-                console.log(WorklogForEditData);
                 //类别
                 var categoryCombobox = WorklogForEditData.categoryCombobox;
                 for (var i = 0; i < categoryCombobox.length; i++) {

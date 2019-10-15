@@ -606,9 +606,9 @@
                   }
                 });
               }else if(!accessToken || !res.authSetting['scope.userInfo']){
-                //  wx.redirectTo({
-                //       url: '/pages/login/choosePageLogin'
-                //   });
+                 wx.redirectTo({
+                      url: '/pages/login/choosePageLogin'
+                  });
               }
             }
           })

@@ -113,7 +113,7 @@
                     <text style="font-size:32rpx;font-weight: bold">{{caseData.name}}</text>
                   </view>
                   <view>
-                    <text class="color">{{caseData.clientId}}</text>
+                    <text class="color">{{caseData.serialId ||''}}</text>
                   </view>
                   <view>
                      <text>{{caseData.categoryText||'未填写'}}</text>

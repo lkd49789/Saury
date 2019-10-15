@@ -3,6 +3,9 @@ var localhost = "https://www.ailinkedlaw.com";
 
 let urlArr = ['/api/Account/GetWechatUserInfo']  //不需要token的地址
 var getData = (http, method, data = '') => {
+  wx.showLoading({
+    title: 'loading...',
+  })
   return new Promise((resolve, reject) => {
     wx.getStorage({
       key: 'access',

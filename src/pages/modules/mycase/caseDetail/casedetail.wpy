@@ -950,9 +950,9 @@
                           </view>
                           <view>
                             <icon class="iconfont icon-fujian-copy" style="font-size:30rpx;color:#5d73fa;margin-right:20rpx"></icon>
-                            <text style="margin-right:20rpx">{{item.checkItemCount}}</text>
+                            <text style="margin-right:20rpx">{{item.attachmentCount}}</text>
                             <icon class="iconfont icon-zirenwu-copy" style="font-size:30rpx;color:#5d73fa;margin-right:20rpx"></icon>
-                            <text>{{item.commentCount}}</text>
+                            <text>{{item.checkItemCount}}</text>
                           </view>
                         </view>
                       </view>

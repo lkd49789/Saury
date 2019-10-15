@@ -40,6 +40,7 @@
             box-shadow: 0rpx 8rpx 30rpx 0rpx rgba(65, 98, 213, 0.25);
             border-radius: 20rpx;
             margin: 44rpx 28rpx;
+            border-bottom: 0rpx;
             .title{
                 align-items: center;
             }
@@ -107,7 +108,7 @@
                     </view>
                     <view class="bill_view "><text class="{{costData.status=='WaitForApproved'?'bill_yellow':costData.status=='Returned'?'bill_gray':'bill_green'}} status">{{costData.statusName}}</text><text class="bill_gray">{{costData.workflows[0].creationTime}}</text></view>
                     <view class="bill-del bill_gray">
-                        通过<text>{{costData.workflows.length}}</text>的审核
+                        通过<text>{{costData.workflows.length}}</text>位审核人审核
                     </view>
                 </view>
             </view>
