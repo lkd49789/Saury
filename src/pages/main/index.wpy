@@ -239,12 +239,14 @@
 
 <script>
   import wepy from 'wepy';
+  import { AllPermissions,UserNotifications,PersonAnnualCounts,CurrentLoginInformations } from '@/api/main.js';
+  import { EmployeePhoto } from '@/api/common.js';
   import 'wepy-async-function';
   import {
     toFixed,
     beautify_time
   } from '../../utils/cofig/api.js';
-  import ajax from '../../utils/cofig/ajax.js';
+  import ajax from '@/utils/cofig/ajax.js';
   export default class mainIndex extends wepy.page {
     components = {};
     data = {
@@ -518,11 +520,7 @@
     };
     watch = {}
     async getSwiperdata() {
-      var resData = await ajax.getData(
-        '/api/services/web/analyzeStatistics/GetPersonAnnualCounts', //获取swiper数据
-        'post'
-      );
-      console.log(resData)
+      var resData = await PersonAnnualCounts()
       if (resData.statusCode == 200) {
         this.GetPersonAnnualCounts = resData.data.result;
         //浮点指数
@@ -555,17 +553,14 @@
     }
     //获取通知消息
     async GetUserNotifications() {
-      var data = {
-        maxResultCount: 10,
-        notificationName: "",
-        skipCount: 0,
-        state: "",
-      }
-      var resData = await ajax.getData(
-        '/api/services/app/notification/GetWechatMiniUserNotifications',
-        'POST',
-        data
-      )
+      // var data = {
+      //   maxResultCount: 10,
+      //   notificationName: "",
+      //   skipCount: 0,
+      //   state: "",
+      // }
+      let resData = await UserNotifications()
+
       if (resData.statusCode == 200) {
         var UserNotifications_Data = resData.data.result.items;
         UserNotifications_Data.forEach( item =>{
@@ -697,14 +692,7 @@
     }
     //功能权限
     async GetFunctionItems() {
-      var id = {
-        id: this.$parent.global.currentUserId
-      }
-      var resData = await ajax.getData(
-        '/api/services/app/function/GetFunctionItems',
-        'post',
-        id
-      )
+      var resData = await AllPermissions()
       if (resData.statusCode == 200) {
         var GetFunctionItemsData = resData.data.result.items
         var itemsData = [];
@@ -909,29 +897,36 @@
               break;
           }
         })
-        // this.setData({
-        //   functionData:itemsData
-        // })
-       this.functionData=itemsData;
-        this.$apply();
+       this.functionData = itemsData;
       }
+      this.$apply()
     }
     //获取用户信息
     async GetCurrentLoginInformations() {
-      var CurrentLoginInformationsData = await ajax.getData(
-        '/api/services/app/session/GetCurrentLoginInformations',
-        'post'
-      )
-      if (CurrentLoginInformationsData.statusCode == 200) {
+      let resData = await CurrentLoginInformations()
+      if (resData.statusCode == 200) {
         var userInfo = {}
-        userInfo = CurrentLoginInformationsData.data.result.user;
-        var http = '/api/services/web/personal/GetEmployeePhoto?id=' + CurrentLoginInformationsData.data.result.user.id;
-        this.$parent.global.currentUserId = CurrentLoginInformationsData.data.result.user.id;
-        var avatarData = await ajax.getAavatar(http);
+        userInfo = resData.data.result.user;
+        if(!resData.data.result.user)
+        return false;
+        var avatarData = await EmployeePhoto(resData.data.result.user.id);
         userInfo['userAvatar'] = avatarData;
         this.$parent.global.userInfo = userInfo;
-        this.$parent.global.tenant=CurrentLoginInformationsData.data.result.tenant;
+        this.$parent.global.tenant = resData.data.result.tenant;
       }
+      // var CurrentLoginInformationsData = await ajax.getData(
+      //   {url:'/api/services/app/session/GetCurrentLoginInformations', method:'post'}
+      // )
+      // if (CurrentLoginInformationsData.statusCode == 200) {
+      //   var userInfo = {}
+      //   userInfo = CurrentLoginInformationsData.data.result.user;
+      //   var http = '/api/services/web/personal/GetEmployeePhoto?id=' + CurrentLoginInformationsData.data.result.user.id;
+      //   this.$parent.global.currentUserId = CurrentLoginInformationsData.data.result.user.id;
+      //   var avatarData = await ajax.getAavatar(http);
+      //   userInfo['userAvatar'] = avatarData;
+      //   this.$parent.global.userInfo = userInfo;
+      //   this.$parent.global.tenant=CurrentLoginInformationsData.data.result.tenant;
+      // }
     }
     onShow() {
       this.GetCurrentLoginInformations();

@@ -143,7 +143,7 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '@/utils//cofig/ajax.js'
+  import { LaborRelationAttachment, LaborRelationAgreement,LaborRelation } from '@/api/mine.js';
   export default class index extends wepy.page {
     data = {
       LaborRelationData: {},
@@ -189,14 +189,12 @@
     };
     methods = {
       preview(name, fileId, fileName) {
+        var fileClass = '.' + fileName.split('.')[1];
         if (name == 'attachment') {
           var http = '/api/services/web/personal/DownloadLaborRelationAttachment?id=' + fileId
-          var fileClass = '.' + fileName.split('.')[1];
-          ajax.preView(http, fileClass)
+          LaborRelationAttachment(fileId, fileClass)
         } else if (name == 'agreement') {
-          var http = '/api/services/web/personal/DownloadLaborRelationAgreement?id=' + fileId
-          var fileClass = '.' + fileName.split('.')[1];
-          ajax.preView(http, fileClass)
+          LaborRelationAgreement(fileId, fileClass)
         }
       },
       tobianji() {
@@ -211,10 +209,7 @@
       }
     };
     async GetLaborRelation() {
-      var LaborRelationData = await ajax.getData(
-        '/api/services/web/personal/GetLaborRelation',
-        'post'
-      )
+      var LaborRelationData = LaborRelation()
       if (LaborRelationData.statusCode == 200 && LaborRelationData.data.result !== null) {
         var LaborRelationData = LaborRelationData.data.result
         this.LaborRelationData = LaborRelationData;

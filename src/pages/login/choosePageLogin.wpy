@@ -98,16 +98,17 @@
         methods = {
             async bindGetUserInfo(res) {
                 if (res.detail.userInfo) {
-                    let resData = await ajax.request('/api/Account/GetWechatUserInfo',
-                    'POST',
-                    {
+                    console.log(res.detail.userInfo);
+                    let resData = await ajax.getData({url:'/api/Account/GetWechatUserInfo',
+                    data:{
                             code: this.code,
                             encryptedData: res.detail.encryptedData,
                             iv: res.detail.iv,
                             rawData: res.detail.rawData,
                             signature: res.detail.signature
                         }
-                    )
+                    })
+                    return false;
                     if (resData.data.result.accessToken) {
                                 wx.switchTab({
                                     url: '../main/index'

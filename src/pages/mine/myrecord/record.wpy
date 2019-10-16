@@ -240,7 +240,8 @@
 <script>
 import wepy from 'wepy';
 import navbar from '@/components/navbar';
-import ajax from '@/utils/cofig/ajax.js';
+import { Resume } from '@/api/mine.js';
+
 import placeHolderImage from '@/components/placeHolderImage';
  import mixins from '@/utils/cofig/mixin.js';
 export default class extends wepy.page {
@@ -317,14 +318,7 @@ export default class extends wepy.page {
     }
   }
   async GetResume(){
-    var userId={
-      id:this.userId
-    }
-    var resumeData=await ajax.getData(
-      '/api/services/web/employeeResume/GetResume',
-      'post',
-      userId
-    )
+    var resumeData = await Resume({id:this.userId})
     let { educations, workExperiences, firmProjectExperiences, projectExperiences, socialDuites } = resumeData.data.result;
 
     //教育背景
@@ -373,7 +367,7 @@ export default class extends wepy.page {
     })
   }
   onLoad(options) {
-    this.userId =options.id;
+    this.userId = options.id;
     this.GetResume()
     this.$apply()
   }

@@ -198,7 +198,10 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+
+    import { MeetingForEdit, GeneralComboboxList } from '@/api/myMeeting.js';
+  
+  
     import {myDistinct} from '@/utils/cofig/api.js';
     import StartTime from '@/components/Date/nowDateTimePicker';
     import EndTime from '@/components/Date/endDateTimePicker';
@@ -219,8 +222,8 @@
             Title,//会议名称
             Category,//会议类型
             Subject,//会议议题
-            ClientId,//客户编款号,
-            CaseId,//案件编号
+            ClientId,//客户名称,
+            CaseId,//案件名称
             Moderator,//会议主持人
             Linker,//会议联系人
             Visitor,
@@ -272,7 +275,7 @@
             },
             SubjectValue: '',
             ClientId: {
-                title: '关联客户编号',
+                title: '客户名称',
                 key: 'displayText',
                 name: 'ClientId',
                 data: [],
@@ -280,7 +283,7 @@
             },
             ClientIdIndex: -1,
             CaseId: {
-                title: '关联案件编号',
+                title: '案件名称',
                 key: 'displayText',
                 name: 'CaseId',
                 data: [],
@@ -472,7 +475,7 @@
             ClientIdIndex(index){
                 this.submitData.ClientId=this.ClientId.data[index].value;
                 this.GetGeneralComboboxList('case',this.ClientId.data[index].value);
-                this.GetGeneralComboboxList('employee');
+                // this.GetGeneralComboboxList('employee');
                 this.$apply();
             },
             CaseIdIndex(index){
@@ -484,7 +487,7 @@
                 this.Participant.index=[];
                 if(index!==-1){
                     this.submitData.CaseId=this.CaseId.data[index].value;
-                    this.GetGeneralComboboxList('employee',this.CaseId.data[index].value)
+                    this.GetGeneralComboboxList('employee','',this.CaseId.data[index].value)
                 }else{
                     this.submitData.CaseId='';
                     this.GetGeneralComboboxList('employee')
@@ -503,11 +506,7 @@
         
         async GetMeetingForEdit() {
             var data = {};
-            var resData = await ajax.getData(
-                '/api/services/web/meeting/GetMeetingForEdit',
-                'post',
-                data
-            )
+            var resData = await MeetingForEdit({})
             if (resData.statusCode == 200) {
                 var EditData = resData.data.result;
                 wx.setStorageSync('meetingRoomData',EditData.meetingRoomCombobox);
@@ -524,32 +523,24 @@
             this.$apply();
         }
         //客户 案件创建数据
-        async GetGeneralComboboxList(keyWord,...arg) {
+        async GetGeneralComboboxList(keyWord,parentId = "",shortCode = null) {
+            let data = {
+                        class: keyWord,
+                        name: '',
+                        parentId,
+                        shortCode
+                    }
             switch (keyWord) {
                 case 'client':
-                    var data = {
-                        class: keyWord
-                    }
-                    var resData = await ajax.getData(
-                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
-                        'post',
-                        data
-                    )
+                    var resData = await GeneralComboboxList(data)
                     if (resData.statusCode == 200) {
                         this.ClientId.data= resData.data.result;
                         this.$apply();
                     }
                 break;
                 case 'case':
-                    var data = {
-                        class: keyWord,
-                        parentId:arg[0]
-                    }
-                    var resData = await ajax.getData(
-                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
-                        'post',
-                        data
-                    )
+                    var resData = await GeneralComboboxList(data)
+                    console.log(resData);
                     if (resData.statusCode == 200) {
                         if (resData.data.result.length !== 0) {
                             this.CaseId.data = resData.data.result
@@ -563,15 +554,11 @@
                     break;
                
                 case 'employee':
-                    var data = {
-                        class: keyWord,
-                        shortCode: arg[0]
-                    }
-                    var resData = await ajax.getData(
-                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
-                        'post',
-                        data
-                    )
+                    //  data = {
+                    //     class: keyWord,
+                    //     shortCode: arg[0]
+                    // }
+                    var resData = await  GeneralComboboxList(data)
                     if (resData.statusCode == 200) {
                         var ComboboxList = resData.data.result;
                         this.Moderator.data=ComboboxList

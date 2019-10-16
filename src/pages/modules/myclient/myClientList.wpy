@@ -231,7 +231,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { Clients,PersonAnnualCounts } from '@/api/myclient.js';
     import mixin from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
     export default class myClientList extends wepy.page {
@@ -340,11 +340,7 @@
                 title: '数据加载中',
                 mask: true,
             });
-            var clientsData = await ajax.getData(
-                '/api/services/web/client/GetClients',
-                'post',
-                data
-            )
+            var clientsData = await Clients(data)
             this.totalCount = clientsData.data.result.totalCount;
             switch (clientsData.statusCode) {
                 case 200:
@@ -393,10 +389,7 @@
             this.$apply();
         }
         async GetPersonAnnualCounts() {
-            var resData = await ajax.getData(
-                '/api/services/web/analyzeStatistics/GetPersonAnnualCounts', //获取swiper数据
-                'post'
-            );
+            var resData = await PersonAnnualCounts();
             if (resData.statusCode == 200) {
                 this.AnnualCountsClient = resData.data.result[0];
                 this.$apply();

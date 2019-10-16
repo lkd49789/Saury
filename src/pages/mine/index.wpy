@@ -204,6 +204,7 @@
 <script>
   import wepy from 'wepy';
   import 'wepy-async-function';
+  import { GetUsers, PersonAnnualCount } from '@/api/mine.js';
   import ajax from '../../utils/cofig/ajax.js';
   export default class mineIndex extends wepy.page {
     data = {
@@ -289,11 +290,8 @@
     };
     // 获取'案件''客户''时间''金额'数据
     async GetPersonAnnualCounts() {
-      var PersonAnnualCounts = await ajax.getData(
-        '/api/services/web/analyzeStatistics/GetPersonAnnualCounts',
-        'post'
-      )
-      // console.log(PersonAnnualCounts)
+      var PersonAnnualCounts = await PersonAnnualCount()
+      console.log(PersonAnnualCounts)
       if (PersonAnnualCounts.statusCode == 200 && PersonAnnualCounts.data.result.length !== 0) {
         var data = PersonAnnualCounts.data.result;
         for (var idx in data) {
@@ -319,10 +317,7 @@
     }
     //获取用户基本信息
     async GetMe() {
-      var getMeData = await ajax.getData(
-        '/api/services/web/personal/GetMe',
-        'post'
-      )
+      var getMeData = await GetUsers()
       this.meData.name = getMeData.data.result.name;
       this.meData.category = getMeData.data.result.category;
       this.meData.phone = getMeData.data.result.phone;

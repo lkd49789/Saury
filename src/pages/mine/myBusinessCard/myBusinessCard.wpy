@@ -291,7 +291,8 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { Employee, Resume } from '@/api/mine.js';
+    import { EmployeePhoto } from '@/api/common.js';
     export default class myBusinessCard extends wepy.page {
         config = {
             navigationBarTitleText: "个人名片",
@@ -364,12 +365,7 @@
         watch = {};
         computed = {};
         async GetMe() {
-            var resData = await ajax.getData(
-                '/api/services/web/personal/GetEmployee',
-                'post', {
-                    id: this.id
-                }
-            )
+            var resData = await Employee({id:this.id})
             if (resData.statusCode == 200) {
                 this.baseData = resData.data.result;
                 // this.baseData.goodBusiness=null;
@@ -377,12 +373,7 @@
             }
         }
         async GetResume() {
-            var resData = await ajax.getData(
-                '/api/services/web/employeeResume/GetResume',
-                'post', {
-                    id: this.id
-                }
-            )
+            var resData = await Resume({id:this.id})
             if (resData.statusCode == 200) {
                 this.resumeData = resData.data.result;
                 this.resumeData.projectExperiences.push(...this.resumeData.firmProjectExperiences)
@@ -398,8 +389,7 @@
             }
         }
         async GetEmployeePhoto() {
-            var http = '/api/services/web/personal/GetEmployeePhoto?id=' + this.id;
-            var imageURL = await ajax.getAavatar(http);
+            var imageURL = await EmployeePhoto(this.id);
             this.urlTobase64(imageURL);
         }
         onShareAppMessage(res) {

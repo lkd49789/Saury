@@ -157,7 +157,8 @@
   import {
     myDistinct
   } from '@/utils/cofig/api.js';
-  import ajax from '@/utils/cofig/ajax.js';
+  import { GeneralCodeComboOutput } from '@/api/common.js';
+
   import {
     formatDate
   } from '@/utils/cofig/api.js';
@@ -359,9 +360,7 @@
       this.$apply();
     }
     async GetGeneralCodeComboOutput(){
-      var resData=await ajax.getData(
-        '/api/services/web/common/GetGeneralCodeComboOutput',
-        'post',
+      var resData = await GeneralCodeComboOutput(
         {
             class: "TPCT",
         }

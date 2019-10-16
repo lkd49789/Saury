@@ -1,32 +1,47 @@
 //微信获取后台数据
-var localhost = "https://www.ailinkedlaw.com";
+var localhost = "http://www.ailinkedlaw.com:8081";
+// let localhost = "https://www.ailinkedlaw.com";
 
-let urlArr = ['/api/Account/GetWechatUserInfo']  //不需要token的地址
-var getData = (http, method, data = '') => {
+let urlArr = ['/api/services/app/Account/IsTenantAvailable','/api/TokenAuth/Authenticate']  //不需要token的地址
+
+var getData = ({url, method = 'post', header, data = ''}) => {
   return new Promise((resolve, reject) => {
-    wx.getStorage({
-      key: 'access',
-      success: token => {
-        if(urlArr.includes(http)){
-          var header = { 'content-type': 'application/json' }
-        }else{
-          var header = { Authorization: 'Bearer ' + token.data }
-        }
-        wx.request({
-          url: localhost + http,
-          method: method,
-          header,
-          data: data,
-          success: res => {
-            resolve(res);
-          },
-          fail: err => {
-            reject(err.success);
-          },
-          complete: () => {
-            wx.hideLoading();
-          }
-        });
+    let token = wx.getStorageSync('access')
+    // if(!header && !urlArr.includes(url)){
+    //   header = { Authorization: 'Bearer ' + token }
+    // }
+    if(!urlArr.includes(url) && token && !header){
+      header = { Authorization: 'Bearer ' + token }
+    }
+    // wx.showLoading({
+    //   title: 'loading...',
+    // })
+    wx.request({
+      url: localhost + url,
+      method,
+      header,
+      data,
+      success(res) {
+        resolve(res);
+        // if(res.data.success){
+        //   resolve(res);
+        // }else{
+        //   let title = "网络请求错误"
+        //   if(res.data.error.message)
+        //   title = res.data.error.message
+        //   wx.showToast({
+        //     title,
+        //     icon: 'none',
+        //     duration: 3000,
+        //     mask: false
+        //   });
+        // }
+      },
+      fail(err) {
+        reject(err.success);
+      },
+      complete(){
+        wx.hideLoading();
       }
     });
   })

@@ -689,7 +689,7 @@
                                 <view class="schedule_content">
                                     <view class="leave" @tap="intoDetails(leave,'{{item.id}}')">
                                         <view class="leave_box">
-                                            <text class="leave_name">{{item.eName}}<text class="leave_add">｜{{item.eCategory}}</text></text>
+                                            <text class="leave_name">{{item.eName}}<text class="leave_add">｜{{item.eCategory || ''}}</text></text>
                                             <text class="leave_time">{{item.totalDay}}天</text>
                                         </view>
                                         <view class="leave_box">
@@ -718,6 +718,7 @@
     import wepy from 'wepy';
     import navbar from '@/components/navbar';
     import ajax from '@/utils/cofig/ajax.js';
+    import { ScheduleCenterForCalendar } from '@/api/schedule.js';
     import mixins from '@/utils/cofig/mixin.js';
     import {myDistinct} from '@/utils/cofig/api.js';
     import placeHolderImage from '@/components/placeHolderImage'
@@ -1033,11 +1034,8 @@
                 },
                 isCurrent: true,
             }
-            var resData = await ajax.getData(
-                '/api/services/web/schedule/GetScheduleCenterForCalendar',
-                'post',
-                data
-            );
+            var resData = await ScheduleCenterForCalendar(data);
+            console.log(resData);
             let { tasks, schedules, workLogs, caseCourts, meetings, vacations } = resData.data.result;
 
             this.dateArr.forEach( item =>{
@@ -1091,11 +1089,7 @@
                 },
                 isCurrent: true,
             }
-            var resData = await ajax.getData(
-                '/api/services/web/schedule/GetScheduleCenterForCalendar',
-                'post',
-                data
-            );
+            var resData = await ScheduleCenterForCalendar(data)
             let {tasks, schedules, workLogs, caseCourts, meetings, vacations} = resData.data.result;
             switch (resData.statusCode) {
                 case 200:

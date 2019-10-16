@@ -194,7 +194,9 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+
+    import { ProjectCover,TaskProjects } from '@/api/myTaskCourse.js'
+
     import mixins from '@/utils/cofig/mixin.js';
     import navbar from '@/components/navbar';
     export default class taskProject extends wepy.page {
@@ -372,8 +374,7 @@
                 var CasePublicProjectImage = [];
                 for (var index in data) {
                     var id = data[index].id;
-                    var http = '/api/services/web/taskProject/GetProjectCover?id=' + id
-                    var ProjectCoverData = await ajax.getUserAvatar(http);
+                    var ProjectCoverData = await ProjectCover(id);
                     CasePublicProjectImage[index] = ProjectCoverData.tempFilePath;
                 }
                 this.CasePublicProjectImage = this.CasePublicProjectImage.concat(CasePublicProjectImage);
@@ -385,8 +386,7 @@
                 var CasePrivateProjectImage = [];
                 for (var index in data) {
                     var id = data[index].id;
-                    var http = '/api/services/web/taskProject/GetProjectCover?id=' + id
-                    var ProjectCoverData = await ajax.getUserAvatar(http);
+                    var ProjectCoverData = await ProjectCover(id);
                     CasePrivateProjectImage[index] = ProjectCoverData.tempFilePath;
                 }
                 this.CasePrivateProjectImage = this.CasePrivateProjectImage.concat(CasePrivateProjectImage);
@@ -409,11 +409,7 @@
                 Object.assign(data,this.queryStream);
             }
             // data.name =  this.queryStream.name || '';
-            var resData = await ajax.getData(
-                '/api/services/web/taskProject/GetTaskProjects',
-                'post',
-                data
-            )
+            var resData = await TaskProjects(data)
             if(resData.statusCode==200){
                 if (resData.data.result.items.length !== 0) {
                         var CasePublicProject = resData.data.result.items;
@@ -463,11 +459,7 @@
             if(Object.keys(this.queryStream).length>0){
                 Object.assign(data,this.queryStream);
             }
-            var resData = await ajax.getData(
-                '/api/services/web/taskProject/GetTaskProjects',
-                'post',
-                data
-            )
+            var resData = await TaskProjects(data)
             if(resData.statusCode==200){
                  if (resData.data.result.items.length !== 0) {
                         var CasePrivateProject = resData.data.result.items;
@@ -487,7 +479,7 @@
                                     break;
                             }
                         }
-                        this.CasePrivateProject.items = this.CasePrivateProject.items.concat(CasePrivateProject);
+                        this.CasePrivateProject.items =  CasePrivateProject
                         this.CasePrivateProject.totalCount = resData.data.result.totalCount;
                         this.getImage2(CasePrivateProject);
                     } else {

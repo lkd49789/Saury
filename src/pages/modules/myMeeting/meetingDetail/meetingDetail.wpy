@@ -653,7 +653,8 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { DocumentFile, MeetingMinutesFile, Meeting, OrUpdateMeetingMinutes, MeetingParticipant} from '@/api/myMeeting.js'
+    import { EmployeePhoto  } from  '@/api/common.js'
     import {
         formatDate
     } from '@/utils/cofig/api.js';
@@ -753,12 +754,10 @@
                 // this.waitAffirm = !this.waitAffirm;
             },
             preview(id, fileClass) {
-                var http = '/api/services/web/meetingAttachment/GetDocumentFile?id=' + id;
-                ajax.preView(http, fileClass)
+                DocumentFile(id,fileClass)
             },
             previewDoc(id, fileClass) {
-                var http = '/api/services/web/meeting/GetMeetingMinutesFile?id=' + id;
-                ajax.preView(http, fileClass)
+                MeetingMinutesFile(id,fileClass)
             },
         };
         watch={
@@ -775,11 +774,7 @@
             var data = {
                 id: this.id,
             }
-            var resData = await ajax.getData(
-                '/api/services/web/meeting/GetMeeting',
-                'post',
-                data
-            )
+            var resData = await Meeting(data)
             // console.log(resData.data.result);
             switch (resData.statusCode) {
                 case 200:
@@ -787,14 +782,12 @@
                         var meetingData = resData.data.result;
                         //主持人头像
                         if(meetingData.moderator){
-                            var mhttp = '/api/services/web/personal/GetEmployeePhoto?id=' + meetingData.moderator
-                           var moderatorAvatar=await ajax.getUserAvatar(mhttp)
+                           var moderatorAvatar=await EmployeePhoto(meetingData.moderator)
                              meetingData.moderatorAvatar=moderatorAvatar.tempFilePath;
                         }
                         //联系人头像
                         if(meetingData.linker){
-                            var lhttp = '/api/services/web/personal/GetEmployeePhoto?id=' + meetingData.linker
-                            var linkerAvatar=await ajax.getUserAvatar(lhttp);
+                            var linkerAvatar=await EmployeePhoto(meetingData.linker);
                             meetingData.linkerAvatar=linkerAvatar.tempFilePath;
                         }
                         // 是否标记
@@ -896,8 +889,7 @@
                                 }
                             }
                             var participantList = meetingData.participantList[pindex];
-                            var phttp = '/api/services/web/personal/GetEmployeePhoto?id=' + participantList.employeeId
-                            var participantAvatar = await ajax.getUserAvatar(phttp);
+                            var participantAvatar = await EmployeePhoto(participantList.employeeId);
                             participantList.Avatar = participantAvatar.tempFilePath;
                         }
                         //会议室风格
@@ -951,11 +943,7 @@
                 Remark: this.remarkValue,
                 Status: status,
             }
-            var resData = await ajax.getData(
-                '/api/services/web/meetingParticipant/ConfirmMeetingParticipant',
-                'post',
-                data
-            )
+            var resData = await MeetingParticipant()
             if (resData.statusCode == 200) {
                  wx.showToast({
                         title: '操作完成',
@@ -978,11 +966,7 @@
                 Status: this.radioStatus,
                 Summary: this.remarkValue
             }
-            var res = await ajax.getData(
-                '/api/services/web/meeting/CreateOrUpdateMeetingMinutes',
-                'post',
-                data
-            );
+            var res = await OrUpdateMeetingMinutes(data);
             if (res.statusCode == 200) {
                 var isRefresh = wx.getStorageSync('isRefresh');
                 isRefresh.isRefresh = true

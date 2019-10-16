@@ -274,31 +274,41 @@
                 mask: false, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-            var data = {
-                AcceptDate: {
-                    StartDate: "",
-                    EndDate: ""
-                },
-                CaseId: "",
-                Category: "",
-                ClientId: "",
-                ClientName: "",
-                CreationTime: {
-                    StartDate: "",
-                    EndDate: ""
-                },
-                Id: "",
-                KeyWord: "",
-                Lawyer: "",
-                LawyerName: "",
-                LawyerRole: "",
-                Name: "",
-                ProcessStatus: "",
-                Status: "",
-                pageNumber: this.pageNumber,
-                pageSize: this.pageSize,
-                sorting: "",
-            }
+
+            // var data = {
+            //     AcceptDate: {
+            //         StartDate: "",
+            //         EndDate: ""
+            //     },
+            //     CaseId: "",
+            //     Category: "",
+            //     ClientId: "",
+            //     ClientName: "",
+            //     CreationTime: {
+            //         StartDate: "",
+            //         EndDate: ""
+            //     },
+            //     Id: "",
+            //     KeyWord: "",
+            //     Lawyer: "",
+            //     LawyerName: "",
+            //     LawyerRole: "",
+            //     Name: "",
+            //     ProcessStatus: "",
+            //     Status: "",
+            //     pageNumber: this.pageNumber,
+            //     pageSize: this.pageSize,
+            //     sorting: "",
+            // }
+            // let data = {
+            //     acceptDateRange: {startDate: "", endDate: ""},
+            //     categoryList: [],
+            //     filter: "",
+            //     lawyerName: "",
+            //     pageNumber: 1,
+            //     pageSize: 10,
+            //     processStatusList: []
+            // }
             if (Object.keys(this.queryStream).length !== 0) {
                 data.KeyWord = this.queryStream.KeyWord || '';
                 data.AcceptDate.StartDate = this.queryStream.hasOwnProperty('AcceptDate') ? this.queryStream.AcceptDate.StartDate : '';
@@ -312,6 +322,11 @@
                 data.ClientName = this.queryStream.ClientName || '';
                 data.LawyerRole = this.queryStream.LawyerRole || '';
             }
+            // var resData = await ajax.getData(
+            //     '/api/services/web/Case/GetMyCases',
+            //     'post',
+            //     data              
+            // )
             var resData = await ajax.getData(
                 '/api/services/web/caseApplication/GetCaseRecordList',
                 'post',

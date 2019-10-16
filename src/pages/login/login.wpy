@@ -197,7 +197,7 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '../../utils/cofig/ajax.js';
+  import { IsTenantAvailable, Authenticate } from '@/api/login.js';
   export default class login extends wepy.page {
     config = {
       backgroundTextStyle: 'dark',
@@ -219,77 +219,25 @@
           url: '../login/forgetPassword'
         });
       },
-      formSubmit(e) {
-        wx.request({
-          url: 'https://www.ailinkedlaw.com/api/Account/GetAccessToken',
-          method: 'post',
-          data: {
-            tenancyName: e.detail.value.domain,
-            usernameOrEmailAddress: e.detail.value.username,
-            password: e.detail.value.password
-          },
-          success: res => {
-            if (res.statusCode==200) {
-              var accessToken = res.data.result.accessToken
-              if (this.openId && this.unionId) {
-                var data = {
-                  openId: this.openId,
-                  unionId: this.unionId,
-                  loginProvider: 'WechatMini',
-                }
-                wx.request({
-                  url: 'https://www.ailinkedlaw.com/api/services/web/userExternalLogin/AddWechatUserLogin',
-                  method: 'POST',
-                  header: {
-                    Authorization: 'Bearer ' + accessToken,
-                  },
-                  data: data,
-                  success: resData => {
-                    if (resData.data.success) {
-                      this.storage(accessToken);
-                    } else {
-                      wx.showModal({
-                        title: '警告',
-                        content: resData.data.error.message,
-                        showCancel: true,
-                        confirmText: '确定',
-                        success: res=> {
-                            if (res.confirm) {
-                                this.storage(accessToken);
-                            }
-                        }
-                    })
-                    }
-                  },
-                  fail: err => {
-                    console.log(err);
-                  },
-                  complete: () => {
-                  }
-                });
-                // this.AddWechatUserLogin();
-              } else {
-                this.storage(accessToken);
-              }
-            }else{
-              wx.showToast({
-                title: '登陆失败！',
-                icon: 'none',
-                image: '',
-                duration: 1500,
-                mask: false,
-                success: (result)=>{
-                  
+      async formSubmit(e) {
+        let { data } = await IsTenantAvailable({ 'tenancyName':e.detail.value.domain })           
+        let state = data.result.state;
+            if(state == 1){
+              let resData  = await Authenticate({ 
+                  'Abp.TenantId':data.result.tenantId
                 },
-                fail: ()=>{},
-                complete: ()=>{}
-              });
-            }
-          },
-          fail: err => {
-              console.log(err);
-          },
-        });
+                {
+                  userNameOrEmailAddress: e.detail.value.username,
+                  password: e.detail.value.password
+                })  
+              this.storage(resData.data.result.accessToken)
+            }else{
+              let content = (state == 2 ) ? '未激活' : '不存在'
+              wx.showModal({
+                title: '警告',
+                content
+            })
+          }
       }
     };
     // onShow() {

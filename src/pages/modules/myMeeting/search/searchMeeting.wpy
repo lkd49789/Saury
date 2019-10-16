@@ -190,7 +190,7 @@
     import {
         myDistinct
     } from '@/utils/cofig/api.js';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { GeneralCodeComboboxItems,MeetingRoomCombobox } from '@/api/myMeeting.js';
     import {
         formatDate
     } from '@/utils/cofig/api.js';
@@ -435,11 +435,7 @@
             var data_id={
                 id
             }
-            var resData= await ajax.getData(
-                '/api/services/web/common/GetGeneralCodeComboboxItems',
-                'POST',
-                data_id
-            )
+            var resData= await GeneralCodeComboboxItems(data_id)
             if(resData.statusCode == 200){
                 var GetGeneralCodeComboboxItemsData = resData.data.result;
                 let key = ''
@@ -468,10 +464,7 @@
         }
         //会议室
         async GetMeetingRoomCombobox(){
-            var resData=await ajax.getData(
-                '/api/services/web/meetingRoom/GetMeetingRoomCombobox',
-                'POST'
-            )
+            var resData=await MeetingRoomCombobox()
             if(resData.statusCode==200){
                 var GetMeetingRoomComboboxData=resData.data.result;
                 for(var index in GetMeetingRoomComboboxData){

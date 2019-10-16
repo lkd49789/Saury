@@ -168,7 +168,7 @@
                             <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
                         </view>
                     </picker> -->
-                    <picker mode="multiSelector" @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" value="{{region}}" range="{{multiArray}}">
+                    <picker mode="multiSelector" @tap="regionTap" @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" value="{{region}}" range="{{multiArray}}" >
                         <view class="tui-picker-detail">
                             {{regionText || '请选择'}}
                             <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
@@ -201,10 +201,9 @@
 
 <script>
     import wepy from 'wepy';
-    import {
-        myDistinct
-    } from '@/utils/cofig/api.js';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { myDistinct } from '@/utils/cofig/api.js';
+    import { GeneralCodeComboOutput } from '@/api/common.js';
+    import { Clients,Region,SearchForClients } from '@/api/myclient.js';
     import {
         formatDate
     } from '@/utils/cofig/api.js';
@@ -325,6 +324,7 @@
         };
         methods = {
             bindMultiPickerChange (e) {
+                console.log(e);
                 let one = this.multiArray[0][this.region[0]]     
                 let two = this.multiArray[1].length > 0 ? '/'+ this.multiArray[1][this.region[1]] : ''
                 let three = this.multiArray[2].length > 0 ? '/'+ this.multiArray[2][this.region[2]] : ''
@@ -342,8 +342,8 @@
                 if(e.detail.column < 3){
                     this.num = e.detail.column + 2
                     this.getRegion(e.detail.column + 2,this.multiArrayId[e.detail.column][e.detail.value])
-                    this.region[e.detail.column] = e.detail.value;
                 }
+                this.region[e.detail.column] = e.detail.value;
             },
             getData(type) {
                 if (type == "Category") {
@@ -523,9 +523,7 @@
                 this.$apply();
             },
             advancedSearchSubmit() {
-                let resData = ajax.getData('/api/services/web/client/GetClients',
-                    'post',
-                    this.searchData)
+                let resData = Clients(this.searchData)
                 var pages = getCurrentPages();
                 var prevPage = pages[pages.length - 2]; //上一个页面
                 if (prevPage) {
@@ -621,11 +619,7 @@
                 IsRecursive: false,
                 // isAll: true
             }
-            var resData = await ajax.getData(
-                '/api/services/web/common/GetGeneralCodeComboOutput',
-                'post',
-                data
-            )
+            var resData = await GeneralCodeComboOutput(data)
             // console.log(resData);
             // console.log(keyWords,Depth,ParentId);
             if (resData.statusCode == 200 && resData.data.result.length !== 0 && keyWords == "CLIDT") {
@@ -653,10 +647,7 @@
         }
         //检索条件信息
         async GetSearchForClients() {
-            var resData = await ajax.getData(
-                '/api/services/web/client/GetSearchForClients',
-                'post'
-            )
+            var resData = await SearchForClients()
             if (resData.statusCode == 200) {
                 var SearchForClients_data = resData.data.result;
                 for (var index_Import in SearchForClients_data.importantLevelCombobox) {
@@ -682,9 +673,8 @@
         }
         /* 获取地区 */
         async getRegion(Depth = 1,ParentId = "100000"){
-             var { data } = await ajax.getData(
-                '/api/services/web/common/GetRegion',
-                'post',
+            console.log(Depth)
+             var { data } = await Region(
                 {
                     Class: "region",
                     Depth,
@@ -708,6 +698,9 @@
             if(this.num < 5){
                 this.getRegion(this.num,this.multiArrayId[Depth - 1][0])
             }
+        }
+        regionTap(){
+            this.getRegion()
         }
         /* 高级搜索 */
         // search

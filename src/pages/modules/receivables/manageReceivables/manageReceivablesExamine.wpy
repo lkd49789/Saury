@@ -166,6 +166,8 @@
 <script>
     import wepy from 'wepy';
     import ajax from '@/utils/cofig/ajax.js';
+    import { Organizations, CaseCategoryComboboxItems } from '@/api/common.js';
+    import { Cases } from '@/api/receivables.js';
     import {
         formatTime
     } from '@/utils/cofig/api.js';
@@ -327,10 +329,7 @@
                 argData.organizationUnitId=this.searchData.organizationUnitId||'';
                 argData.acceptDateRange=this.searchData.acceptDateRange||'';
             }
-            var resData = await ajax.getData(
-                '/api/services/web/common/GetCases',
-                'post',argData
-            );
+            var resData = await Cases(argData);
             switch (resData.statusCode) {
                 case 200:
                     if (resData.data.result.items.length !== 0) {
@@ -362,11 +361,7 @@
             }
         }
         async GetOrganizations(){
-            var resData=await ajax.getData(
-                '/api/services/web/common/GetOrganizations',
-                'post',
-                {}
-            )
+            var resData=await Organizations({})
             console.log(resData);
             if(resData.statusCode==200){
                 this.organizationUnitId.data=resData.data.result;
@@ -382,11 +377,7 @@
             }
         }
         async GetCaseCategoryComboboxItems(){
-            var resData=await ajax.getData(
-                '/api/services/web/common/GetCaseCategoryComboboxItems',
-                'post',
-                {}
-            )
+            var resData=await CaseCategoryComboboxItems({})
             if(resData.statusCode==200){
                 this.category.data=resData.data.result;
                 this.$apply();

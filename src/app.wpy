@@ -543,10 +543,7 @@
     }
     //获取用户信息
     async GetCurrentLoginInformations() {
-      var CurrentLoginInformationsData = await ajax.getData(
-        '/api/services/app/session/GetCurrentLoginInformations',
-        'post'
-      )
+      var CurrentLoginInformationsData = await ajax.getData({url:'/api/services/app/session/GetCurrentLoginInformations'})
       if (CurrentLoginInformationsData.statusCode == 200) {
         var userInfo = {}
         userInfo = CurrentLoginInformationsData.data.result.user;
@@ -583,14 +580,14 @@
                 wx.getUserInfo({
                   withCredentials: true,
                   success: async res => {
-                    let resData = await ajax.getData('/api/Account/GetWechatUserInfo',
-                    "POST",                  
-                      {
+                    let resData = await ajax.getData({url:'/api/Account/GetWechatUserInfo',
+                      data:{
                         code: code,
                         encryptedData: res.encryptedData,
                         iv: res.iv,
                         rawData: res.rawData,
                         signature: res.signature
+                      }
                       })
                       if (resData.data.result.accessToken) {
                           try {

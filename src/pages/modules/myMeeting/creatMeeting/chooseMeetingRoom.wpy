@@ -141,7 +141,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { OrUpdateMeeting,MeetingRoom } from '@/api/myMeeting.js'
     export default class clientDetail extends wepy.page {
         components = {
         };
@@ -186,11 +186,7 @@
                     this.$apply();
                 }
             });
-            var resData=await ajax.getData(
-                '/api/services/web/meeting/CreateOrUpdateMeeting',
-                'post',
-                data
-            )
+            var resData=await OrUpdateMeeting(data)
             if(resData.statusCode==200){
                var isRefresh=wx.getStorageSync('isRefresh');
                 isRefresh.isRefresh=true;
@@ -209,13 +205,9 @@
         }
         async GetMeetingRoom(id){
             var roomId={
-                id:id
+                id
             }
-            var resData=await ajax.getData(
-                '/api/services/web/meetingRoom/GetMeetingRoom',
-                'post',
-                roomId
-            )
+            var resData=await MeetingRoom(roomId)
             if(resData.statusCode==200){
                 this.meetingRoomData=resData.data.result;
             }

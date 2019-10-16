@@ -150,7 +150,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { Meetings } from '@/api/myMeeting.js'
     import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
     import {
@@ -294,11 +294,7 @@
                 Title,
                 sorting: this.sorting,
             };
-            var meetingsData = await ajax.getData(
-                '/api/services/web/meeting/GetMeetings',
-                'post',
-                data
-            )
+            var meetingsData = await Meetings(data)
             switch (meetingsData.statusCode) {
                 case 200:
                     if (meetingsData.data.result.items.length !== 0) {
