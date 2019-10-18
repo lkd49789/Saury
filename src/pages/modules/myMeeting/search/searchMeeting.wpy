@@ -190,7 +190,8 @@
     import {
         myDistinct
     } from '@/utils/cofig/api.js';
-    import { GeneralCodeComboboxItems,MeetingRoomCombobox } from '@/api/myMeeting.js';
+    import { MeetingRoomCombobox } from '@/api/myMeeting.js';
+    import { GeneralCodeComboboxItems } from '@/api/common.js';
     import {
         formatDate
     } from '@/utils/cofig/api.js';

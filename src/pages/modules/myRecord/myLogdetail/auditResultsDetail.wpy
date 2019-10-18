@@ -57,12 +57,12 @@
                 <view class="items">
                     <view class="items-left">
                         <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false" />
-                        <text>{{item.employeeName||'未填写'}}</text>
+                        <text>{{item.operatorUserName||'未填写'}}</text>
                     </view>
                     <view class="items-right"> 
                         <view class="items-right-top">
-                            <text style="color:{{item.result=='A'?'#069400':item.result=='R'?'#e20000':'#7a7a7a'}}">{{item.resultText||'未填写'}}</text>
-                            <text>{{item.approvalDateText||'未填写'}}</text>
+                            <text style="color:{{item.result=='A'?'#069400':item.result=='R'?'#e20000':'#7a7a7a'}}">{{item.result||'未填写'}}</text>
+                            <text>{{item.operationTime||'未填写'}}</text>
                         </view>
                         <view class="items-right-bottom">
                             <text>{{item.remark||'未填写'}}</text>
@@ -76,7 +76,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { EmployeePhoto } from '@/api/common.js';
     import {formatTime} from '@/utils/cofig/api.js'
     export default class auditResultsDetail extends wepy.page {
         data = {
@@ -89,9 +89,8 @@
         computed = {};
         async getAvatar() {
             for (var index in this.approvalList) {
-                this.approvalList[index].approvalDateText=formatTime(this.approvalList[index].approvalDate)
-                var http = '/api/services/web/personal/GetEmployeePhoto?id=' + this.approvalList[index].employeeId;
-                this.approvalList[index].avatar = await ajax.getAavatar(http);
+                this.approvalList[index].operationTime = formatTime(this.approvalList[index].operationTime)
+                this.approvalList[index].avatar = await EmployeePhoto(this.approvalList[index].id);
             }
             this.$apply()
         }

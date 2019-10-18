@@ -188,7 +188,8 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { CaseLawyers } from '@/api/myTaskCourse.js';
+    import { GeneralComboboxList } from '@/api/common.js';
     import {
         myDistinct
     } from '@/utils/cofig/api.js';
@@ -425,9 +426,7 @@
             var data = {
                 caseId: projectId,
             }
-            var resData = await ajax.getData(
-                '/api/services/web/caseLawyer/GetCaseLawyers',
-                'post',
+            var resData = await CaseLawyers(
                 data
             );
             if (resData.statusCode == 200) {
@@ -465,9 +464,7 @@
             }
         }
         async GetGeneralComboboxList() {
-            var resData = await ajax.getData(
-                '/api/services/web/common/GetGeneralComboboxList',
-                'post', {
+            var resData = await GeneralComboboxList({
                     name: "",
                     class: "employee",
                     parentId: "",

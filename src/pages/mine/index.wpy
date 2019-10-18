@@ -1,6 +1,6 @@
 <style lang="less">
   .body {
-    height: 100%;
+    // height: 100%;
     padding: 28rpx;
   }
   .header {
@@ -123,13 +123,13 @@
   //向上弹出框
   Page {
     /* background: #1baceb; */
-    position: absolute;
+    // position: absolute;
     font-size: 36rpx;
-    width: 100%;
-    height: 100%;
-    display: block;
+    // width: 100%;
+    // height: 100%;
+    // display: block;
     background: #fafafa;
-    overflow-y: hidden;
+    // overflow-y: hidden;
     .extra-word {
       height: 100%;
     }

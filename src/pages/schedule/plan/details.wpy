@@ -27,6 +27,17 @@
                 .plan_yellow {
                     color: #ff9900
                 }
+                .plan_time{
+                    font-size: 26rpx;
+                }
+            }
+            .line{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                image{
+                     margin-right: 20rpx;
+                }
             }
             .plan_content {
                 margin-bottom: 30rpx;
@@ -114,13 +125,13 @@
         }
 
         .participant {
-                margin-right: 20rpx;
-                >image {
-                    height: 60rpx;
-                    width: 60rpx;
-                    border-radius: 50%;
-                }
-            }
+            margin-right: 20rpx;
+        }
+    }
+    .head {
+        height: 60rpx;
+        width: 60rpx;
+        border-radius: 50%;
     }
     .body {
         height: 100%;
@@ -193,20 +204,23 @@
 <template>
     <view class="plan">
         <view class="container-title">
-            <text class="title-text">日程详情</text>
+            <text class="title-text">{{planLogData.title}}</text>
         </view>
         <view class="plan_box">
-            <view class="plan_line">
-                <text class="plan_name">{{planLogData.employeeName}}（所属人）</text>
+            <view class="plan_line line">
+                <view class="line">
+                    <image class="head" src="{{headUrl}}" mode="scaleToFill" lazy-load="false" />
+                    <text class="plan_name">{{planLogData.employeeName}}（所属人）</text>
+                </view>
                 <text class="plan_yellow plan_right plan_state">{{planLogData.statusText}}</text>
             </view>
             <view class="plan_line">
                 <text class="plan_gray plan_work">工作｜{{planLogData.eventTypeText}} <text class="plan_address"> {{planLogData.situationText}}</text></text>
-                <text class="plan_right plan_situation">{{planLogData.title}}</text>
+                <text class="plan_right plan_situation">{{planLogData.privacyText}}</text>
             </view>
             <view class="plan_line">
-                <text class="plan_gray plan_time">时间：{{planLogData.startTime}}至{{planLogData.startTime}}</text>
-                <text class="plan_yellow plan_right plan_haveTime">8h</text>
+                <text class="plan_gray plan_time">时间：{{planLogData.startTime}}至{{planLogData.endTime}}</text>
+                <text class="plan_yellow plan_right plan_haveTime">{{planLogData.privacy}}h</text>
             </view>
             <view class="plan_line">
                 <text class="plan_red plan_ifImportant">{{planLogData.priorityText}} </text>
@@ -268,7 +282,7 @@
                     </view>
                     <repeat for="{{planLogData.participantList}}" key="index" index="index" item="item">
                         <view class="participant" wx:if="{{item.status=='A'}}">
-                            <image src="{{item.employeeAvatar}}" mode="scaleToFill" lazy-load="false"></image>
+                            <image class="head" src="{{item.employeeAvatar}}" mode="scaleToFill" lazy-load="false"></image>
                         </view>
                     </repeat>
                 </view>
@@ -278,7 +292,7 @@
                     </view>
                     <repeat for="{{planLogData.participantList}}" key="index" index="index" item="item">
                         <view class="participant" wx:if="{{item.status=='N'}}">
-                            <image src="{{item.employeeAvatar}}" mode="scaleToFill" lazy-load="false"></image>
+                            <image class="head" src="{{item.employeeAvatar}}" mode="scaleToFill" lazy-load="false"></image>
                         </view>
                     </repeat>
                 </view>

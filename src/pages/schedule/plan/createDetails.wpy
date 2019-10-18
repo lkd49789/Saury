@@ -490,10 +490,10 @@
                     if (!this.submitData.Title) {
                         this.warning[0] = true
                     }
-                    if (!this.submitData.Description) {
+                    if (!this.submitData.Category) {
                         this.warning[1] = true
                     }
-                    if (!this.submitData.Category) {
+                    if (!this.submitData.Description) {
                         this.warning[2] = true;
                     }
                 }
@@ -564,6 +564,16 @@
                             this.ifShowCustomer = true
                         } else {
                             this.ifShowCustomer = false
+                            this.RelationId =  {
+                                value: [],
+                                displayText: [],
+                                index: -1,
+                            }
+                            this.CaseId = {
+                                value: [],
+                                displayText: [],
+                                index: -1,
+                            }
                         }
                         break;
                     case 'eventTypeCombobox':

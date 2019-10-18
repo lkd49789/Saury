@@ -869,7 +869,8 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { DocumentFile,EmployeePhoto } from '@/api/common.js';
+    import { OrUpdateSubTask,CfTaskParticipant,Task,Comment,Attachment,DSubTask,ComTaskParticipant,DeleteTasks } from '@/api/myTaskCourse.js';
     import navbar from '@/components/navbar';
     import api from '@/utils/cofig/api.js';
     export default class taskdetail extends wepy.page {
@@ -1135,29 +1136,27 @@
                         urls: [filePath] // 需要预览的图片http链接列表
                     });
                 } else {
-                    var http =
-                        '/api/services/web/taskAttachment/GetDocumentFile?id=' + fileId;
                     switch (fileClass) {
                         case '.jpg':
-                            ajax.preView(http, fileClass);
+                            DocumentFile(fileId, fileClass);
                             break;
                         case '.png':
-                            ajax.preView(http, fileClass);
+                            DocumentFile(fileId, fileClass);
                             break;
                         case '.xls':
-                            ajax.preView(http, fileClass);
+                            DocumentFile(fileId, fileClass);
                             break;
                         case '.xlsx':
-                            ajax.preView(http, fileClass);
+                            DocumentFile(fileId, fileClass);
                             break;
                         case '.docx':
-                            ajax.preView(http, fileClass);
+                            DocumentFile(fileId, fileClass);
                             break;
                         case '.doc':
-                            ajax.preView(http, fileClass);
+                            DocumentFile(fileId, fileClass);
                             break;
                         case '.pdf':
-                            ajax.preView(http, fileClass);
+                            DocumentFile(fileId, fileClass);
                             break;
                         case '.mp4':
                             this.showVideo = true;
@@ -1268,11 +1267,8 @@
                 mask: true,
                 success: () => {}
             });
-            var res = await ajax.getData(
-                '/api/services/web/taskPlanning/CreateOrUpdateSubTask',
-                'post',
-                data
-            );
+            var res = await OrUpdateSubTask(data);
+            
             if (res.statusCode == 200) {
                 if (isChecked) {
                     wx.showToast({
@@ -1316,11 +1312,7 @@
             var id = {
                 id: this.id
             };
-            let { data } = await ajax.getData(
-                '/api/services/web/taskPlanning/GetTask',
-                'post',
-                id
-            );
+            let { data } = await Task(id);
             var taskData = data;
             //是否显示编辑图标
             if (taskData.result.isAccept == 'N') {
@@ -1417,8 +1409,7 @@
             ) {
                 for (var index in taskData.result.participants) {
                     var id = taskData.result.participants[index].employeeId;
-                    var http = '/api/services/web/personal/GetEmployeePhoto?id=' + id;
-                    var avatarData = await ajax.getAavatar(http);
+                    var avatarData = await EmployeePhoto(id);
                     this.avatar[index] = avatarData;
                 }
             }
@@ -1439,11 +1430,7 @@
                 pageNumber: this.pageNumber,
                 pageSize: this.pageSize
             };
-            var CommentsDatas = await ajax.getData(
-                '/api/services/web/taskComment/GetComments',
-                'post',
-                data
-            );
+            var CommentsDatas = await Comments(data);
             this.CommentsDatas = CommentsDatas.data.result.item;
             this.totalCount = CommentsDatas.data.result.totalCount;
             var arr = [];
@@ -1462,18 +1449,14 @@
                         case '.jpg':
                             obj['icon'] = '';
                             obj['color'] = '';
-                            var http =
-                                '/api/services/web/taskAttachment/GetDocumentFile?id=' + file.id;
-                            var image = await ajax.getAavatar(http);
+                            var image = await DocumentFile(file.id);
                             console.log(image);
                             obj['image'] = image;
                             break;
                         case '.png':
                             obj['icon'] = '';
                             obj['color'] = '';
-                            var http =
-                                '/api/services/web/taskAttachment/GetDocumentFile?id=' + file.id;
-                            var image = await ajax.getAavatar(http);
+                            var image = await DocumentFile(file.id);
                             obj['image'] = image;
                             break;
                         case '.xls':
@@ -1511,10 +1494,7 @@
                 // 头像
                 if (CommentsDatas.result.items[index].creatorUserId !== this.userId) {
                     obj['creatorUserId'] = CommentsDatas.result.items[index].creatorUserId;
-                    var http =
-                        '/api/services/web/personal/GetEmployeePhoto?id=' +
-                        CommentsDatas.result.items[index].creatorUserId;
-                    var avatarData = await ajax.getAavatar(http);
+                    var avatarData = await EmployeePhoto(CommentsDatas.result.items[index].creatorUserId);
                     obj['avatar'] = avatarData;
                 } else {
                     obj['creatorUserId'] = this.userId;
@@ -1548,7 +1528,7 @@
                 title: '发送中',
                 mask: true
             });
-            ajax.getData('/api/services/web/taskComment/CreateComment', 'post', data);
+            Comment(data);
             var pages = getCurrentPages();
                 var prevPage = pages[pages.length - 2]; //上一个页面
                 if (prevPage) {
@@ -1564,11 +1544,7 @@
                 id: this.id,
                 file: '(binary)'
             };
-            var infoData = await ajax.uploadFile(
-                '/api/services/web/taskComment/uploadAttachment',
-                tempFilePaths,
-                data
-            );
+            var infoData = await Attachment(tempFilePaths,data);
             console.log(infoData);
             if (choose == 'image') {
                 var imageInfoData = JSON.parse(infoData.data).result;
@@ -1648,11 +1624,7 @@
                 isAccept: isAccept,
                 remark: this.refuseRemark
             };
-            var resData = await ajax.getData(
-                '/api/services/web/taskParticipant/ConfirmTaskParticipant',
-                'post',
-                data
-            );
+            var resData = await TaskParticipant(data);
             console.log(resData)
             if (resData.statusCode == 200) {
                 this.participateView = false;
@@ -1686,11 +1658,7 @@
                     stageId: this.taskData.stageId,
                     title: this.childName
                 };
-                var resData = await ajax.getData(
-                    '/api/services/web/taskPlanning/CreateOrUpdateSubTask',
-                    'post',
-                    data
-                )
+                var resData = await OrUpdateSubTask(data)
                 if (resData.statusCode == 200) {
                     this.childName = '';
                     this.childView = false;
@@ -1715,11 +1683,7 @@
                 var data = {
                     id: this.taskData.checkItems[index].id,
                 };
-                var resData = await ajax.getData(
-                    '/api/services/web/taskPlanning/DeleteSubTask',
-                    'post',
-                    data
-                )
+                var resData = await DSubTask(data)
                 if (resData.statusCode == 200) {
                     var pages = getCurrentPages();
                     var prevPage = pages[pages.length - 2]; //上一个页面
@@ -1764,9 +1728,7 @@
                 isCompleted: isCompleted,
                 projectId: this.taskData.projectId
             };
-            var res = await ajax.getData(
-                '/api/services/web/taskParticipant/CompletedTaskParticipant',
-                'post',
+            var res = await ComTaskParticipant(
                 data
             )
             if (res.data.success) {
@@ -1791,9 +1753,7 @@
             var data = {
                 id: this.taskData.id
             }
-            var resData = await ajax.getData(
-                '/api/services/web/taskPlanning/DeleteTask',
-                'post',
+            var resData = await DeleteTasks(
                 data
             )
             if (resData.statusCode == 200) {

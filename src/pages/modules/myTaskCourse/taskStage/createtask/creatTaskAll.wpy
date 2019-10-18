@@ -67,7 +67,8 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { TaskForEdit } from '@/api/common.js';
+    import { OrUpdateTask } from '@/api/myTaskCourse.js';
     import Estimate from '@/components/picker/input';
     import StageId from '@/components/picker/option';
     import RemindTime from '@/components/picker/option';
@@ -249,9 +250,7 @@
                 projectid: projectId,
                 stageid: id,
             }
-            var resData=await ajax.getData(
-                '/api/services/web/taskPlanning/GetTaskForEdit',
-                'post',
+            var resData=await TaskForEdit(
                 data
             );
             if(resData.statusCode==200){
@@ -289,9 +288,7 @@
                     
                  }
                });
-            var resData=await ajax.getData(
-                '/api/services/web/taskPlanning/CreateOrUpdateTask',
-                'post',
+            var resData=await OrUpdateTask(
                 this.submitData
             )
             if(resData.statusCode==200){

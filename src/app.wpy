@@ -87,7 +87,7 @@
 <script>
   import wepy from 'wepy';
   import 'wepy-async-function';
-  import ajax from '@/utils/cofig/ajax.js';
+  import { getRequest, getData, getAavatar } from './utils/cofig/ajax.js';
   export default class extends wepy.app {
     config = {
       "pages": [
@@ -543,13 +543,16 @@
     }
     //获取用户信息
     async GetCurrentLoginInformations() {
-      var CurrentLoginInformationsData = await ajax.getData({url:'/api/services/app/session/GetCurrentLoginInformations'})
+      var CurrentLoginInformationsData = await getData(
+        '/api/services/app/session/GetCurrentLoginInformations',
+        'post'
+      )
       if (CurrentLoginInformationsData.statusCode == 200) {
         var userInfo = {}
         userInfo = CurrentLoginInformationsData.data.result.user;
         var http = '/api/services/web/personal/GetEmployeePhoto?id=' + CurrentLoginInformationsData.data.result.user.id;
         this.global.currentUserId = CurrentLoginInformationsData.data.result.user.id;
-        var avatarData = await ajax.getAavatar(http);
+        var avatarData = await getAavatar(http);
         userInfo['userAvatar'] = avatarData;
         this.global.userInfo = userInfo;
         this.global.tenant=CurrentLoginInformationsData.data.result.tenant;
@@ -577,11 +580,12 @@
             success: res => {
               var accessToken=wx.getStorageSync('access');
               if (res.authSetting['scope.userInfo']) {
+                console.log(1);
                 wx.getUserInfo({
                   withCredentials: true,
                   success: async res => {
-                    let resData = await ajax.getData({url:'/api/Account/GetWechatUserInfo',
-                      data:{
+                    let resData = await getRequest({url:'/api/Account/GetWechatUserInfo',
+                    data: {
                         code: code,
                         encryptedData: res.encryptedData,
                         iv: res.iv,
@@ -589,20 +593,23 @@
                         signature: res.signature
                       }
                       })
-                      if (resData.data.result.accessToken) {
+                      if (resData.statusCode === 200 && resData.data.result.accessToken) {
                           try {
+                            console.log(3)
                             wx.setStorageSync('access', resData.data.result.accessToken);
+                            getCurrentPages()[0].onShow();  // 刷新首页
                           } catch (err) {
                             console.log(err);
                           }
-                        } else {
-                          wx.redirectTo({
-                            url: '/pages/login/choosePageLogin'
-                          });
-                        }
+                      } else {
+                          // wx.redirectTo({
+                          //   url: '/pages/login/choosePageLogin'
+                          // });
+                      }
                   }
                 });
-              }else if(!accessToken || !res.authSetting['scope.userInfo']){
+              }else if(!res.authSetting['scope.userInfo']||!accessToken){
+                console.log(2);
                 //  wx.redirectTo({
                 //       url: '/pages/login/choosePageLogin'
                 //   });

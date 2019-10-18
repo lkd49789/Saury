@@ -4,18 +4,12 @@ var localhost = "http://www.ailinkedlaw.com:8081";
 
 let urlArr = ['/api/services/app/Account/IsTenantAvailable','/api/TokenAuth/Authenticate']  //不需要token的地址
 
-var getData = ({url, method = 'post', header, data = ''}) => {
+var getRequest = ({url, method = 'post', header, data = ''}) => {
   return new Promise((resolve, reject) => {
     let token = wx.getStorageSync('access')
-    // if(!header && !urlArr.includes(url)){
-    //   header = { Authorization: 'Bearer ' + token }
-    // }
     if(!urlArr.includes(url) && token && !header){
       header = { Authorization: 'Bearer ' + token }
     }
-    // wx.showLoading({
-    //   title: 'loading...',
-    // })
     wx.request({
       url: localhost + url,
       method,
@@ -23,19 +17,6 @@ var getData = ({url, method = 'post', header, data = ''}) => {
       data,
       success(res) {
         resolve(res);
-        // if(res.data.success){
-        //   resolve(res);
-        // }else{
-        //   let title = "网络请求错误"
-        //   if(res.data.error.message)
-        //   title = res.data.error.message
-        //   wx.showToast({
-        //     title,
-        //     icon: 'none',
-        //     duration: 3000,
-        //     mask: false
-        //   });
-        // }
       },
       fail(err) {
         reject(err.success);
@@ -45,8 +26,40 @@ var getData = ({url, method = 'post', header, data = ''}) => {
       }
     });
   })
-
 };
+
+var getData = (http, method, data = '') => {
+  return new Promise((resolve, reject) => {
+    wx.getStorage({
+      key: 'access',
+      success: token => {
+        if(urlArr.includes(http)){
+          var header = { 'content-type': 'application/json' }
+        }else{
+          var header = { Authorization: 'Bearer ' + token.data }
+        }
+        wx.request({
+          url: localhost + http,
+          method: method,
+          header,
+          data: data,
+          success: res => {
+            resolve(res);
+          },
+          fail: err => {
+            reject(err.success);
+          },
+          complete: () => {
+            wx.hideLoading();
+
+          }
+        });
+      }
+    });
+  })
+};
+
+
 var getAavatar = http => {
   return new Promise((resolve, reject) => {
     wx.getStorage({
@@ -200,6 +213,7 @@ var uploadFile = (http,filePath,formData,name = 'jpg') => {
 // var ifOverdue = newFunction();
 
 module.exports = {
+  getRequest,
   getData,
   getAavatar,
   getUserAvatar,

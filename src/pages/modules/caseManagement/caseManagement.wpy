@@ -254,16 +254,31 @@
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-            var subData={
-                    sorting: "",
-                    pageNumber: this.pageNumber,
-                    pageSize: 10,
-            }
+            // var subData={
+            //         sorting: "",
+            //         pageNumber: this.pageNumber,
+            //         pageSize: 10,
+            // }
+            var subData={ CreationDateRange: {startDate: "", endDate: ""},
+                        acceptDateRange: {startDate: "", endDate: ""},
+                        categoryList: [],
+                        filter: "",
+                        importLevel: "",
+                        isForeign: "",
+                        isLegal: "",
+                        language: "",
+                        lawyerRoleList: [],
+                        lawyereIdList: [],
+                        pageNumber: 1,
+                        pageSize: 10,
+                        processStatusList: [],
+                        secretLevel: "" 
+                        }
             if(Object.keys(this.searchData).length>0){
                 subData = Object.assign(subData, this.searchData);
             }
             var resData = await ajax.getData(
-                '/api/services/web/caseManage/GetCaseManage',
+                '/api/services/web/Case/GetCases',
                 'post', 
                 subData
             )
@@ -329,6 +344,7 @@
             this.$apply();
         }
         isRefresh(searchData){
+            console.log(searchData);
             if(searchData){
                 this.searchData=searchData;
             }

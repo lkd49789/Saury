@@ -145,7 +145,7 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { GeneralComboboxList } from '@/api/common.js';
     export default class searchCaseClient extends wepy.page {
         data = {
             searchData: {},
@@ -189,11 +189,7 @@
                 parentId: this.parentId,
                 shortCode: null,
             }
-            var resData= await ajax.getData(
-                '/api/services/web/common/GetGeneralComboboxList',
-                'post',
-                data
-            )
+            var resData= await GeneralComboboxList(data)
             if(resData.statusCode==200){
                 this.myinvoice=resData.data.result;
                 this.$apply();

@@ -207,7 +207,10 @@
 
 <script>
     import wepy from 'wepy';
+    import { WorklogForEdit } from '@/api/myRecord.js'
     import ajax from '@/utils/cofig/ajax.js'
+    import {GeneralComboboxList} from '@/api/common.js'
+
     import {
         myDistinct
     } from '@/utils/cofig/api.js';
@@ -373,13 +376,14 @@
                     case 'ClientId':
                         this.ClientId.index = +e.detail.value;
                         this.submitData.ClientId = this.ClientId.value[this.ClientId.index];
+                        console.log(this.ClientId.value)
                         this.GetGeneralComboboxList('case', this.isData, this.ClientId.value[this.ClientId.index]);
                         this.GetGeneralComboboxList('employee', this.isData);
                         break;
                     case 'CaseId':
                         this.CaseId.index = +e.detail.value;
                         this.submitData.CaseId = this.CaseId.value[this.CaseId.index];
-                        this.GetGeneralComboboxList('employee', this.isData, this.CaseId.value[this.CaseId.index]);
+                        this.GetGeneralComboboxList('employee', this.isData, '',this.CaseId.value[this.CaseId.index]);
                         break;
                         break;
                     case 'Participant':
@@ -447,9 +451,7 @@
                     caseid: data.caseId,
                     isconverted: true,
                 }
-                var resData = await ajax.getData(
-                    '/api/services/web/worklog/GetWorklogForEdit',
-                    'post',
+                var resData = await WorklogForEdit(
                     formatData
                 )
                 if (resData.statusCode == 200) {
@@ -533,9 +535,7 @@
                 }
             } else {
                 var formatData = {}
-                var resData = await ajax.getData(
-                    '/api/services/web/worklog/GetWorklogForEdit',
-                    'post',
+                var resData = await WorklogForEdit(
                     formatData
                 )
                 if (resData.statusCode == 200) {
@@ -560,24 +560,30 @@
             }
             this.$apply();
         }
-        async GetGeneralComboboxList(keyWord, isData, ...arg) {
+        async GetGeneralComboboxList(keyWord, isData,parentId = '',shortCode = null) {
+            let data = {
+                        class: keyWord,
+                        name: '',
+                        parentId : parentId,
+                        shortCode 
+                    }
             switch (keyWord) {
                 case 'case':
-                    var data = {
-                        class: keyWord,
-                        parentId: arg[0],
-                    }
-                    var resData = await ajax.getData(
-                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
-                        'post',
-                        data
-                    )
+                    // var data = {
+                    //     class: keyWord,
+                    //     parentId: arg[0],
+                    // }
+                    // var resData = await ajax.getData('/api/services/web/generalCodeComboService/GetGeneralComboboxList',
+                    // 'post',
+                    //     data)
+                        var resData = await GeneralComboboxList(data)
                     if (resData.statusCode == 200) {
                         console.log(resData.data.result.length !== 0)
                         if (resData.data.result.length !== 0) {
                             var ComboboxList = resData.data.result
-                            for (var index in ComboboxList) {
-                                var item = ComboboxList[index];
+                            this.CaseId.value = []
+                            this.CaseId.displayText = []
+                            ComboboxList.forEach((item,index) =>{
                                 this.CaseId.value[index] = item.value;
                                 this.CaseId.displayText[index] = item.displayText;
                                 if (isData) {
@@ -586,7 +592,7 @@
                                     this.CaseId.isSelected = false;
                                 }
                                 this.CaseId.index = -1;
-                            }
+                            })
                         } else {
                             this.submitData.CaseId = '';
                             this.CaseId.index = -1;
@@ -597,15 +603,12 @@
                     }
                     break;
                 case 'client':
-                    var data = {
-                        class: keyWord,
-                        parentId: ""
-                    }
-                    var resData = await ajax.getData(
-                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
-                        'post',
-                        data
-                    )
+                    // var data = {
+                    //     class: keyWord,
+                    //     parentId: ""
+                    // }
+                    var resData = await GeneralComboboxList(data)
+
                     if (resData.statusCode == 200) {
                         var ComboboxList = resData.data.result
                         for (var index in ComboboxList) {
@@ -622,15 +625,12 @@
                     this.$apply();
                     break
                 case 'employee':
-                    var data = {
-                        class: keyWord,
-                        shortCode: arg[0]
-                    }
-                    var resData = await ajax.getData(
-                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
-                        'post',
-                        data
-                    )
+                    // var data = {
+                    //     class: keyWord,
+                    //     shortCode: arg[0]
+                    // }
+                    var resData = await GeneralComboboxList(data)
+
                     if (resData.statusCode == 200) {
                         this.Participant.value = [];
                         this.Participant.displayText = [];
@@ -663,9 +663,8 @@
                     this.$apply();
                 }
             });
-            var resData = await ajax.getData(
-                '/api/services/web/worklog/CreateOrUpdateWorklog',
-                'post',
+            var resData = await ajax.getData('/api/services/web/worklog/CreateOrUpdateWorklog',
+            'post',
                 data
             );
             if (resData.statusCode == 200) {
@@ -694,8 +693,11 @@
             var data = JSON.parse(options.data);
             this.isData = data.isData;
             // this.GetGeneralComboboxList('case',data.isData);
-            this.GetGeneralComboboxList('client', data.isData);
-            this.GetGeneralComboboxList('employee', data.isData);
+            // this.GetGeneralComboboxList('client', data.isData);
+            // this.GetGeneralComboboxList('employee', data.isData);
+            this.GetGeneralComboboxList('case');
+            this.GetGeneralComboboxList('client');
+            this.GetGeneralComboboxList('employee');
             if (data.isData) {
                 this.dateOptions.time = data.startTime.Y + ' ' + data.startTime.M;
                 this.dateOptions1.time = data.endTime.Y + ' ' + data.endTime.M;

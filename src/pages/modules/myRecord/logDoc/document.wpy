@@ -136,7 +136,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { Worklog } from '@/api/myRecord.js';
     export default class contractdoc extends wepy.page {
         components = {};
         data = {
@@ -283,10 +283,7 @@
             var logId = {
                 id
             };
-            var resData = await ajax.getData(
-                '/api/services/web/worklog/GetWorklog',
-                'post',
-                logId
+            var resData = await Worklog(logId
             )
             if (resData.statusCode == 200) {
                 this.logAttachmentList=resData.data.result.attachmentList;

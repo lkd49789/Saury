@@ -365,7 +365,7 @@
             class: "TPCT",
         }
       )
-      if(resData.statusCode==200){
+      if(resData.statusCode == 200){
         this.Category.data=resData.data.result;
         this.$apply();
       }else{

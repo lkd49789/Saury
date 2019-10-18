@@ -214,7 +214,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { TaskStages, Tasks, TaskParticipant, DeleteTasks, DeleteTaskStages } from '@/api/common.js'
     import {
         formatTimeSymbol
     } from '@/utils/cofig/api.js';
@@ -407,11 +407,7 @@
             var data = {
                 projectId: this.projectId
             }
-            var TaskStagesDatas = await ajax.getData(
-                '/api/services/web/taskPlanning/GetTaskStages',
-                'post',
-                data
-            )
+            var TaskStagesDatas = await TaskStages(data)
             if(TaskStagesDatas.statusCode==200){
                 var TaskStagesData = TaskStagesDatas.data.result;
                 this.TaskStagesDatas = TaskStagesData;
@@ -440,11 +436,7 @@
                 stageId: stageId,
                 projectId: this.projectId
             }
-            var GetTasksDatas = await ajax.getData(
-                '/api/services/web/taskPlanning/GetTasks',
-                'post',
-                data
-            )
+            var GetTasksDatas = await Tasks(data)
             if (GetTasksDatas.data.result.items.length !== 0) {
                 var TasksData = GetTasksDatas.data.result
                 var childChecked = [];
@@ -493,9 +485,7 @@
                 isCompleted: isCompleted,
                 projectId: this.projectId
             };
-            var res = await ajax.getData(
-                '/api/services/web/taskParticipant/CompletedTaskParticipant',
-                'post',
+            var res = await TaskParticipant(
                 data
             )
             if (res.data.success) {
@@ -523,11 +513,7 @@
             var id = {
                 id: id
             }
-            var resData = await ajax.getData(
-                '/api/services/web/taskPlanning/DeleteTaskStage',
-                'post',
-                id
-            )
+            var resData = await DeleteTaskStages(id)
             if (resData.statusCode == 200) {
                 // this.TaskStagesDatas = [];
                 // this.TasksDatas = [];
@@ -556,9 +542,7 @@
             var data = {
                 id
             }
-            var resData = await ajax.getData(
-                '/api/services/web/taskPlanning/DeleteTask',
-                'post',
+            var resData = await DeleteTasks(
                 data
             )
             if (resData.statusCode == 200) {

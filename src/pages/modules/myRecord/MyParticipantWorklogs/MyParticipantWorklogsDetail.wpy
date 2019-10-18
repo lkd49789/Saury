@@ -78,7 +78,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { MyParticipantWorklogs } from '@/api/myRecord.js'
     import mixins from '@/utils/cofig/mixin.js';
     import {formatDate} from '@/utils/cofig/api.js';
     import placeHolderImage from '@/components/placeHolderImage';
@@ -113,10 +113,7 @@
         }
         // 获取日志提醒参与信息
         async GetMyParticipantWorklogs(){
-            var GetMyParticipantWorklogs =await ajax.getData(
-            '/api/services/web/worklog/GetMyParticipantWorklogs',
-            'post'
-            )
+            var GetMyParticipantWorklogs =await MyParticipantWorklogs()
             switch (GetMyParticipantWorklogs.statusCode) {
                 case 200:
                     if(GetMyParticipantWorklogs.data.result.length!==0){

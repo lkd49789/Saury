@@ -199,7 +199,8 @@
 <script>
     import wepy from 'wepy';
 
-    import { MeetingForEdit, GeneralComboboxList } from '@/api/myMeeting.js';
+    import { MeetingForEdit } from '@/api/myMeeting.js';
+    import { GeneralComboboxList } from '@/api/common.js';
   
   
     import {myDistinct} from '@/utils/cofig/api.js';
@@ -579,6 +580,7 @@
         onLoad() {
             this.GetMeetingForEdit();
             this.GetGeneralComboboxList('client');
+            this.GetGeneralComboboxList('case');
             this.GetGeneralComboboxList('employee');
             var now=new Date();
             this.dateOptions1.time=now;

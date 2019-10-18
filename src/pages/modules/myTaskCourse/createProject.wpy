@@ -213,7 +213,8 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '@/utils/cofig/ajax.js';
+  import { GeneralCodeComboOutput } from '@/api/common.js';
+  import { TemplatesWithGroup, ApplicationTemplatesWithGroup, Stages, ApplicationStages, OrUpdateTaskProject, ProjectCover } from '@/api/myTaskCourse.js';
   import Name from '@/components/picker/input';
   import Description from '@/components/picker/input';
   import Privacy from '@/components/picker/pickerOption';
@@ -453,12 +454,9 @@
     };
     computed = {};
     async GetGeneralCodeComboOutput() {
-      var resData = await ajax.getData(
-        '/api/services/web/common/GetGeneralCodeComboOutput',
-        'post', {
+      var resData = await GeneralCodeComboOutput({
           class: "TPCT",
-        }
-      )
+        })
       if (resData.statusCode == 200) {
         this.Category = resData.data.result;
         this.$apply();
@@ -473,20 +471,15 @@
       }
     }
     async GetTemplatesWithGroup() {
-      var resData = await ajax.getData(
-        '/api/services/web/taskTemplate/GetTemplatesWithGroup',
-        'post', {}
-      )
+      var resData = await TemplatesWithGroup({})
       if (resData.statusCode == 200) {
         this.TemplateId.data = resData.data.result.items[0].templates;
         this.$apply();
       }
     }
     async GetApplicationTemplatesWithGroup(index) {
-      var resData = await ajax.getData(
-        '/api/services/web/taskTemplate/GetApplicationTemplatesWithGroup',
-        'post', {}
-      )
+      var resData = await ApplicationTemplatesWithGroup({})
+
       if (resData.statusCode == 200) {
         var TemplateIdData = resData.data.result.items;
         this.TemplateIdDataArray = TemplateIdData;
@@ -508,9 +501,7 @@
       this.$apply();
     }
     async GetApplicationStages(templateId) {
-      var resData = await ajax.getData(
-        '/api/services/web/taskTemplate/GetApplicationStages',
-        'post', {
+      var resData = await ApplicationStages({
           templateId
         }
       )
@@ -533,9 +524,7 @@
       }
     }
     async GetStages(templateId){
-      var resData=await ajax.getData(
-        '/api/services/web/taskTemplate/GetStages',
-        'post',
+      var resData=await Stages(
         {
           templateId
         }
@@ -560,9 +549,7 @@
     }
     //提交数据
     async CreateOrUpdateTaskProject(){
-      var resData=await ajax.getData(
-        '/api/services/web/taskProject/CreateOrUpdateTaskProject',
-        'post',
+      var resData=await OrUpdateTaskProject(
         this.subData
       )
       console.log(resData);
@@ -598,8 +585,7 @@
         mask: true, //显示透明蒙层，防止触摸穿透,
         success: res => {}
       });
-      var resData=await ajax.uploadFile(
-        '/api/services/web/taskProject/UploadProjectCover',
+      var resData=await upProjectCover(
         image,
         {
           Id:this.subData.Id

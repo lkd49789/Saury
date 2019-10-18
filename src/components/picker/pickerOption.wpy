@@ -73,7 +73,7 @@
             },
         };
         onLoad() {
-             this.options.disabled=this.options.disabled||false;
+             this.options.disabled = this.options.disabled ||false;
         }
     }
 </script>

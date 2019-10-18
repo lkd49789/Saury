@@ -158,7 +158,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { WorklogStatistics } from '@/api/myRecord.js'
     import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
     export default class statisticsDetail extends wepy.page {
@@ -198,9 +198,7 @@
                 //     startDate: this.startDate
                 // }
             }
-            var WorklogsForScheduleData=await ajax.getData(
-                '/api/services/web/worklogAnalysis/GetWorklogStatistics',
-                'post',
+            var WorklogsForScheduleData=await WorklogStatistics(
                 data
             )
             switch (WorklogsForScheduleData.statusCode) {

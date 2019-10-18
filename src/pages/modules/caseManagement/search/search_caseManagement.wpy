@@ -137,11 +137,31 @@
             z-index: 99;
         }
     }
+    .caseSearchInput{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          >view:first-child{
+            width:90%;
+          }
+          >view:last-child{
+            background: #5d73fa;
+            height:60rpx;
+            width:60rpx;
+            line-height:60rpx;
+            text-align: center;
+              >icon{
+                font-size:40rpx;
+                color:#ffffff;
+              }
+          }
+          
+        }
 </style>
 
 <template>
     <view class='container'>
-        <view class="keyword-search" wx:if="{{showPage}}">
+        <view class="keyword-search" wx:if="{{!showPage}}">
             <view class="search_top">
                 <view class="search_input">
                     <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"></icon>
@@ -167,25 +187,35 @@
                 </view>
             </view>
         </view>
-        <view class="advanced-search-input-panel" wx:else="{{showPage}}">
+        <view class="advanced-search-input-panel" wx:else>
             <view class="advanced-search-title">
                 <text>高级搜索</text>
                 <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
             </view>
             <view class="advanced-search-content">
-                <Id :input.sync="Id" :inputValue.sync='IdValue' :twoWayTitle="IdValue" />
-                <Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
+                <!-- <Id :input.sync="Id" :inputValue.sync='IdValue' :twoWayTitle="IdValue" />
+                <!--<Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
                 <ClientId :input.sync="ClientId" :inputValue.sync='ClientIdValue' :twoWayTitle="ClientIdValue" />
-                <ClientName :input.sync="ClientName" :inputValue.sync='ClientNameValue' :twoWayTitle="ClientNameValue" />
+                <ClientName :input.sync="ClientName" :inputValue.sync='ClientNameValue' :twoWayTitle="ClientNameValue" /> -->
+
+
                 <AcceptDate :pickerData="AcceptDate" :twoWayTitle="AcceptDate" />
-                <OrganizationUnitId :options.sync="OrganizationUnitId" :index.sync='OrganizationUnitIdIndex' :twoWayTitle="OrganizationUnitIdIndex" />
+                <!-- <OrganizationUnitId :options.sync="OrganizationUnitId" :index.sync='OrganizationUnitIdIndex' :twoWayTitle="OrganizationUnitIdIndex" /> -->
+                <Lawyer :options.sync="Lawyer" :index.sync='LawyerValue' :twoWayTitle="LawyerValue" />
+                <Join :options.sync="Join" :index.sync='JoinIndex' :twoWayTitle="JoinIndex" />
+                <CreateDate :pickerData="CreateDate" :twoWayTitle="CreateDate" />
                 <SecretLevel :options.sync="SecretLevel" :index.sync='SecretLevelIndex' :twoWayTitle="SecretLevelIndex" />
                 <Language :options.sync="Language" :index.sync='LanguageIndex' :twoWayTitle="LanguageIndex" />
                 <ImportLevel :options.sync="ImportLevel" :index.sync='ImportLevelIndex' :twoWayTitle="ImportLevelIndex" />
                 <IsForeign :options.sync="IsForeign" :index.sync='IsForeignIndex' :twoWayTitle="IsForeignIndex" />
                 <IsLegal :options.sync="IsLegal" :index.sync='IsLegalIndex' :twoWayTitle="IsLegalIndex" />
+
+                <Type :options.sync="Type" :index.sync='TypeIndex' :twoWayTitle="TypeIndex" />
+                <State :options.sync="State" :index.sync='StateIndex' :twoWayTitle="StateIndex" />
+
             </view>
-            <view class="checkedBox">
+            
+            <!-- <view class="checkedBox">
                 <view class="title">
                     案件类型
                 </view>
@@ -195,15 +225,20 @@
                                 </label>
                 </checkbox-group>
             </view>
-            <view class="checkedRadioBox">
+            <view class="checkedBox">
                 <view class="title">
                     状态
                 </view>
-                <radio-group class="radio-group" @change="radioChange">
+                <checkbox-group @change="checkboxChange" class="checkbox-group">
+                    <label wx:for="{{Status}}" wx:key="index" index="index" item="item " class="label">
+                                        <checkbox value="{{item.name}}" checked="{{item.isSelected}}" name="id"  color="#5d73fa"/> {{item.displayName}}
+                                </label>
+                </checkbox-group>
+                <!-- <radio-group class="radio-group" @change="radioChange">
                     <label class="radio" wx:for="{{Status}}" wx:key="index" index="index" item="item ">
-                            <radio value="{{item.value}}" checked="{{item.isSelected}}" color="#5d73fa" /> {{item.displayText}}
+                            <radio value="{{item.name}}" checked="{{item.isSelected}}" color="#5d73fa" /> {{item.displayName}}
                           </label>
-                </radio-group>
+                </radio-group> -->
             </view>
             <view class="checkedBox" wx:if="{{isProcessStatus}}">
                 <view class="title">
@@ -226,37 +261,50 @@
         myDistinct
     } from '@/utils/cofig/api.js';
     import ajax from '@/utils/cofig/ajax.js';
+    import { GeneralCodeComboboxItems } from '@/api/common.js';
+
     import {
         formatDate
     } from '@/utils/cofig/api.js';
-    import Id from '@/components/picker/input';
-    import Name from '@/components/picker/input';
-    import ClientId from '@/components/picker/input';
-    import ClientName from '@/components/picker/input';
-    import OrganizationUnitId from '@/components/picker/pickerOption';
+    // import Id from '@/components/picker/input';
+    // import Name from '@/components/picker/input';
+    // import ClientId from '@/components/picker/input';
+    // import ClientName from '@/components/picker/input';
     import AcceptDate from '@/components/picker/pickerDate';
-    import SecretLevel from '@/components/picker/pickerOption';
-    import Language from '@/components/picker/pickerOption';
-    import ImportLevel from '@/components/picker/pickerOption';
-    import IsLegal from '@/components/picker/pickerOption';
-    import IsForeign from '@/components/picker/pickerOption';
+
+    import PickerOption from '@/components/picker/pickerOption';
+    // import SecretLevel from '@/components/picker/pickerOption';
+    // import Language from '@/components/picker/pickerOption';
+    // import ImportLevel from '@/components/picker/pickerOption';
+    // import IsLegal from '@/components/picker/pickerOption';
+    // import IsForeign from '@/components/picker/pickerOption';
     export default class searchRegister extends wepy.page {
         components = {
-            Id,
-            Name,
-            ClientId,
-            ClientName,
+            // Id,
+            // Name,
+            // ClientId,
+            // ClientName,
             AcceptDate,
-            OrganizationUnitId,
-            SecretLevel,
-            Language,
-            ImportLevel,
-            IsLegal,
-            IsForeign
+            CreateDate:AcceptDate,
+            // OrganizationUnitId,
+            Join:PickerOption,
+            Lawyer:PickerOption,
+            SecretLevel:PickerOption,
+            Language:PickerOption,
+            ImportLevel:PickerOption,
+            IsLegal:PickerOption,
+            IsForeign:PickerOption,
+            Type:PickerOption,
+            State:PickerOption
         }
         data = {
             AcceptDate: {
                 title: '收案时间',
+                startDateData: '',
+                endDateData: ''
+            },
+            CreateDate: {
+                title: '创建时间',
                 startDateData: '',
                 endDateData: ''
             },
@@ -265,38 +313,76 @@
             searchKeyWords: '',
             showPage: true,
             isShowArray: [],
-            Id: {
-                title: '案件编号',
-                name: 'Id',
-                warning: false,
-            },
-            IdValue: '',
-            Name: {
-                title: '案件名称',
-                name: 'Name',
-                warning: false,
-            },
-            NameValue: '',
-            ClientName: {
-                title: '客户名称',
-                name: 'ClientName',
-                warning: false,
-            },
-            ClientNameValue: '',
-            ClientId: {
-                title: '客户编号',
-                name: 'ClientId',
-                warning: false,
-            },
-            ClientIdValue: '',
-            OrganizationUnitId: {
-                title: '组织结构',
-                key: 'displayName',
-                name: 'OrganizationUnitId',
+
+
+            // Id: {
+            //     title: '案件编号',
+            //     name: 'Id',
+            //     warning: false,
+            // },
+            // IdValue: '',
+            // Name: {
+            //     title: '案件名称',
+            //     name: 'Name',
+            //     warning: false,
+            // },
+            // NameValue: '',
+            // ClientName: {
+            //     title: '客户名称',
+            //     name: 'ClientName',
+            //     warning: false,
+            // },
+            // ClientNameValue: '',
+            // ClientId: {
+            //     title: '客户编号',
+            //     name: 'ClientId',
+            //     warning: false,
+            // },
+            // ClientIdValue: '',
+
+
+
+            // OrganizationUnitId: {
+            //     title: '组织结构',
+            //     key: 'displayName',
+            //     name: 'OrganizationUnitId',
+            //     data: [],
+            //     warning: false
+            // },
+            // //参案角色
+            // OrganizationUnitIdIndex: -1,
+            Lawyer: {
+                title: '律师',
+                key: 'name',
+                name: 'Lawyer',
                 data: [],
                 warning: false
             },
-            OrganizationUnitIdIndex: -1,
+            LawyerIndex: -1,
+            Type: {
+                title: '案件类型',
+                key: 'displayText',
+                name: 'Type',
+                data: [],
+                warning: false
+            },
+            TypeIndex: -1,
+            State: {
+                title: '状态',
+                key: 'displayText',
+                name: 'State',
+                data: [],
+                warning: false
+            },
+            StateIndex: -1,
+            Join: {
+                title: '参案角色',
+                key: 'displayText',
+                name: 'Join',
+                data: [],
+                warning: false
+            },
+            JoinIndex: -1,
             // 保密级别
             SecretLevel: {
                 title: '保密级别',
@@ -488,23 +574,23 @@
                 this.searchData.AcceptDate.EndDate = data.endDateData;
                 this.$apply();
             },
-            IdValue(value) {
-                this.searchData.Id = value;
-                this.$apply();
-            },
-            NameValue(value) {
-                this.searchData.Name = value;
-                this.$apply();
-            },
-            ClientNameValue(value) {
-                this.searchData.ClientName = value;
-                this.$apply();
-            },
-            ClientIdValue(value) {
+            // IdValue(value) {
+            //     this.searchData.Id = value;
+            //     this.$apply();
+            // },
+            // NameValue(value) {
+            //     this.searchData.Name = value;
+            //     this.$apply();
+            // },
+            // ClientNameValue(value) {
+            //     this.searchData.ClientName = value;
+            //     this.$apply();
+            // },
+            TypeIndex(value) {
                 this.searchData.ClientId = value;
                 this.$apply();
             },
-            OrganizationUnitIdIndex(index) {
+            StateIndex(index) {
                 this.searchData.OrganizationUnitId = this.OrganizationUnitId.data[index].id;
                 this.$apply();
             },
@@ -546,27 +632,28 @@
         //获取代编辑数据
         async GetCaseApplyListSearchInput() {
             var resData = await ajax.getData(
-                '/api/services/web/caseApplication/GetCaseApplyListSearchInput',
+                '/api/services/web/Case/GetCaseStates',
                 'post'
             )
             if (resData.statusCode == 200) {
                 var CaseApplyListSearchInputDatas = resData.data.result;
-                this.Category = CaseApplyListSearchInputDatas.categoryList;
-                this.Status = CaseApplyListSearchInputDatas.statusList;
-                this.ProcessStatusData = CaseApplyListSearchInputDatas.processStatusList;
+                // this.Category = CaseApplyListSearchInputDatas.categoryList;
+                this.State.data = CaseApplyListSearchInputDatas.items;
+                // this.ProcessStatusData = CaseApplyListSearchInputDatas.processStatusList;
             }
             this.$apply();
         }
         //案件待编辑基础数据
         async GetCaseGeneralInfo() {
             var resData = await ajax.getData(
-                '/api/services/web/case/GetCaseGeneralInfo',
+                '/api/services/web/case/GetCaseGeneralInfoForEdit',
                 'post', {
                     Id: ''
                 }
             )
             if (resData.statusCode == 200) {
                 var caseGeneralInfoData = resData.data.result;
+                this.Type.data = caseGeneralInfoData.caseCategoryCombobox.splice(1)
                 //书面语言
                 this.Language.data = caseGeneralInfoData.caseWrittenLanguageCombobox;
                 //保密级别
@@ -586,9 +673,10 @@
                 '/api/services/web/common/GetOrganizations',
                 'post'
             )
+            console.log(resData.data);
             if (resData.statusCode == 200) {
                 var GetOrganizationsData = resData.data.result;
-                this.OrganizationUnitId.data = GetOrganizationsData;
+                // this.OrganizationUnitId.data = GetOrganizationsData;
             }
             this.$apply();
         }
@@ -599,11 +687,29 @@
                 return item.value.substr(0, 1) == status
             })
         }
+        // 获取参案人
+        async GetGeneralCodeComboboxItems(){
+            let Join = await GeneralCodeComboboxItems({id:"CACBT"})
+            this.Join.data = Join.data.result
+        }
+        // 获取律师
+        async GetLawyer(){
+            var resData = await ajax.getData(
+                '/api/services/web/common/GetEmployees',
+                'post', {
+                    pageNumber: 1,
+                    pageSize: 100
+                }
+            );
+            this.lawyer.data = resData.data.result
+        }
         onLoad() {
             this.isHistory();
             this.GetCaseApplyListSearchInput();
             this.GetCaseGeneralInfo();
             this.GetOrganizations();
+            this.GetGeneralCodeComboboxItems()
+            this.GetLawyer()
         };
         onShow() {};
     }

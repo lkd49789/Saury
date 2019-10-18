@@ -900,6 +900,7 @@
        this.functionData = itemsData;
       }
       this.$apply()
+      wx.stopPullDownRefresh()
     }
     //获取用户信息
     async GetCurrentLoginInformations() {
@@ -928,11 +929,17 @@
       //   this.$parent.global.tenant=CurrentLoginInformationsData.data.result.tenant;
       // }
     }
-    onShow() {
+    GetData(){
       this.GetCurrentLoginInformations();
       this.getSwiperdata();
       this.GetUserNotifications();
       this.GetFunctionItems();
+    }
+    onPullDownRefresh() {
+      this.GetData()
+    }
+    onShow() {
+      this.GetData()
     }
   }
 </script>

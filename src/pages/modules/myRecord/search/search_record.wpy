@@ -97,7 +97,6 @@
   import {
     myDistinct
   } from '@/utils/cofig/api.js';
-  import ajax from '@/utils/cofig/ajax.js';
   import {
     formatDate
   } from '@/utils/cofig/api.js';

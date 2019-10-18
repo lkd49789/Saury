@@ -546,8 +546,8 @@
                     <view style="margin-bottom:200rpx" hidden="{{currentTab==1?'':true}}">
                         <view class="schedule_box">
                             <repeat for="{{planData}}" key="index" index="index" item="item">
-                                <view class="schedule_content">
-                                    <view class="plan" @tap="intoDetails(plan,'{{item.id}}')">
+                                <view class="schedule_content" @tap="intoDetails(plan,'{{item.id}}')">
+                                    <view class="plan">
                                         <view class="plan_left">
                                             <text class="plan_timeFirst">{{item.start}}</text>
                                             <text class="plan_timeLast">{{item.end}}</text>
@@ -556,7 +556,10 @@
                                             <view class="plan_firstLine">
                                                 <text>{{item.title}}</text> <text class="ifwait {{false?'green':'yellow'}}">{{item.statusText}}</text>
                                             </view>
-                                            <view class="plan_lastLine"> <text>{{item.clientName}}</text> <text class="ifwait">工作｜{{item.eventTypeText}}</text></view>
+                                            <view class="plan_lastLine"> 
+                                                <view>{{item.privacyText}}</view> 
+                                                <view class="ifwait"><view>{{item.categoryText}}</view>｜<view>{{item.eventTypeText}}</view></view>
+                                            </view>
                                         </view>
                                     </view>
                                 </view>
@@ -689,7 +692,7 @@
                                 <view class="schedule_content">
                                     <view class="leave" @tap="intoDetails(leave,'{{item.id}}')">
                                         <view class="leave_box">
-                                            <text class="leave_name">{{item.eName}}<text class="leave_add">｜{{item.eCategory || ''}}</text></text>
+                                            <text class="leave_name">{{item.eName}}<text class="leave_add">｜{{item.eCategory}}</text></text>
                                             <text class="leave_time">{{item.totalDay}}天</text>
                                         </view>
                                         <view class="leave_box">
