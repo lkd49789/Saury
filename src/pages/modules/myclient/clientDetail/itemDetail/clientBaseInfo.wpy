@@ -317,10 +317,12 @@
         }
         }
         onLoad(options) {
+            console.log(options);
             if(options.id){
                 this.GetClient(options.id)
             }else{
                  var clientBaseData = wx.getStorageSync('clientData').clientBaseInfoData;
+                 console.log(clientBaseData);
                  this.clientBaseData = clientBaseData;
                  if(this.clientBaseData.birthday!==null){
                      this.clientBaseData.birthday=this.clientBaseData.birthday.split('T')[0];
@@ -329,12 +331,12 @@
             this.$apply();
         }
         onUnload() {
-            wx.removeStorage({
-                key: 'clientData',
-                success(res) {
-                console.log("===客户数据已清除======")
-                }
-            })
+            // wx.removeStorage({
+            //     key: 'clientData',
+            //     success(res) {
+            //     console.log("===客户数据已清除======")
+            //     }
+            // })
         }
     }
 </script>

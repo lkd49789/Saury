@@ -13,6 +13,7 @@
                 justify-content: space-between;
                 align-items: center;
                 font-size: 48rpx;
+                border-bottom: 1px #dedede solid;
             }
             .filter {
                 left: 0;
@@ -95,13 +96,13 @@
                     <icon class="iconfont icon-shaixuan1" style="font-size:60rpx;color:#5d73fa" @tap="isshowFilter"></icon>
                 </view>
             </view>
-            <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" />
+            <!-- <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" /> -->
             <view class="filter animation" wx:if="{{isShow}}">
                 <view catchtap="filter('cteateTime')">创建时间排序</view>
                 <view catchtap="filter('case')">案件排序</view>
             </view>
         </view>
-        <view style="margin-top:230rpx">
+        <view style="margin-top:136rpx">
             <repeat for="{{myinvoice}}" key="index" index="index" item="item">
             <view class="bill_content" @tap="into('{{item}}')">
                 <view class="bill_view">{{item.clientName||'未填写'}}</view>
@@ -171,7 +172,7 @@
             totalCount: 0,
             navbars: ['待处理', '已开票', '已领取', '已作废', '已退回'],
             currentTab: 0,
-            state: "UnHandled",
+            statusList: "",
             queryStream: {},
             isShow: false,
             sorting: ''
@@ -193,10 +194,10 @@
                 this.pageNumber = 1;
                 switch (name) {
                     case 'cteateTime':
-                        this.getbill(this.state,'CreationTime desc')
+                        this.getbill(this.statusList,'CreationTime desc')
                         break;
                     case 'case':
-                        this.getbill(this.state,'CaseName desc')
+                        this.getbill(this.statusList,'CaseName desc')
                         break;
                     default:
                         break;
@@ -210,7 +211,7 @@
         onReachBottom() {
             if (this.totalCount / 10 > this.pageNumber && this.$parent.global.netWorkString) {
                 this.pageNumber += 1;
-                this.getbill(this.state);
+                this.getbill(this.statusList);
             } else {
                 if (this.$parent.global.netWorkString) {
                     wx.showToast({
@@ -233,14 +234,14 @@
         onPullDownRefresh() {
             this.myinvoice = [];
             this.pageNumber = 1;
-            this.getbill(this.state);
+            this.getbill(this.statusList);
             wx.hideNavigationBarLoading(); //完成停止加载
             wx.stopPullDownRefresh(); //停止下拉刷新
             this.$apply();
         }
         //获取发票
-        async getbill(state,sort) {
-            if (this.state !== state) {
+        async getbill(statusList,sort) {
+            if (this.statusList !== statusList) {
                 this.pageNumber = 1
             }
              this.sorting = sort ? sort : this.sorting;
@@ -251,7 +252,7 @@
                 'post', {
                     pageNumber: this.pageNumber,
                     pageSize: 10,
-                    status: state,
+                    statusList,
                     creationTimeRange,
                     filter,
                     sorting: this.sorting,
@@ -260,7 +261,7 @@
             );
             switch (resData.statusCode) {
                 case 200:
-                    if (this.state == state) {
+                    if (this.statusList == statusList) {
                         if (resData.data.result.items.length !== 0) {
                             this.myinvoice = this.myinvoice.concat(resData.data.result.items);
                             this.totalCount = resData.data.result.totalCount;
@@ -281,7 +282,7 @@
                             for (var index in this.myinvoice) {
                                 this.myinvoice[index].creationTime = this.myinvoice[index].creationTime.split('T')[0]
                             }
-                            this.state = state
+                            this.statusList = statusList
                             this.totalCount = resData.data.result.totalCount;
                             this.placeHolder.placeHolderShow = false;
                             this.$apply();
@@ -310,7 +311,7 @@
             }
         }
         onLoad() {
-            this.getbill(this.state)
+            this.getbill(this.statusList)
         };
         onShow() {
             let pages = getCurrentPages();
@@ -320,7 +321,9 @@
                 data.refresh = false;
                 this.myinvoice = [];
                 this.pageNumber = 1;
-                this.getbill(this.state);
+                if(this.queryStream.statusList)
+                this.statusList = this.queryStream.statusList;
+                this.getbill(this.statusList);
             }
         };
     }

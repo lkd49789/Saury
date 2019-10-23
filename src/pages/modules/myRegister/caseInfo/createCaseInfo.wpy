@@ -297,9 +297,9 @@
                     []
                 ],
                 displayText: [
-                    ["请选择"],
-                    ["请选择"],
-                    ["请选择"]
+                    [],
+                    [],
+                    []
                 ],
                 content: '',
             },
@@ -335,8 +335,8 @@
             Category: {
                 title: '案件类别',
                 name: 'Category',
-                value: [""],
-                displayText: ["请选择"],
+                value: [],
+                displayText: [],
                 warning: true
             },
             CategoryIndex: 0,
@@ -344,8 +344,8 @@
             Partition: {
                 title: '案件业务划分',
                 name: 'Partition',
-                value: [""],
-                displayText: ["请选择"],
+                value: [],
+                displayText: [],
                 warning: false
             },
             PartitionIndex: 0,
@@ -839,7 +839,7 @@
         //案件待编辑基础数据
         async GetCaseGeneralInfo() {
             var resData = await ajax.getData(
-                '/api/services/web/case/GetCaseGeneralInfo',
+                '/api/services/web/case/GetCaseGeneralInfoForEdit',
                 'post', {
                     Id: ''
                 }
@@ -1108,10 +1108,10 @@
                 this.submitData = wx.getStorageSync('CREATE_CASEINFO_DATA');
                 this.isCaseInfoData = true;
             } else {
-                this.submitData.ClientName =options.ClientName;
+                this.submitData.ClientName = options.ClientName;
                  this.submitData.ClientId = options.ClientId;
-                this.submitData.CaseClientRelationList=[];
-                this.submitData.CaseContactsList=[];
+                this.submitData.CaseClientRelationList = [];
+                this.submitData.CaseContactsList = [];
                 this.isCaseInfoData = false
             }
             this.$apply();

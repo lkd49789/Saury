@@ -214,7 +214,7 @@
 
 <script>
     import wepy from 'wepy';
-    import { TaskStages, Tasks, TaskParticipant, DeleteTasks, DeleteTaskStages } from '@/api/common.js'
+    import { TaskStages, Tasks, TaskParticipant, DeleteTasks, DeleteTaskStages } from '@/api/myTaskCourse.js'
     import {
         formatTimeSymbol
     } from '@/utils/cofig/api.js';
@@ -408,7 +408,7 @@
                 projectId: this.projectId
             }
             var TaskStagesDatas = await TaskStages(data)
-            if(TaskStagesDatas.statusCode==200){
+            if(TaskStagesDatas.statusCode == 200){
                 var TaskStagesData = TaskStagesDatas.data.result;
                 this.TaskStagesDatas = TaskStagesData;
                 for (var index in TaskStagesData) {

@@ -155,9 +155,9 @@
                         </picker>
                     </view>
                 </view>
-                <CaseName :input.sync="CaseName" :inputValue.sync='CaseNameValue' :twoWayTitle="CaseNameValue" />
+                <!-- <CaseName :input.sync="CaseName" :inputValue.sync='CaseNameValue' :twoWayTitle="CaseNameValue" />
                 <ClientName :input.sync="ClientName" :inputValue.sync='ClientNameValue' :twoWayTitle="ClientNameValue" />
-                <Currency :options.sync="Currency" :index.sync='CurrencyIndex' :twoWayTitle="CurrencyIndex" />
+                <Currency :options.sync="Currency" :index.sync='CurrencyIndex' :twoWayTitle="CurrencyIndex" /> -->
                 <image class="btn-sub" src="../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearchSubmit" />
             </view>
         </view>
@@ -296,7 +296,7 @@
                 if (value) {
                     var pages = getCurrentPages();
                     var prevPage = pages[pages.length - 2]; //上一个页面
-                    prevPage.data.queryStream.KeyWord = e.detail.value;
+                    prevPage.data.queryStream.filter = e.detail.value;
                     prevPage.data.refresh = true;
                     wx.navigateBack({
                         delta: 1, //返回的页面数，如果 delta 大于现有页面数，则返回到首页,

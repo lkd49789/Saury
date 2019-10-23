@@ -168,27 +168,31 @@
                         url: '../mycase/caseDetail/casedetail?id=' + item.id + '&clientId=' + item.clientId
                     });
             },
-            operations(items, index) {
-                var operations = items.operations.map((item) => {
-                    return item.text
-                })
+            async operations(items, index) {
+                var { data } = await ajax.getData(
+                    '/api/services/web/Case/GetCaseActions',
+                    'post', {
+                        id: items.id
+                    }
+                )
+                var operations = data.result.items.map(item => item.displayName)
                 wx.showActionSheet({
                     itemList: operations, //按钮的文字数组，数组长度最大为6个,
                     //   itemColor: '#000000', //按钮的文字颜色,
                     success: res => {
-                        var className = items.operations[res.tapIndex].className;
+                        var className = data.result.items[res.tapIndex].name;
                         switch (className) {
-                            case 'Info':
+                            case 'View':
                                 wx.navigateTo({
                                     url: '../mycase/caseDetail/casedetail?id=' + items.id + '&clientId=' + items.clientId
                                 });
                                 break;
-                            case "EditCaseApply":
+                            case "Edit":
                                 wx.navigateTo({
                                     url: '../myRegister/register?id=' + items.id
                                 });
                                 break;
-                            case "delete":
+                            case "Delete":
                                 wx.showModal({
                                     title: '你确定吗？', //提示的标题,
                                     content: '是否确认删除信息？', //提示的内容,
@@ -295,7 +299,7 @@
             for (var index_1 in caseManageData) {
                 var lawyerList = caseManageData[index_1].lawyerList;
                 var lawyerListData = [];
-                for (var index_2 = 0; index_2 < lawyerList.length; index_2++) {
+                for (var index_2 = 0; caseManageData[index_1].lawyerList && index_2 < lawyerList.length; index_2++) {
                     if (index_2 < 6) {
                         var http = '/api/services/web/personal/GetEmployeePhoto?id=' + lawyerList[index_2].userId;
                         lawyerListData[index_2] = await ajax.getAavatar(http);
@@ -332,7 +336,7 @@
                     success: res => {}
                 });
             } else {
-                console.log(resData)
+                // console.log(resData)
                 wx.showToast({
                     title: resData.data.error.message, //提示的内容,
                     icon: 'none', //图标,
@@ -343,12 +347,28 @@
             }
             this.$apply();
         }
+        //获取案件操作列表
+        // GetCaseActions(){
+        //     wx.showLoading({
+        //         title: 'Loading...', //提示的内容,
+        //         mask: true, //显示透明蒙层，防止触摸穿透,
+        //         success: res => {}
+        //     });
+        //     var resData = await ajax.getData(
+        //         '/api/services/web/Case/GetCaseActions',
+        //         'post', {
+        //             id: id
+        //         }
+        //     )
+
+        // }
+        // /api/services/web/Case/GetCaseActions
         isRefresh(searchData){
-            console.log(searchData);
+            console.log(searchData+ '1');
             if(searchData){
                 this.searchData=searchData;
             }
-            this.searchData={};
+            // this.searchData={};
             this.caseManageData = [];
             this.pageNumber = 1;
             this.GetCaseManage();  

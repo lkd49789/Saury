@@ -140,31 +140,38 @@
         mixins = [mixins]
         watch = {
             currentTab(newValue, oldValue) {
+                let statusList = [];
+                this.pageNumber = 1;
                 switch (newValue) {
                     case 0:
-                        this.getbill("");
+                        this.statusList = ["WaitForClaim", "WaitForConfirm", "Returned", "Confirmed", "WaitForSend"]
                         break;
                     case 1:
-                        this.getbill("WaitForConfirmed");
+                        this.statusList = ["WaitForConfirm", "Returned", "WaitForSend"]
                         break;
                     case 2:
-                        this.getbill("WaitForAssigned");
+                        this.statusList = ["Confirmed"]
+                        break;
+                    case 3:
+                        this.statusList = ["WaitForClaim"]
                         break;
                     default:
                         break;
                 }
+                this.getbill(this.statusList);
             }
         };
         data = {
             myinvoice: [],
             pageNumber: 1,
             totalCount: 0,
-            navbars: ['全部', '待确认', '待分配'],
+            navbars: ['全部', '处理中', '已完成', '待认领'],
             currentTab: 0,
             state: "",
             queryStream: {},
             isShow: false,
-            sorting: ''
+            sorting: '',
+            statusList:["WaitForClaim", "WaitForConfirm", "Returned", "Confirmed", "WaitForSend"]
         };
         methods = {
             toSearch() {
@@ -182,10 +189,10 @@
                 this.pageNumber = 1;
                 switch (name) {
                     case 'cteateTime':
-                        this.getbill(this.state, 'CreationTime desc')
+                        this.getbill(this.statusList, 'CreationTime desc')
                         break;
                     case 'case':
-                        this.getbill(this.state, 'CaseName desc')
+                        this.getbill(this.statusList, 'CaseName desc')
                         break;
                     default:
                         break;
@@ -199,7 +206,7 @@
         onReachBottom() {
             if (this.totalCount / 10 > this.pageNumber && this.$parent.global.netWorkString) {
                 this.pageNumber += 1;
-                this.getbill(this.state);
+                this.getbill(this.statusList);
             } else {
                 if (this.$parent.global.netWorkString) {
                     wx.showToast({
@@ -222,16 +229,14 @@
         onPullDownRefresh() {
             this.myinvoice = [];
             this.pageNumber = 1;
-            this.getbill(this.state);
+            this.getbill(this.statusList);
             wx.hideNavigationBarLoading(); //完成停止加载
             wx.stopPullDownRefresh(); //停止下拉刷新
             this.$apply();
         }
         //获取发票
-        async getbill(state, sort) {
-            if (this.state !== state) {
-                this.pageNumber = 1
-            }
+        // state, sort,
+        async getbill(statusList,sort) {
             this.sorting = sort ? sort : this.sorting;
             var filter = this.queryStream.filter ? this.queryStream.filter : '';
             var resData = await ajax.getData(
@@ -240,16 +245,15 @@
                     isRoleFilter: true,
                     pageNumber: this.pageNumber,
                     pageSize: 10,
-                    status: state,
+                    statusList,
                     filter,
                     sorting: this.sorting
                 }
             );
             switch (resData.statusCode) {
                 case 200:
-                    if (this.state == state) {
-                        if (resData.data.result.items.length !== 0) {
-                            this.myinvoice = this.myinvoice.concat(resData.data.result.items);
+                    if (resData.data.result.items.length !== 0) {
+                            this.myinvoice = resData.data.result.items;
                             this.totalCount = resData.data.result.totalCount;
                             for (var index in this.myinvoice) {
                                 this.myinvoice[index].creationTime = this.myinvoice[index].creationTime.split('T')[0]
@@ -262,24 +266,6 @@
                             this.placeHolder.placeHolderImageIndex = 0;
                             this.placeHolder.placeHolderShow = true;
                         }
-                    } else {
-                        if (resData.data.result.items.length !== 0) {
-                            this.myinvoice = resData.data.result.items
-                            for (var index in this.myinvoice) {
-                                this.myinvoice[index].creationTime = this.myinvoice[index].creationTime.split('T')[0]
-                            }
-                            this.state = state
-                            this.totalCount = resData.data.result.totalCount;
-                            this.placeHolder.placeHolderShow = false;
-                            this.$apply();
-                        } else {
-                            console.log('数据为空');
-                            this.billData = []
-                            this.state = state
-                            this.placeHolder.placeHolderImageIndex = 0;
-                            this.placeHolder.placeHolderShow = true;
-                        }
-                    }
                     this.$apply();
                     break;
                 case 403:
@@ -298,7 +284,7 @@
             }
         }
         onLoad() {
-            this.getbill(this.state)
+            this.getbill(this.statusList)
         };
         onShow() {
             var pages = getCurrentPages();
@@ -308,7 +294,9 @@
                 prevPage.data.refresh = false;
                 this.myinvoice = [];
                 this.pageNumber = 1;
-                this.getbill(this.state);
+                if(this.queryStream.statusList)
+                this.statusList = this.queryStream.statusList ;
+                this.getbill(this.statusList);
             }
         };
     }

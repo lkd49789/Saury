@@ -122,7 +122,7 @@
                 </view>
                 <view>
                     <text>请假时间</text>
-                    <text>{{VacationApplyOutputData.startDateText}}至{{VacationApplyOutputData.endDateText}}</text>
+                    <text>{{VacationApplyOutputData.startDate}}至{{VacationApplyOutputData.endDate}}</text>
                 </view>
                 <view>
                     <text>此区间节假日天数</text>
@@ -133,9 +133,9 @@
                     <text>{{VacationApplyOutputData.memo||'未填写'}}</text>
                 </view>
             </view>
-            <view class="border-line" wx:if="{{VacationApplyOutputData.status!=='W'||auditStatus=='W'}}">
+            <view class="border-line" wx:if="{{VacationApplyOutputData.status !== 'W' || auditStatus == 'W'}}">
             </view>
-            <view class="content-bottom" wx:if="{{VacationApplyOutputData.status!=='W'}}">
+            <view class="content-bottom" wx:if="{{VacationApplyOutputData.status !== 'W'}}">
                 <view>
                     <text>审核信息</text>
                 </view>
@@ -144,21 +144,21 @@
                         <image src="{{VacationApplyOutputData.avatar}}" mode="scaleToFill" lazy-load="false">
                         </image>
                         <view>
-                            <text>{{VacationApplyOutputData.approveUserText}}</text>
+                            <text>{{VacationApplyOutputData.eName}}</text>
                         </view>
                     </view>
                     <view>
                         <view>
-                            <text style="color:{{VacationApplyOutputData.status=='A'?'#069400':'#e20000'}}">{{VacationApplyOutputData.statusText}}</text>
+                            <text style="color:{{VacationApplyOutputData.status == 'A' ? '#069400' : '#e20000'}}">{{VacationApplyOutputData.statusText}}</text>
                             <text>{{VacationApplyOutputData.approveTimeText}}</text>
                         </view>
                         <view>
-                            <text style="color:#7a7a7a">{{VacationApplyOutputData.approveMemo||'未填写'}}</text>
+                            <text style="color:#7a7a7a">{{VacationApplyOutputData.approveMemo || '未填写'}}</text>
                         </view>
                     </view>
                 </view>
             </view>
-            <view class="auditStatus" wx:if="{{auditStatus=='W'}}">
+            <view class="auditStatus" wx:if="{{auditStatus == 'W'}}">
                 <view class="checked">
                     <radio-group class="radio-group" @change="bindPickerChange">
                         <label class="radio" wx:for="{{isPass}}" wx:key="index" style="width:50%;">
@@ -173,7 +173,7 @@
                 <textarea :input.sync="input" :inputValue.sync='inputValue' :twoWayTitle="inputValue" fixed="{{true}}" />
             </view>
         </view>
-         <image src="{{'../../../../images/test.png'}}" wx:if="{{auditStatus=='W'}}"  mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;"  @touchstart="touchStart" @touchend="touchEnd">
+         <image src="{{'../../../../images/test.png'}}" wx:if="{{auditStatus == 'W'}}"  mode="scaleToFill" lazy-load="true" class="addImage" style="opacity:{{addOpacity}} ;"  @touchstart="touchStart" @touchend="touchEnd">
         </image>
     </view>
 </template>
@@ -181,6 +181,7 @@
 <script>
     import wepy from 'wepy';
     import ajax from '@/utils/cofig/ajax.js'
+    import { formatTimeSymbol } from '@/utils/cofig/api.js'
     import input from '@/components/picker/input';
     export default class clientDetail extends wepy.page {
         components = {
@@ -268,13 +269,15 @@
                 data
             )
             if (resData.statusCode == 200) {
-                var VacationApplyOutputData = resData.data.result;
-                if (VacationApplyOutputData.approveUserId) {
-                    var http = '/api/services/web/personal/GetEmployeePhoto?id=' + VacationApplyOutputData.approveUserId;
+                var { result } = resData.data;
+                if (result.creationUser) {
+                    var http = '/api/services/web/personal/GetEmployeePhoto?id=' + result.creationUser;
                     var avatar = await ajax.getAavatar(http);
-                    VacationApplyOutputData['avatar'] = avatar;
+                    result['avatar'] = avatar;
                 }
-                this.VacationApplyOutputData = VacationApplyOutputData;
+                result.startDate = formatTimeSymbol(result.startDate,'-')
+                result.endDate = formatTimeSymbol(result.endDate,'-')
+                this.VacationApplyOutputData = result;
             } else {
                 wx.showToast({
                     title: '网络出差中！',

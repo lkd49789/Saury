@@ -3,9 +3,13 @@
 <style lang='scss'>
     .container {
         .top-title {
-            height: 104rpx;
-            line-height: 104rpx;
-            font-size: 48rpx; // padding-left: 28rpx;
+            .title{
+              height: 104rpx;  
+              font-size: 48rpx;
+            }
+            // height: 104rpx;
+            // line-height: 104rpx;
+             // padding-left: 28rpx;
             border-bottom: 1px solid #dedede;
             position: fixed;
             top: 0;
@@ -13,14 +17,16 @@
             width: 100%;
             background: #fff;
             z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            >text {
-                padding-left: 28rpx;
-            }
-            >icon {
-                padding-right: 28rpx;
+            >view{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                 >text {
+                    padding-left: 28rpx;
+                }
+                >icon {
+                    padding-right: 28rpx;
+                }
             }
         }
         .main {
@@ -84,8 +90,11 @@
 <template>
     <view class='container'>
         <view class="top-title">
-            <text>我的立案</text>
-            <icon class="iconfont icon-sousuo1" style="font-size:60rpx;color:#5d73fa" @tap="toSearch"></icon>
+            <view class="title">
+                <text>我的立案</text>
+                <icon class="iconfont icon-sousuo1" style="font-size:60rpx;color:#5d73fa" @tap="toSearch"></icon>
+            </view>
+            <!-- <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" /> -->
         </view>
         <view class="main">
             <repeat for="{{CaseRecordListDatas}}" key="index" index="index" item="item">
@@ -111,6 +120,8 @@
 <script>
     import wepy from 'wepy';
     import ajax from '@/utils/cofig/ajax.js';
+    import navbar from '@/components/navbar';
+
     export default class myRegisterList extends wepy.page {
         config = {
             enablePullDownRefresh: true,
@@ -124,99 +135,111 @@
             pageSize: 10,
             totalCount: 0,
             CaseRecordListDatas: [],
+            navbars: ['全部', '处理中', '已完成','已退回','未提交'],
+            currentTab: 0,
+            processStatusList : ["NF", "NC", "NS", "NX", "NR", "NP", "ND", "AA", "NH", "NI", "NK", "AP", "AZ", "CB", "CE", "CG", "CI","CC","CD","CK","CE","CG","CA"]
         };
+        watch = {
+            currentTab(newValue, oldValue) {
+                 wx.pageScrollTo({
+                    scrollTop: 0,
+                    duration: 0
+                });
+                this.myinvoice = [];
+                this.pageNumber = 1;
+                switch (newValue) {
+                    case 0:
+                        this.processStatusList = ["NF", "NC", "NS", "NX", "NR", "NP", "ND", "AA", "NH", "NI", "NK", "AP", "AZ", "CB", "CE", "CG", "CI","CC","CD","CK","CE","CG","CA"]
+                        break;
+                    case 1:
+                        this.processStatusList =  ["NF", "NS", "ND"]
+                        break;
+                    case 2:
+                        this.processStatusList = ["AA", "AP", "AZ", "CB", "CE", "CG", "CI", "CC", "CK", "CA", "CD", "CB", "CI", "CC", "CD", "CK", "CE","CG","CA"]
+                        break;
+                    case 3:
+                        this.processStatusList = ["NC", "NX", "NR", "NP"]
+                        break;
+                    case 4:
+                        this.processStatusList = ["NH", "NI", "NK"]
+                        break;
+                    default:
+                        break;
+                }
+                this.GetCaseRecordList(this.processStatusList);
+                this.$apply();
+            }
+        }
+        components = {
+            navbar
+        }
         methods = {
             toSearch() {
                 wx.navigateTo({
                     url: './search/search_register'
                 });
             },
-            operations(item) {
-                var opition = item.operations.map((item) => item.text)
+            async operations(item) {
+                let { data } = await ajax.getData(
+                    '/api/services/web/Case/GetUserCaseActions',
+                    'post',
+                    {id : item.id}
+                )
+                var opition = data.result.items.map((item) => item.displayName)
                 wx.showActionSheet({
                     itemList: opition, //按钮的文字数组，数组长度最大为6个,
                     //   itemColor: '#000000', //按钮的文字颜色,
                     success: res => {
-                        var className=item.operations[res.tapIndex].className;
+                        var className = data.result.items[res.tapIndex].name;
+                          //NH 案件参与人   NI设置案件费用  NK 上传案件合同 
                         switch (className) {
-                            case 'Info':
+                            case 'View':
                                 wx.navigateTo({
                                     url: '../mycase/caseDetail/casedetail?id=' + item.id + '&clientId=' + item.clientId
                                 });
                                 break;
-                            case 'OrderInfo':
+                            case 'Edit':
+                                console.log(item.processStatus);
                                 wx.navigateTo({
-                                    url: '../conflictRetrieval/auditedResults/auditedResults?id=' + item.orderItemId + '&caseId=' + item.id
+                                    url: `../myRegister/register?id=${item.id}`
                                 });
-                                // wx.showToast({
-                                //   title: '此功能暂未开放！', //提示的内容,
-                                //   icon: 'none', //图标,
-                                //   duration: 2000, //延迟时间,
-                                //   mask: false, //显示透明蒙层，防止触摸穿透,
-                                //   success: res => {}
-                                // });
-                                break;
-                            case 'EditCaseApply':
-                                if(item.processStatus=='NK'){
-                                    console.log(item);
+                                return false;
+                                if(item.processStatus == 'NH'){
                                     wx.navigateTo({
-                                        url: './caseChargeAndContract/lawyerChargeInfo?id=' + item.id
+                                        url: `../myRegister/caseLawyerLinker/caseLawyerLinkerList?id=${item.id}`
                                     });
-                                    // wx.showActionSheet({
-                                    //     itemList:['相册或相机拍照','本地文件'],
-                                    //     success : re =>{
-                                    //         if(re.tapIndex === 0){
-                                    //             wx.chooseImage({
-                                    //                 count: 1,
-                                    //                 sizeType: ['original', 'compressed'],
-                                    //                 sourceType: ['album', 'camera'],
-                                    //                 success : res =>{
-                                    //                     // tempFilePath可以作为img标签的src属性显示图片
-                                    //                     const tempFilePaths = res.tempFilePaths
-                                    //                     console.log(tempFilePaths);
-                                    //                     this.uploadFile(tempFilePaths[0],item.id)
-                                    //                 }
-                                    //             })
-                                    //         }else{
-                                    //             wx.chooseMessageFile({
-                                    //                 count: 1,
-                                    //                 type: 'file',
-                                    //                 success : res =>{
-                                    //                     // tempFilePath可以作为img标签的src属性显示图片
-                                    //                     const tempFilePaths = res.tempFilePaths
-                                    //                     console.log(tempFilePaths);
-                                    //                     this.uploadFile(tempFilePaths[0],item.id)
-                                                        
-                                    //                 }
-                                    //             })
-                                    //         }
-                                    //     },
-                                    //     fail (res) {
-                                    //         console.log(res.errMsg)
-                                    //     }
-                                    // })
-                                    return false;
-                                    wx.showModal({
-                                            title: '提示', //提示的标题,
-                                            content: '此功能需要打开APP或者登录网页版进行操作', //提示的内容,
-                                            showCancel: true, //是否显示取消按钮,
-                                            cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
-                                            cancelColor: '#000000', //取消按钮的文字颜色,
-                                            confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
-                                            confirmColor: '#5d73fa', //确定按钮的文字颜色,
-                                            success: res => {
-                                                if (res.confirm) {
-                                                    console.log('用户点击确定')
-                                                } else if (res.cancel) {
-                                                    console.log('用户点击取消')
-                                                }
-                                            }
-                                        });
-                                }else{
+                                }else if(item.processStatus.includes('NI') || item.processStatus.includes('NK')){
                                     wx.navigateTo({
-                                            url: './register?id=' + item.id
+                                        url: `../myRegister/caseChargeAndContract/lawyerChargeInfo?id=${item.id}`
                                     });
                                 }
+                                break;
+                            case 'Delete':
+                                wx.showModal({
+                                    title: '你确定吗?',
+                                    content: '是否确认删除信息？',
+                                    success : async (res) => {
+                                        if (res.confirm) {
+                                            console.log('用户点击确定')
+                                            let resData = await ajax.getData(
+                                                '/api/services/web/Case/DeleteCase',
+                                                'post',
+                                                {id : item.id}
+                                            )
+                                            if(resData.statusCode == 200){
+                                                wx.showToast({
+                                                    title: '成功',
+                                                    icon: 'success',
+                                                    duration: 2000
+                                                }) 
+                                                this.CaseRecordListDatas = []
+                                                this.GetCaseRecordList()
+                                            }
+                                        } else if (res.cancel) {
+                                        console.log('用户点击取消')
+                                        }
+                                    }
+                                })
                                 break;
 
                             default:
@@ -274,7 +297,7 @@
                 mask: false, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-
+            console.log(1);
             // var data = {
             //     AcceptDate: {
             //         StartDate: "",
@@ -300,35 +323,39 @@
             //     pageSize: this.pageSize,
             //     sorting: "",
             // }
-            // let data = {
-            //     acceptDateRange: {startDate: "", endDate: ""},
-            //     categoryList: [],
-            //     filter: "",
-            //     lawyerName: "",
-            //     pageNumber: 1,
-            //     pageSize: 10,
-            //     processStatusList: []
-            // }
+            let data = {
+                CreationDateRange: {startDate: "", endDate: ""},
+                LawyerIdList: [],
+                acceptDateRange: {startDate: "", endDate: ""},
+                categoryList: [],
+                filter: "",
+                lawyerRoleList: [],
+                pageNumber: 1,
+                pageSize: 10,
+                processStatusList: this.processStatusList
+            }
             if (Object.keys(this.queryStream).length !== 0) {
-                data.KeyWord = this.queryStream.KeyWord || '';
-                data.AcceptDate.StartDate = this.queryStream.hasOwnProperty('AcceptDate') ? this.queryStream.AcceptDate.StartDate : '';
-                data.AcceptDate.EndDate = this.queryStream.hasOwnProperty('AcceptDate') ? this.queryStream.AcceptDate.EndDate : '';
-                data.CreationTime.EndDate = this.queryStream.hasOwnProperty('CreationTime') ? this.queryStream.CreationTime.EndDate : '';
-                data.CreationTime.StartDate = this.queryStream.hasOwnProperty('CreationTime') ? this.queryStream.CreationTime.StartDate : '';
-                data.Status = this.queryStream.Status || '';
-                data.ProcessStatus = this.queryStream.ProcessStatus || '';
-                data.Category = this.queryStream.Category || '';
-                data.Name = this.queryStream.Name || '';
-                data.ClientName = this.queryStream.ClientName || '';
-                data.LawyerRole = this.queryStream.LawyerRole || '';
+                data.filter = this.queryStream.filter || '';
+                data.acceptDateRange.startDate = this.queryStream.acceptDateRange.startDate ? this.queryStream.acceptDateRange.startDate : '';
+                data.acceptDateRange.endDate = this.queryStream.acceptDateRange.endDate ? this.queryStream.acceptDateRange.endDate : '';
+                data.CreationDateRange.endDate = this.queryStream.CreationDateRange.endDate ? this.queryStream.CreationDateRange.endDate : '';
+                data.CreationDateRange.startDate = this.queryStream.CreationDateRange.startDate ? this.queryStream.CreationDateRange.startDate : '';
+                data.LawyerIdList = this.queryStream.LawyerIdList || [];
+                data.categoryList = this.queryStream.categoryList || [];
+                data.lawyerRoleList = this.queryStream.lawyerRoleList || [];
             }
             // var resData = await ajax.getData(
             //     '/api/services/web/Case/GetMyCases',
             //     'post',
             //     data              
             // )
+            // var resData = await ajax.getData(
+            //     '/api/services/web/caseApplication/GetCaseRecordList',
+            //     'post',
+            //     data
+            // )
             var resData = await ajax.getData(
-                '/api/services/web/caseApplication/GetCaseRecordList',
+                '/api/services/web/Case/GetUserCases',
                 'post',
                 data
             )
@@ -368,7 +395,7 @@
         };
         isRefresh(searchData){
             if(searchData){
-                 this.queryStream=searchData;
+                 this.queryStream = searchData;
             }
             this.CaseRecordListDatas = [];
             this.pageNumber = 1;

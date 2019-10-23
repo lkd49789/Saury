@@ -67,8 +67,8 @@
 
 <script>
     import wepy from 'wepy';
-    import { TaskForEdit } from '@/api/common.js';
-    import { OrUpdateTask } from '@/api/myTaskCourse.js';
+    import { GeneralCodeComboboxItems } from '@/api/common.js';
+    import { OrUpdateTask,TaskForEdit } from '@/api/myTaskCourse.js';
     import Estimate from '@/components/picker/input';
     import StageId from '@/components/picker/option';
     import RemindTime from '@/components/picker/option';
@@ -209,30 +209,30 @@
         }; 
         watch={
             StageIdIndex(index){
-                this.submitData.StageId=this.StageId.value[index]
+                this.submitData.StageId = this.StageId.value[index]
                 this.$apply();
             },
             StartTime(dateData){
-                var StartDate=dateData[0]+'-'+dateData[1]+'-'+dateData[2]+' '+dateData[3]+':'+dateData[4]+':'+dateData[5];
+                var StartDate=dateData[0] + '-'+dateData[1] + '-' + dateData[2] + ' ' + dateData[3] + ':' + dateData[4] + ':' + dateData[5];
                 this.submitData.StartTime=StartDate;
                 this.millDif()
                 this.$apply();
             },
             EndTime(dateData){
-                this.submitData.EndTime=dateData[0]+'-'+dateData[1]+'-'+dateData[2]+' '+dateData[3]+':'+dateData[4]+':'+dateData[5];
+                this.submitData.EndTime=dateData[0] + '-' + dateData[1] + '-' + dateData[2] + ' ' + dateData[3] + ':' + dateData[4] + ':' + dateData[5];
                 this.millDif()
                 this.$apply();
             },
             EstimateValue(value){
-                this.submitData.Estimate=value;
+                this.submitData.Estimate = value;
                 this.$apply();
             },
             PriorityIndex(index){
-                this.submitData.Priority=this.Priority.value[index];
+                this.submitData.Priority = this.Priority.value[index];
                 this.$apply(); 
             },
             RemindTimeIndex(index){
-                this.submitData.RemindTime=this.RemindTime.value[index];
+                this.submitData.RemindTime = this.RemindTime.value[index];
                 this.$apply();
             },
             // millDif(value){
@@ -250,26 +250,25 @@
                 projectid: projectId,
                 stageid: id,
             }
-            var resData=await TaskForEdit(
-                data
-            );
-            if(resData.statusCode==200){
-                var TaskForEdit=resData.data.result;
+            var resData = await TaskForEdit(data);
+            console.log(resData);
+            if(resData.statusCode == 200){
+                var Task = resData.data.result;
                 //阶段
-                for(var index in TaskForEdit.stageCombobox){
-                    this.StageId.value[index]=TaskForEdit.stageCombobox[index].value;
-                    this.StageId.displayText[index]=TaskForEdit.stageCombobox[index].displayText;
-                    this.submitData.StageId=TaskForEdit.stageCombobox[this.StageIdIndex].value;
+                for(var index in Task){
+                    this.StageId.value[index] = Task[index].id;
+                    this.StageId.displayText[index] = Task[index].name;
+                    this.submitData.StageId = Task[this.StageIdIndex].value;
                 }
                 //优先级
-                for(var Pindex in TaskForEdit.priorityCombobox){
-                    this.Priority.value[Pindex]=TaskForEdit.priorityCombobox[Pindex].value;
-                    this.Priority.displayText[Pindex]=TaskForEdit.priorityCombobox[Pindex].displayText;
-                }
+                // for(var Pindex in Task.priorityCombobox){
+                //     this.Priority.value[Pindex] = Task.priorityCombobox[Pindex].value;
+                //     this.Priority.displayText[Pindex] = Task.priorityCombobox[Pindex].displayText;
+                // }
                 //是否提醒
-                this.IsRemind =TaskForEdit.isRemindCombobox;
+                this.IsRemind = Task.isRemindCombobox;
                 // 是否标记
-                this.IsMark=TaskForEdit.isMarkCombobox;
+                this.IsMark = Task.isMarkCombobox;
                 this.$apply();
             }else{
                 wx.showToast({
@@ -288,10 +287,8 @@
                     
                  }
                });
-            var resData=await OrUpdateTask(
-                this.submitData
-            )
-            if(resData.statusCode==200){
+            var resData = await OrUpdateTask(this.submitData)
+            if(resData.statusCode == 200){
                 this.addOpacity = 1;
                     var pages = getCurrentPages();
                     var prevPage = pages[pages.length - 3]; //上一个页面
@@ -333,8 +330,17 @@
                 }
                 this.EstimateValue=hours;
                 this.submitData.Estimate=hours;
+            }
+        } 
+        // 获取优先级
+        async GetGeneralCodeComboboxItems(){
+            let { data } = await GeneralCodeComboboxItems({id: "PRIORITY"})
+            data.result.forEach((item,index) =>{
+                this.Priority.value[index] = item.value;
+                this.Priority.displayText[index] = item.displayText;
+            })
+            this.$apply();
         }
-           } 
         onLoad() {
             this.submitData=wx.getStorageSync('taskNextPage');
             this.StageIdIndex=Number(this.submitData.currentStage);
@@ -343,6 +349,7 @@
             this.EstimateValue=1;
             this.$apply();
             this.GetTaskForEdit(this.submitData.stageId,this.submitData.ProjectId);
+            this.GetGeneralCodeComboboxItems()
         }
     }
 </script>

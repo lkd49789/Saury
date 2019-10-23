@@ -137,6 +137,7 @@
                 <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
             </view>
             <view class="advanced-search-content">
+                <PickerOption :options.sync="PickerOption" :index.sync='PickerOptionIndex' :twoWayTitle="PickerOptionIndex"/>
                 <creationTimeRange :pickerData="creationTimeRange" :twoWayTitle="creationTimeRange" />
                 <creatorUserName :input.sync="creatorUserName" :inputValue.sync='creatorUserNameValue' :twoWayTitle="creatorUserNameValue" />
             </view>
@@ -156,10 +157,12 @@
     } from '@/utils/cofig/api.js';
     import creationTimeRange from '@/components/picker/pickerDate';
     import creatorUserName from '@/components/picker/input';
+    import PickerOption from '@/components/picker/pickerOption';
     export default class searchCost extends wepy.page {
         components={
             creationTimeRange,
-            creatorUserName
+            creatorUserName,
+            PickerOption
         }
         data = {
             searchData: {},
@@ -173,19 +176,46 @@
                 name: 'creatorUserName',
                 warning: false,
             },
+            PickerOption: {
+                title:"状态",
+                key: 'displayName',
+                name: 'PickerOption',
+                data: [],
+                warning: false
+            },
+            PickerOptionIndex: -1,
             creatorUserNameValue: '',
             history_keyWord_case: [],
             searchClentValue: '',
             showPage:true,
             isShowArray: [],
         };
+        watch = {
+            creationTimeRange(date){
+                if (!this.searchData.creationTimeRange) {
+                    this.searchData.creationTimeRange = {};
+                }
+                this.searchData.creationTimeRange.startDate = date.startDateData;
+                this.searchData.creationTimeRange.endDate = date.endDateData;
+                this.$apply();
+            },
+            creatorUserNameValue(value){
+                 this.searchData.creatorUserName = value;
+                 this.$apply();
+            },
+            PickerOptionIndex(index){
+                this.searchData.statusList = [this.PickerOption.data[index].name];
+                this.$apply();
+            }
+        }
         methods = {
             advancedSearchSubmit(){
                 console.log(this.searchData);
-                if(Object.keys(this.searchData).length!==0){
+                if(Object.keys(this.searchData).length !== 0){
                      var pages = getCurrentPages();
                     var prevPage = pages[pages.length - 2]; //上一个页面
                     prevPage.data.queryStream = this.searchData;
+                    console.log( prevPage.data.queryStream);
                     prevPage.data.refresh = true;
                     wx.navigateBack({
                         delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
@@ -273,20 +303,6 @@
                 }
             }
         };
-        watch={
-            creationTimeRange(date){
-                if (!this.searchData.creationTimeRange) {
-                    this.searchData.creationTimeRange = {};
-                }
-                this.searchData.creationTimeRange.startDate = date.startDateData;
-                this.searchData.creationTimeRange.endDate = date.endDateData;
-                this.$apply();
-            },
-            creatorUserNameValue(value){
-                 this.searchData.creatorUserName=value;
-                 this.$apply();
-            }
-        }
         // 判断初始化历史数据
         isHistory() {
             var pages = getCurrentPages();
@@ -305,8 +321,19 @@
             }
             this.$apply();
         }
+         // 获取状态
+        async GetChargeStates(){
+            var { data } = await ajax.getData(
+                '/api/services/web/FinancialCharge/GetChargeStates',
+                'POST'
+            )
+             this.PickerOption.data = data.result.items
+             console.log(this.PickerOption.data);
+        
+        }
         onLoad() {
             this.isHistory();
+            this.GetChargeStates()
         };
         onShow() {};
     }

@@ -154,7 +154,7 @@
               <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false" />
               <view>
                 <text>{{item.name}}</text>
-                <text style="color:#7a7a7a">{{item.organizationUnitName}}</text>
+                <text style="color:#7a7a7a">{{item.categoryName || ''}}</text>
               </view>
             </view>
           </repeat>

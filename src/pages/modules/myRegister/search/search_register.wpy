@@ -173,21 +173,21 @@
                 <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
             </view>
             <view class="advanced-search-content">
-                <Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
-                <ClientName :input.sync="ClientName" :inputValue.sync='ClientNameValue' :twoWayTitle="ClientNameValue" />
+                <!-- <Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
+                <ClientName :input.sync="ClientName" :inputValue.sync='ClientNameValue' :twoWayTitle="ClientNameValue" /> -->
                 <view class="tui-picker-content">
                     <view>收案时间</view>
                     <view style="display:flex;align-items:center;">
-                        <picker id="startAcceptDate" mode="date" value="{{searchData.AcceptDate.StartDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
+                        <picker id="startAcceptDate" mode="date" value="{{searchData.acceptDateRange.startDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
                             <view class="tui-picker-detail">
-                                {{searchData.AcceptDate.StartDate||'请选择'}}
+                                {{searchData.acceptDateRange.startDate||'请选择'}}
                                 <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
                             </view>
                         </picker>
                         <text style="margin:0 20rpx">至</text>
-                        <picker id="endAcceptDate" mode="date" value="{{searchData.AcceptDate.EndDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
+                        <picker id="endAcceptDate" mode="date" value="{{searchData.acceptDateRange.endDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
                             <view class="tui-picker-detail">
-                                {{searchData.AcceptDate.EndDate||'请选择'}}
+                                {{searchData.acceptDateRange.endDate||'请选择'}}
                                 <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
                             </view>
                         </picker>
@@ -196,24 +196,26 @@
                 <view class="tui-picker-content">
                     <view>创建时间</view>
                     <view style="display:flex;align-items:center;">
-                        <picker id="startCreateDate" mode="date" value="{{searchData.CreationTime.StartDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
+                        <picker id="startCreateDate" mode="date" value="{{searchData.CreationDateRange.startDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
                             <view class="tui-picker-detail">
-                                {{searchData.CreationTime.StartDate||'请选择'}}
+                                {{searchData.CreationDateRange.startDate||'请选择'}}
                                 <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
                             </view>
                         </picker>
                         <text style="margin:0 20rpx">至</text>
-                        <picker id="endCreateDate" mode="date" value="{{searchData.CreationTime.EndDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
+                        <picker id="endCreateDate" mode="date" value="{{searchData.CreationDateRange.endDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
                             <view class="tui-picker-detail">
-                                {{searchData.CreationTime.EndDate||'请选择'}}
+                                {{searchData.CreationDateRange.endDate||'请选择'}}
                                 <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
                             </view>
                         </picker>
                     </view>
                 </view>
                 <LawyerRole :options.sync="LawyerRole" :index.sync='LawyerRoleIndex' :twoWayTitle="LawyerRoleIndex" />
+                <LawcaseType :options.sync="LawcaseType" :index.sync='LawcaseTypeIndex' :twoWayTitle="LawcaseTypeIndex" />
+                <Lawyer :options.sync="Lawyer" :index.sync='LawyerIndex' :twoWayTitle="LawyerIndex" />
             </view>
-            <view class="checkedBox">
+            <!-- <view class="checkedBox">
                 <view class="title">
                     案件类型
                 </view>
@@ -222,8 +224,8 @@
                                 <checkbox value="{{item.value}}" checked="{{item.isSelected}}" name="id"  color="#5d73fa"/> {{item.displayText}}
                         </label>
                 </checkbox-group>
-            </view>
-            <view class="checkedRadioBox">
+            </view> -->
+            <!-- <view class="checkedRadioBox">
                 <view class="title">
                     状态
                 </view>
@@ -232,7 +234,7 @@
                     <radio value="{{item.value}}" checked="{{item.isSelected}}" color="#5d73fa" /> {{item.displayText}}
                   </label>
                 </radio-group>
-            </view>
+            </view> -->
             <view class="checkedBox" wx:if="{{isProcessStatus}}">
                 <view class="title">
                     立案流程状态
@@ -254,17 +256,20 @@
         myDistinct
     } from '@/utils/cofig/api.js';
     import ajax from '@/utils/cofig/ajax.js';
+    import { CaseCategoryComboboxItems,GeneralCodeComboboxItems } from '@/api/common.js'
     import {
         formatDate
     } from '@/utils/cofig/api.js';
-    import Name from '@/components/picker/input';
-    import ClientName from '@/components/picker/input';
+    // import Name from '@/components/picker/input';
+    // import ClientName from '@/components/picker/input';
     import LawyerRole from '@/components/picker/option';
     export default class searchRegister extends wepy.page {
         components = {
-            Name,
-            ClientName,
-            LawyerRole
+            // Name,
+            // ClientName,
+            LawyerRole,
+            LawcaseType:LawyerRole,
+            Lawyer:LawyerRole
         }
         data = {
             searchData: {},
@@ -284,16 +289,30 @@
                 warning: false,
             },
             ClientNameValue: '',
+            LawcaseType: {
+                title: '案件类别',
+                name: 'LawcaseType',
+                value: [],
+                displayText: [],
+                warning: false
+            },
+            LawcaseTypeIndex: -1,
             LawyerRole: {
                 title: '参案角色',
                 name: 'LawyerRole',
-                value: [''],
-                displayText: [
-                    '请选择'
-                ],
+                value: [],
+                displayText: [],
                 warning: false
             },
-            LawyerRoleIndex: 0,
+            LawyerRoleIndex: -1,
+            Lawyer:{
+                title: '律师',
+                name: 'Lawyer',
+                value: [],
+                displayText: [],
+                warning: false
+            },
+            LawyerIndex:-1,
             //案件类别
             Category: [],
             //状态
@@ -302,6 +321,28 @@
             //立案流程状态
             ProcessStatus:[],
             ProcessStatusData:[],
+        };
+        watch = {
+            NameValue(value) {
+                this.searchData.Name = value;
+                this.$apply();
+            },
+            ClientNameValue(value) {
+                this.searchData.ClientName = value;
+                this.$apply();
+            },
+            LawyerRoleIndex(index) {
+                this.searchData.lawyerRoleList = [this.LawyerRole.value[index]];
+                this.$apply();
+            },
+            LawcaseTypeIndex(index) {
+                this.searchData.categoryList = [this.LawcaseType.value[index]];
+                this.$apply();
+            },
+            LawyerIndex(index){
+                this.searchData.LawyerIdList = [this.Lawyer.value[index]];
+                this.$apply();
+            }
         };
         methods = {
             checkboxChangeProcessStatus(e){
@@ -314,7 +355,7 @@
             },
             radioChange(e){
                 this.isProcessStatus=true;
-                this.searchData.Status=e.detail.value;
+                this.searchData.Status = e.detail.value;
                 this.statusFilter(e.detail.value);
                 this.$apply();
             },
@@ -327,26 +368,36 @@
                 this.$apply();
             },
             bindDateChange(e) {
+                this.searchData.acceptDateRange = {
+                    StartDate:'',
+                    EndDate:'',
+                };
+                this.searchData.CreationDateRange = {
+                    StartDate:'',
+                    EndDate:'',
+                };
                 switch (e.currentTarget.id) {
                     case 'startAcceptDate':
-                        this.searchData.AcceptDate.StartDate = e.detail.value;
+                        this.searchData.acceptDateRange.startDate = e.detail.value;
                         break;
                     case 'endAcceptDate':
-                        this.searchData.AcceptDate.EndDate = e.detail.value;
+                        this.searchData.acceptDateRange.endDate = e.detail.value;
                         break;
                     case 'startCreateDate':
-                        this.searchData.CreationTime.StartDate = e.detail.value;
+                        this.searchData.CreationDateRange.startDate = e.detail.value;
                         break;
                     case 'endCreateDate':
-                        this.searchData.CreationTime.EndDate = e.detail.value;
+                        this.searchData.CreationDateRange.endDate = e.detail.value;
                         break;
                     default:
                         break;
                 }
+                console.log(this.searchData);
                 this.$apply();
             },
             advancedSearchSubmit() {
                 if (Object.keys(this.searchData).length !== 0) {
+                    console.log(this.searchData);
                     var pages = getCurrentPages();
                     var prevPage = pages[pages.length - 2]; //上一个页面
                     if(prevPage){
@@ -413,7 +464,7 @@
                     var pages = getCurrentPages();
                     var prevPage = pages[pages.length - 2]; //上一个页面
                     if(prevPage){
-                        this.searchData.KeyWord=e.detail.value;
+                        this.searchData.filter = e.detail.value;
                         prevPage.isRefresh(this.searchData);
                     }
                     wx.navigateBack({
@@ -438,20 +489,6 @@
                         success: res => {}
                     });
                 }
-            }
-        };
-        watch = {
-            NameValue(value) {
-                this.searchData.Name = value;
-                this.$apply();
-            },
-            ClientNameValue(value) {
-                this.searchData.ClientName = value;
-                this.$apply();
-            },
-            LawyerRoleIndex(index) {
-                this.searchData.LawyerRole = this.LawyerRole.value[index];
-                this.$apply();
             }
         };
         // 判断初始化历史数据
@@ -481,33 +518,58 @@
         }
         //获取代编辑数据
         async GetCaseApplyListSearchInput() {
-            var resData = await ajax.getData(
-                '/api/services/web/caseApplication/GetCaseApplyListSearchInput',
-                'post'
-            )
+            var resData = await CaseCategoryComboboxItems()
             if (resData.statusCode == 200) {
-                var CaseApplyListSearchInputDatas = resData.data.result;
-                for (var lawyerRoleList_index in CaseApplyListSearchInputDatas.lawyerRoleList) {
-                    this.LawyerRole.value.push(CaseApplyListSearchInputDatas.lawyerRoleList[lawyerRoleList_index].value);
-                    this.LawyerRole.displayText.push(CaseApplyListSearchInputDatas.lawyerRoleList[lawyerRoleList_index].displayText);
-                }
-                this.Category = CaseApplyListSearchInputDatas.categoryList;
-                this.Status=CaseApplyListSearchInputDatas.statusList;
-                this.ProcessStatusData=CaseApplyListSearchInputDatas.processStatusList;
+                // var CaseApplyListSearchInputDatas = resData.data.result;
+                // for (var lawyerRoleList_index in CaseApplyListSearchInputDatas.lawyerRoleList) {
+                //     this.LawyerRole.value.push(CaseApplyListSearchInputDatas.lawyerRoleList[lawyerRoleList_index].value);
+                //     this.LawyerRole.displayText.push(CaseApplyListSearchInputDatas.lawyerRoleList[lawyerRoleList_index].displayText);
+                // }
+                resData.data.result.forEach( item =>{
+                    this.LawcaseType.value.push(item.value)
+                    this.LawcaseType.displayText.push(item.displayText)
+                })
+                // this.Status=CaseApplyListSearchInputDatas.statusList;
+                // this.ProcessStatusData=CaseApplyListSearchInputDatas.processStatusList;
             }
             this.$apply();
         }
+        // 获取律师数据
+        async GetEmployees(){
+            let resData = await ajax.getData('/api/services/web/Common/GetEmployees','post',
+            {pageNumber: 1,
+            pageSize: 100,
+            singleSelect: false})
+            if (resData.statusCode == 200) {
+                resData.data.result.items.forEach(item =>{
+                    this.Lawyer.value.push(item.id)
+                    this.Lawyer.displayText.push(item.name)
+                })
+            }
+        }
+        // 参案角色
+        async GetGeneralCodeComboboxItems(){
+            let resData = await GeneralCodeComboboxItems({id: "CACBT"})
+            if (resData.statusCode == 200) {
+                resData.data.result.forEach(item =>{
+                    this.LawyerRole.value.push(item.value)
+                    this.LawyerRole.displayText.push(item.displayText)
+                })
+            }
+        }
         onLoad() {
-            this.searchData.CreationTime = {
+            this.searchData.CreationDateRange = {
                 StartDate:'',
                 EndDate:'',
             };
-            this.searchData.AcceptDate = {
+            this.searchData.acceptDateRange = {
                 StartDate:'',
                 EndDate:'',
             };
             this.isHistory();
             this.GetCaseApplyListSearchInput();
+            this.GetEmployees()
+            this.GetGeneralCodeComboboxItems()
         };
         onShow() {};
     }

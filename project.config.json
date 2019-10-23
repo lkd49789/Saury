@@ -1,13 +1,14 @@
 {
 	"description": "A WePY project",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": false,
 		"enhance": false,
-		"postcss": false,
-		"minified": false,
+		"postcss": true,
+		"minified": true,
 		"newFeature": true,
-		"nodeModules": false,
+		"coverView": true,
+		"nodeModules": true,
 		"autoAudits": false,
 		"uglifyFileName": false,
 		"checkInvalidKey": true,
@@ -21,11 +22,13 @@
 	},
 	"compileType": "miniprogram",
 	"appid": "wxef90042fdcbc1459",
-	"projectname": "Saury-01-04-09",
+	"projectname": "2.0",
 	"miniprogramRoot": "dist/",
-	"libVersion": "2.3.2",
+	"libVersion": "2.8.3",
 	"simulatorType": "wechat",
-	"simulatorPluginLibVersion": {},
+	"simulatorPluginLibVersion": {
+		"qywx_simulator_plugin": "1.2.0"
+	},
 	"condition": {
 		"search": {
 			"current": -1,

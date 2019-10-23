@@ -122,7 +122,7 @@
         <view class="bill_title">
             <text class="title">收款认领</text>
         </view>
-        <view wx:if="{{costData.status=='UnClaimed'}}">
+        <!-- <view wx:if="{{costData.status == 'UnClaimed'}}"> -->
             <view class="bill_content">
                 <view class="flex" >
                     <view class="bill_box2">
@@ -134,30 +134,30 @@
                 </view>
                 <view wx:if="{{getcase.isCaseData}}">
                     <view class="bill_box">
-                        <view class="bill_view bill_blue">{{getcase.name||'未填写'}}</view>
-                        <view class="bill_view bill_gray">{{getcase.serialId||'未填写'}}</view>
+                        <view class="bill_view bill_blue">{{getcase.name || '未填写'}}</view>
+                        <view class="bill_view bill_gray">{{getcase.serialId || '未填写'}}</view>
                     </view>
                     <view class="bill_box">
-                        <view class="bill_view bill_blue">{{getcase.clientName||'未填写'}}</view>
-                        <view class="bill_view bill_gray">{{getcase.clientId||'未填写'}}</view>
+                        <view class="bill_view bill_blue">{{getcase.clientName || '未填写'}}</view>
+                        <view class="bill_view bill_gray">{{getcase.clientId || '未填写'}}</view>
                     </view>
                 </view>
                 <view class="flex">
                     <view class="bill_box">
                         <view class="bill_view bill_gray">支 付 方</view>
-                        <view class="bill_view">{{costData.payer||'未填写'}}</view>
+                        <view class="bill_view">{{costData.payer || '未填写'}}</view>
                     </view>
                 </view>
                 <view class="flex">
                     <view class="bill_box2">
                         <view class="bill_view bill_gray">支票编号</view>
-                        <view class="bill_view">{{costData.checkNo||'未填写'}}</view>
+                        <view class="bill_view">{{costData.checkNo || '未填写'}}</view>
                     </view>
                 </view>
                 <view class="flex">
                     <view class="bill_box2">
                         <view class="bill_view bill_gray">收款金额</view>
-                        <view class="bill_view">{{costData.payAmount||'未填写'}}</view>
+                        <view class="bill_view">{{costData.payAmount || '未填写'}}</view>
                     </view>
                     <view class="bill_box2">
                         <view class="bill_view bill_gray">收款方式</view>
@@ -175,59 +175,59 @@
                 <lawyerFee :input.sync="lawyerFee" :inputValue.sync='lawyerFeeValue' :twoWayTitle="lawyerFeeValue" />
                 <caseFee :input.sync="caseFee" :inputValue.sync='caseFeeValue' :twoWayTitle="caseFeeValue" />
             </view>
-        </view>
-        <view wx:if="{{costData .status=='Claimed'||costData .status=='WaitForAssigned'||costData .status=='WaitForConfirmed'}}">
+        <!-- </view> -->
+        <view wx:if="{{costData .status=='Claimed' || costData .status == 'WaitForAssigned' || costData .status=='WaitForConfirmed'}}">
             <view class="bill_content">
                 <view class="bill_box">
-                    <view class="bill_view bill_blue">{{costData.receiptCase.name||'未填写'}}</view>
-                    <view class="bill_view bill_gray">{{costData.receiptCase.serialId||'未填写'}}</view>
+                    <view class="bill_view bill_blue">{{costData.receiptCase.name || '未填写'}}</view>
+                    <view class="bill_view bill_gray">{{costData.receiptCase.serialId || '未填写'}}</view>
                 </view>
                 <view class="bill_box">
-                    <view class="bill_view bill_blue">{{costData.receiptCase.clientName||'未填写'}}</view>
-                    <view class="bill_view bill_gray">{{costData.receiptCase.clientId||'未填写'}}</view>
+                    <view class="bill_view bill_blue">{{costData.receiptCase.clientName || '未填写'}}</view>
+                    <view class="bill_view bill_gray">{{costData.receiptCase.clientId || '未填写'}}</view>
                 </view>
             </view>
             <view class="bill_content">
                 <view class="flex">
                     <view class="bill_box2">
                         <view class="bill_view bill_gray">支票编号</view>
-                        <view class="bill_view">{{costData.checkNo||'未填写'}}</view>
+                        <view class="bill_view">{{costData.checkNo || '未填写'}}</view>
                     </view>
                 </view>
                 <view class="flex">
                     <view class="bill_box">
                         <view class="bill_view bill_gray">支 付 方</view>
-                        <view class="bill_view">{{costData.payer||'未填写'}}</view>
+                        <view class="bill_view">{{costData.payer || '未填写'}}</view>
                     </view>
                 </view>
                 <view class="flex">
                     <view class="bill_box2">
                         <view class="bill_view bill_gray">收款方式</view>
-                        <view class="bill_view">{{costData.payModeName||'未填写'}}</view>
+                        <view class="bill_view">{{costData.payModeName || '未填写'}}</view>
                     </view>
                     <view class="bill_box2">
                         <view class="bill_view bill_gray">收款日期</view>
-                        <view class="bill_view">{{costData.receiptDate||'未填写'}}</view>
+                        <view class="bill_view">{{costData.receiptDate || '未填写'}}</view>
                     </view>
                 </view>
                 <view class="flex">
                     <view class="bill_box2">
                         <view class="bill_view bill_gray">付款总额</view>
-                        <view class="bill_view">{{costData.payAmount||'未填写'}}</view>
+                        <view class="bill_view">{{costData.payAmount || '未填写'}}</view>
                     </view>
                     <view class="bill_box2">
                         <view class="bill_view bill_gray">支付币种</view>
-                        <view class="bill_view">{{costData.payCurrencyName||'未填写'}}</view>
+                        <view class="bill_view">{{costData.payCurrencyName || '未填写'}}</view>
                     </view>
                 </view>
                 <view class="flex">
                     <view class="bill_box2">
                         <view class="bill_view bill_gray">律师费用</view>
-                        <view class="bill_view">{{costData.lawyerFee||'未填写'}}</view>
+                        <view class="bill_view">{{costData.lawyerFee || '未填写'}}</view>
                     </view>
                     <view class="bill_box2">
                         <view class="bill_view bill_gray">办 案 费</view>
-                        <view class="bill_view">{{costData.caseFee||'未填写'}}</view>
+                        <view class="bill_view">{{costData.caseFee || '未填写'}}</view>
                     </view>
                 </view>
             </view>
@@ -236,8 +236,8 @@
         </view>
         <!-- <view style="height:{{costData.status=='Claimed'? '200rpx':'0'}}"></view>
         <view style="height:{{costData.status=='UnClaimed'? '200rpx':'0'}}"></view> -->
-        <button class="bill_btn" wx:if="{{costData.status=='UnClaimed'}}" catchtap="toAuditing('{{0}}')">认领</button>
-        <button class="bill_btn" wx:if="{{costData.status=='Claimed'}}" catchtap="toAuditing('{{1}}')">发送合伙人</button>
+        <button class="bill_btn" wx:if="{{costData.status == 'UnClaimed'}}" catchtap="toAuditing('{{0}}')">认领</button>
+        <button class="bill_btn" wx:if="{{costData.status == 'Claimed'}}" catchtap="toAuditing('{{1}}')">发送合伙人</button>
     </view>
 </template>
 <script>
@@ -342,8 +342,8 @@
                     console.log(resData);
                     this.costData = resData.data.result;
                     if(this.costData.creationTime)
-                    this.costData.creationTime =this.costData.creationTime?formatTime(this.costData.creationTime).split(' ')[0]:'';
-                    this.costData.receiptDate = this.costData.receiptDate?formatTime(this.costData.receiptDate).split(' ')[0]:'';
+                    this.costData.creationTime = this.costData.creationTime ? formatTime(this.costData.creationTime).split(' ')[0] : '';
+                    this.costData.receiptDate = this.costData.receiptDate ? formatTime(this.costData.receiptDate).split(' ')[0] : '';
                     this.$apply();
                     break;
                 case 403:

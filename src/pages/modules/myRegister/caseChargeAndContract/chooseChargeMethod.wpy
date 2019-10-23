@@ -533,7 +533,7 @@
         computed = {};
         async GetCaseChargeAndContractForEdit() {
             var resData = await ajax.getData(
-                '/api/services/web/case/GetCaseChargeAndContractForEdit',
+                '/api/services/web/case/GetCaseChargeForEdit',
                 'post', {
                     Id: this.caseId
                 }

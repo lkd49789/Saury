@@ -65,9 +65,9 @@
         };   
         methods = {
             bindPickerChange(e){
-                if(e.detail.value!==0){
-                    this.index=e.detail.value;
-                    this.options.warning=false;
+                if(e.detail.value !== 0){
+                    this.index = e.detail.value;
+                    this.options.warning = false;
                 }
                 this.$apply();
             },

@@ -220,6 +220,7 @@
         });
       },
       async formSubmit(e) {
+        console.log(1);
         let { data } = await IsTenantAvailable({ 'tenancyName':e.detail.value.domain })           
         let state = data.result.state;
             if(state == 1){

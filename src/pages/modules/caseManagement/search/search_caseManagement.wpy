@@ -161,7 +161,7 @@
 
 <template>
     <view class='container'>
-        <view class="keyword-search" wx:if="{{!showPage}}">
+        <view class="keyword-search" wx:if="{{showPage}}">
             <view class="search_top">
                 <view class="search_input">
                     <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"></icon>
@@ -201,7 +201,7 @@
 
                 <AcceptDate :pickerData="AcceptDate" :twoWayTitle="AcceptDate" />
                 <!-- <OrganizationUnitId :options.sync="OrganizationUnitId" :index.sync='OrganizationUnitIdIndex' :twoWayTitle="OrganizationUnitIdIndex" /> -->
-                <Lawyer :options.sync="Lawyer" :index.sync='LawyerValue' :twoWayTitle="LawyerValue" />
+                <Lawyer :options.sync="Lawyer" :index.sync='LawyerIndex' :twoWayTitle="LawyerIndex" />
                 <Join :options.sync="Join" :index.sync='JoinIndex' :twoWayTitle="JoinIndex" />
                 <CreateDate :pickerData="CreateDate" :twoWayTitle="CreateDate" />
                 <SecretLevel :options.sync="SecretLevel" :index.sync='SecretLevelIndex' :twoWayTitle="SecretLevelIndex" />
@@ -239,8 +239,8 @@
                             <radio value="{{item.name}}" checked="{{item.isSelected}}" color="#5d73fa" /> {{item.displayName}}
                           </label>
                 </radio-group> -->
-            </view>
-            <view class="checkedBox" wx:if="{{isProcessStatus}}">
+            <!-- </view> -->
+            <!-- <view class="checkedBox" wx:if="{{isProcessStatus}}">
                 <view class="title">
                     立案流程状态
                 </view>
@@ -249,9 +249,9 @@
                             <checkbox value="{{item.value}}" checked="{{item.isSelected}}" name="id"  color="#5d73fa"/> {{item.displayText}}
                     </label>
                 </checkbox-group>
-            </view>
+            </view> -->
+            <image wx:if="{{!showPage}}" class="btn-sub" src="../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearchSubmit" />
         </view>
-        <image wx:if="{{!showPage}}" class="btn-sub" src="../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearchSubmit" />
     </view>
 </template>
 
@@ -369,7 +369,7 @@
             TypeIndex: -1,
             State: {
                 title: '状态',
-                key: 'displayText',
+                key: 'displayName',
                 name: 'State',
                 data: [],
                 warning: false
@@ -446,12 +446,12 @@
                 }
                 this.$apply();
             },
-            radioChange(e) {
-                this.isProcessStatus = true;
-                this.searchData.Status = e.detail.value;
-                this.statusFilter(e.detail.value);
-                this.$apply();
-            },
+            // radioChange(e) {
+            //     this.isProcessStatus = true;
+            //     this.searchData.Status = e.detail.value;
+            //     this.statusFilter(e.detail.value);
+            //     this.$apply();
+            // },
             checkboxChange(e) {
                 if (e.detail.value.length !== 0) {
                     this.searchData.Category = e.detail.value.join(',')
@@ -566,12 +566,32 @@
             }
         };
         watch = {
-            AcceptDate(data) {
-                if (!this.searchData.AcceptDate) {
-                    this.searchData.AcceptDate = {};
+            AcceptDate(value) {
+                if (!this.searchData.acceptDateRange) {
+                    this.searchData.acceptDateRange = {};
                 }
-                this.searchData.AcceptDate.StartDate = data.startDateData;
-                this.searchData.AcceptDate.EndDate = data.endDateData;
+                this.searchData.acceptDateRange.StartDate = value.startDateData;
+                this.searchData.acceptDateRange.EndDate = value.endDateData;
+                this.$apply();
+            },
+            CreateDate(value){
+                if (!this.searchData.CreationDateRange) {
+                    this.searchData.CreationDateRange = {};
+                }
+                this.searchData.CreationDateRange.StartDate = value.startDateData;
+                this.searchData.CreationDateRange.EndDate = value.endDateData;
+                this.$apply();
+            },
+            LawyerIndex(index){
+                this.searchData.LawyerIdList = this.Lawyer.data[index].id;;
+                this.$apply();
+            },
+            JoinIndex(index){
+                this.searchData.lawyerRoleList = this.Join.data[index].value;
+                this.$apply();
+            },
+            TypeIndex(index){
+                this.searchData.categoryList = this.Type.data[index].value;
                 this.$apply();
             },
             // IdValue(value) {
@@ -591,7 +611,7 @@
                 this.$apply();
             },
             StateIndex(index) {
-                this.searchData.OrganizationUnitId = this.OrganizationUnitId.data[index].id;
+                this.searchData.processStatusList = [this.State.data[index].name];
                 this.$apply();
             },
             SecretLevelIndex(index) {
@@ -599,6 +619,7 @@
                 this.$apply();
             },
             LanguageIndex(index) {
+                console.log(index);
                 this.searchData.Language = this.Language.data[index].value;
                 this.$apply();
             },
@@ -636,9 +657,9 @@
                 'post'
             )
             if (resData.statusCode == 200) {
-                var CaseApplyListSearchInputDatas = resData.data.result;
+                this.State.data = resData.data.result.items;
                 // this.Category = CaseApplyListSearchInputDatas.categoryList;
-                this.State.data = CaseApplyListSearchInputDatas.items;
+                // this.State.data = CaseApplyListSearchInputDatas.items;
                 // this.ProcessStatusData = CaseApplyListSearchInputDatas.processStatusList;
             }
             this.$apply();
@@ -691,6 +712,7 @@
         async GetGeneralCodeComboboxItems(){
             let Join = await GeneralCodeComboboxItems({id:"CACBT"})
             this.Join.data = Join.data.result
+            console.log(this.Join.data);
         }
         // 获取律师
         async GetLawyer(){
@@ -701,7 +723,8 @@
                     pageSize: 100
                 }
             );
-            this.lawyer.data = resData.data.result
+            this.Lawyer.data = resData.data.result.items
+            console.log(this.Lawyer.data);
         }
         onLoad() {
             this.isHistory();

@@ -138,7 +138,19 @@
             navbar
         };
         mixins = [mixins]
-        watch = {
+        data = {
+            myinvoice: [],
+            pageNumber: 1,
+            totalCount: 0,
+            navbars: ['全部', '处理中', '已完成', '已退回', '未提交'],
+            currentTab: 0,
+            state: "UnHandled",
+            queryStream: {},
+            isShow: false,
+            sorting: '',
+            statusList:["WaitForRegister", "WaitForClaim", "Returned", "Claimed", "UnSubmitted"]
+        };
+                watch = {
             currentTab(newValue, oldValue) {
                 wx.pageScrollTo({
                   scrollTop: 0, //滚动到页面的目标位置（单位px）,
@@ -146,38 +158,25 @@
                 });
                 switch (newValue) {
                     case 0:
-                        this.getbill("UnHandled");
+                        this.statusList =  ["WaitForRegister", "WaitForClaim", "Returned", "Claimed", "UnSubmitted"]
                         break;
                     case 1:
-                        this.getbill("Invoiced");
+                         this.statusList =  ["WaitForRegister", "WaitForClaim"]
                         break;
                     case 2:
-                        this.getbill("Claimed");
+                         this.statusList =  ["Claimed"]
                         break;
                     case 3:
-                        this.getbill("Canceled");
+                         this.statusList =  ["Returned"]
                         break;
                     case 4:
-                        this.getbill("Returned");
-                        break;
-                    case 5:
-                        this.getbill("UnSubmitted");
+                         this.statusList =  ["UnSubmitted"]
                         break;
                     default:
                         break;
                 }
+                this.getbill(this.statusList);
             }
-        };
-        data = {
-            myinvoice: [],
-            pageNumber: 1,
-            totalCount: 0,
-            navbars: ['待处理', '已开票', '已领取', '已作废', '已退回', '未提交'],
-            currentTab: 0,
-            state: "UnHandled",
-            queryStream: {},
-            isShow: false,
-            sorting: ''
         };
         methods = {
             toSearch() {
@@ -196,10 +195,10 @@
                 this.pageNumber = 1;
                 switch (name) {
                     case 'cteateTime':
-                        this.getbill(this.state,'CreationTime desc')
+                        this.getbill(this.statusList,'CreationTime desc')
                         break;
                     case 'case':
-                        this.getbill(this.state,'CaseName desc')
+                        this.getbill(this.statusList,'CaseName desc')
                         break;
                     default:
                         break;
@@ -254,7 +253,7 @@
                 'post', {
                     pageNumber: this.pageNumber,
                     pageSize: 10,
-                    status: state,
+                    statusList: state,
                     creationTimeRange,
                     filter,
                     sorting: this.sorting 
@@ -313,7 +312,7 @@
             }
         }
         onLoad() {
-            this.getbill(this.state)
+            this.getbill(this.statusList)
         };
         onShow() {
             var pages = getCurrentPages();
@@ -323,7 +322,7 @@
                 prevPage.data.refresh = false;
                 this.myinvoice = [];
                 this.pageNumber = 1;
-                this.getbill(this.state);
+                this.getbill(this.statusList);
             }
         };
     }

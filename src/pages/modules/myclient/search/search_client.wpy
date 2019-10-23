@@ -202,7 +202,7 @@
 <script>
     import wepy from 'wepy';
     import { myDistinct } from '@/utils/cofig/api.js';
-    import { GeneralCodeComboOutput } from '@/api/common.js';
+    import { GeneralCodeComboOutput,Organizations } from '@/api/common.js';
     import { Clients,Region,SearchForClients } from '@/api/myclient.js';
     import {
         formatDate
@@ -267,7 +267,7 @@
             IdValue: '',
             OrganizationUnitId: {
                 title: '组织结构',
-                name: 'OrganizationUnitId',
+                name: 'displayName',
                 value: [],
                 displayText: [],
                 warning: false
@@ -589,6 +589,10 @@
                 this.searchData.ClientType = this.ClientType.value[index];
                 this.$apply();
             },
+            OrganizationUnitIdIndex(index){
+                this.searchData.OrganizationUnitId = this.OrganizationUnitId.value[index];
+                this.$apply();
+            }
         };
         computed = {};
         // 判断初始化历史数据
@@ -648,20 +652,29 @@
         //检索条件信息
         async GetSearchForClients() {
             var resData = await SearchForClients()
+            let { data } = await Organizations()
             if (resData.statusCode == 200) {
                 var SearchForClients_data = resData.data.result;
-                for (var index_Import in SearchForClients_data.importantLevelCombobox) {
-                    this.ImportLevel.value[index_Import] = SearchForClients_data.importantLevelCombobox[index_Import].value;
-                    this.ImportLevel.displayText[index_Import] = SearchForClients_data.importantLevelCombobox[index_Import].displayText;
-                }
-                for (var Origin_index in SearchForClients_data.customerOriginCombobox) {
-                    this.Origin.value[Origin_index] = SearchForClients_data.customerOriginCombobox[Origin_index].value;
-                    this.Origin.displayText[Origin_index] = SearchForClients_data.customerOriginCombobox[Origin_index].displayText;
-                }
-                for (var ClientType_index in SearchForClients_data.customerTypeCombobox) {
-                    this.ClientType.value[ClientType_index] = SearchForClients_data.customerTypeCombobox[ClientType_index].value;
-                    this.ClientType.displayText[ClientType_index] = SearchForClients_data.customerTypeCombobox[ClientType_index].displayText;
-                }
+                this.forEachData(SearchForClients_data.importantLevelCombobox,this.ImportLevel)
+                // for (var index_Import in SearchForClients_data.importantLevelCombobox) {
+                //     this.ImportLevel.value[index_Import] = SearchForClients_data.importantLevelCombobox[index_Import].value;
+                //     this.ImportLevel.displayText[index_Import] = SearchForClients_data.importantLevelCombobox[index_Import].displayText;
+                // }
+
+                this.forEachData(SearchForClients_data.customerOriginCombobox,this.Origin)
+
+                // for (var Origin_index in SearchForClients_data.customerOriginCombobox) {
+                //     this.Origin.value[Origin_index] = SearchForClients_data.customerOriginCombobox[Origin_index].value;
+                //     this.Origin.displayText[Origin_index] = SearchForClients_data.customerOriginCombobox[Origin_index].displayText;
+                // }
+
+                this.forEachData(SearchForClients_data.customerTypeCombobox,this.ClientType)
+
+                // for (var ClientType_index in SearchForClients_data.customerTypeCombobox) {
+                //     this.ClientType.value[ClientType_index] = SearchForClients_data.customerTypeCombobox[ClientType_index].value;
+                //     this.ClientType.displayText[ClientType_index] = SearchForClients_data.customerTypeCombobox[ClientType_index].displayText;
+                // }
+                this.forEachData(data.result,this.OrganizationUnitId,['id','displayName'])
                 this.$apply();
             } else {
                 wx.showLoading({
@@ -671,6 +684,14 @@
                 });
             }
         }
+        forEachData(data,arr,obj = ['value','displayText']){
+            data.forEach((item,index) =>{
+                arr.value[index] = item[obj[0]]
+                arr.displayText[index] = item[obj[1]]
+            })
+
+        }
+        // /api/services/web/Common/GetOrganizations
         /* 获取地区 */
         async getRegion(Depth = 1,ParentId = "100000"){
             console.log(Depth)

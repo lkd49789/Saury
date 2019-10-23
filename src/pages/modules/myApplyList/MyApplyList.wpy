@@ -96,7 +96,7 @@
             <repeat for="{{MyApplyListData}}" key="index" index="index" item="item">
                 <view class="item-container" @tap="toMyApplyList('{{item.id}}')">
                     <view>
-                        <text>{{item.startDateText}}至{{item.endDateText}}</text>
+                        <text>{{item.startDate}}至{{item.endDate}}</text>
                         <text style="color:#ff9900">{{item.totalDay}}天</text>
                     </view>
                     <view class="text-hidden-online">
@@ -126,6 +126,7 @@
 <script>
     import wepy from 'wepy';
     import ajax from '@/utils/cofig/ajax.js'
+    import { formatTimeSymbol } from '@/utils/cofig/api.js'
     import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
     export default class myApplyList extends wepy.page {
@@ -146,7 +147,8 @@
             totalCount: 0,
             MyApplyListData: [],
             isShow: false,
-            sorting: ''
+            sorting: '',
+            statusList:["R", "W", "A"]
         };
         methods = {
             toSearch() {
@@ -228,10 +230,10 @@
         }
         async GetMyApplyList(sort) {
             this.sorting = sort ? sort : this.sorting;
-            var Keyword = this.queryStream.Keyword ? this.queryStream.Keyword : '';
-            var Status = this.queryStream.Status ? this.queryStream.Status : '';
-            var VacationType = this.queryStream.Keyword ? this.queryStream.VacationType : '';
-            var creationTimeRange = this.queryStream.creationTimeRange ? this.queryStream.creationTimeRange : '';
+            var filter = this.queryStream.filter || '';
+            // var Status = this.queryStream.Status ? this.queryStream.Status : '';
+            var VacationTypeList = this.queryStream.VacationTypeList || '';
+            var creationTimeRange = this.queryStream.creationTimeRange || '';
             wx.showLoading({
                 title: '加载中，请稍等！',
                 mask: true,
@@ -240,13 +242,14 @@
                 pageNumber: this.pageNumber,
                 pageSize: 10,
                 sorting: this.sorting,
-                Keyword,
-                Status,
-                VacationType,
+                filter,
+                VacationTypeList,
                 creationTimeRange,
+                statusList:this.statusList
             }
+
             var resData = await ajax.getData(
-                '/api/services/web/myVacation/GetMyApplyList',
+                '/api/services/web/EmployeeVacation/GetUserVacations',
                 'post',
                 data
             )
@@ -255,21 +258,23 @@
                     if (resData.data.result.items.length !== 0) {
                         this.totalCount = resData.data.result.totalCount;
                         var MyApplyListData = resData.data.result.items;
-                        for (var index in MyApplyListData) {
-                            switch (MyApplyListData[index].status) {
+                        MyApplyListData.forEach(item =>{
+                            switch (item.status) {
                                 case 'A':
-                                    MyApplyListData[index]['statusColor'] = '#069400'
+                                    item['statusColor'] = '#069400'
                                     break;
                                 case 'W':
-                                    MyApplyListData[index]['statusColor'] = '#ff9900'
+                                    item['statusColor'] = '#ff9900'
                                     break;
                                 case 'R':
-                                    MyApplyListData[index]['statusColor'] = '#e20000'
+                                    item['statusColor'] = '#e20000'
                                     break;
                                 default:
                                     break;
                             }
-                        }
+                            item.startDate = formatTimeSymbol(item.startDate,'-')
+                            item.endDate = formatTimeSymbol(item.endDate,'-')
+                        })
                         this.MyApplyListData = this.MyApplyListData.concat(MyApplyListData);
                         var isRefresh = {
                             isRefresh: false

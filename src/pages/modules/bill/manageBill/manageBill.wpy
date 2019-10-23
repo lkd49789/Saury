@@ -7,6 +7,7 @@
             width: 100%;
             background: #fff;
             z-index: 10000;
+            border-bottom: 1px #dedede solid;
             .flex {
                 height: 104rpx;
                 display: flex;
@@ -90,13 +91,14 @@
                 </view>
             </view>
             <!-- 案件导航 -->
-             <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" />
+             <!-- <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" /> -->
             <view class="filter animation" wx:if="{{isShow}}">
                 <view catchtap="filter('cteateTime')">创建时间排序</view>
                 <view catchtap="filter('id')">客户编号排序</view>
             </view>
         </view>
-        <view style="margin-top:230rpx">
+        <!-- 230rpx -->
+        <view style="margin-top:114rpx">
             <repeat for="{{billData}}" key="index" index="index" item="item">
                 <view class="bill_content" @tap="into('{{item}}')">
                     <view class="bill_view">账单编号: {{item.id||'未填写'}}</view>
@@ -229,10 +231,10 @@
             var CaseName = this.queryStream.CaseName ? this.queryStream.CaseName : '';
             var ClientName = this.queryStream.ClientName ? this.queryStream.ClientName : '';
             var Currency = this.queryStream.Currency ? this.queryStream.Currency : '';
-            var KeyWord = this.queryStream.KeyWord ? this.queryStream.KeyWord : '';
+            var Filter = this.queryStream.Filter ? this.queryStream.Filter : '';
             var billDate = this.queryStream.billDate ? this.queryStream.billDate : '';
             var resData = await ajax.getData(
-                '/api/services/web/financialBilling/GetWaitApprovalBillings',
+                '/api/services/web/FinancialBilling/GetBillings',
                 'post', {
                     pageNumber: this.pageNumber,
                     pageSize: 10,
@@ -240,7 +242,7 @@
                     CaseName,
                     ClientName,
                     Currency,
-                    KeyWord,
+                    Filter,
                     billDate,
                     sorting: this.sorting
                 }

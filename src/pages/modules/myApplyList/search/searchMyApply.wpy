@@ -155,7 +155,7 @@
                         </picker>
                     </view>
                 </view>
-                <Status :options.sync="Status" :index.sync='StatusIndex' :twoWayTitle="StatusIndex" />
+                <!-- <Status :options.sync="Status" :index.sync='StatusIndex' :twoWayTitle="StatusIndex" /> -->
                 <VacationType :options.sync="VacationType" :index.sync='VacationTypeIndex' :twoWayTitle="VacationTypeIndex" />
                 <image class="btn-sub" src="../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearchSubmit" />
             </view>
@@ -176,33 +176,31 @@
     import VacationType from '@/components/picker/option';
     export default class searchApply extends wepy.page {
         components={
-            Status,
+            // Status,
             VacationType
         }
         data = {
             searchData: {},
             // 状态
-            Status: {
-                title: '状态',
-                name: 'Status',
-                value: [],
-                displayText: [
-                    '请选择'
-                ],
-                warning: false
-            },
-            StatusIndex: 0,
+            // Status: {
+            //     title: '状态',
+            //     name: 'Status',
+            //     value: [],
+            //     displayText: [
+            //         '请选择'
+            //     ],
+            //     warning: false
+            // },
+            // StatusIndex: 0,
             // 请假类型
             VacationType: {
                 title: '请假类型',
                 name: 'VacationType',
                 value: [],
-                displayText: [
-                     '请选择'
-                ],
+                displayText: [],
                 warning: false
             },
-            VacationTypeIndex: 0,
+            VacationTypeIndex: -1,
             history_keyWord_case: [],
             searchClentValue: '',
             showPage:true,
@@ -292,7 +290,7 @@
                     var pages = getCurrentPages();
                     var prevPage = pages[pages.length - 2]; //上一个页面
                     console.log(prevPage);
-                    prevPage.data.queryStream.Keyword = e.detail.value;
+                    prevPage.data.queryStream.filter = e.detail.value;
                     prevPage.data.refresh = true;
                     wx.navigateBack({
                         delta: 1, //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
@@ -319,12 +317,12 @@
             }
         };
         watch = {
-            StatusIndex(index){
-                this.searchData.Status=this.Status.value[index-1];
-                this.$apply();
-            },
+            // StatusIndex(index){
+            //     this.searchData.Status = this.Status.value[index-1];
+            //     this.$apply();
+            // },
             VacationTypeIndex(index){
-                this.searchData.VacationType=this.VacationType.value[index-1];
+                this.searchData.VacationTypeList = [this.VacationType.value[index]];
                 this.$apply();
             },
         };
@@ -371,7 +369,7 @@
         onLoad() {
             this.isHistory();
             this.GetGeneralCodeComboboxItems('QJ')
-            this.GetGeneralCodeComboboxItems('DESZT')
+            // this.GetGeneralCodeComboboxItems('DESZT')
         };
         onShow() {};
     }

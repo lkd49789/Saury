@@ -408,7 +408,7 @@
         computed = {};
         async GetCaseChargeAndContractForEdit() {
             var resData = await ajax.getData(
-                '/api/services/web/case/GetCaseChargeAndContractForEdit',
+                '/api/services/web/Case/GetCaseChargeForEdit',
                 'post', {
                     Id: this.caseId
                 }
@@ -535,28 +535,30 @@
             this.caseId = options.id;
             // this.caseId = '894A9A68-AA61-E911-AC1B-B0D9BF31DAD7'
             this.submitData = {
-                    AllocBaseAmount: "0",
                     AllocStyle: "1",
                     Category: "",
-                    ChargeLimit: "",
-                    CostLimit: "",
-                    Currency: "",
+                    ChargeLimit: "0",
+                    CostLimit: "0",
+                    Currency: "CNY",
                     ExchangeRate: "",
-                    ExchangeRateValue: "",
-                    FreeHours: "",
+                    ExchangeRateValue: "0",
+                    FreeHours: "0",
                     Id: options.id,
-                    IsTarget: "",
-                    LimitFee: "",
-                    LimitHour: "",
+                    IsTarget: "Y",
+                    LimitFee: "0",
+                    LimitHour: "0",
                     PaidParty: "",
-                    PayDetailHourly: "2",
-                    PayDetailQuota: "1",
-                    PayDetailRisk: "1",
-                    PayPeriod: "",
+                    PayPeriod: "0",
                     PayStyle: "",
-                    TargetAmount: "",
+                    TargetAmount: "0",
                     TargetProrate: "",
-                    allocstyle: "",
+                    allocstyle: "1",
+                    hourlypay: "2",
+                    normalcharge: "1",
+                    payDetailHourly: "2",
+                    payDetailQuota: "1",
+                    payDetailRisk: "1",
+                    rishCharge: "1"
                 },
                 this.GetCaseChargeAndContractForEdit()
         };

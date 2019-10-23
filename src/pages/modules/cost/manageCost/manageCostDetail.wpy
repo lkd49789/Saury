@@ -117,9 +117,9 @@
                         <text class="bill_gray">财务操作记录</text>
                         <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
                     </view>
-                    <view class="bill_view "><text class="{{costData.status=='WaitForApproved'?'bill_yellow':costData.status=='Returned'?'bill_gray':'bill_green'}} status">{{costData.statusName}}</text><text class="bill_gray">{{costData.workflows[0].creationTime}}</text></view>
+                    <view class="bill_view "><text class="{{costData.status=='WaitForApproved'?'bill_yellow':costData.status=='Returned'?'bill_gray':'bill_green'}} status">{{costData.statusName}}</text><text class="bill_gray">{{workflows[0].creationTime}}</text></view>
                     <view class="bill-del bill_gray">
-                        通过<text>{{costData.workflows.length}}</text>位审核人审核
+                        通过<text>{{workflows.length}}</text>位审核人审核
                     </view>
                 </view>
             </view>
@@ -141,7 +141,8 @@
         data = {
             costData: {},
             invoiceDetailId: '',
-            avatar: []
+            avatar: [],
+            workflows:[]
         };
         methods = {
               toFOR() {
@@ -159,14 +160,6 @@
                 }
             }
         };
-        onLoad(options) {
-            this.invoiceDetailId = options.id;
-            this.getbill();
-            this.$apply();
-        };
-        onShow() {
-            
-        }
         //获取账单
         async getbill(num) {
             wx.showLoading({
@@ -192,13 +185,13 @@
                     for (var index in this.costData.invoiceBillings) {
                         this.costData.invoiceBillings[index].creationTime=formatTime(this.costData.invoiceBillings[index].creationTime)
                     }
-                    for (var index in this.costData.workflows) {
-                        this.costData.workflows[index].creationTime=formatTime(this.costData.workflows[index].creationTime)
-                        // var http = "/api/services/web/personal/GetEmployeePhoto?id=" + this.costData.workflows[index].creatorUserId
-                        // var avatar = await ajax.getAavatar(http);
-                        // this.costData.workflows[index].avatar = avatar;
-                        // this.$apply();
-                    }
+                    // for (var index in this.costData.workflows) {
+                    //     this.costData.workflows[index].creationTime=formatTime(this.costData.workflows[index].creationTime)
+                    //     // var http = "/api/services/web/personal/GetEmployeePhoto?id=" + this.costData.workflows[index].creatorUserId
+                    //     // var avatar = await ajax.getAavatar(http);
+                    //     // this.costData.workflows[index].avatar = avatar;
+                    //     // this.$apply();
+                    // }
                     
                     this.$apply();
                     break;
@@ -255,6 +248,27 @@
                 default:
                     break;
             }
+        }
+        // 获取操作记录
+        async GetLogs(){
+            var { data } = await ajax.getData(
+                '/api/services/web/Workflow/GetLogs',
+                'post', {
+                    id: this.invoiceDetailId
+                }
+            );
+            this.workflows = data.result.items.filter(item => item.creationTime = formatTime(item.operationTime))
+            console.log(this.workflows);
+            this.$apply()
+        }
+        onLoad(options) {
+            this.invoiceDetailId = options.id;
+            this.getbill();
+            this.$apply();
+            this.GetLogs()
+        };
+        onShow() {
+            
         }
     }
 </script>

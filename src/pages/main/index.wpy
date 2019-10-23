@@ -905,6 +905,7 @@
     //获取用户信息
     async GetCurrentLoginInformations() {
       let resData = await CurrentLoginInformations()
+      console.log(resData);
       if (resData.statusCode == 200) {
         var userInfo = {}
         userInfo = resData.data.result.user;

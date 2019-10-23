@@ -157,7 +157,7 @@ export function CaseLawyers(data){   //
 
 export function TaskForEdit(data){   // 
     return getRequest({
-        url:'/api/services/web/caseLawyer/GetTaskForEdit',
+        url:'/api/services/web/TaskPlanning/GetTaskStages',
         data
     })       
 }
@@ -175,5 +175,3 @@ export function ComTaskParticipant(data){   // 完成任务接口
         data
     })       
 }
-
-完成任务接口

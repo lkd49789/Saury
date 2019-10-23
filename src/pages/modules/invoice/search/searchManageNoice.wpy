@@ -137,6 +137,7 @@
                 <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
             </view>
             <view class="advanced-search-content">
+                <PickerOption :options.sync="PickerOption" :index.sync='PickerOptionIndex' :twoWayTitle="PickerOptionIndex"/>
                 <creationTimeRange :pickerData="creationTimeRange" :twoWayTitle="creationTimeRange" />
                 <creatorUserName :input.sync="creatorUserName" :inputValue.sync='creatorUserNameValue' :twoWayTitle="creatorUserNameValue" />
             </view>
@@ -156,10 +157,12 @@
     } from '@/utils/cofig/api.js';
     import creationTimeRange from '@/components/picker/pickerDate';
     import creatorUserName from '@/components/picker/input';
+    import PickerOption from '@/components/picker/pickerOption';
     export default class searchMyBill extends wepy.page {
         components={
             creationTimeRange,
-            creatorUserName
+            creatorUserName,
+            PickerOption
         }
         data = {
             searchData: {},
@@ -178,7 +181,33 @@
             searchClentValue: '',
             showPage:true,
             isShowArray: [],
+            PickerOption: {
+                title:"状态",
+                key: 'displayName',
+                name: 'PickerOption',
+                data: [],
+                warning: false
+            },
+            PickerOptionIndex: -1
         };
+        watch = {
+            creationTimeRange(date){
+                if (!this.searchData.creationTimeRange) {
+                    this.searchData.creationTimeRange = {};
+                }
+                this.searchData.creationTimeRange.startDate = date.startDateData;
+                this.searchData.creationTimeRange.endDate = date.endDateData;
+                this.$apply();
+            },
+            creatorUserNameValue(value){
+                 this.searchData.creatorUserName = value;
+                 this.$apply();
+            },
+            PickerOptionIndex(index){
+                this.searchData.statusList = [this.PickerOption.data[index].name];
+                this.$apply();
+            }
+        }
         methods = {
             advancedSearchSubmit(){
                 console.log(this.searchData)
@@ -273,19 +302,14 @@
                 }
             }
         };
-        watch={
-            creationTimeRange(date){
-                if (!this.searchData.creationTimeRange) {
-                    this.searchData.creationTimeRange = {};
-                }
-                this.searchData.creationTimeRange.startDate = date.startDateData;
-                this.searchData.creationTimeRange.endDate = date.endDateData;
-                this.$apply();
-            },
-            creatorUserNameValue(value){
-                 this.searchData.creatorUserName = value;
-                 this.$apply();
-            }
+         // 获取状态
+        async GetInvoiceStates(){
+            var { data } = await ajax.getData(
+                '/api/services/web/FinancialInvoice/GetInvoiceStates',
+                'POST'
+            )
+             this.PickerOption.data = data.result.items
+             console.log(this.PickerOption.data);      
         }
         // 判断初始化历史数据
         isHistory() {
@@ -307,6 +331,7 @@
         }
         onLoad() {
             this.isHistory();
+            this.GetInvoiceStates()
         };
         onShow() {};
     }

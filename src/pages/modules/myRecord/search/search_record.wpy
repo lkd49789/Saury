@@ -152,7 +152,7 @@
         if (value) {
           var pages = getCurrentPages();
           var prevPage = pages[pages.length - 2]; //上一个页面
-          prevPage.data.queryStream.KeyWord = e.detail.value;
+          prevPage.data.queryStream.filter = e.detail.value;
           prevPage.data.refresh = true;
           wx.navigateBack({
             delta: 1, //返回的页面数，如果 delta 大于现有页面数，则返回到首页,

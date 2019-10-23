@@ -109,7 +109,7 @@
             <view class="search_top">
                 <view class="search_input">
                     <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"></icon>
-                    <input value="{{searchClentValue}}" type="text" confirm-type="search" placeholder="支付方" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
+                    <input value="{{searchClentValue}}" type="text" confirm-type="search" placeholder="案件名称/客户名称/支付方" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
                     </input>
                 </view>
                 <view class="top_right_btn">
@@ -137,6 +137,7 @@
                 <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
             </view>
             <view class="advanced-search-content">
+                <PickerOption :options.sync="PickerOption" :index.sync='PickerOptionIndex' :twoWayTitle="PickerOptionIndex"/>
                 <creationTimeRange :pickerData="creationTimeRange" :twoWayTitle="creationTimeRange" />
                 <!-- <creatorUserName :input.sync="creatorUserName" :inputValue.sync='creatorUserNameValue' :twoWayTitle="creatorUserNameValue" /> -->
             </view>
@@ -155,9 +156,11 @@
         formatDate
     } from '@/utils/cofig/api.js';
     import creationTimeRange from '@/components/picker/pickerDate';
+    import PickerOption from '@/components/picker/pickerOption';
     export default class searchMyBill extends wepy.page {
         components={
-            creationTimeRange
+            creationTimeRange,
+            PickerOption
         }
         data = {
             searchData: {},
@@ -169,7 +172,15 @@
             History_KeyWord_ManageReceivables: [],
             searchClentValue: '',
             isShowArray: [],
-            showPage:true
+            showPage:true,
+            PickerOption: {
+                title:"状态",
+                key: 'displayName',
+                name: 'PickerOption',
+                data: [],
+                warning: false
+            },
+            PickerOptionIndex: -1
         };
         watch = {
             creationTimeRange(date){
@@ -178,7 +189,11 @@
                 }
                 this.searchData.creationTimeRange.startDate = date.startDateData;
                 this.searchData.creationTimeRange.endDate = date.endDateData;
-            }
+            },
+            PickerOptionIndex(index){
+                this.searchData.statusList = [this.PickerOption.data[index].name];
+                this.$apply();
+            },
         }
         methods = {
             advancedSearchSubmit(){
@@ -275,6 +290,11 @@
             },
 
         };
+        //获取状态信息
+        async GetReceiptStates(){
+            let { data } = await ajax.getData('/api/services/web/FinancialReceipt/GetReceiptStates','post') 
+            this.PickerOption.data = data.result.items
+        }
         // 判断初始化历史数据
         isHistory() {
             var pages = getCurrentPages();
@@ -295,6 +315,7 @@
         }
         onLoad() {
             this.isHistory();
+            this.GetReceiptStates()
         };
         onShow() {};
     }

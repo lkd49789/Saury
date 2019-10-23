@@ -87,11 +87,11 @@
                     <view class="bill_box-item" >
                         <view class="bill_box2" style="width:20%">
                                 <image src="{{item.avatar}}" mode="scaleToFill" lazy-load="false" style="z-index:{{index}};background:#7a7a7a;left:{{index*30}}rpx"></image>
-                                <view class="bill_view">{{item.creatorUserName||'未填写'}}</view>
+                                <view class="bill_view">{{item.operatorUserName||'未填写'}}</view>
                             </view>
                             <view class="bill_box2" style="width:80%">
-                                <view class="bill_view bill_gray left" style="margin-bottom:10rpx">{{item.operationTypeName||'未填写'}} <span style="float:right">{{item.creationTime||'未填写'}}</span> </view>
-                                <view class="bill_view bill_blue left">{{item.remark||'未填写'}}</view>
+                                <view class="bill_view bill_gray left" style="margin-bottom:10rpx">{{item.operationTypeName||'未填写'}} <span style="float:right">{{item.operationTime||'未填写'}}</span> </view>
+                                <view class="bill_view bill_blue left">{{item.jsonData.Remark||'未填写'}}</view>
                         </view>
                     </view>
                 </repeat>
@@ -104,7 +104,7 @@
 <script>
   import wepy from 'wepy';
   import ajax from '@/utils/cofig/ajax.js'
-  import {formatTime} from '@/utils/cofig/api.js'
+  import { formatTime } from '@/utils/cofig/api.js'
   export default class financialOperationRecord extends wepy.page {
     data = {
         workflows:[]
@@ -127,22 +127,30 @@
                 success: res => {}
             });
             var resData = await ajax.getData(
-                '/api/services/web/financialCharge/GetCharge',
+                '/api/services/web/Workflow/GetLogs',
                 'post', {
                     id: this.invoiceDetailId
                 }
             );
-            if(resData.statusCode==200){
-                this.workflows = resData.data.result.workflows;
-                // this.$apply();
-                for (var index in this.workflows) {
-                    this.workflows[index].creationTime=formatTime(this.workflows[index].creationTime)
-                    var http = "/api/services/web/personal/GetEmployeePhoto?id=" + this.workflows[index].creatorUserId
+            if(resData.statusCode == 200){
+                this.workflows = resData.data.result.items
+                for(let i in this.workflows){
+                    var http = "/api/services/web/personal/GetEmployeePhoto?id=" + this.workflows[i].operatorUserId
                     var avatar = await ajax.getAavatar(http);
-                    this.workflows[index].avatar = avatar;
+                    this.workflows[i].avatar = avatar
+                    this.workflows[i].jsonData = JSON.parse(this.workflows[i].jsonData)
+                    this.workflows[i].operationTime = formatTime(this.workflows[i].operationTime)
                     this.$apply();
                 }
-                 this.$apply();
+                // this.workflows = resData.data.result.workflows;
+                // // this.$apply();
+                // for (var index in this.workflows) {
+                //     this.workflows[index].creationTime = formatTime(this.workflows[index].creationTime)
+                //     var http = "/api/services/web/personal/GetEmployeePhoto?id=" + this.workflows[index].creatorUserId
+                //     var avatar = await ajax.getAavatar(http);
+                //     this.workflows[index].avatar = avatar;
+                //     this.$apply();
+                // }
             }
            
         }

@@ -323,12 +323,12 @@
         }
         async GetMyWorklogs(sort) {
             this.sorting = sort ? sort : this.sorting;
-            var KeyWord = this.queryStream.KeyWord ? this.queryStream.KeyWord : '';
+            var filter = this.queryStream.filter ? this.queryStream.filter : '';
             var data = {
                 EmployeeId: this.$parent.global.userInfo.id,
                 pageNumber: this.pageNumber,
                 pageSize: 10,
-                KeyWord: KeyWord,
+                filter,
                 sorting: this.sorting
             }
             var MyWorklogsData = await MyWorklogs(

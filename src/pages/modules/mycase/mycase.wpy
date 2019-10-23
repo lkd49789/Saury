@@ -190,14 +190,14 @@
 						<view class="detail">
 							<text class="about-case">{{item.name}}</text>
 							<text class="law-office">{{item.clientName||'未填写'}}</text>
-							<text class="case-type">{{item.categoryName}}</text>
+							<text class="case-type">{{item.categoryText}}</text>
 						</view>
 						<view class="case-bottom">
 							<view>
 								<view style="width:10%">
 									<text class="statusColor" style="border: 1px solid {{statusColor}};"></text>
 								</view>
-								<text class="hint">{{item.processStatusName}}</text>
+								<text class="hint">{{item.processStatusText}}</text>
 							</view>
 							<text class="date">{{item.acceptDate}}</text>
 						</view>
@@ -371,7 +371,7 @@
 				pageData.categoryList=this.queryStream.categoryList || '';
 			}
 			var resData = await ajax.getData(
-				'/api/services/web/case/GetUserCases', //获取办理中数据
+				'/api/services/web/Case/GetMyCases', //获取办理中数据
 				'post',
 				pageData
 			);

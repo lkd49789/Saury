@@ -1021,15 +1021,15 @@
             </view>
             <view class="flex win-hidden">
               <view class="flex-column " style="width:33%">
-                <text style="" class="blue-text margin-bot-10">{{caseDetailData.workLogsDatas.selfDuration+'0'}}h</text>
+                <text style="" class="blue-text margin-bot-10">{{caseDetailData.workLogsDatas.selfDuration}}h</text>
                 <text class="color" style="font-size:28rpx;">自报时长</text>
               </view>
               <view class="flex-column" style="width:33%">
-                <text class="blue-text margin-bot-10">{{caseDetailData.workLogsDatas.businessDuration+'0'}}</text>
+                <text class="blue-text margin-bot-10">{{caseDetailData.workLogsDatas.businessDuration}}h</text>
                 <text class="color" style="font-size:28rpx;">业务时长</text>
               </view>
               <view class="flex-column" style="width:33%">
-                <text class="blue-text margin-bot-10">{{caseDetailData.workLogsDatas.billDuration+'0'}}</text>
+                <text class="blue-text margin-bot-10">{{caseDetailData.workLogsDatas.billDuration}}h</text>
                 <text class="color" style="font-size:28rpx;">账单时长</text>
               </view>
             </view>
@@ -1042,7 +1042,7 @@
                   <view class="item1-left">
                     {{caseDetailData.workLogsDatas.startTime[index][0]}} {{caseDetailData.workLogsDatas.startTime[index][1]}}-{{caseDetailData.workLogsDatas.startTime[index][0]==caseDetailData.workLogsDatas.endTime[index][0]?caseDetailData.workLogsDatas.endTime[index][1]:caseDetailData.workLogsDatas.endTime[index][0]+caseDetailData.workLogsDatas.endTime[index][1]}}
                   </view>
-                  <text class="item1-right">{{item.selfDuration+'.0'}}h</text>
+                  <text class="item1-right">{{item.selfDuration}}h</text>
                 </view>
                 <view class="log-list-item2">
                   <text>{{item.description}}</text>
@@ -2280,11 +2280,12 @@
         this.caseDetailData.workLogsDatas.workLogData =
           workLogsData.data.result.items;
         var workLogData = workLogsData.data.result.items;
-        this.caseDetailData.workLogsDatas.selfDuration = workLogData.reduce((pre,cur) => cur.selfDuration + pre )
+        // this.caseDetailData.workLogsDatas.selfDuration = workLogData.reduce((pre,cur) => cur.selfDuration + pre )
+        console.log(this.caseDetailData.workLogsDatas.selfDuration);
         for (var index in workLogData) {
-          // this.caseDetailData.workLogsDatas.selfDuration += Number(
-          //   workLogData[index].selfDuration.toFixed(2)
-          // ); //自报时长
+          this.caseDetailData.workLogsDatas.selfDuration += Number(
+            workLogData[index].selfDuration.toFixed(2)
+          ); //自报时长
           this.caseDetailData.workLogsDatas.businessDuration += Number(
             workLogData[index].businessDuration.toFixed(2)
           ); //业务时长

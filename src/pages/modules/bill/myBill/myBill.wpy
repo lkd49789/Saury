@@ -131,7 +131,8 @@
             totalCount: 0,
             queryStream: {},
             isShow: false,
-            sorting: ''
+            sorting: '',
+            processStatusList: ["Y", "A", "R", "N"]
         };
         methods = {
             toSearch() {
@@ -202,22 +203,17 @@
                 success: res => {}
             });
             this.sorting = sort ? sort : this.sorting;
-            var CaseName = this.queryStream.CaseName ? this.queryStream.CaseName : '';
-            var ClientName = this.queryStream.ClientName ? this.queryStream.ClientName : '';
-            var Currency = this.queryStream.Currency ? this.queryStream.Currency : '';
-            var KeyWord = this.queryStream.KeyWord ? this.queryStream.KeyWord : '';
+            var filter = this.queryStream.filter ? this.queryStream.filter : '';
             var billDate = this.queryStream.billDate ? this.queryStream.billDate : '';
             var resData = await ajax.getData(
                 '/api/services/web/financialBilling/GetMyBillings',
                 'post', {
                     pageNumber: this.pageNumber,
                     pageSize: 10,
-                    CaseName,
-                    ClientName,
-                    Currency,
-                    KeyWord,
+                    filter,
                     billDate,
-                    sorting:  this.sorting
+                    sorting:this.sorting,
+                    processStatusList: this.processStatusList
                 }
             );
             switch (resData.statusCode) {

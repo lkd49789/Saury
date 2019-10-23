@@ -570,6 +570,11 @@
       if(Object.keys(this.global.userInfo).length==0){
         this.GetCurrentLoginInformations();
       }
+      if(wx.getSystemInfo.environment){
+        console.log('qy')
+      }else{
+        console.log('wx')
+      }
     }
     onShow(options) {
       this.global.options=options;
@@ -608,7 +613,7 @@
                       }
                   }
                 });
-              }else if(!res.authSetting['scope.userInfo']||!accessToken){
+              }else if(!res.authSetting['scope.userInfo'] || !accessToken){
                 console.log(2);
                 //  wx.redirectTo({
                 //       url: '/pages/login/choosePageLogin'
