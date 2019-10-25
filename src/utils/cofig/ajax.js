@@ -29,6 +29,9 @@ var getRequest = ({url, method = 'post', header, data = ''}) => {
 };
 
 var getData = (http, method, data = '') => {
+  wx.showLoading({
+    title: 'loading...',
+  })
   return new Promise((resolve, reject) => {
     wx.getStorage({
       key: 'access',
