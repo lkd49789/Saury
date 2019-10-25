@@ -493,8 +493,8 @@
                         <text>会议附件</text>
                     </view>
                     <repeat for="{{meetingData.attachmentList}}" key="index" index="index" item="item">
-                        <view class="docItem">
-                            <icon class="iconfont {{item.icon}}" style="color:{{item.color}}" @tap="preview('{{item.id}}','{{item.extension}}')"></icon>
+                        <view class="docItem" @tap="preview('{{item.id}}','{{item.extension}}')">
+                            <icon class="iconfont {{item.icon}}" style="color:{{item.color}}" ></icon>
                             <text>{{item.name}}</text>
                         </view>
                     </repeat>

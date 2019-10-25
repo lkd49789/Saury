@@ -623,7 +623,7 @@
         }
         async CreateOrUpdateWorklog(data) {
              wx.showLoading({
-                 title: '提交中，请稍等！', //提示的内容,
+                 title: '提交中...', //提示的内容,
                  mask: true, //显示透明蒙层，防止触摸穿透,
                  success:()=> {
                      this.addOpacity = 1;

@@ -186,24 +186,24 @@
                 this.CreateOrUpdateTask();
             },
             IsRemind(){
-                this.IsRemindChecked=!this.IsRemindChecked;
+                this.IsRemindChecked = !this.IsRemindChecked;
                 if(this.IsRemindChecked){
-                    this.submitData.IsRemind=this.IsRemind[0].value;
-                     this.isRemindTime=true;
+                    this.submitData.IsRemind = this.IsRemind[0].value;
+                     this.isRemindTime = true;
                 }else{
                     this.submitData.IsRemind=this.IsRemind[1].value;
-                     this.isRemindTime=false;
-                     this.RemindTimeIndex=0;
-                     this.submitData.RemindTime=0;
+                     this.isRemindTime = false;
+                     this.RemindTimeIndex = 0;
+                     this.submitData.RemindTime = 0;
                 }
                 this.$apply();
             },
             IsMark(){
                 this.IsMarkChecked=!this.IsMarkChecked;
                 if(this.IsMarkChecked){
-                    this.submitData.IsMark=this.IsMark[0].value;
+                    this.submitData.IsMark = this.IsMark[0].value;
                 }else{
-                    this.submitData.IsMark=this.IsMark[1].value;
+                    this.submitData.IsMark = this.IsMark[1].value;
                 }
             }
         }; 
@@ -293,9 +293,9 @@
                     var pages = getCurrentPages();
                     var prevPage = pages[pages.length - 3]; //上一个页面
                     var prevPages = pages[pages.length - 4]; //上一个页面
-                    if (prevPage&&prevPages) {
+                    if (prevPage && prevPages) {
                         prevPage.isRefresh();
-                        prevPages.isRefresh?prevPages.isRefresh():'';
+                        prevPages.isRefresh ? prevPages.isRefresh() : '';
                         wx.navigateBack({
                             delta: 2,
                         });
@@ -311,15 +311,15 @@
             }
         }
          millDif(){
-            if(this.submitData.StartTime&&this.submitData.EndTime){
-                var StartDateTime= new Date(this.submitData.StartTime).getTime();
-                var EndDateTime= new Date(this.submitData.EndTime).getTime(); 
-                var millDif=EndDateTime-StartDateTime;
-                var hours='';
-                if(millDif>=10*1000){   
-                    hours=(millDif/(3600*1000)).toFixed(1);
+            if(this.submitData.StartTime && this.submitData.EndTime){
+                var StartDateTime = new Date(this.submitData.StartTime).getTime();
+                var EndDateTime = new Date(this.submitData.EndTime).getTime(); 
+                var millDif = EndDateTime - StartDateTime;
+                var hours = '';
+                if(millDif >= 10 * 1000){   
+                    hours = (millDif / (3600*1000)).toFixed(1);
                 }else{
-                    hours=0;
+                    hours = 0;
                     wx.showToast({
                       title: '时差有误！', //提示的内容,
                       icon: 'none', //图标,
@@ -328,8 +328,8 @@
                       success: res => {}
                     });
                 }
-                this.EstimateValue=hours;
-                this.submitData.Estimate=hours;
+                this.EstimateValue = hours;
+                this.submitData.Estimate = hours;
             }
         } 
         // 获取优先级
@@ -342,11 +342,11 @@
             this.$apply();
         }
         onLoad() {
-            this.submitData=wx.getStorageSync('taskNextPage');
-            this.StageIdIndex=Number(this.submitData.currentStage);
-            this.EndDate.time=new Date();
-            this.StartDate.time=new Date();
-            this.EstimateValue=1;
+            this.submitData = wx.getStorageSync('taskNextPage');
+            this.StageIdIndex = Number(this.submitData.currentStage);
+            this.EndDate.time = new Date();
+            this.StartDate.time = new Date();
+            this.EstimateValue = 1;
             this.$apply();
             this.GetTaskForEdit(this.submitData.stageId,this.submitData.ProjectId);
             this.GetGeneralCodeComboboxItems()

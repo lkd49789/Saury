@@ -67,17 +67,18 @@
                 >view:not(:last-child) {
                     margin-bottom: 44rpx;
                 }
-                .records-item {
+            }
+            .records-item {
+                margin-bottom:50rpx; 
                     .item-onLine {
-                        margin-bottom: 36rpx;
+                        margin-bottom: 16rpx;
                         display: flex;
                         justify-content: space-between
                     }
                     .item-twoLine {
-                        margin-bottom: 20rpx;
+                        margin-bottom: 12rpx;
                     }
                     .item-threeLine {
-                        margin-bottom: 20rpx;
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
@@ -87,7 +88,6 @@
                         }
                     }
                 }
-            }
         }
     }
 </style>
@@ -148,6 +148,7 @@
         <placeHolderImage :placeHolder.sync="placeHolder" />
     </view>
 </template>
+
 
 <script>
     import wepy from 'wepy';

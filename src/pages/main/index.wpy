@@ -695,11 +695,17 @@
       var resData = await AllPermissions()
       if (resData.statusCode == 200) {
         var GetFunctionItemsData = resData.data.result.items
-        var itemsData = [];
+       var itemsData = [];
+        let lawCaseDta = []  // 案件
+        let moneyData = [];  //收款
+        let invoiceData = [];  //发票
+        let billData = [];  //账单
+        let conflictData = []; // 冲突
+        let costData = []; // 费用
         GetFunctionItemsData.forEach( item =>{
           switch (item.name) {
             case 'Pages.Business.Cases.MyCases':
-              itemsData.push({
+              lawCaseDta.push({
                 displayName: item.displayName,
                 icon: 'icon-wodeanjian',
                 color: '#5d73fa',
@@ -727,7 +733,7 @@
               break;
             case 'Pages.Works.Task':
               itemsData.push({
-                displayName: item.displayName,
+                displayName: '任务项目',
                 icon: 'icon-wodejincheng',
                 color: '#ff9900',
                 link: '../modules/myTaskCourse/taskProject',
@@ -756,7 +762,7 @@
               })
               break;
             case 'Pages.Financial.Billings.MyBillings':
-              itemsData.push({
+              billData.push({
                 displayName:item.displayName,
                 icon: 'icon-wodezhangdan',
                 color: '#ff9900',
@@ -766,7 +772,7 @@
               })
               break;
             case 'Pages.Financial.Billings.Manage':
-              itemsData.push({
+              billData.push({
                 displayName: item.displayName,
                 icon: 'icon-zhangdanguanli',
                 color: '#ff9900',
@@ -776,7 +782,7 @@
               })
               break;
             case 'Pages.Financial.Invoices.MyApplyInvoices':
-              itemsData.push({
+              invoiceData.push({
                 displayName: item.displayName,
                 icon: 'icon-wodefapiao',
                 color: '#e20000',
@@ -786,7 +792,7 @@
               })
               break;
             case 'Pages.Financial.Invoices.Manage':
-              itemsData.push({
+              invoiceData.push({
                 displayName: item.displayName,
                 icon: 'icon-fapiaoguanli',
                 color: '#e20000',
@@ -796,7 +802,7 @@
               })
               break;
             case 'Pages.Financial.Charge.MyCharges':
-              itemsData.push({
+              costData.push({
                 displayName: item.displayName,
                 icon: 'icon-wodefeiyong',
                 color: '#e20000',
@@ -806,7 +812,7 @@
               })
               break;
             case 'Pages.Financial.Charge.Manage':
-              itemsData.push({
+              costData.push({
                 displayName: item.displayName,
                 icon: 'icon-feiyongguanli',
                 color: '#e20000',
@@ -816,7 +822,7 @@
               })
               break;
             case 'Pages.Financial.Receipts.MyReceipts':
-              itemsData.push({
+              moneyData.push({
                 displayName: item.displayName,
                 icon: 'icon-wodeshoukuan',
                 color: '#ff9900',
@@ -826,7 +832,7 @@
               })
               break;
             case 'Pages.Financial.Receipts':
-              itemsData.push({
+              moneyData.push({
                 displayName: item.displayName,
                 icon: 'icon-shoukuanguanli',
                 color: '#ff9900',
@@ -846,7 +852,7 @@
               })
               break;
             case 'Pages.Business.CaseApplications.Check':
-              itemsData.push({
+              conflictData.push({
                 displayName: item.displayName,
                 icon: 'icon-chongtujiansuo',
                 color: '#e20000',
@@ -856,7 +862,7 @@
               })
               break;
             case 'Pages.Business.CaseApplications.CheckCustomers':
-              itemsData.push({
+              conflictData.push({
                 displayName: item.displayName,
                 icon: 'icon-liyichongtuyujian',
                 color: '#e20000',
@@ -866,7 +872,7 @@
               })
               break;
               case 'Pages.Business.Cases.Manage':
-              itemsData.push({
+              lawCaseDta.push({
                 displayName: item.displayName,
                 icon: 'icon-anjianguanli',
                 color: '#5d73fa',
@@ -876,7 +882,7 @@
               })
               break;
               case 'Pages.Business.Cases.Create':
-              itemsData.push({
+              lawCaseDta.push({
                 displayName: item.displayName,
                 icon: 'icon-lianshenqing',
                 color: '#5d73fa',
@@ -897,9 +903,12 @@
               break;
           }
         })
-       this.functionData = itemsData;
+        // this.setData({
+        //   functionData:itemsData
+        // })
+       this.functionData = itemsData.concat(lawCaseDta,billData,moneyData,invoiceData,conflictData,costData);
+        this.$apply();
       }
-      this.$apply()
       wx.stopPullDownRefresh()
     }
     //获取用户信息

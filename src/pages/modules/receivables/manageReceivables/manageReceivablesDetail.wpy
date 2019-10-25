@@ -291,32 +291,14 @@
                 });
             },
             toAuditing(type) {
+                console.log(this.getcase.ifshow)
                 if (type == 0) {
-                    if (this.getcase.ifshow && this.lawyerFeeValue && this.caseFeeValue) {
+                    if (this.getcase.isCaseData && this.lawyerFeeValue && this.caseFeeValue) {
                         this.claim(this.costData.id)
                     } else {
-                        if (!this.getcase.ifshow) {
-                            this.warning[0] = true;
-                        }
-                        this.warning[0] = true
-                        if (!this.lawyerFeeValue) {
-                            this.lawyerFee.warning = true;
-                        }
-                        if (!this.caseFeeValue) {
-                            this.caseFee.warning = true;
-                        }
-                    }
-                    if (!this.getcase.ifshow) {
-                        this.warning[0] = true;
-                    } else {
-                        this.warning[0] = false;
-                    }
-                    this.warning[0] = true
-                    if (!this.lawyerFeeValue) {
-                        this.lawyerFee.warning = true;
-                    }
-                    if (!this.caseFeeValue) {
-                        this.caseFee.warning = true;
+                        this.warning[0] = !this.getcase.isCaseData
+                        this.lawyerFee.warning = !this.lawyerFeeValue
+                        this.caseFee.warning = !this.caseFeeValue
                     }
                     this.$apply()
                 } else {

@@ -399,7 +399,7 @@
     };
     async GetWorklog() {
       wx.showLoading({
-        title: '加载中！请稍等！', //提示的内容,
+        title: '加载中...', //提示的内容,
         mask: true, //显示透明蒙层，防止触摸穿透,
         success: res => {}
       });
@@ -467,7 +467,7 @@
     // 获取日志提醒参与信息
     async GetMyParticipantWorklogs() {
       wx.showLoading({
-        title: '提交中，请稍等！', //提示的内容,
+        title: '提交中...', //提示的内容,
         mask: true, //显示透明蒙层，防止触摸穿透,
       });
       var GetMyParticipantWorklogs = await MyParticipantWorklogs()
@@ -485,7 +485,7 @@
     //取消参与提醒
     async CancelMyParticipantWorklog() {
       wx.showLoading({
-        title: '提交中，请稍等！', //提示的内容,
+        title: '提交中...', //提示的内容,
         mask: true, //显示透明蒙层，防止触摸穿透,
         success: () => {
           this.GetMyParticipantWorklogs();
