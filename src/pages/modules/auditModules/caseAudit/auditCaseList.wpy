@@ -68,17 +68,17 @@
             <repeat for="{{waitCreationsData.items}}" key="index" index="index" item="item">
                 <view @tap="toCaseDetailAudit('{{item.id}}')">
                     <view>
-                        <text>{{item.caseName||'未填写'}}</text>
+                        <text>{{item.name || '未填写'}}</text>
                     </view>
                     <view>
-                        <text>{{item.clientName||'未填写'}}</text>
+                        <text>{{item.clientName ||  '未填写'}}</text>
                     </view>
                     <view>
                         <view>
-                            <text>{{item.caseCategoryText||'未填写'}}</text>
+                            <text>{{item.categoryText || '未填写'}}</text>
                         </view>
                         <view>
-                            <text>{{item.acceptDateText||'未填写'}}</text>
+                            <text>{{item.acceptDate || '未填写'}}</text>
                         </view>
                     </view>
                 </view>
@@ -246,7 +246,7 @@
                 pageSize: 10
             }
             var resData = await ajax.getData(
-                '/api/services/web/caseCreation/GetCaseCreations',
+                '/api/services/web/Case/GetAuditCases',
                 'post',
                 data
             )
@@ -256,11 +256,14 @@
                     if (resData.data.result.items.length !== 0) {
                         var waitCreationsData = resData.data.result.items;
                         if(this.waitCreationsData.items){
-                            this.waitCreationsData.items =this.waitCreationsData.items.concat(waitCreationsData);
+                            this.waitCreationsData.items = this.waitCreationsData.items.concat(waitCreationsData);
                         }else{
                             this.waitCreationsData['items'] = waitCreationsData;
                         }
-                        var  isRefresh={
+                        this.waitCreationsData.items.forEach(item =>{
+                            item.acceptDate = item.acceptDate.split('T')[0]
+                        })
+                        var  isRefresh = {
                              isRefresh:false
                         }
                         wx.setStorageSync('isRefresh', isRefresh);
@@ -302,7 +305,7 @@
                 pageSize: 10
             }
             var resData = await ajax.getData(
-                '/api/services/web/caseCreation/GetCaseCreations',
+                '/api/services/web/Case/GetAuditCases',
                 'post',
                 data
             )

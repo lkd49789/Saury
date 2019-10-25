@@ -452,7 +452,7 @@
                         TasksData.items[i]['childTask'] = true
                     }
                     if (TasksData.items[i].endTime) {
-                       var millTime=new Date(TasksData.items[i].endTime).getTime()-(8*60*60*1000);
+                       var millTime=new Date(TasksData.items[i].endTime).getTime();
                         TasksData.items[i].endTime=new Date(millTime);
                         TasksData.items[i].endTime = formatTimeSymbol(TasksData.items[i].endTime, '/');
                     }

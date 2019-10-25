@@ -135,7 +135,7 @@
         </view>
         <radio-group class="radio-group" @change="radioChange">
           <label wx:for="{{Category}}" wx:key="index" index="index" item="item " class="label">
-                          <radio value="{{item.id}}"  name="id"  color="#5d73fa"/> {{item.name}}
+                          <radio value="{{item.id}}" checked="{{item.checked}}" name="id"  color="#5d73fa"/> {{item.name}}
                       </label>
         </radio-group>
         <view class="warning" wx:if="{{!subData.Category}}">
@@ -229,7 +229,7 @@
     data = {
       subData: {
         CaseId: "",
-        Category: "",
+        Category: "0",
         ClientId: "",
         Cover: "",
         CreationTime: "",
@@ -458,6 +458,12 @@
           class: "TPCT",
         })
       if (resData.statusCode == 200) {
+        resData.data.result.forEach(item =>{
+          if(item.name == '案件项目')
+          item.checked = true
+          else
+          item.checked = false
+        })
         this.Category = resData.data.result;
         this.$apply();
       } else {
@@ -636,12 +642,18 @@
     random(lower, upper) {
       return Math.floor(Math.random() * (upper - lower + 1)) + lower;
     }
-    onLoad() {
+    onLoad(option) {
       this.subData.Id = 'temp_' + this.random(0, 100000000000);
       this.subData.inputTemplate = this.inputTemplate[0].value;
       this.subData.Privacy=this.Privacy.data[0].value;
       this.GetGeneralCodeComboOutput();
       this.GetTemplatesWithGroup();
+      let obj = JSON.parse(option.obj)
+      this.ClientIdValue = obj.clientName;
+      this.subData.ClientId = obj.clientId;
+      this.CaseIdValue = obj.name;
+      this.subData.CaseId = obj.id;
+      this.subData.Name = obj.name;
     };
   }
 </script>

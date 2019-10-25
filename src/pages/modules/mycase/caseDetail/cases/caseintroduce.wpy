@@ -33,7 +33,7 @@
     <!-- <text></text> -->
     <view class="body">
         <view class="container-title">
-            <text class="title-text">案件简介</text>
+            <text class="title-text">案情简介</text>
             <!-- <icon class="iconfont icon-bianji" style="font-size:60rpx;color:#5d73fa"></icon> -->
         </view>
         <view class="introduce-container">

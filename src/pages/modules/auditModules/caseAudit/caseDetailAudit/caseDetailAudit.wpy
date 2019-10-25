@@ -1091,11 +1091,13 @@
         // }
         //检索结果
         async GetOrderItem(id) {
+            this.GetCaseInfo(id);
+            return false;
             var data = {
                 id: id
             }
             var resData = await ajax.getData(
-                '/api/services/web/caseOrder/GetOrderItem',
+                '/api/services/web/Case/GetCaseCheckList',
                 'post',
                 data
             )

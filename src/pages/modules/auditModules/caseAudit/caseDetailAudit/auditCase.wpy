@@ -144,14 +144,27 @@
                 });
             }
         }
+        async GetAuditCaseActions(id){
+            let { data } = await ajax.getData('/api/services/web/Case/GetAuditCaseActions','post',id)
+            this.result  = data.result.items;
+            data.result.items.forEach((item,index) =>{
+                if(index === 0)
+                item.isSelected = true;
+                else
+                item.isSelected = false;
+            })
+            this.submitData.result = data.result.items[0].condition;
+            this.submitData.id = id;
+            this.submitData.caseId = id
+        }
         onLoad() {
-            var OrderItem=wx.getStorageSync('OrderItem'); 
-            OrderItem.getCreationResultList[0].isSelected=true;
-            this.result  = OrderItem.getCreationResultList;
-            this.submitData.result= OrderItem.getCreationResultList[0].value;
-            this.submitData.id=OrderItem.id;
-            this.submitData.caseId=OrderItem.caseId;
-            this.$apply();
+            // var OrderItem=wx.getStorageSync('OrderItem'); 
+            // OrderItem.getCreationResultList[0].isSelected=true;
+            // this.result  = OrderItem.getCreationResultList;
+            // this.submitData.result= OrderItem.getCreationResultList[0].value;
+            // this.submitData.id = OrderItem.id;
+            // this.submitData.caseId=OrderItem.caseId;
+            // this.$apply();
         }
     }
 </script>

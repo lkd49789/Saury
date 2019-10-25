@@ -82,7 +82,7 @@
                 padding: 30rpx 28rpx;
                 display: flex;
                 flex-wrap: wrap;
-                >view:not(:last-child) {
+                >view{
                     display: flex;
                     flex-direction: column;
                     width: 50%;

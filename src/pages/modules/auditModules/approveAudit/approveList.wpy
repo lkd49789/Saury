@@ -136,7 +136,7 @@
         };
         data = {
             currentTab:0,
-            navbars: ['待审核', '已审核', '已退回'],
+            navbars: ['全部', '待处理'],
             pageNumber_w: 1,
             pageNumber_A: 1,
             pageNumber_R: 1,
@@ -222,7 +222,7 @@
                 status: status
             }
             var resData = await ajax.getData(
-                '/api/services/web/caseFileStampManage/GetApproveCaseFileList',
+                '/api/services/web/CaseFileStamp/GetAuditCaseFileStamps',
                 'post',
                 data
             )

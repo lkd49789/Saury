@@ -1600,12 +1600,15 @@
             }
           });
         } else {
+          var filePath = textPath.split('/');
+        filePath = '/' + filePath[filePath.length - 1];
+        if(!this.caseDetailData.documentDatas.filePath.includes(filePath)){
           this.getDocumentData(id, docClass);
+          this.caseDetailData.documentDatas.filePath.push(filePath);
+          console.log(this.caseDetailData.documentDatas);
           this.caseDetailData.documentDatas.lastPathClass.push(docClass);
           this.caseDetailData.documentDatas.lastPathId.push(id);
-          var filePath = textPath.split('/');
-          filePath = '/' + filePath[filePath.length - 1];
-          this.caseDetailData.documentDatas.filePath.push(filePath);
+        }
           // if(this.caseDetailData.documentDatas.searchDocValue){
           //   this.caseDetailData.documentDatas.filePath=filePath
           // }else{
@@ -1751,8 +1754,15 @@
       wx.navigateTo({
         url: '../../myTaskCourse/taskStage/createtask/createStage?projectId=' + projectId + '&sort=' + sort
       });
-      else
-      wx.navigateTo({ url: '../../myTaskCourse/createProject' });
+      else{
+        let obj = {
+          clientName:this.caseDetailData.caseData.caseDetail.clientName,
+          clientId:this.caseDetailData.caseData.caseDetail.clientId,
+          name:this.caseDetailData.caseData.caseDetail.name,
+          id:this.caseDetailData.caseData.caseDetail.id
+        }
+        wx.navigateTo({ url: `../../myTaskCourse/createProject?obj=${JSON.stringify(obj)}` });
+      }
     }
     //案件信息
     async getCaseData() {

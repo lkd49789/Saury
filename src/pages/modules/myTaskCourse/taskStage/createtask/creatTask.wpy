@@ -277,6 +277,8 @@
                 var condition2=this.JudgeIsTrue(this.submitData.Title  && this.submitData.Description && this.category == '2'&&this.submitData.Participant)
                 console.log(condition1,condition2)
                 if ( condition1||condition2) {
+                    this.childConfirm()
+                    this.tagConfirm()
                     wx.setStorageSync('taskNextPage', this.submitData);
                     wx.navigateTo({
                         url: './creatTaskAll'
@@ -322,23 +324,7 @@
                 this.$apply();
             },
             childBindconfirm() {
-                if (this.childTitle) {
-                    var childData = {
-                        isCompleted: 'N',
-                        checked: false,
-                        id: 'temp_' + this.childTask.length,
-                        sort: this.childTask.length,
-                        title: this.childTitle,
-                    }
-                    this.childTitle = '';
-                    this.childTask.push(childData);
-                    this.throught.push(false);
-                    this.submitData.checkItems = this.childTask;
-                    this.isShowChild = !this.isShowChild;
-                    this.$apply();
-                } else {
-                    this.isShowChild = !this.isShowChild;
-                }
+                this.childConfirm()
             },
             childBindinput(e) {
                 if (e.detail.value) {
@@ -366,15 +352,7 @@
                 this.$apply();
             },
             tagBindconfirm() {
-                if (this.TagValue) {
-                    this.Tag.TagItem.push(this.TagValue);
-                    this.Tag.TagItem = myDistinct(this.Tag.TagItem);
-                    this.TagValue = '';
-                    this.submitData.Tag = this.Tag.TagItem.toString();
-                    this.$apply();
-                } else {
-                    return
-                }
+                this.tagConfirm()
             },
             tagBindinput(e) {
                 if (e.detail.value) {
@@ -406,6 +384,33 @@
                 this.$apply();
             }
         };
+        tagConfirm(){
+            if (this.TagValue) {
+                this.Tag.TagItem.push(this.TagValue);
+                this.Tag.TagItem = myDistinct(this.Tag.TagItem);
+                this.TagValue = '';
+                console.log(this.Tag.TagItem)
+                this.submitData.Tag = this.Tag.TagItem.toString();
+                this.$apply();
+            } 
+        }
+        childConfirm(){
+            if (this.childTitle) {
+                    var childData = {
+                        isCompleted: 'N',
+                        checked: false,
+                        id: 'temp_' + this.childTask.length,
+                        sort: this.childTask.length,
+                        title: this.childTitle,
+                    }
+                    this.childTitle = '';
+                    this.childTask.push(childData);
+                    this.throught.push(false);
+                    this.submitData.checkItems = this.childTask;
+                    this.$apply();
+                }
+                this.isShowChild = false;
+        }
         getScroll() {
             var that = this;
             //   if(that.scrollTop )

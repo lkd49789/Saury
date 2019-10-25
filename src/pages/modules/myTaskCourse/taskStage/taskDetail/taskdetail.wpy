@@ -870,7 +870,7 @@
 <script>
     import wepy from 'wepy';
     import { DocumentFile,EmployeePhoto } from '@/api/common.js';
-    import { OrUpdateSubTask,CfTaskParticipant,Task,Comment,Attachment,DSubTask,ComTaskParticipant,DeleteTasks } from '@/api/myTaskCourse.js';
+    import { OrUpdateSubTask,CfTaskParticipant,Task,Comment,Attachment,DSubTask,ComTaskParticipant,DeleteTasks,Comments  } from '@/api/myTaskCourse.js';
     import navbar from '@/components/navbar';
     import api from '@/utils/cofig/api.js';
     export default class taskdetail extends wepy.page {
@@ -1328,7 +1328,7 @@
                 this.tag[0] = '标签未知';
             }
             if (taskData.result.startTime !== null && taskData.result.endTime !== null) {
-                var millTime=new Date(taskData.result.endTime).getTime()-(8*60*60*1000);
+                var millTime=new Date(taskData.result.endTime).getTime();
                     taskData.result.endTime=new Date(millTime);
                 taskData.result.endTime = api.formatTimeSymbol(taskData.result.endTime, '-')
                 //任务时长
@@ -1488,13 +1488,13 @@
                             obj['color'] = '#7a7a7a';
                             break;
                     }
-                } else if (CommentsDatas.result.items[index].message !== null) {
-                    obj['message'] = CommentsDatas.result.items[index].message;
+                } else if (CommentsDatas.data.result.items[index].message !== null) {
+                    obj['message'] = CommentsDatas.data.result.items[index].message;
                 }
                 // 头像
-                if (CommentsDatas.result.items[index].creatorUserId !== this.userId) {
-                    obj['creatorUserId'] = CommentsDatas.result.items[index].creatorUserId;
-                    var avatarData = await EmployeePhoto(CommentsDatas.result.items[index].creatorUserId);
+                if (CommentsDatas.data.result.items[index].creatorUserId !== this.userId) {
+                    obj['creatorUserId'] = CommentsDatas.data.result.items[index].creatorUserId;
+                    var avatarData = await EmployeePhoto(CommentsDatas.data.result.items[index].creatorUserId);
                     obj['avatar'] = avatarData;
                 } else {
                     obj['creatorUserId'] = this.userId;
@@ -1502,7 +1502,7 @@
                 }
                 // 日期
                 // if (this.CommentsDatas[index].creationTime !== '' && this.CommentsDatas[index].creationTime !== null) {
-                obj['creationTime'] = CommentsDatas.result.items[
+                obj['creationTime'] = CommentsDatas.data.result.items[
                     index
                 ].creationTime.replace(/[a-zA-Z]/g, ' ').split('.')[0];
                 // }

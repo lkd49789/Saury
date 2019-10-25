@@ -41,7 +41,7 @@
             <text>{{input.title}}</text>
         </view>
         <view class="textarea-container" style="border-bottom:1px solid {{inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
-            <textarea name="{{input.name}}" bindfocus="bindfocus" bindblur="bindblur" placeholder="请输入{{input.title}}" bindinput="bindinput" maxlength='-1' value="{{inputValue}}" auto-height cursor-spacing="5px" fixed="{{true}}" style="width:83%"/>
+            <textarea name="{{input.name}}" bindfocus="bindfocus" bindblur="bindblur" placeholder="请输入" bindinput="bindinput" maxlength='-1' value="{{inputValue}}" auto-height cursor-spacing="5px" fixed="{{true}}" style="width:83%"/>
         </view>
         <view  wx:if="{{input.warning}}" style="color:#e20000">
                 <text>此字段是必填字段</text>
@@ -52,7 +52,7 @@
             <text>{{input.title}}</text>
         </view>
         <view class="input-container" style="border-bottom:1px solid {{inputChecked?'#5d73fa':'#dedede'}};color:#7a7a7a">
-            <input name="{{input.name}}" bindfocus="bindfocus" bindblur="bindblur" placeholder="请输入{{input.title}}" bindinput="bindinput" disabled="{{input.disabled}}" value="{{inputValue}}" type="{{input.type||'text'}}" confirm-type="done" cursor-spacing="5px" />
+            <input name="{{input.name}}" bindfocus="bindfocus" bindblur="bindblur" placeholder="请输入" bindinput="bindinput" disabled="{{input.disabled}}" value="{{inputValue}}" type="{{input.type||'text'}}" confirm-type="done" cursor-spacing="5px" />
         </view>
         <view  wx:if="{{input.warning}}" style="color:#e20000">
                 <text>此字段是必填字段</text>
@@ -69,6 +69,7 @@
         data = {
             inputChecked: false,
             isShow:false,
+            dis:false
         };
         props = {
             input: {
@@ -82,7 +83,9 @@
         methods = {
             bindinput(e) {
                 var value= e.detail.value;
-                this.input.warning=value?false:true;
+                if(this.dis){
+                    this.input.warning = value ? false : true;
+                }
                 this.inputValue = value
                 this.$apply();
             },
@@ -93,14 +96,15 @@
             bindblur(e) {
                 this.inputChecked = !this.inputChecked
                 if(this.isWarning&&e.detail.value==""){
-                    this.input.warning=true;
+                    this.input.warning = true;
                 }
                 this.$apply();
             }
         };
         onLoad() {
-            this.isShow=this.input.options||false;
-            this.input.disabled=this.input.disabled||false;
+            this.isShow=this.input.options || false;
+            this.input.disabled = this.input.disabled || false;
+            this.dis = this.input.warning
             this.$apply();
         }
     }
