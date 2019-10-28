@@ -43,7 +43,7 @@
             </view>
         </picker>
          <view  wx:if="{{options.warning}}" style="color:#e20000">
-                <text>此字段是必填字段</text>
+                <text>必填字段</text>
         </view>
     </view>
 </template>

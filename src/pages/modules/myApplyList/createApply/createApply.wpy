@@ -101,12 +101,12 @@
             },
             EndTime: '',
             VacationDay: {
-                title: '请假期间节假日天数',
+                title: '此区间节假日天数',
                 name: 'VacationDay',
                 warning: false,
                 type: 'digit',
             },
-            VacationDayValue: '',
+            VacationDayValue: '0',
             TotalDay: {
                 title: '请假天数',
                 name: 'TotalDay',
@@ -171,10 +171,22 @@
         watch = {
             StartTime(dateData) {
                 this.submitData.StartDate = dateData[0] + '/' + dateData[1] + '/' + dateData[2] + ' ' + dateData[3] + ':' + dateData[4] + ':' + dateData[5];
+                let endDate = new Date(this.submitData.EndDate).getTime();
+                let StartDate = new Date(this.submitData.StartDate).getTime();
+                if(endDate > StartDate)
+                    this.TotalDayValue = (((endDate - StartDate) / 1000 / 60 / 60 / 24).toFixed(1)).toString() 
+                else
+                    this.TotalDayValue = ''
                 this.$apply();
             },
             EndTime(dateData) {
                 this.submitData.EndDate = dateData[0] + '/' + dateData[1] + '/' + dateData[2] + ' ' + dateData[3] + ':' + dateData[4] + ':' + dateData[5];
+                let endDate = new Date(this.submitData.EndDate).getTime();
+                let StartDate = new Date(this.submitData.StartDate).getTime();
+                if(endDate > StartDate)
+                    this.TotalDayValue = (((endDate - StartDate) / 1000 / 60 / 60 / 24).toFixed(2)).toString() 
+                else
+                    this.TotalDayValue = ''
                 this.$apply();
             },
             VacationTypeIndex(index) {

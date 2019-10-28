@@ -806,7 +806,8 @@
                     avatar: []
                 },
             ],
-            OrderItemData: {}
+            OrderItemData: {},
+            id:''
         };
         methods = {
             // 跳转至客户方本案联系人
@@ -820,7 +821,7 @@
             touchEnd() {
                 this.addOpacity = 1;
                 wx.navigateTo({
-                    url: './auditCase'
+                    url: './auditCase?id='+ this.id
                 });
             },
             //文件预览
@@ -1122,6 +1123,7 @@
             }
         }
         onLoad(options) {
+            this.id = options.id;
             this.GetOrderItem(options.id);
             this.$apply();
         }

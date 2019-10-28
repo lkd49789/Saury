@@ -707,7 +707,7 @@
                             <view>
                                 <textarea placeholder="备注原因" name="textarea" style="height:234rpx;width:440rpx;" maxlength="140" bindinput="bindinput" value="{{refuseRemark}}" bindblur='bindblur' fixed='{{true}}' />
                                 <view wx:if="{{warning}}" style="color:#e20000">
-                                    <text>此字段是必填字段</text>
+                                    <text>必填字段</text>
                                 </view>
                             </view>
                             <view>
@@ -1104,7 +1104,7 @@
                 this.setData({
                     msgData: ''
                 });
-                var time = new Date();
+                var time = new Date(new Date().getTime()+8 * 3600000);
                 var creationTime = api.formatTime(time);
                 console.log(creationTime);
                 var msgInfo = {
@@ -1127,7 +1127,7 @@
             preView(fileId, fileClass, fileSize, filePath) {
                 console.log(fileId, fileClass, fileSize, filePath);
                 wx.showLoading({
-                    title: '加载中，请稍等！',
+                    title: '加载中,请稍等!',
                     mask: true
                 });
                 if (fileId == null) {

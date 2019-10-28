@@ -190,7 +190,6 @@
                 });
             },
             filter(name) {
-                this.myinvoice = [];
                 this.pageNumber = 1;
                 switch (name) {
                     case 'cteateTime':
@@ -232,7 +231,6 @@
             this.$apply();
         };
         onPullDownRefresh() {
-            this.myinvoice = [];
             this.pageNumber = 1;
             this.getbill(this.statusList);
             wx.hideNavigationBarLoading(); //完成停止加载
@@ -247,6 +245,7 @@
              this.sorting = sort ? sort : this.sorting;
             var filter = this.queryStream.filter ? this.queryStream.filter : '';
             var creationTimeRange = this.queryStream.creationTimeRange ? this.queryStream.creationTimeRange : '';
+            this.myinvoice = [];
             var resData = await ajax.getData(
                 '/api/services/web/financialInvoice/GetInvoices',
                 'post', {

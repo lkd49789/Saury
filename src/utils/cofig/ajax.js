@@ -30,7 +30,7 @@ var getRequest = ({url, method = 'post', header, data = ''}) => {
 
 var getData = (http, method, data = '') => {
   wx.showLoading({
-    title: 'loading...',
+    title: '加载中,请稍等!',
   })
   return new Promise((resolve, reject) => {
     wx.getStorage({

@@ -394,7 +394,7 @@
         //获取通知消息
         async GetUserNotifications(isRresh,state='') {
             wx.showLoading({
-                title: 'Loading...', //提示的内容,
+                title: '加载中,请稍等!', //提示的内容,
                 mask: true, //显示透明蒙层，防止触摸穿透,
             });
             if (!isRresh) {
@@ -636,7 +636,7 @@
         //标记
         async SetNotificationAsRead(id, index) {
             wx.showLoading({
-                title: 'Loading...', //提示的内容,
+                title: '加载中,请稍等!', //提示的内容,
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {
                     this.GetUserNotifications_data[index].state = 1;
@@ -657,7 +657,7 @@
         //批量标记
         async SetAllNotificationsAsRead(id) {
             wx.showLoading({
-                title: 'Loading...', //提示的内容,
+                title: '加载中,请稍等!', //提示的内容,
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {
                     this.sign_id = [];
@@ -679,7 +679,7 @@
         //删除消息
         async DeleteUserNotification(id, index) {
             wx.showLoading({
-                title: 'Loading...', //提示的内容,
+                title: '加载中,请稍等!', //提示的内容,
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {
                     this.GetUserNotifications_data.splice(index, 1);
@@ -705,7 +705,7 @@
         //批量删除
         async DeleteUserNotifications() {
             wx.showLoading({
-                title: 'Loading...', //提示的内容,
+                title: '加载中,请稍等!', //提示的内容,
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {
                     this.GetUserNotifications(false);

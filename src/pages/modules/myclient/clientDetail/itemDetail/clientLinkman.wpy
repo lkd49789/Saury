@@ -160,7 +160,7 @@ export default class caseintroduce extends wepy.page {
       pageSize: this.pageSize
     };
     wx.showLoading({
-      title: '加载中，请稍等哦！',
+      title: '加载中,请稍等!',
       mask: true,
     });
     var resData = await ajax.getData(

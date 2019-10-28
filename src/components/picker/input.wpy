@@ -44,7 +44,7 @@
             <textarea name="{{input.name}}" bindfocus="bindfocus" bindblur="bindblur" placeholder="请输入" bindinput="bindinput" maxlength='-1' value="{{inputValue}}" auto-height cursor-spacing="5px" fixed="{{true}}" style="width:83%"/>
         </view>
         <view  wx:if="{{input.warning}}" style="color:#e20000">
-                <text>此字段是必填字段</text>
+                <text>必填字段</text>
         </view>
     </view>
     <view class="input"  wx:else>
@@ -55,7 +55,7 @@
             <input name="{{input.name}}" bindfocus="bindfocus" bindblur="bindblur" placeholder="请输入" bindinput="bindinput" disabled="{{input.disabled}}" value="{{inputValue}}" type="{{input.type||'text'}}" confirm-type="done" cursor-spacing="5px" />
         </view>
         <view  wx:if="{{input.warning}}" style="color:#e20000">
-                <text>此字段是必填字段</text>
+                <text>必填字段</text>
         </view>
     </view>
    

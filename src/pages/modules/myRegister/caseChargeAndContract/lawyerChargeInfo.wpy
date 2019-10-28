@@ -190,7 +190,7 @@
                 title: '办案费限额',
                 name: 'ChargeLimit',
                 warning: false,
-                type: 'text',
+                type: 'number',
                 options: false
             },
             ChargeLimitValue: '',
@@ -217,7 +217,7 @@
                 title: '汇率',
                 name: 'ExchangeRateValue',
                 warning: false,
-                type: 'text',
+                type: 'number',
                 options: false
             },
             ExchangeRateValueValue: '',
@@ -250,7 +250,7 @@
                 title: '律师费用',
                 name: 'CostLimit',
                 warning: false,
-                type: 'text',
+                type: 'number',
                 options: false,
                 isDisabled: true
             },
@@ -260,7 +260,7 @@
                 title: '免费小时',
                 name: 'FreeHours',
                 warning: false,
-                type: 'text',
+                type: 'number',
                 options: false,
             },
             FreeHoursValue: '',
@@ -317,15 +317,22 @@
                             }
                         })
                     }else{
-                        wx.chooseMessageFile({
-                            count: 1,
-                            type: 'file',
-                            success : res =>{
-                                // tempFilePath可以作为img标签的src属性显示图片
-                                const tempFilePaths = res.tempFilePaths
-                                this.uploadFile(tempFilePaths[0],this.caseId)
-                            }
-                        })
+                        if(wx.chooseMessageFile){
+                            wx.chooseMessageFile({
+                                count: 1,
+                                type: 'file',
+                                success : res =>{
+                                    // tempFilePath可以作为img标签的src属性显示图片
+                                    const tempFilePaths = res.tempFilePaths
+                                    this.uploadFile(tempFilePaths[0],this.caseId)
+                                }
+                            })
+                        }else{
+                            wx.showModal({
+                                title: '提示',
+                                content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
+                            })
+                        }
                     }
                 },
                 fail (res) {
@@ -489,7 +496,7 @@
         //提交数据
         async CreateOrUpdateCaseCharge() {
             wx.showLoading({
-                title: 'Loading...', //提示的内容,
+                title: '加载中,请稍等!', //提示的内容,
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {
                 }

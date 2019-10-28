@@ -11,7 +11,7 @@
         .bill_content {
             background: #ffffff;
             margin: 0 auto;
-            padding: 44rpx 28rpx 34rpx 28rpx;
+            padding: 30rpx 28rpx 34rpx 28rpx;
             font-size: 28rpx;
             overflow: auto;
             border-bottom: 20rpx solid #f2f2f2;
@@ -76,12 +76,30 @@
         .flex {
             display: flex;
             margin-bottom: 15rpx;
+            justify-content: space-between;
         }
         .right {
             text-align: right;
         }
         .left {
             text-align: left;
+        }
+        .workflows{
+            box-shadow: 0rpx 8rpx 30rpx 0rpx rgba(65, 98, 213, 0.25);
+            border-radius: 20rpx;
+            margin: 44rpx 28rpx;
+            border-bottom: 0rpx;
+            .title{
+                align-items: center;
+            }
+            .status{
+                margin-right: 20rpx;
+            }
+            .bill-del{
+                >text{
+                    color:#5d73fa;
+                }
+            }
         }
         .bill_btn {
             border-radius: 0;
@@ -172,7 +190,19 @@
                 </repeat>
             </view>
         </view>
-        <view class="bill_content" wx:if="{{invoiceDataDetail.workflows.length>0}}">
+        <view class="bill_content workflows">
+                <view class="bill_box" @tap="toFOR">
+                    <view class="title flex bill_view ">
+                        <text class="bill_gray">财务操作记录</text>
+                        <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                    <view class="bill_view "><text class="{{invoiceDataDetail.status=='WaitForApproved'?'bill_yellow':invoiceDataDetail.status=='Returned'?'bill_gray':'bill_green'}} status">{{invoiceDataDetail.statusName}}</text><text class="bill_gray">{{invoiceDataDetail.workflows[0].creationTime}}</text></view>
+                    <view class="bill-del bill_gray">
+                        通过<text>{{invoiceDataDetail.workflows.length}}</text>位审核人审核
+                    </view>
+                </view>
+            </view>
+        <!-- <view class="bill_content" wx:if="{{invoiceDataDetail.workflows.length>0}}">
             <view class="bill_box">
                 <view class="bill_view">财务操作记录</view>
                 <repeat for="{{invoiceDataDetail.workflows}}" key="index" index="index" item="item">
@@ -190,7 +220,7 @@
                     </view>
                 </repeat>
             </view>
-        </view>
+        </view> -->
         <view style="height:{{invoiceDataDetail.status=='UnSubmitted' || invoiceDataDetail.status=='Returned'? '98rpx':'0'}}"></view>
         <button class="bill_btn" wx:if="{{invoiceDataDetail.status=='UnSubmitted' || invoiceDataDetail.status=='Returned'}}" catchtap="toAuditing()">提交</button>
     </view>
@@ -212,6 +242,11 @@
             avatar: []
         };
         methods = {
+            toFOR() {
+                wx.navigateTo({
+                    url: `../../cost/myCost/financialOperationRecord?invoiceDetailId=${this.invoiceDetailId}&invoice=${true}`
+                });
+            }
         };
         onLoad(options) {
             this.invoiceDetailId = options.id;
@@ -223,7 +258,7 @@
         //获取账单
         async getbill(num) {
             wx.showLoading({
-                title: 'Loading...', //提示的内容,
+                title: '加载中,请稍等!', //提示的内容,
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });

@@ -167,7 +167,7 @@
                             </label>
                     </radio-group>
                     <view wx:if="{{warning}}" style="color:#e20000">
-                        <text>此字段是必填字段</text>
+                        <text>必填字段</text>
                     </view>
                 </view>
                 <textarea :input.sync="input" :inputValue.sync='inputValue' :twoWayTitle="inputValue" fixed="{{true}}" />
@@ -193,7 +193,7 @@
             auditStatus: false,
             isPass: [{
                     value: 'A',
-                    displayText: '通过审核',
+                    displayText: '审核通过',
                     isChecked: false,
                 },
                 {
@@ -255,7 +255,7 @@
         }
         async GetVacationApplyOutput() {
             wx.showLoading({
-              title: 'Loading...', //提示的内容,
+              title: '加载中,请稍等!', //提示的内容,
               mask: true //显示透明蒙层，防止触摸穿透,
             });
             var data = {

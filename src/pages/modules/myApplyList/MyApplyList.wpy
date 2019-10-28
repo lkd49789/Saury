@@ -235,7 +235,7 @@
             var VacationTypeList = this.queryStream.VacationTypeList || '';
             var creationTimeRange = this.queryStream.creationTimeRange || '';
             wx.showLoading({
-                title: '加载中，请稍等！',
+                title: '加载中,请稍等!',
                 mask: true,
             });
             var data = {

@@ -15,19 +15,34 @@
 9 verbose lifecycle lvzhihui@0.0.2~dev: PATH: C:\Users\Administrator\AppData\Roaming\npm\node_modules\npm\bin\node-gyp-bin;c:\Users\Administrator\Desktop\2.0\node_modules\.bin;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows7Master;D:\Wo\Git\cmd;D:\sdk\tools;D:\sdk\platform-tools;D:\Wo\Microsoft VS Code\bin;C:\Program Files\Git\cmd;D:\Program Files\nodejs\;D:\Program Files\python\Scripts\;D:\Program Files\python\;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows7Master;D:\Program Files\nodejs\;D:\Program Files\Java\jdk1.8.0_92\bin;D:\Program Files\Java\jdk1.8.0_92\bin;D:\Program Files\Java\jdk1.8.0_92\jre\bin;D:\Wo\Microsoft VS Code\bin;C:\Users\Administrator\AppData\Roaming\npm
 10 verbose lifecycle lvzhihui@0.0.2~dev: CWD: c:\Users\Administrator\Desktop\2.0
 11 silly lifecycle lvzhihui@0.0.2~dev: Args: [ '/d /s /c', 'wepy build --watch' ]
-12 verbose stack Error: kill ENOSYS
-12 verbose stack     at process.kill (internal/process/per_thread.js:189:13)
-12 verbose stack     at process.listener (C:\Users\Administrator\AppData\Roaming\npm\node_modules\npm\node_modules\npmlog\node_modules\gauge\node_modules\signal-exit\index.js:95:15)
-12 verbose stack     at process.emit (events.js:209:13)
-13 verbose cwd c:\Users\Administrator\Desktop\2.0
-14 error Windows_NT 6.1.7601
-15 error argv "D:\\Program Files\\nodejs\\node.exe" "C:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js" "run" "dev"
-16 error node v12.10.0
-17 error npm  v4.1.2
-18 error code ENOSYS
-19 error errno ENOSYS
-20 error syscall kill
-21 error kill ENOSYS
-22 error If you need help, you may report this error at:
-22 error     <https://github.com/npm/npm/issues>
-23 verbose exit [ 1, true ]
+12 silly lifecycle lvzhihui@0.0.2~dev: Returned: code: 3221225786  signal: null
+13 info lifecycle lvzhihui@0.0.2~dev: Failed to exec dev script
+14 verbose stack Error: lvzhihui@0.0.2 dev: `wepy build --watch`
+14 verbose stack Exit status 3221225786
+14 verbose stack     at EventEmitter.<anonymous> (C:\Users\Administrator\AppData\Roaming\npm\node_modules\npm\lib\utils\lifecycle.js:279:16)
+14 verbose stack     at EventEmitter.emit (events.js:209:13)
+14 verbose stack     at ChildProcess.<anonymous> (C:\Users\Administrator\AppData\Roaming\npm\node_modules\npm\lib\utils\spawn.js:40:14)
+14 verbose stack     at ChildProcess.emit (events.js:209:13)
+14 verbose stack     at maybeClose (internal/child_process.js:1021:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:283:5)
+15 verbose pkgid lvzhihui@0.0.2
+16 verbose cwd c:\Users\Administrator\Desktop\2.0
+17 error Windows_NT 6.1.7601
+18 error argv "D:\\Program Files\\nodejs\\node.exe" "C:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js" "run" "dev"
+19 error node v12.10.0
+20 error npm  v4.1.2
+21 error code ELIFECYCLE
+22 error lvzhihui@0.0.2 dev: `wepy build --watch`
+22 error Exit status 3221225786
+23 error Failed at the lvzhihui@0.0.2 dev script 'wepy build --watch'.
+23 error Make sure you have the latest version of node.js and npm installed.
+23 error If you do, this is most likely a problem with the lvzhihui package,
+23 error not with npm itself.
+23 error Tell the author that this fails on your system:
+23 error     wepy build --watch
+23 error You can get information on how to open an issue for this project with:
+23 error     npm bugs lvzhihui
+23 error Or if that isn't available, you can get their info via:
+23 error     npm owner ls lvzhihui
+23 error There is likely additional logging output above.
+24 verbose exit [ 1, true ]

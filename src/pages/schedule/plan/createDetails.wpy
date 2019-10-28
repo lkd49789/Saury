@@ -350,7 +350,7 @@
                 Privacy: "",
                 RelationId: "",
                 Remark: "",
-                RemindTime: "",
+                RemindTime: "0",
                 Situation: "",
                 StartTime: "",
                 Tag: "",
@@ -712,7 +712,7 @@
                         parentId: arg[0]
                     }
                     var resData = await ajax.getData(
-                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
+                        '/api/services/web/common/GetGeneralComboboxList',
                         'post',
                         data
                     )
@@ -741,7 +741,7 @@
                         class: keyWord
                     }
                     var resData = await ajax.getData(
-                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
+                        '/api/services/web/common/GetGeneralComboboxList',
                         'post',
                         data
                     )
@@ -761,7 +761,7 @@
                         shortCode: arg[0]
                     }
                     var resData = await ajax.getData(
-                        '/api/services/web/generalCodeComboService/GetGeneralComboboxList',
+                        '/api/services/web/common/GetGeneralComboboxList',
                         'post',
                         data
                     )

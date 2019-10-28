@@ -54,8 +54,8 @@
                 <radio-group class="radio-group" @change="bindPickerChang" style="padding-bottom:20rpx;">
                     <label class="radio" wx:for="{{result}}" wx:key="index">
                         <view>
-                            <radio value="{{item.value}}" checked="{{item.isSelected}}" color="#5d73fa"/>
-                        <text  style="margin-right:60rpx">{{item.displayText}}</text>
+                            <radio value="{{item.eventName}}" checked="{{item.isSelected}}" eventName="{{item.eventName}}"  color="#5d73fa"/>
+                        <text  style="margin-right:60rpx">{{item.displayName}}</text>
                         </view>
                     </label>
                 </radio-group>
@@ -87,34 +87,24 @@
             },
             remarkValue:''
         };
+        watch = {
+            remarkValue(value){
+                this.submitData.remark = value;
+                this.$apply();
+            }
+        }
         methods = {
             touchEnd(){
-                    if(this.submitData.result=="WaitForTransfer"){
-                        this.ProcessOrderItem();
-                    }else if(this.submitData.result!=="WaitForTransfer"&&this.submitData.result){
-                        this.remark.warning=true;
-                        wx.showToast({
-                          title: '审核意见不能为空！', //提示的内容,
-                          icon: 'none', //图标,
-                          duration: 2000, //延迟时间,
-                          mask: false, //显示透明蒙层，防止触摸穿透,
-                          success: res => {}
-                        });
-                    }
+                    this.ProcessOrderItem();
                     this.$apply();
                 
             },
             bindPickerChang(e){
-                console.log(e.detail.value)
-                this.submitData.result=e.detail.value
+                console.log(e)
+                this.submitData.condition = e.detail.value
             }
         };
-        watch={
-            remarkValue(value){
-                this.submitData.remark=value;
-                this.$apply();
-            }
-        }
+    
         async ProcessOrderItem(){
             wx.showLoading({
                 title: '提交中，请稍等！', //提示的内容,
@@ -124,7 +114,7 @@
                 }
             });
             var resData=await ajax.getData(
-                '/api/services/web/caseCreation/ProcessOrderItem',
+                '/api/services/web/Case/ProcessCase',
                 'post',
                 this.submitData
             )
@@ -145,7 +135,7 @@
             }
         }
         async GetAuditCaseActions(id){
-            let { data } = await ajax.getData('/api/services/web/Case/GetAuditCaseActions','post',id)
+            let { data } = await ajax.getData('/api/services/web/Case/GetAuditCaseActions','post',{id})
             this.result  = data.result.items;
             data.result.items.forEach((item,index) =>{
                 if(index === 0)
@@ -153,11 +143,13 @@
                 else
                 item.isSelected = false;
             })
-            this.submitData.result = data.result.items[0].condition;
+            this.submitData.condition = data.result.items[0].condition;
             this.submitData.id = id;
             this.submitData.caseId = id
+            this.$apply()
         }
-        onLoad() {
+        onLoad(option) {
+            this.GetAuditCaseActions(option.id)
             // var OrderItem=wx.getStorageSync('OrderItem'); 
             // OrderItem.getCreationResultList[0].isSelected=true;
             // this.result  = OrderItem.getCreationResultList;

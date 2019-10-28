@@ -107,7 +107,8 @@
   import { formatTime } from '@/utils/cofig/api.js'
   export default class financialOperationRecord extends wepy.page {
     data = {
-        workflows:[]
+        workflows:[],
+        invoice:false
     };
 
     components = {};
@@ -122,12 +123,16 @@
      //获取账单
         async getbill() {
             wx.showLoading({
-                title: 'Loading...', //提示的内容,
+                title: '加载中,请稍等!', //提示的内容,
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
+            let url = '/api/services/web/financialCharge/GetCharge';
+            if(this.invoice){
+                url = `/api/services/web/financialInvoice/GetInvoice`
+            }
             var resData = await ajax.getData(
-                '/api/services/web/Workflow/GetLogs',
+                url,
                 'post', {
                     id: this.invoiceDetailId
                 }
@@ -157,6 +162,9 @@
     onLoad(options) {
         this.invoiceDetailId=options.invoiceDetailId;
         this.getbill();
+        if(options.invoice){
+            this.invoice = options.invoice;
+        }
         this.$apply();
      };
 

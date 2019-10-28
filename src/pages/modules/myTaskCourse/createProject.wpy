@@ -151,7 +151,7 @@
           <text wx:if="{{ClientIdValue}}" catchtap="deleteValue('ClientIdValue')">x</text>
         </view>
         <view class="warning" wx:if="{{subData.Category=='1'&&!ClientIdValue}}" style="color:#e20000">
-                <text>此字段是必填字段</text>
+                <text>必填字段</text>
         </view>
       </view>
       <view class="inputSearch" wx:if="{{subData.Category=='0'}}">
@@ -561,7 +561,7 @@
       console.log(resData);
       if(resData.statusCode==200){
         wx.showLoading({
-          title: 'Loading...', //提示的内容,
+          title: '加载中,请稍等!', //提示的内容,
           mask: true, //显示透明蒙层，防止触摸穿透,
           success: res => {
             var pages = getCurrentPages();
@@ -587,7 +587,7 @@
     //上传图片
     async UploadProjectCover(image){
       wx.showLoading({
-        title: 'Loading...', //提示的内容,
+        title: '加载中,请稍等!', //提示的内容,
         mask: true, //显示透明蒙层，防止触摸穿透,
         success: res => {}
       });
@@ -648,12 +648,14 @@
       this.subData.Privacy=this.Privacy.data[0].value;
       this.GetGeneralCodeComboOutput();
       this.GetTemplatesWithGroup();
-      let obj = JSON.parse(option.obj)
-      this.ClientIdValue = obj.clientName;
-      this.subData.ClientId = obj.clientId;
-      this.CaseIdValue = obj.name;
-      this.subData.CaseId = obj.id;
-      this.subData.Name = obj.name;
+      if(option.obj){
+        let obj = JSON.parse(option.obj)
+        this.ClientIdValue = obj.clientName;
+        this.subData.ClientId = obj.clientId;
+        this.CaseIdValue = obj.name;
+        this.subData.CaseId = obj.id;
+        this.subData.Name = obj.name;
+      }
     };
   }
 </script>

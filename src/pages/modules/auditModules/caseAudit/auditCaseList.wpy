@@ -294,7 +294,7 @@
         async GetAlreadyCaseCreations(...arg) {
             var keyWord=arg[0]?arg[0].KeyWord:'';
             wx.showLoading({
-                title: '加载中，请稍等！',
+                title: '加载中,请稍等!',
                 mask: true,
             });
             var data = {

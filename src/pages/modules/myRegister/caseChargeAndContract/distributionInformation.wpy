@@ -187,7 +187,7 @@
     }
     async UpdateCaseLawyerCharge(subData,index){
       wx.showLoading({
-        title: 'Loading...', //提示的内容,
+        title: '加载中,请稍等!', //提示的内容,
         mask: true, //显示透明蒙层，防止触摸穿透,
         success: res => {}
       });
@@ -212,7 +212,7 @@
      //提交数据
     async CreateOrUpdateCaseCharge() {
       wx.showLoading({
-          title: 'Loading...', //提示的内容,
+          title: '加载中,请稍等!', //提示的内容,
           mask: true, //显示透明蒙层，防止触摸穿透,
           success: res => {
               

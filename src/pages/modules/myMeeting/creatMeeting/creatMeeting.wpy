@@ -145,7 +145,7 @@
                        
                     </picker>
                      <view  wx:if="{{Participant.ParticipantWarning}}" style="color:#e20000">
-                            <text>此字段是必填字段</text>
+                            <text>必填字段</text>
                     </view>
                 </view>
                 <Visitor :input.sync="Visitor" :inputValue.sync='VisitorValue' :twoWayTitle="VisitorValue" />

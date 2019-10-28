@@ -248,7 +248,7 @@
                         <text>{{clientBaseData.industryTypeText||'未填写'}}</text>
                     </view>
                     <view>
-                        <text>组织结构</text>
+                        <text>组织机构</text>
                         <text>{{clientBaseData.organizationUnitText||'未填写'}}</text>
                     </view>
                 </view>

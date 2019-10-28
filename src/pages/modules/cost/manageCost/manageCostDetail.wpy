@@ -163,7 +163,7 @@
         //获取账单
         async getbill(num) {
             wx.showLoading({
-                title: 'Loading...', //提示的内容,
+                title: '加载中,请稍等!', //提示的内容,
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
@@ -177,13 +177,13 @@
             switch (resData.statusCode) {
                 case 200:
                    this.costData = resData.data.result;
-                    this.costData.creationTime =formatTime(this.costData.creationTime);
+                    this.costData.creationTime = formatDate(this.costData.creationTime).slice(0,3).join('-');
                     for(var item in this.costData.chargeItems){
-                        this.costData.chargeItems[item].chargeDate=formatTime(this.costData.chargeItems[item].chargeDate);
-                        this.costData.chargeItems[item].chargeRate=(Number(this.costData.chargeItems[item].chargeRate)*100).toFixed(2)+'%'
+                        this.costData.chargeItems[item].chargeDate = formatDate(this.costData.chargeItems[item].chargeDate).slice(0,3).join('-');
+                        this.costData.chargeItems[item].chargeRate = (Number(this.costData.chargeItems[item].chargeRate)*100).toFixed(2)+'%'
                     }
                     for (var index in this.costData.invoiceBillings) {
-                        this.costData.invoiceBillings[index].creationTime=formatTime(this.costData.invoiceBillings[index].creationTime)
+                        this.costData.invoiceBillings[index].creationTime = formatDate(this.costData.invoiceBillings[index].creationTime).slice(0,3).join('-')
                     }
                     // for (var index in this.costData.workflows) {
                     //     this.costData.workflows[index].creationTime=formatTime(this.costData.workflows[index].creationTime)

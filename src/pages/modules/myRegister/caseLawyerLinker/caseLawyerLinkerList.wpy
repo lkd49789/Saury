@@ -146,7 +146,7 @@
     <view class="chooseLayerMask" wx:if="{{isShowChooseLawyer}}" id="Mask" catchtap="isMask" catchtouchmove='{{true}}'>
       <view class="content" id='MaskContent' catchtap="isMask">
         <view class="input">
-          <input value="{{inputValue}}" type="text" placeholder="搜索关键词" placeholder-class="placeholder" maxlength="140" bindinput="searchData" style="border-bottom:1px solid #dfdfdf;" @blur="blur" />
+          <input value="{{inputValue}}" type="text" placeholder="搜索关键字" placeholder-class="placeholder" maxlength="140" bindinput="searchData" style="border-bottom:1px solid #dfdfdf;" @blur="blur" />
         </view>
         <view class="scroll-Y">
           <repeat for="{{lawyerListData}}" key="index" index="index" item="item">
@@ -310,7 +310,7 @@
     //提交选中律师
     async CreateOrUpdateCaseLawyer(subData, storageData) {
       wx.showLoading({
-        title: 'Loading...', //提示的内容,
+        title: '加载中,请稍等!', //提示的内容,
         mask: true, //显示透明蒙层，防止触摸穿透,
         success: res => {
           wx.setStorageSync('CREATE_CASELAWYERLINKERLIST_DATA', storageData)

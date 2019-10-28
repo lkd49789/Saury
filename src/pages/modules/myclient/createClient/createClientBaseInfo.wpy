@@ -242,7 +242,7 @@
             },
             AddressValue: '',
             OrganizationUnitId: {
-                title: '隶属组织架构',
+                title: '隶属组织机构',
                 name: 'OrganizationUnitId',
                 value: [""],
                 displayText: ["请选择"],
@@ -316,7 +316,7 @@
                 this.$apply();
             },
             touchEnd(){
-                if(this.clientBaseData.Name&&this.clientBaseData.OrganizationUnitId&&this.clientBaseData.Origin){
+                if(this.clientBaseData.Name && this.clientBaseData.OrganizationUnitId && this.clientBaseData.Origin){
                     try {
                         wx.setStorageSync('CLIENT_CREATE_DATA',this.clientBaseData);
                         wx.navigateTo({ url: './createClientPrincipalInfo' });
@@ -325,8 +325,8 @@
                         console.log(error)
                     }
                 }else{
-                    this.OrganizationUnitId.warning=true;
-                    this.Origin.warning=true;
+                    this.OrganizationUnitId.warning = !this.clientBaseData.OrganizationUnitId;
+                    this.Origin.warning = !this.clientBaseData.Origin;
                     wx.showToast({
                       title: '请完成必填项！', //提示的内容,
                       icon: 'none', //图标,
@@ -548,7 +548,7 @@
             }
             this.$apply();
         }
-        //获取隶属组织架构
+        //获取隶属组织机构
         async GetOrganizations() {
             var resData = await ajax.getData(
                 '/api/services/web/common/GetOrganizations',
