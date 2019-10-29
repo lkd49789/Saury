@@ -545,7 +545,7 @@
     async GetCurrentLoginInformations() {
       var CurrentLoginInformationsData = await getData(
         '/api/services/app/session/GetCurrentLoginInformations',
-        'post'
+        'get'
       )
       if (CurrentLoginInformationsData.statusCode == 200) {
         var userInfo = {}
@@ -555,7 +555,7 @@
         var avatarData = await getAavatar(http);
         userInfo['userAvatar'] = avatarData;
         this.global.userInfo = userInfo;
-        this.global.tenant=CurrentLoginInformationsData.data.result.tenant;
+        this.global.tenant = CurrentLoginInformationsData.data.result.tenant;
       }
     }
     onLaunch() {

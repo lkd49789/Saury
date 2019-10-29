@@ -59,6 +59,7 @@ export default class caseintroduce extends wepy.page {
       key: 'caseDetailData',
       success: res => {
         this.description = res.data.caseData.description;
+        this.$apply()
       }
     });
   }

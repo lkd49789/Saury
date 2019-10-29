@@ -3,29 +3,35 @@
     .body {
         height: 100%;
         .top-title {
-            height: 104rpx;
-            line-height: 104rpx;
-            font-size: 48rpx;
+            // height: 104rpx;
+            // line-height: 104rpx;
+            // font-size: 48rpx;
             // padding-left: 28rpx;
-            border-bottom: 1px solid #dedede;
+            // border-bottom: 1px solid #dedede;
             position: fixed;
             top:0;
             left:0;
             width:100%;
             background:#fff;
             z-index:9999;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             >text{
                 margin-left:28rpx;
             }
             >icon{
                 margin-right: 28rpx;
             }
+            .case-top {
+                height: 104rpx;
+                line-height: 104rpx;
+                padding: 0 28rpx;
+                font-size: 48rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
         }
         .main{
-           margin:149rpx 28rpx 0 28rpx;
+           margin:230rpx 28rpx 0 28rpx;
             .item-content{
                 margin: 44rpx 0;
                 display: flex;
@@ -70,8 +76,12 @@
 <template>
     <view class="body">
          <view class="top-title">
-            <text class="title">请假审核</text>
-            <icon wx:if="{{waitData.length!==0}}" class="iconfont icon-sousuo1 " style="font-size:60rpx;color:#5d73fa" @tap="toSearch"></icon>
+            <view class="case-top">
+                <text class="title">请假审核</text>
+                <icon class="iconfont icon-sousuo1 " style="font-size:60rpx;color:#5d73fa" @tap="toSearch"></icon>
+            </view>
+            <!-- 案件导航 -->
+            <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" />
          </view>
         <view class='main'>
             <repeat for="{{waitData}}" key="index" index="index" item="item">
@@ -79,14 +89,14 @@
                     <view>
                         <view>
                             <text>{{item.eName}} </text>
-                            <text style="color:#7a7a7a">| {{item.eDepartment}}</text>
+                            <text style="color:#7a7a7a" wx:if="{{item.eDepartment}}">| {{item.eDepartment}}</text>
                         </view>
                         <view style="color:#ff9900">
                             <text>{{item.totalDay}}天</text>
                         </view>
                     </view>
                     <view>
-                        <text>{{item.startDateText}}至{{item.endDateText}}</text>
+                        <text>{{item.startDate}}至{{item.endDate}}</text>
                     </view>
                     <view class="memo">
                         <text>{{item.memo||'未填写'}}</text>
@@ -106,9 +116,10 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
-    import mixins from '@/utils/cofig/mixin.js';
+    import ajax from '@/utils/cofig/ajax'
+    import mixins from '@/utils/cofig/mixin';
     import navbar from '@/components/navbar';
+    import { formatTimeSymbol } from '@/utils/cofig/api';
     import placeHolderImage from '@/components/placeHolderImage';
     export default class applyAuditList extends wepy.page {
         config = {
@@ -119,6 +130,7 @@
         };
         components = {
             placeHolderImage,
+            navbar
         };
         data = {
             queryStream:{},
@@ -126,7 +138,22 @@
             waitData:[],
             totalCount:0,
             pageNumber:1,
+            navbars:['全部','待处理'],
+            currentTab: 0
         };
+        watch = {
+            currentTab(current){
+                 wx.pageScrollTo({
+                        scrollTop: 0,
+                        duration: 0,
+                });
+                if(current == 0){
+                    
+                }else if(current == 1){
+                     
+                }
+            }
+        }
         methods = {
             toSearch(){
                 wx.navigateTo({ url: './search/searchApplyAudit' });
@@ -174,32 +201,33 @@
             
         }
         async GetApplyPageList(){
-                var Keyword =  this.queryStream.Keyword?this.queryStream.Keyword:'';
-                var EName =  this.queryStream.EName?this.queryStream.EName:'';
-                var DepartmentId =  this.queryStream.DepartmentId?this.queryStream.DepartmentId:'';
-                var VacationType =  this.queryStream.VacationType?this.queryStream.VacationType:'';
+                var filter =  this.queryStream.filter || '';
+                var VacationTypeList =  this.queryStream.VacationTypeList || '';
+                let creationTimeRange = this.queryStream.creationTimeRange
                 var data={
                 pageSize:10,
                 pageNumber:this.pageNumber,
-                Status:'W',
-                Keyword,
-                EName,
-                DepartmentId,
-                VacationType
+                statusList:["W"],
+                filter,
+                creationTimeRange,
+                VacationTypeList
             }
-            var resData=await ajax.getData(
-                '/api/services/web/vacationManage/GetApplyPageList',
+            var resData = await ajax.getData(
+                '/api/services/web/EmployeeVacation/GetAuditVacations',
                 'post',
                 data
             )
             switch (resData.statusCode) {
                 case 200:
                     if(resData.data.result.items.length!==0){
-                        var ApplyPageList=resData.data.result.items;
+                        var ApplyPageList = resData.data.result.items;
                         this.totalCount= resData.data.result.totalCount;
-                        for(var index in ApplyPageList){
-                            ApplyPageList[index]['auditStatus']='W'
-                        }     
+                        ApplyPageList.forEach(item => {
+                            item['auditStatus'] = 'W'  
+                            item.startDate = formatTimeSymbol(item.startDate,'-')
+                            item.endDate = formatTimeSymbol(item.endDate,'-')
+                        })
+                            
                         this.waitData=this.waitData.concat(ApplyPageList)
                         var  isRefresh={
                              isRefresh:false

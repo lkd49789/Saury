@@ -196,7 +196,7 @@
                 WorkTime
             }
             var resData = await ajax.getData(
-                '/api/services/web/worklogApproval/GetWaitApprovalWorklogs',
+                '/api/services/web/Worklog/GetAuditWorklogs',
                 'post',
                 data
             )

@@ -117,7 +117,7 @@
                         <text class="bill_gray">财务操作记录</text>
                         <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
                     </view>
-                    <view class="bill_view "><text class="{{costData.status=='WaitForApproved'?'bill_yellow':costData.status=='Returned'?'bill_gray':'bill_green'}} status">{{costData.statusName}}</text><text class="bill_gray">{{workflows[0].creationTime}}</text></view>
+                    <view class="bill_view "><text class="{{costData.status == 'WaitForApproved' ? 'bill_yellow':costData.status=='Returned'?'bill_gray':'bill_green'}} status">{{costData.statusName}}</text><text class="bill_gray">{{workflows[0].creationTime}}</text></view>
                     <view class="bill-del bill_gray">
                         通过<text>{{workflows.length}}</text>位审核人审核
                     </view>

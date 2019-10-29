@@ -162,6 +162,7 @@
 <script>
     import wepy from 'wepy';
     import ajax from '@/utils/cofig/ajax.js';
+    import { EmployeePhoto } from '@/api/common';
     import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
     import {
@@ -203,22 +204,22 @@
                 switch (item.notification.notificationName) {
                     case 'App.Financial.Receipt.WaitForAssigned':
                         wx.navigateTo({
-                            url: item.linkPage + '?id=' + item.notification.data.properties.id + '&type=1',
+                            url: item.linkPage + '?id=' + item.notification.data.properties.Id + '&type=1',
                         });
                         break;
                     case 'App.Financial.Receipt.WaitForConfirmed':
                         wx.navigateTo({
-                            url: item.linkPage + '?id=' + item.notification.data.properties.id + '&type=0',
+                            url: item.linkPage + '?id=' + item.notification.data.properties.Id + '&type=0',
                         });
                         break;
                     case 'App.Financial.Receipt.WaitForClaimed':
                         wx.navigateTo({
-                            url: item.linkPage + '?id=' + item.notification.data.properties.id + '&type=0',
+                            url: item.linkPage + '?id=' + item.notification.data.properties.Id + '&type=0',
                         });
                         break;
                     default:
                         wx.navigateTo({
-                            url: item.linkPage + '?id=' + item.notification.data.properties.id,
+                            url: item.linkPage + '?id=' + item.notification.data.properties.Id,
                         });
                         break;
                 }
@@ -315,11 +316,11 @@
                 this.sign_id = [];
                 this.delet_id = [];
                 this.all_checked = false;
-                if(this.showTools){
-                    this.GetUserNotifications(false,'0');
-                }else{
-                    this.GetUserNotifications(false);
-                }
+                // if(this.showTools){
+                //     this.GetUserNotifications(false,'0');
+                // }else{
+                //     this.GetUserNotifications(false);
+                // }
                 this.isDisabled = this.isDisabled.map(item => {
                     item = false
                     return item
@@ -410,11 +411,11 @@
                 maxResultCount: this.maxResultCount,
                 notificationName: "",
                 skipCount: this.skipCount,
-                state,
+                state
             }
             var resData = await ajax.getData(
-                '/api/services/app/notification/GetWechatMiniUserNotifications',
-                'POST',
+                '/api/services/app/Notification/GetUserNotifications',
+                'GET',
                 data
             )
             switch (resData.statusCode) {
@@ -574,6 +575,14 @@
                                     item.TextTile = '文书报审-已审核';
                                     item.linkPage = '../../modules/auditModules/approveAudit/approveDetail';
                                     break;
+                                case 'App.Business.CaseFinance.Created':
+                                    item.TextTile = '结案-财务审核-待审核';
+                                    item.linkPage = '';
+                                    break;
+                                case 'App.Business.CaseCheck.Created':
+                                    item.TextTile = '立案-冲突检索';
+                                    item.linkPage = '';
+                                    break;    
                             }
                             isDisabled.push(false)
                         })
@@ -610,9 +619,7 @@
         async GetPhoto(data, refresh) {
             var avatarData = []
             for (var index in data) {
-                var http = '/api/services/web/personal/GetEmployeePhoto?id=' + data[index].notification.data.properties.creatorUserId;
-                var resData = await ajax.getUserAvatar(http);
-                avatarData[index] = resData.tempFilePath;
+                avatarData[index] = await EmployeePhoto(data[index].notification.data.properties.CreatorUserId);
             }
             refresh ? this.EmployeePhoto = [...this.EmployeePhoto, ...avatarData] : this.EmployeePhoto = avatarData;
             this.$apply();
@@ -668,7 +675,7 @@
                 }
             });
             var resData = await ajax.getData(
-                '/api/services/app/notification/SetNotificationsAsRead',
+                '/api/services/app/Notification/SetNotificationAsRead',
                 'POST',
                 id
             )

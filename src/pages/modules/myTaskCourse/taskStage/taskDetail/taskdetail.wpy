@@ -1,15 +1,22 @@
 <!--  -->
 <style lang="less">
     .body {
-        height: 100%;
+        height: 100vh;
         position: relative;
+        display: flex;
+        flex-direction: column;
+        >scroll-view{
+            flex: 1;
+            display:flex;
+            flex-direction: column;
+        }
         .fixed-view {
-            position: fixed;
-            top: 0;
-            left: 0;
+            // position: fixed;
+            // top: 0;
+            // left: 0;
             width: 100%;
             background: #fff;
-            z-index: 100;
+            // z-index: 100;
         }
         .placeholder::before {
             height: 199rpx;
@@ -17,7 +24,7 @@
             display: block;
         }
         .container-title {
-            height: 104rpx;
+            // height: 104rpx;
             font-size: 48rpx;
             padding: 0 28rpx;
             color: #2a2a2a;
@@ -562,8 +569,6 @@
     }
 </style>
 <template>
-    <!-- <view></view> -->
-    <!-- <text></text> -->
     <view class="body winHeight">
         <view class="fixed-view">
             <view class="container-title">
@@ -572,9 +577,9 @@
             </view>
             <navbar :navbars='navbars' :currentTab.sync="currentTab" :twoWayTitle="currentTab"></navbar>
         </view>
-        <!-- <view style="height:200rpx;width:100%;">
-                                                                </view> -->
-        <view style="margin-top:170rpx;" hidden="{{currentTab==0?'':true}}">
+        <!-- <view style="height:200rpx;width:100%;"></view> -->
+        <scroll-view scroll-y="true">
+            <view  hidden="{{currentTab == 0?'':true}}">
             <view class="taskdetail-container">
                 <view class="task-title-content">
                     <view>
@@ -669,7 +674,7 @@
                                             <text style="margin-right:14rpx">{{item.employeeName}}</text>
                                             <text style="color:#7a7a7a" wx:if="{{item.isAssigner=='Y'}}">任务分配人</text>
                                         </view>
-                                        <view>
+                                        <view wx:if="{{item.priorityText}}">
                                             <text style="color:{{item.priorityText=='普通'?'#009dff':item.priorityText=='紧急'?'#FF9900':'#E20000'}}">{{item.priorityText}}</text>
                                         </view>
                                     </view>
@@ -749,7 +754,7 @@
                 </view>
             </view>
         </view>
-        <view style="margin-top:170rpx;" hidden="{{currentTab==1?'':true}}">
+        <view style="margin-top:170rpx;" hidden="{{currentTab == 1 ? '':true}}">
             <view class="chat-panel" style="padding-bottom:{{sendShow?'260rpx':'160rpx'}};">
                 <!-- <view class="reverseView"> -->
                 <repeat for="{{fileInfo}}" key="index" index="index" item="item">
@@ -864,6 +869,8 @@
                 </view>
             </view>
         </view>
+        </scroll-view>
+        
     </view>
 </template>
 
@@ -1058,7 +1065,7 @@
                         console.log(res);
                         var tempFilePath = res.tempFilePath;
                         var thumbTempFilePath = res.thumbTempFilePath;
-                        var time = new Date();
+                        var time = new Date(new Date().getTime()+8 * 3600000);
                         var creationTime = api.formatTime(time);
                         this.uploadFile(
                             'video',
@@ -1080,7 +1087,7 @@
                         // tempFilePath可以作为img标签的src属性显示图片
                         console.log(res);
                         const tempFilePaths = res.tempFilePaths[0];
-                        var time = new Date();
+                        var time = new Date(new Date().getTime()+8 * 3600000);
                         var creationTime = api.formatTime(time);
                         this.uploadFile('image', tempFilePaths, creationTime);
                         this.getScroll();

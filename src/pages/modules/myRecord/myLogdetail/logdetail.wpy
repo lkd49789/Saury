@@ -276,7 +276,6 @@
       <view class="log-chunck6" @tap="toauditResultsDetail">
         <view>
           <text>审核结果</text>
-          <icon class="iconfont icon-gengduo" style="font-size:40rpx;color:#dedede"></icon>
         </view>
         <view>
           <view style="color:{{workLogData.processStatus=='R'?'#e20000':workLogData.processStatus=='N'?'#FF9900':'#069400'}}">
@@ -326,7 +325,7 @@
     };
     methods = {
       toauditResultsDetail(){
-        if(this.workLogData.approvalList.length>0){
+        if(this.workLogData.approvalList.length > 0){
         var approvalList=JSON.stringify(this.workLogData.approvalList)
         wx.navigateTo({ url: './auditResultsDetail?approvalList='+approvalList});
         }

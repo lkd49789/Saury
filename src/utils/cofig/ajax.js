@@ -43,7 +43,7 @@ var getData = (http, method, data = '') => {
         }
         wx.request({
           url: localhost + http,
-          method: method,
+          method,
           header,
           data: data,
           success: res => {

@@ -737,11 +737,11 @@
               <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
             </view>
             <view class="case-introduce">
-              <text>{{caseDetailData.caseData.caseDetail.description||'未填写'}}
+              <text>{{caseDetailData.caseData.caseDetail.description || '未填写'}}
                                                                                       </text>
             </view>
           </view>
-          <view class="case-three-item" @tap='tocasepersonnelin' wx:if="{{caseDetailData.caseData.userPhoto.length!==0}}">
+          <view class="case-three-item" @tap='tocasepersonnelin' wx:if="{{caseDetailData.caseData.userPhoto.length !== 0}}">
             <view class="case-one-line">
               <text style="color:#7a7a7a">案件律师信息
                                                                                                           </text>
@@ -764,26 +764,24 @@
                                                                                           </text>
             </view>
             <view class="case-one-line" style="margin-bottom:0">
-              <text style="color:#7a7a7a">{{caseDetailData.caseData.caseDetail.caseClientRelationList[0].category||'未填写'}}
+              <text style="color:#7a7a7a">{{caseDetailData.caseData.caseDetail.caseClientRelationList[0].category || '未填写'}}
                                                                                                           </text>
               <text style="color:#7a7a7a">共{{caseDetailData.caseData.caseDetail.caseClientRelationList.length}}条冲突信息</text>
             </view>
           </view>
           <view class="case-five-item" @tap='tocontractinfo'>
             <view class="case-one-line">
-              <text style="color:#7a7a7a">合同信息
-                                                                                                          </text>
+              <text style="color:#7a7a7a">合同信息</text>
               <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
             </view>
             <view class="marg-bot">
-              <text>案件项下的办案费用支出:{{caseDetailData.caseData.caseDetail.paidPartyText!==''?caseDetailData.caseData.caseDetail.paidPartyText:'未填写'}}
-                                                                           </text>
+              <text>案件项下的办案费用支出:{{caseDetailData.caseData.caseDetail.paidPartyText || '未填写'}}</text>
             </view>
             <view style="color:#7a7a7a" class="marg-bot">
-              <text>办案费限额:{{caseDetailData.caseData.caseDetail.chargeLimit||'未填写'}}</text>
+              <text>办案费限额:{{caseDetailData.caseData.caseDetail.chargeLimit || '未填写'}}</text>
             </view>
             <view style="color:#7a7a7a">
-              <text>收费方式:{{caseDetailData.caseData.payStyleText||'未填写'}}</text>
+              <text>收费方式:{{caseDetailData.caseData.payStyleText || '未填写'}}</text>
             </view>
           </view>
         </view>
@@ -2533,6 +2531,7 @@
             date[index] = item.creationTime.split('T')[0];
             switch (item.statusName) {
               case '已领取':
+              case '已到账':
                 item['statusColor'] = '#069400';
                 break;
               case '未提交':
@@ -2546,8 +2545,6 @@
                 break;
               case '已开票':
                 item['statusColor'] = '#009dff';
-              case '已到账':
-                item['statusColor'] = '#069400';
               case '未到账':
                 item['statusColor'] = '#e20000';
               case '部分到账':
@@ -2615,22 +2612,16 @@
             date[index] = item.creationTime.split('T')[0];
             switch (item.statusName) {
               case '已领取':
+              case '已分配':
                 item['statusColor'] = '#069400';
                 break;
               case '未领取':
-                item['statusColor'] = '#ff9900';
-                break;
               case '待确认':
-                item['statusColor'] = '#ff9900';
-                break;
               case '待分配':
                 item['statusColor'] = '#ff9900';
                 break;
               case '未提交':
                 item['statusColor'] = '#5d73fa';
-                break;
-              case '已分配':
-                item['statusColor'] = '#069400';
                 break;
               default:
                 break;

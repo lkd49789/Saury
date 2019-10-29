@@ -193,10 +193,10 @@
         </swiper>
       </view>
       <view class="Notifications" @tap="toMessagePage">
-        <view class="tishi" wx:if="{{GetUserNotifications_data.length!==0}}">
+        <view class="tishi" wx:if="{{GetUserNotifications_data.length !== 0}}">
           <icon class="iconfont icon-tishi" style="font-size:70rpx;color:#ff9900"></icon>
         </view>
-        <swiper autoplay interval="3000" circular vertical="{{true}}" skip-hidden-item-layout="{{true}}" display-multiple-items="{{GetUserNotifications_data.length==1?1:2}}" style="height:{{GetUserNotifications_data.length==1?41:82}}rpx;width:86%;" wx:if="{{GetUserNotifications_data.length!==0}}">
+        <swiper autoplay interval="3000" circular vertical="{{true}}" skip-hidden-item-layout="{{true}}" display-multiple-items="{{GetUserNotifications_data.length == 1 ? 1 : 2}}" style="height:{{GetUserNotifications_data.length == 1 ? 41 : 82}}rpx;width:86%;" wx:if="{{GetUserNotifications_data.length !== 0}}">
           <repeat for="{{GetUserNotifications_data}}" key="index" index="index" item="item">
             <swiper-item catchtouchmove="true">
               <view class="remind_swiper">
@@ -680,6 +680,12 @@
             case 'App.Business.StampFiles.Approved':
               item.TextTile = '文书报审-已审核';
               break;
+            case 'App.Business.CaseFinance.Created':
+              item.TextTile = '结案-财务审核-待审核';
+              break;
+            case 'App.Business.CaseCheck.Created':
+              item.TextTile = '立案-冲突检索';
+              break;  
             default:
               break;
           }

@@ -186,10 +186,12 @@
                     {id : item.id}
                 )
                 var opition = data.result.items.map((item) => item.displayName)
+                console.log(opition);
                 wx.showActionSheet({
                     itemList: opition, //按钮的文字数组，数组长度最大为6个,
                     //   itemColor: '#000000', //按钮的文字颜色,
                     success: res => {
+                        console.log(res);
                         var className = data.result.items[res.tapIndex].name;
                           //NH 案件参与人   NI设置案件费用  NK 上传案件合同 
                         switch (className) {

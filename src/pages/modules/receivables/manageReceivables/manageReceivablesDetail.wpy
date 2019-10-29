@@ -122,7 +122,7 @@
         <view class="bill_title">
             <text class="title">收款认领</text>
         </view>
-        <!-- <view wx:if="{{costData.status == 'UnClaimed'}}"> -->
+        <view wx:if="{{costData.status == 'WaitForClaim'}}">
             <view class="bill_content">
                 <view class="flex" >
                     <view class="bill_box2">
@@ -175,8 +175,9 @@
                 <lawyerFee :input.sync="lawyerFee" :inputValue.sync='lawyerFeeValue' :twoWayTitle="lawyerFeeValue" />
                 <caseFee :input.sync="caseFee" :inputValue.sync='caseFeeValue' :twoWayTitle="caseFeeValue" />
             </view>
-        <!-- </view> -->
-        <view wx:if="{{costData .status=='Claimed' || costData .status == 'WaitForAssigned' || costData .status=='WaitForConfirmed'}}">
+        </view>
+        <!-- wx:if="{{costData .status=='Claimed' || costData .status == 'WaitForAssigned' || costData .status=='WaitForConfirmed'}} -->
+        <view wx:else>
             <view class="bill_content">
                 <view class="bill_box">
                     <view class="bill_view bill_blue">{{costData.receiptCase.name || '未填写'}}</view>
@@ -236,8 +237,8 @@
         </view>
         <!-- <view style="height:{{costData.status=='Claimed'? '200rpx':'0'}}"></view>
         <view style="height:{{costData.status=='UnClaimed'? '200rpx':'0'}}"></view> -->
-        <button class="bill_btn" wx:if="{{costData.status == 'UnClaimed'}}" catchtap="toAuditing('{{0}}')">认领</button>
-        <button class="bill_btn" wx:if="{{costData.status == 'Claimed'}}" catchtap="toAuditing('{{1}}')">发送合伙人</button>
+        <button class="bill_btn" wx:if="{{costData.status == 'WaitForClaim'}}" catchtap="toAuditing('{{0}}')">认领</button>
+        <button class="bill_btn" wx:if="{{costData.status == 'WaitForSend'}}" catchtap="toAuditing('{{1}}')">发送合伙人</button>
     </view>
 </template>
 <script>
@@ -427,13 +428,14 @@
             }
         }
         isRefresh(item){
-            this.getcase=item;
-            this.getcase.isCaseData=true;
+            this.getcase = item;
+            this.getcase.isCaseData = true;
             this.$apply();
         }
          onLoad(options) {
             this.invoiceDetailId = options.id;
             this.getbill();
+            console.log(this.getcase)
             this.$apply();
         };
     }

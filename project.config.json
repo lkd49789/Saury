@@ -24,7 +24,7 @@
 	"appid": "wxef90042fdcbc1459",
 	"projectname": "2.0",
 	"miniprogramRoot": "dist/",
-	"libVersion": "2.8.3",
+	"libVersion": "2.9.1",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {
 		"qywx_simulator_plugin": "1.2.0"

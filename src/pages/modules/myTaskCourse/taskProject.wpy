@@ -374,8 +374,7 @@
                 var CasePublicProjectImage = [];
                 for (var index in data) {
                     var id = data[index].id;
-                    var ProjectCoverData = await ProjectCover(id);
-                    CasePublicProjectImage[index] = ProjectCoverData.tempFilePath;
+                    CasePublicProjectImage[index] = await ProjectCover(id);
                 }
                 this.CasePublicProjectImage = this.CasePublicProjectImage.concat(CasePublicProjectImage);
                 this.$apply();
@@ -386,8 +385,7 @@
                 var CasePrivateProjectImage = [];
                 for (var index in data) {
                     var id = data[index].id;
-                    var ProjectCoverData = await ProjectCover(id);
-                    CasePrivateProjectImage[index] = ProjectCoverData.tempFilePath;
+                    CasePrivateProjectImage[index] = await ProjectCover(id);
                 }
                 this.CasePrivateProjectImage = this.CasePrivateProjectImage.concat(CasePrivateProjectImage);
                 this.$apply();

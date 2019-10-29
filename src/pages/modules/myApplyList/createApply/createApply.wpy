@@ -52,20 +52,18 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
-    import StartTime from '@/components/Date/DateTimePicker';
-    import EndTime from '@/components/Date/DateTimePicker';
-    import input1 from '@/components/picker/input';
-    import input2 from '@/components/picker/input';
-    import input3 from '@/components/picker/input';
+    import ajax from '@/utils/cofig/ajax'
+    import { GeneralCodeComboboxItems } from '@/api/common'
+    import Time from '@/components/Date/DateTimePicker';
+    import input from '@/components/picker/input';
     import option from '@/components/picker/option';
     export default class clientDetail extends wepy.page {
         components = {
-            StartTime,
-            EndTime,
-            VacationDay: input1,
-            TotalDay: input2,
-            Memo: input3,
+            StartTime:Time,
+            EndTime:Time,
+            VacationDay: input,
+            TotalDay: input,
+            Memo: input,
             VacationType: option
         };
         data = {
@@ -82,7 +80,7 @@
                 // StartDate: "2018-10-26 17:50",
                 // TotalDay: "5",
                 // VacationDay: "10",
-                // VacationType: "04",
+                VacationType: "01",
             },
             StartDate: {
                 title: '开始时间',
@@ -136,7 +134,7 @@
                 this.$apply();
             },
             touchEnd() {
-                if (this.submitData.VacationType && this.submitData.TotalDay) {
+                if (this.submitData.VacationType && this.submitData.TotalDay) {           
                     switch (this.submitData.VacationType) {
                         case '03':
                             if (Number(+this.annualVacation) > Number(+this.submitData.TotalDay)) {
@@ -212,14 +210,7 @@
             }
         };
         async GetGeneralCodeCombobox() {
-            var data = {
-                class: 'QJ'
-            }
-            var resData = await ajax.getData(
-                '/api/services/web/generalCodeComboService/GetGeneralCodeCombobox',
-                'post',
-                data
-            )
+            var resData = await GeneralCodeComboboxItems({ Id: 'QJ'})
             console.log(resData);
             if (resData.statusCode == 200) {
                 var GeneralCodeComboboxData = resData.data.result;
@@ -241,7 +232,7 @@
                 }
             });
             var resData = await ajax.getData(
-                '/api/services/web/employeeVacation/CreateOrEditEmployeeVacationApply',
+                '/api/services/web/EmployeeVacation/CreateOrUpdateVacationApply',
                 'post',
                 data
             )

@@ -782,13 +782,11 @@
                         var meetingData = resData.data.result;
                         //主持人头像
                         if(meetingData.moderator){
-                           var moderatorAvatar=await EmployeePhoto(meetingData.moderator)
-                             meetingData.moderatorAvatar=moderatorAvatar.tempFilePath;
+                           meetingData.moderatorAvatar = await EmployeePhoto(meetingData.moderator)
                         }
                         //联系人头像
                         if(meetingData.linker){
-                            var linkerAvatar=await EmployeePhoto(meetingData.linker);
-                            meetingData.linkerAvatar=linkerAvatar.tempFilePath;
+                            meetingData.linkerAvatar = await EmployeePhoto(meetingData.linker);
                         }
                         // 是否标记
                         if(meetingData.isMark){
@@ -943,7 +941,7 @@
                 Remark: this.remarkValue,
                 Status: status,
             }
-            var resData = await MeetingParticipant()
+            var resData = await MeetingParticipant(data)
             if (resData.statusCode == 200) {
                  wx.showToast({
                         title: '操作完成',

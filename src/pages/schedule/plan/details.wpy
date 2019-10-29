@@ -215,7 +215,7 @@
                 <text class="plan_yellow plan_right plan_state">{{planLogData.statusText}}</text>
             </view>
             <view class="plan_line">
-                <text class="plan_gray plan_work">{{planLogData.categoryText}}｜{{planLogData.eventTypeText}} <text class="plan_address"> {{planLogData.situationText}}</text></text>
+                <text class="plan_gray plan_work">{{planLogData.categoryText}}｜{{planLogData.eventTypeText}} <text class="plan_address"> {{planLogData.situationText || ''}}</text></text>
                 <text class="plan_right plan_situation">{{planLogData.privacyText}}</text>
             </view>
             <view class="plan_line">
@@ -322,19 +322,21 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import ajax from '@/utils/cofig/ajax';
+    import { EmployeePhoto } from '@/api/common';
     import {
         formatTimeSymbol
-    } from '@/utils/cofig/api.js';
+    } from '@/utils/cofig/api';
     export default class Index extends wepy.page {
         components = {};
         data = {
             id: 0,
             planLogData: {},
             passCount: 0,
-            avatar: []
+            avatar: [],
+            headUrl:''
         };
-        methods = {
+        methods = { 
             preview(fileId, fileName) {
                 console.log(fileId, fileName);
                 var http = '/api/services/web/scheduleAttachment/GetDocumentFile?id=' + fileId
@@ -356,6 +358,8 @@
             planLogData.result.privacy = ((new Date(planLogData.result.endTime).getTime() - new Date(planLogData.result.startTime).getTime()) /1000 / 60 /60).toFixed(1)
             planLogData.result.startTime = formatTimeSymbol(planLogData.result.startTime, '/')
             planLogData.result.endTime = formatTimeSymbol(planLogData.result.endTime, '/')
+            //头像
+            this.headUrl = await EmployeePhoto(planLogData.result.creationUser);
 
              //会议参与人
             for (var i in  planLogData.result.participantList) {

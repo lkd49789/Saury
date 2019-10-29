@@ -127,7 +127,7 @@
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-            let url = '/api/services/web/financialCharge/GetCharge';
+            let url = '/api/services/web/Workflow/GetLogs';
             if(this.invoice){
                 url = `/api/services/web/financialInvoice/GetInvoice`
             }

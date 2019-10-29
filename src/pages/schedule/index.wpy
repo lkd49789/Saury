@@ -674,7 +674,7 @@
                                     <view class="meeting" @tap="intoDetails(meeting,'{{item.id}}')">
                                         <view class="meeting_box">
                                             <text class="meeting_name">{{item.title}}</text>
-                                            <text class="meeting_ifTrue">{{item.statusText}}</text>
+                                            <text class="meeting_ifTrue">{{item.statusText || ''}}</text>
                                         </view>
                                         <view class="meeting_box">
                                             <text class="meeting_time">会议时间：{{item.start}}至{{item.end}}</text>
@@ -683,7 +683,7 @@
                                             <text class="meeting_content">{{item.description}}</text>
                                         </view>
                                         <view class="meeting_box">
-                                            <text class="meeting_timeFirst">必智会议室</text>
+                                            <text class="meeting_timeFirst">{{item.meetingRoomName}}</text>
                                             <text class="meeting_timeLast">主持人：{{item.employeeName}}</text>
                                         </view>
                                     </view>
@@ -706,7 +706,7 @@
                                             <text class="leave_period">请假时间：{{item.start}}至{{item.end}}</text>
                                         </view>
                                         <view class="leave_box">
-                                            <text class="leave_content">{{item.description}}</text>
+                                            <text class="leave_content">{{item.description || ''}}</text>
                                         </view>
                                         <view class="leave_box">
                                             <text class="leave_timeFirst">{{item.tag}}</text>

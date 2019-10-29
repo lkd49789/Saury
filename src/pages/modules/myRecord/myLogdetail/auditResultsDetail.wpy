@@ -90,7 +90,7 @@
         async getAvatar() {
             for (var index in this.approvalList) {
                 this.approvalList[index].operationTime = formatTime(this.approvalList[index].operationTime)
-                this.approvalList[index].avatar = await EmployeePhoto(this.approvalList[index].id);
+                this.approvalList[index].avatar = await EmployeePhoto(this.approvalList[index].operatorUserId);
             }
             this.$apply()
         }

@@ -137,9 +137,10 @@
                 <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
             </view>
             <view class="advanced-search-content">
-                <EName :input.sync="EName" :inputValue.sync='ENameValue' :twoWayTitle="ENameValue" />
-                <DepartmentId :options.sync="DepartmentId" :index.sync='DepartmentIdIndex' :twoWayTitle="DepartmentIdIndex" />
+                <!-- <EName :input.sync="EName" :inputValue.sync='ENameValue' :twoWayTitle="ENameValue" /> -->
+                <!-- <DepartmentId :options.sync="DepartmentId" :index.sync='DepartmentIdIndex' :twoWayTitle="DepartmentIdIndex" /> -->
                 <VacationType :options.sync="VacationType" :index.sync='VacationTypeIndex' :twoWayTitle="VacationTypeIndex" />
+                <creationTime :pickerData="creationTime" :twoWayTitle="creationTime" />
                 <image class="btn-sub" src="../../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearchSubmit" />
             </view>
         </view>
@@ -149,38 +150,38 @@
 <script>
     import wepy from 'wepy';
     import {
-        myDistinct
-    } from '@/utils/cofig/api.js';
-    import ajax from '@/utils/cofig/ajax.js';
-    import {
-        formatDate
-    } from '@/utils/cofig/api.js';
-    import EName from '@/components/picker/input';
-    import DepartmentId from '@/components/picker/option';
+        myDistinct ,formatDate
+    } from '@/utils/cofig/api';
+    import ajax from '@/utils/cofig/ajax';
+    import { GeneralCodeComboboxItems } from '@/api/common';
+    // import EName from '@/components/picker/input';
+    // import DepartmentId from '@/components/picker/option';
     import VacationType from '@/components/picker/option';
+    import creationTime from '@/components/picker/pickerDate'
     export default class searchApplyAudit extends wepy.page {
         components={
-            EName,
-            DepartmentId,
-            VacationType
+            // EName,
+            // DepartmentId,
+            VacationType,
+            creationTime
         }
         data = {
             //姓名
-            EName: {
-                title: '姓名',
-                name: 'EName',
-                warning: false,
-            },
-            ENameValue: '',
+            // EName: {
+            //     title: '姓名',
+            //     name: 'EName',
+            //     warning: false,
+            // },
+            // ENameValue: '',
             // 部门
-            DepartmentId: {
-                title: '部门',
-                name: 'DepartmentId',
-                value: [],
-                displayText: [],
-                warning: false
-            },
-            DepartmentIdIndex: -1,
+            // DepartmentId: {
+            //     title: '部门',
+            //     name: 'DepartmentId',
+            //     value: [],
+            //     displayText: [],
+            //     warning: false
+            // },
+            // DepartmentIdIndex: -1,
             // 请假类型
             VacationType: {
                 title: '请假类型',
@@ -189,12 +190,42 @@
                 displayText: [],
                 warning: false
             },
+            creationTime:{
+                title: '请假时间',
+                startDateData: '',
+                endDateData: ''
+            },
             VacationTypeIndex: -1,
             searchData: {},
             history_keyWord_case: [],
             searchClentValue: '',
             showPage:true,
             isShowArray: [],
+        };
+        watch = {
+            // ENameValue(value){
+            //    this.searchData.EName=value;
+            //    this.$apply();
+            // },
+            // DepartmentIdIndex(index){
+            //     this.searchData.DepartmentId=this.DepartmentId.value[index];
+            //     this.$apply();
+            // },
+            VacationTypeIndex(index){
+                this.searchData.VacationTypeList = [this.VacationType.value[index]];
+                this.$apply();
+            },
+            creationTime(data) {
+                if (!this.searchData.creationTimeRange) {
+                    this.searchData.creationTimeRange = {
+                        startDate:'',
+                        endDate:''
+                    };
+                }
+                this.searchData.creationTimeRange.startDate = data.startDateData;
+                this.searchData.creationTimeRange.endDate = data.endDateData;
+                this.$apply();
+            }
         };
         methods = {
             advancedSearchSubmit(){
@@ -264,7 +295,7 @@
                 if (value) {
                     var pages = getCurrentPages();
                     var prevPage = pages[pages.length - 2]; //上一个页面
-                    prevPage.data.queryStream.Keyword = e.detail.value;
+                    prevPage.data.queryStream.filter = e.detail.value;
                     prevPage.data.refresh = true;
                     wx.navigateBack({
                         delta: 1, //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
@@ -290,20 +321,6 @@
                 }
             }
         };
-        watch = {
-            ENameValue(value){
-               this.searchData.EName=value;
-               this.$apply();
-            },
-            DepartmentIdIndex(index){
-                this.searchData.DepartmentId=this.DepartmentId.value[index];
-                this.$apply();
-            },
-            VacationTypeIndex(index){
-                this.searchData.VacationType=this.VacationType.value[index];
-                this.$apply();
-            },
-        };
         // 判断初始化历史数据
         isHistory() {
             var pages = getCurrentPages();
@@ -323,33 +340,29 @@
             this.$apply();
         }
         //部门
-        async GetOrganizations(){
-            var resData=await ajax.getData(
-                '/api/services/web/common/GetOrganizations',
-                'POST'
-            )
-            if(resData.statusCode==200){
-                var GetOrganizations=resData.data.result;
-                for(var index in GetOrganizations){
-                    this.DepartmentId.value[index]=GetOrganizations[index].id
-                    this.DepartmentId.displayText[index]=GetOrganizations[index].displayName
-                }
-                this.$apply();
-            }
-            console.log(resData);
-        }
+        // async GetOrganizations(){
+        //     var resData=await ajax.getData(
+        //         '/api/services/web/common/GetOrganizations',
+        //         'POST'
+        //     )
+        //     if(resData.statusCode==200){
+        //         var GetOrganizations=resData.data.result;
+        //         for(var index in GetOrganizations){
+        //             this.DepartmentId.value[index]=GetOrganizations[index].id
+        //             this.DepartmentId.displayText[index]=GetOrganizations[index].displayName
+        //         }
+        //         this.$apply();
+        //     }
+        //     console.log(resData);
+        // }
         //请假类型
         async GetGeneralCodeComboboxItems(){
-             var resData=await ajax.getData(
-                '/api/services/web/common/GetGeneralCodeComboboxItems',
-                'POST',
-                {id:'QJ'}
-            )
-             if(resData.statusCode==200){
+             var resData = await GeneralCodeComboboxItems({id:'QJ'})
+             if(resData.statusCode == 200){
                 var GetGeneralCodeComboboxItems=resData.data.result;
                 for(var index in GetGeneralCodeComboboxItems){
-                    this.VacationType.value[index]=GetGeneralCodeComboboxItems[index].value
-                    this.VacationType.displayText[index]=GetGeneralCodeComboboxItems[index].displayText
+                    this.VacationType.value[index] = GetGeneralCodeComboboxItems[index].value
+                    this.VacationType.displayText[index] = GetGeneralCodeComboboxItems[index].displayText
                 }
                 this.$apply();
             }
@@ -357,7 +370,7 @@
         }
         onLoad() {
             this.isHistory();
-            this.GetOrganizations();
+            // this.GetOrganizations();
             this.GetGeneralCodeComboboxItems()
         };
         onShow() {};

@@ -103,7 +103,7 @@
         </view>
         <view style="width:50%">
           <text>是否使用标的</text>
-          <text>{{contractinfoData.isTargetText}}</text>
+          <text>{{contractinfoData.isTargetText || ''}}</text>
         </view>
         <view style="width:50%">
           <text>标的金额</text>
@@ -192,7 +192,8 @@
         key: 'caseDetailData',
         success: res => {
           this.contractinfoData = res.data.caseData;
-          if (res.data.caseData.payStyle.length > 0) {
+          console.log(this.contractinfoData);
+          if (res.data.caseData.payStyle && res.data.caseData.payStyle.length > 0) {
             this.isPayStyleText = true;
             var payStyle = res.data.caseData.payStyle.split(',');
             for (var i in payStyle) {
