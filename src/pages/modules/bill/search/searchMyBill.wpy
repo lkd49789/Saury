@@ -173,41 +173,41 @@
     import {
         formatDate
     } from '@/utils/cofig/api.js';
-    import CaseName from '@/components/picker/input';
-    import ClientName from '@/components/picker/input';
-    import Currency from '@/components/picker/option';
+    // import CaseName from '@/components/picker/input';
+    // import ClientName from '@/components/picker/input';
+    // import Currency from '@/components/picker/option';
     export default class searchMyBill extends wepy.page {
         components = {
-            CaseName,
-            ClientName,
-            Currency
+            // CaseName,
+            // ClientName,
+            // Currency
         }
         data = {
             searchData: {},
             //姓名
-            CaseName: {
-                title: '案件名称',
-                name: 'CaseName',
-                warning: false,
-            },
-            CaseNameValue: '',
-            ClientName: {
-                title: '客户名称',
-                name: 'ClientName',
-                warning: false,
-            },
-            ClientNameValue: '',
+            // CaseName: {
+            //     title: '案件名称',
+            //     name: 'CaseName',
+            //     warning: false,
+            // },
+            // CaseNameValue: '',
+            // ClientName: {
+            //     title: '客户名称',
+            //     name: 'ClientName',
+            //     warning: false,
+            // },
+            // ClientNameValue: '',
             // 请假类型
-            Currency: {
-                title: '货币类型',
-                name: 'Currency',
-                value: [],
-                displayText: [
-                    '请选择'
-                ],
-                warning: false
-            },
-            CurrencyIndex: 0,
+            // Currency: {
+            //     title: '货币类型',
+            //     name: 'Currency',
+            //     value: [],
+            //     displayText: [
+            //         '请选择'
+            //     ],
+            //     warning: false
+            // },
+            // CurrencyIndex: 0,
             history_keyWord_case: [],
             searchClentValue: '',
             showPage: true,
@@ -323,18 +323,18 @@
             }
         };
         watch = {
-            CaseNameValue(value) {
-                this.searchData.CaseName = value;
-                this.$apply();
-            },
-            ClientNameValue(value) {
-                this.searchData.ClientName = value;
-                this.$apply();
-            },
-            CurrencyIndex(index) {
-                this.searchData.Currency = this.Currency.value[index - 1];
-                this.$apply();
-            },
+            // CaseNameValue(value) {
+            //     this.searchData.CaseName = value;
+            //     this.$apply();
+            // },
+            // ClientNameValue(value) {
+            //     this.searchData.ClientName = value;
+            //     this.$apply();
+            // },
+            // CurrencyIndex(index) {
+            //     this.searchData.Currency = this.Currency.value[index - 1];
+            //     this.$apply();
+            // },
         };
         // 判断初始化历史数据
         isHistory() {
@@ -363,10 +363,10 @@
             )
             if (resData.statusCode == 200) {
                 var GetGeneralCodeComboboxItems = resData.data.result;
-                for (var index in GetGeneralCodeComboboxItems) {
-                    this.Currency.value.push(GetGeneralCodeComboboxItems[index].value)
-                    this.Currency.displayText.push(GetGeneralCodeComboboxItems[index].displayText)
-                }
+                // for (var index in GetGeneralCodeComboboxItems) {
+                //     this.Currency.value.push(GetGeneralCodeComboboxItems[index].value)
+                //     this.Currency.displayText.push(GetGeneralCodeComboboxItems[index].displayText)
+                // }
                 this.$apply();
             }
         }

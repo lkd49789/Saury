@@ -31,7 +31,7 @@
             }
         }
         .main{
-           margin:230rpx 28rpx 0 28rpx;
+           margin:230rpx 28rpx 0;
             .item-content{
                 margin: 44rpx 0;
                 display: flex;

@@ -46,6 +46,10 @@
                 margin-right: 10rpx;
                 display: inline-block;
             }
+            .status{
+                display: flex;
+                justify-content: space-between;
+            }
             .bill_view {
                 line-height: 50rpx;
             }
@@ -120,7 +124,10 @@
                     <view class="bill_view bill_gray">收款金额｜
                         <text class="bill_blue">{{item.payAmount}}({{item.payCurrency}})</text>
                     </view>
-                    <view class="bill_view bill_gray">{{item.receiptDate||'未填写'}}</view>
+                    <view class="bill_view bill_gray status">
+                        <text>{{item.receiptDate || '未填写'}}</text>
+                        <text class="bill_gray {{['WaitForSend','WaitForConfirm','WaitForClaim'].includes(item.status) ? 'bill_yellow' : item.status == 'Returned'?'bill_gray':'bill_green'}}">{{item.statusName || ''}}</text>
+                    </view>
                     <!-- <view class="bill_state {{item.statusName=='未提交'?'bill_blue':item.statusName=='待处理'?'bill_yellow':item.statusName=='已退回'?'bill_green':''}}">
                                     <view class="caseConflictBorder_radius"></view>
                                     {{item.statusName||'未填写'}}

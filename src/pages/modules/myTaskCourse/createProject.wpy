@@ -1,7 +1,7 @@
 <style lang='scss'>
   .container {
     .main {
-      margin: 149rpx 28rpx 44rpx 28rpx;
+      margin: 149rpx 28rpx 44rpx;
       .checkedBox {
         // padding: 0 28rpx 22rpx 28rpx;
         margin-bottom: 36rpx;

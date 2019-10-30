@@ -3,10 +3,8 @@
     height: 100%;
     width: 100%;
     position: fixed;
-    top: 0rpx;
+    top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,7 +37,7 @@
     }
     .login-box {
       // margin: 0 68rpx 120rpx 68rpx;
-      padding: 30rpx 64rpx 64rpx 64rpx;
+      padding: 30rpx 64rpx 64rpx;
       box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.35);
       border-radius: 20rpx;
       background: #fff;
@@ -49,10 +47,9 @@
         margin-top: 43rpx;
       }
       .username {
-        margin-top: 70rpx;
         height: 100rpx;
       }
-      .password {
+      .password,.username {
         margin-top: 70rpx;
       }
       .hint {
@@ -90,10 +87,7 @@
           background: #5d73fa;
           box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
           line-height: 86rpx;
-          border-top-left-radius: 20px;
-          border-top-right-radius: 20px;
-          border-bottom-right-radius: 20px;
-          border-bottom-left-radius: 20px;
+          border-radius: 20px;
         }
         .btn-text {
           color: #fff;
@@ -118,13 +112,11 @@
     height: 100%;
     position: relative;
   }
-  .border-left {
+  .border-left,.border-right {
     border-top: 1px solid #dedede;
     width: 35%;
   }
   .border-right {
-    border-top: 1px solid #dedede;
-    width: 35%;
     float: right;
   }
   .text-hint {
@@ -220,25 +212,43 @@
         });
       },
       async formSubmit(e) {
-        console.log(1);
-        let { data } = await IsTenantAvailable({ 'tenancyName':e.detail.value.domain })           
-        let state = data.result.state;
-            if(state == 1){
-              let resData  = await Authenticate({ 
-                  'Abp.TenantId':data.result.tenantId
-                },
-                {
-                  userNameOrEmailAddress: e.detail.value.username,
-                  password: e.detail.value.password
-                })  
+        try{
+          if(!e.detail.value.domain){
+            throw '请输入律所标识'
+          }else if(!e.detail.value.username){
+            throw '请输入账号'
+          }else if(!e.detail.value.password){
+            throw '请输入密码'
+          }
+          let { data } = await IsTenantAvailable({ 'tenancyName':e.detail.value.domain })           
+          let state = data.result.state;
+          if(state == 1){
+            let resData  = await Authenticate({ 
+                'Abp.TenantId':data.result.tenantId
+              },
+              {
+                userNameOrEmailAddress: e.detail.value.username,
+                password: e.detail.value.password
+              }) 
+            if (this.openId && this.unionId) {
+              await this.AddWechatUserLogin(resData.data.result.accessToken)
+            }else {
               this.storage(resData.data.result.accessToken)
-            }else{
-              let content = (state == 2 ) ? '未激活' : '不存在'
-              wx.showModal({
-                title: '警告',
-                content
+            }
+          }else{
+            let content = (state == 2 ) ? '未激活' : '不存在'
+            wx.showModal({
+              title: '警告',
+              content
             })
           }
+        }catch(err){
+          wx.showToast({
+            title: err,
+            icon: 'none',
+            duration: 3000
+          })
+        }
       }
     };
     // onShow() {
@@ -256,20 +266,27 @@
         url: '../main/index'
       })
     }
-    // async AddWechatUserLogin() {
-    //   var data = {
-    //     openId: this.openId,
-    //     unionId: this.unionId,
-    //     loginProvider: 'WechatMini',
-    //   }
-    //   var resData = await ajax.getData(
-    //     '/api/services/web/userExternalLogin/AddWechatUserLogin',
-    //     'POST',
-    //     data
-    //   )
-    //   console.log(resData);
-    //   // console.log(resData.error.message);
-    // }
+    async AddWechatUserLogin(accessToken) {
+      let { data } = await WechatUserLogin({
+        openId: this.openId,
+        unionId: this.unionId,
+        loginProvider: 'WechatMini',
+      })
+      if(!data.success){
+        wx.showModal({
+            title: '警告',
+            content: data.error.message,
+            showCancel: true,
+            confirmText: '确定',
+            success: res=> {
+              if (res.confirm) {
+                  this.storage(accessToken);
+              }
+            }
+        })
+      }
+
+    }
     onLoad(options) {
       if (Object.keys(options).length !== 0) {
         this.openId = options.openId;

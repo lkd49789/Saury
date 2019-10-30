@@ -7,10 +7,9 @@
         align-items: center;
         justify-content: center;
         position: fixed;
-        top: 0rpx;
+        top: 0;
         left: 0;
-        right: 0;
-        bottom: 0; // background-repeat: no-repeat;
+         // background-repeat: no-repeat;
         // background-size: cover;
         // background-image: url('../../images/minapp_startup_bg6.jpg');
         .icon {
@@ -25,10 +24,7 @@
             bottom: 180rpx;
             .wx {
                 // background: #03af01;
-                height: 100%;
-                width: 100%;
                 color: #fff;
-                margin-bottom: 30rpx;
                 >button {
                     width: 100%;
                     color: #fff;
@@ -36,10 +32,12 @@
                     font-size: 32rpx;
                 }
             }
-            .lzh {
+            .wx,.lzh{
                 height: 100%;
-                width: 100%;
+                width: 100%;;
                 margin-bottom: 30rpx;
+            }
+            .lzh {
                 .lzhLogin {
                     background: #fff;
                     width: 100%;
@@ -98,8 +96,8 @@
         methods = {
             async bindGetUserInfo(res) {
                 if (res.detail.userInfo) {
-                    console.log(res.detail.userInfo);
-                    let resData = await ajax.getData({url:'/api/Account/GetWechatUserInfo',
+                    console.log(res.detail);
+                    let resData = await ajax.getRequest({url:'/api/Account/GetWechatUserInfo',
                     data:{
                             code: this.code,
                             encryptedData: res.detail.encryptedData,
@@ -108,21 +106,20 @@
                             signature: res.detail.signature
                         }
                     })
-                    return false;
                     if (resData.data.result.accessToken) {
-                                wx.switchTab({
-                                    url: '../main/index'
-                                })
-                                try {
-                                    wx.setStorageSync('access', resData.data.result.accessToken);
-                                } catch (err) {
-                                    console.log(err);
-                                }
-                            } else {
-                                wx.navigateTo({
-                                    url: './login?openId=' + resData.data.result.openId + '&unionId=' + resData.data.result.unionId
-                                });
-                            }
+                       wx.switchTab({
+                           url: '../main/index'
+                       })
+                       try {
+                           wx.setStorageSync('access', resData.data.result.accessToken);
+                       } catch (err) {
+                           console.log(err);
+                       }
+                    } else {
+                        wx.navigateTo({
+                            url: './login?openId=' + resData.data.result.openId + '&unionId=' + resData.data.result.unionId
+                        });
+                    }
                 } else {
                     //用户按了拒绝按钮
                     wx.showModal({

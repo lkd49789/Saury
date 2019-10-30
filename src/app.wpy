@@ -577,13 +577,13 @@
       }
     }
     onShow(options) {
-      this.global.options=options;
+      this.global.options = options;
       wx.login({
         success: res => {
           var code = res.code;
           wx.getSetting({
             success: res => {
-              var accessToken=wx.getStorageSync('access');
+              var accessToken = wx.getStorageSync('access');
               if (res.authSetting['scope.userInfo']) {
                 console.log(1);
                 wx.getUserInfo({
@@ -598,26 +598,22 @@
                         signature: res.signature
                       }
                       })
-                      if (resData.statusCode === 200 && resData.data.result.accessToken) {
-                          try {
-                            console.log(3)
-                            wx.setStorageSync('access', resData.data.result.accessToken);
-                            getCurrentPages()[0].onShow();  // 刷新首页
-                          } catch (err) {
-                            console.log(err);
-                          }
+                      if (resData.data.result.accessToken) {
+                          console.log(3)
+                          wx.setStorageSync('access', resData.data.result.accessToken);
+                          getCurrentPages()[0].onShow();  // 刷新首页
                       } else {
-                          // wx.redirectTo({
-                          //   url: '/pages/login/choosePageLogin'
-                          // });
+                          wx.redirectTo({
+                            url: '/pages/login/choosePageLogin'
+                          });
                       }
                   }
                 });
               }else if(!res.authSetting['scope.userInfo'] || !accessToken){
                 console.log(2);
-                //  wx.redirectTo({
-                //       url: '/pages/login/choosePageLogin'
-                //   });
+                 wx.redirectTo({
+                      url: '/pages/login/choosePageLogin'
+                  });
               }
             }
           })

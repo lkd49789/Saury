@@ -211,8 +211,8 @@
           name: 'CaseName',
           warning: false,
           disabled:true
-        },
-        CaseNameValue: '',
+      },
+      CaseNameValue: '',
       ClientName: {
           title: '客户名称',
           name: 'ClientName',

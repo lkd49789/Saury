@@ -21,14 +21,14 @@
                     >view {
                         margin-left: 28rpx;
                     }
-                    .date-year {
-                        font-size: 32rpx;
+                    .date-year,.date-mouth {
                         display: flex;
                         align-items: center;
                     }
+                    .date-year{
+                         font-size: 32rpx;
+                    }
                     .date-mouth {
-                        display: flex;
-                        align-items: center;
                         font-size: 50rpx;
                     }
                 }

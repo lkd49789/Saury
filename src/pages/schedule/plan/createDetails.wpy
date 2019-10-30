@@ -163,7 +163,7 @@
                     <input id="Title" name="Title" bindfocus="bindfocus('{{0}}')" bindblur="bindblur('{{0}}')" placeholder="请输入日程标题" bindinput="bindinput" />
                 </view>
                 <view class="warming" wx:if="{{warning[0]}}">
-                    <text>日程标题字段是必需的</text>
+                    <text>必填字段</text>
                 </view>
             </view>
             <view class="option">
@@ -179,7 +179,7 @@
                     </view>
                 </picker>
                 <view class="warming" wx:if="{{warning[1]}}">
-                    <text>日程类型字段是必需的</text>
+                    <text>必填字段</text>
                 </view>
             </view>
             <view class="option">
@@ -203,7 +203,7 @@
                     <textarea id="Describe" name="Describe" bindfocus="bindfocus('{{1}}')" bindblur="bindblur('{{1}}')" placeholder="请添加描述" bindinput="bindinput" auto-height/>
                 </view>
                 <view class="warming" wx:if="{{warning[2]}}">
-                    <text>日程描述字段是必需的</text>
+                    <text>必填字段</text>
                 </view>
             </view>
             <view class="input">

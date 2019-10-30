@@ -429,7 +429,7 @@
         }
         onLoad(options) {
             if(options.IsAll){
-                this.IsAll=options.IsAll?true:false;
+                this.IsAll = options.IsAll ? true : false;
             }
             // this.sorting=this.IsAll?'Name desc':'CreationTime desc'
             this.GetClients();

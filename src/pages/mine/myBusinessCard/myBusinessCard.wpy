@@ -38,7 +38,7 @@
                 }
             }
             .lawyerInfo {
-                padding: 44rpx 28rpx 0 28rpx;
+                padding: 44rpx 28rpx 0;
                 .info-top {
                     padding-bottom: 44rpx;
                     border-bottom: 1px solid #f4f4f4;
@@ -103,7 +103,7 @@
         .list-container {
             color: #2a2a2a;
             .work-experience {
-                padding: 30rpx 28rpx 0rpx 28rpx;
+                padding: 30rpx 28rpx 0rpx;
                 border-bottom: 16rpx solid #f4f4f4;
                 border-top: 16rpx solid #f4f4f4;
                 .work-title {

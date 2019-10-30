@@ -10,21 +10,26 @@ var getRequest = ({url, method = 'post', header, data = ''}) => {
     if(!urlArr.includes(url) && token && !header){
       header = { Authorization: 'Bearer ' + token }
     }
-    wx.request({
-      url: localhost + url,
-      method,
-      header,
-      data,
-      success(res) {
-        resolve(res);
-      },
-      fail(err) {
-        reject(err.success);
-      },
-      complete(){
-        wx.hideLoading();
-      }
-    });
+    if(urlArr.includes(url) || token){
+      wx.request({
+        url: localhost + url,
+        method,
+        header,
+        data,
+        success(res) {
+          if(res.statusCode === 200)
+          resolve(res);
+          else
+          reject(res.data.error.details);
+        },
+        fail(err) {
+          reject(err.message);
+        },
+        complete(){
+          wx.hideLoading();
+        }
+      });
+    }
   })
 };
 
@@ -131,11 +136,6 @@ var preView = (http,fileClass) => {
             console.log(res);
             switch (fileClass) {
               case 'jpg':
-                wx.previewImage({
-                  current: res.tempFilePath, // 当前显示图片的http链接
-                  urls: [res.tempFilePath] // 需要预览的图片http链接列表
-                });
-                break;
               case 'png':
                 wx.previewImage({
                   current: res.tempFilePath, // 当前显示图片的http链接
@@ -151,7 +151,6 @@ var preView = (http,fileClass) => {
                     console.log('打开文件');
 
                   },
-
                   fail: err => {
                     wx.showToast({
                       title: '暂不支持此文件预览！',

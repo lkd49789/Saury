@@ -23,7 +23,7 @@
                 width: 100%;
                 background: #fff;
                 z-index: 99999;
-                padding: 20rpx 28rpx 0 28rpx;
+                padding: 20rpx 28rpx 0;
                 >view {
                     display: flex;
                     flex-direction: column;
@@ -40,7 +40,7 @@
             z-index: 99999;
         }
         .main {
-            margin: 149rpx 28rpx 0 28rpx;
+            margin: 149rpx 28rpx 0 ;
             font-size: 28rpx;
             color: #2a2a2a;
             position: relative;

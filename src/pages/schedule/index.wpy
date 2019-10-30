@@ -19,14 +19,12 @@
                     >view {
                         margin-left: 28rpx;
                     }
-                    .date-year {
+                    .date-year,.date-mouth {
                         font-size: 32rpx;
                         display: flex;
                         align-items: center;
                     }
                     .date-mouth {
-                        display: flex;
-                        align-items: center;
                         font-size: 50rpx;
                     }
                 }
@@ -372,13 +370,7 @@
                     .meeting_ifTrue {
                         float: right;
                     }
-                    .meeting_time {
-                        color: #b2b2b2;
-                    }
-                    .meeting_content {
-                        color: #b2b2b2;
-                    }
-                    .meeting_timeFirst {
+                    .meeting_time, .meeting_content, .meeting_timeFirst{
                         color: #b2b2b2;
                     }
                     .meeting_timeLast {
@@ -1131,7 +1123,7 @@
 
             this.dateArr.forEach( item =>{
                 if(item.isToday){
-                   let timeStamp = new Date(item.isToday).getTime() - 28800000
+                   let timeStamp = new Date(item.isToday).getTime() - 28800000    // 获取到的时间是8点的
                    let timeStamp2 = new Date(item.isToday).getTime() + 57600000 
                    this.forEachTimeList([tasks, schedules, workLogs, caseCourts, meetings, vacations], value =>{
                         var timeStart = new Date(value.start).getTime()

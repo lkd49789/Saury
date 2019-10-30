@@ -12,3 +12,15 @@ export function Authenticate(header,data){ // 校验账号
     data
   })  
 }
+
+// export function Authenticate(data){ // 
+//   return getRequest({url:'/api/TokenAuth/Authenticate',
+//   data
+// })  
+// }
+
+export function AddWechatUserLogin(data){ // 小程序和系统用户绑定
+  return getRequest({url:'/api/services/web/userExternalLogin/AddWechatUserLogin',
+  data
+})  
+}

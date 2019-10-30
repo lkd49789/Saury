@@ -101,6 +101,26 @@
             z-index: 99;
         }
     }
+    .caseSearchInput{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          >view:first-child{
+            width:90%;
+          }
+          >view:last-child{
+            background: #5d73fa;
+            height:60rpx;
+            width:60rpx;
+            line-height:60rpx;
+            text-align: center;
+              >icon{
+                font-size:40rpx;
+                color:#ffffff;
+              }
+          }
+          
+        }
 </style>
 
 <template>
@@ -137,6 +157,12 @@
                 <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
             </view>
             <view class="advanced-search-content">
+                <view class="caseSearchInput">
+                    <CaseName :input.sync="CaseName" :inputValue.sync='CaseNameValue' :twoWayTitle="CaseNameValue" />
+                    <view>
+                    <icon class="iconfont icon-sousuo1" @tap="toCaseSearchPage"></icon>
+                    </view>
+                </view>
                 <view class="tui-picker-content">
                     <view>会议时间</view>
                     <view style="display:flex;align-items:center;">
@@ -173,6 +199,8 @@
                         </picker>
                     </view>
                 </view>
+                <!-- <LawCaseName :options.sync="LawCaseName" :index.sync='LawCaseNameIndex' :twoWayTitle="LawCaseNameIndex" /> -->
+                <Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
                 <Subject :input.sync="Subject" :inputValue.sync='SubjectValue' :twoWayTitle="SubjectValue" />
                 <Title :input.sync="Title" :inputValue.sync='TitleValue' :twoWayTitle="TitleValue" />
                 <Status :options.sync="Status" :index.sync='StatusIndex' :twoWayTitle="StatusIndex" />
@@ -195,23 +223,48 @@
     import {
         formatDate
     } from '@/utils/cofig/api.js';
-    import Subject from '@/components/picker/input';
-    import Title from '@/components/picker/input';
-    import Status from '@/components/picker/option';
-    import Category from '@/components/picker/option';
-    import Level from '@/components/picker/option';
-    import MeetingRoomId from '@/components/picker/option';
+    import Input from '@/components/picker/input';
+    // import Title from '@/components/picker/input';
+    import Option from '@/components/picker/option';
+    // import Category from '@/components/picker/option';
+    // import Level from '@/components/picker/option';
+    // import MeetingRoomId from '@/components/picker/option';
+    import PickerOption from '@/components/picker/pickerOption';
     export default class searchMeeting extends wepy.page {
         components = {
-            Subject,
-            Title,
-            Status,
-            Category,
-            Level,
-            MeetingRoomId
+            CaseName:Input,
+            Name:Input,
+            Subject:Input,
+            Title:Input,
+            Status:Option,
+            Category:Option,
+            Level:Option,
+            MeetingRoomId:Option,
+            // LawCaseName:PickerOption
         }
         data = {
             searchData: {},
+            CaseName: {
+                title: '案件名称',
+                name: 'CaseName',
+                warning: false,
+                disabled:true
+            },
+            CaseNameValue: '',
+            // LawCaseName: {
+            //     title: '参案角色',
+            //     key: 'displayText',
+            //     name: 'LawCaseName',
+            //     data: [],
+            //     warning: false
+            // },
+            // LawCaseNameIndex: -1,
+            Name: {
+                title: '客户名称',
+                name: 'Name',
+                warning: false,
+            },
+            NameValue: '',
             Subject: {
                 title: '会议议题',
                 name: 'Subject',
@@ -269,7 +322,46 @@
             showPage: true,
             isShowArray: [],
         };
+        watch = {
+            LawCaseNameIndex(index){
+                this.searchData.lawyerRoleList = this.LawCaseName.data[index].value;
+                this.$apply();
+            },
+            NameValue(value) {
+                this.searchData.Name = value;
+                this.$apply();
+            },
+            SubjectValue(value) {
+                this.searchData.Subject = value;
+                this.$apply();
+            },
+            TitleValue(value) {
+                this.searchData.Title = value;
+                this.$apply();
+            },
+            //会议室
+            MeetingRoomIdIndex(index) {
+                this.searchData.MeetingRoomId = this.MeetingRoomId.value[index-1];
+                this.$apply();
+            },
+            LevelIndex(index) {
+                this.searchData.Level = this.Level.value[index-1];
+                this.$apply();
+            },
+            CategoryIndex(index) {
+                this.searchData.Category = this.Category.value[index-1];
+                this.$apply();
+            },
+            StatusIndex(index) {
+                this.searchData.Status = this.Status.value[index-1];
+                this.$apply();
+            },
+        };
         methods = {
+            toCaseSearchPage(){
+                wx.navigateTo({ url: '../../receivables/manageReceivables/manageReceivablesExamine' });
+                this.$apply();        
+            },
             advancedSearchSubmit() {
                 console.log(this.searchData)
                 if (Object.keys(this.searchData).length !== 0) {
@@ -387,33 +479,6 @@
                 }
             }
         };
-        watch = {
-            SubjectValue(value) {
-                this.searchData.Subject = value;
-                this.$apply();
-            },
-            TitleValue(value) {
-                this.searchData.Title = value;
-                this.$apply();
-            },
-            //会议室
-            MeetingRoomIdIndex(index) {
-                this.searchData.MeetingRoomId = this.MeetingRoomId.value[index-1];
-                this.$apply();
-            },
-            LevelIndex(index) {
-                this.searchData.Level = this.Level.value[index-1];
-                this.$apply();
-            },
-            CategoryIndex(index) {
-                this.searchData.Category = this.Category.value[index-1];
-                this.$apply();
-            },
-            StatusIndex(index) {
-                this.searchData.Status = this.Status.value[index-1];
-                this.$apply();
-            },
-        };
         // 判断初始化历史数据
         isHistory() {
             var pages = getCurrentPages();
@@ -474,6 +539,10 @@
                 }
                 this.$apply();
             }
+        }
+        isRefresh(caseInfoData){
+            this.CaseNameValue = caseInfoData.name;
+            this.searchData.CaseName = caseInfoData.name;
         }
         onLoad() {
             this.isHistory();

@@ -182,30 +182,18 @@ export default class contractdoc extends wepy.page {
       console.log(fileClass);
       if(this.progress[progressIndex]!==100){
         this.stopProgress[progressIndex]=!this.stopProgress[progressIndex]
-           var http = '/api/services/web/document/GetDocumentFile?id=' + fileId
+           var http = '/api/services/web/Document/GetDocumentFile?Id=' + fileId
               switch (fileClass) {
                       case 'jpg':
-                          this.downloadFile(http, fileClass,progressIndex);
-                          break;
                       case 'png':
-                          this.downloadFile(http, fileClass,progressIndex);
-                          break;
                       case 'xls':
-                          this.downloadFile(http, fileClass,progressIndex);
-                          break;
                       case 'xlsx':
-                          this.downloadFile(http, fileClass,progressIndex);
-                          break;
                       case 'docx':
-                          this.downloadFile(http, fileClass,progressIndex);
-                          break;
                       case 'doc':
-                         this.downloadFile(http, fileClass,progressIndex);
-                          break;
                       case 'pdf':
-                         this.downloadFile(http, fileClass,progressIndex);
-                          break;
                       case 'mp4':
+                      case 'ppt':
+                      case 'pptx':
                           this.downloadFile(http, fileClass,progressIndex);
                           break;
                       default:
@@ -226,11 +214,6 @@ export default class contractdoc extends wepy.page {
             // console.log(res)
              switch (fileClass) {
                     case 'jpg':
-                      wx.previewImage({
-                        current: filePath, // 当前显示图片的http链接
-                        urls: [filePath] // 需要预览的图片http链接列表
-                      });
-                      break;
                     case 'png':
                       wx.previewImage({
                         current: filePath, // 当前显示图片的http链接
@@ -238,8 +221,8 @@ export default class contractdoc extends wepy.page {
                       });
                       break;
                     case 'mp4':
-                      this.videoPath=filePath;
-                      this.showVideo=true;
+                      this.videoPath = filePath;
+                      this.showVideo = true;
                       this.$apply();
                       break;
                     default:
@@ -276,11 +259,11 @@ export default class contractdoc extends wepy.page {
                     'content-type': 'application/octet-stream',
                     Authorization: 'Bearer ' + res.data
                   },
-                  url:'https://www.ailinkedlaw.com'+http,
+                  url:'http://www.ailinkedlaw.com:8081'+http,
                   success: res => {
-                   var filePath=res.tempFilePath;
-                   var cacheData=wx.getStorageSync('cacheDownLoadData');
-                    cacheData[progressIndex]=filePath;
+                   var filePath = res.tempFilePath;
+                   var cacheData = wx.getStorageSync('cacheDownLoadData');
+                    cacheData[progressIndex] = filePath;
                     wx.setStorageSync('cacheDownLoadData', cacheData);
                   },
                   fail: err => {
@@ -292,7 +275,7 @@ export default class contractdoc extends wepy.page {
                 });
                 downloadTask.onProgressUpdate((res) => {
                   if(this.stopProgress[progressIndex]){
-                    this.progress[progressIndex]=res.progress
+                    this.progress[progressIndex] = res.progress
                     this.$apply();
                   }else{
                     downloadTask.abort()
@@ -370,6 +353,7 @@ export default class contractdoc extends wepy.page {
               data: cacheData
           });
         }
+        this.$apply()
       }
     });
   }

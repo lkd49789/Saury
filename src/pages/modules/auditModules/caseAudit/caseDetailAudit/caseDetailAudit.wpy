@@ -1090,6 +1090,33 @@
         //         return resData.tempFilePath;
         //     }
         // }
+        //获取检索条件
+        async GetConflictCheckList(id){
+            let { data } = await ajax.getData(
+                '/api/services/web/Case/GetConflictCheckList',
+                'post',
+                { id:id }
+            )   
+            let params = {
+                caseCheckList:[{
+                    checkType:data.result.items[0].checkType,
+                    keywordCN:data.result.items[0].searchName,
+                    keywordEN:data.result.items[0].enName
+                }],
+                caseId:id,
+                pageNumber: 1,
+                pageSize: 100
+            }
+            this.GetCaseCheckList(params)
+        }
+        //获取检索结果
+        async GetCaseCheckList(data){
+            var resData = await ajax.getData(
+                '/api/services/web/Case/GetCaseCheckList',
+                'post',
+                data
+            )   
+        }
         //检索结果
         async GetOrderItem(id) {
             this.GetCaseInfo(id);
@@ -1109,7 +1136,7 @@
                 this.GetCaseInfo(OrderItemData.caseId);
                 //完成时间
                 OrderItemData.completeTime = formatTimeSymbol(this.OrderItemData.completeTime, '/')
-                if (this.OrderItemData.conflictCondition.conflictList.length>0) {
+                if (this.OrderItemData.conflictCondition.conflictList.length > 0) {
                     //关键字中文
                     this.OrderItemData.conflictCondition.conflictList[0].searchName = this.OrderItemData.conflictCondition.conflictList[0].searchName.split(',')
                     //关键字英文 
@@ -1125,6 +1152,7 @@
         onLoad(options) {
             this.id = options.id;
             this.GetOrderItem(options.id);
+            this.GetConflictCheckList(options.id)
             this.$apply();
         }
     }

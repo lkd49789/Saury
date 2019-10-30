@@ -583,6 +583,14 @@
                                     item.TextTile = '立案-冲突检索';
                                     item.linkPage = '';
                                     break;    
+                                case 'App.Business.StampFiles.IsSeal.Created':
+                                    item.TextTile = '文书盖章-待盖章';
+                                    item.linkPage = '';
+                                    break;  
+                                case 'App.Business.CaseCreation.ReturnConflict':
+                                    item.TextTile = '立案-退回案件检索人';
+                                    item.linkPage = '';
+                                    break;  
                             }
                             isDisabled.push(false)
                         })

@@ -31,7 +31,7 @@
             }
         }
         .main {
-            margin: 230rpx 28rpx 0 28rpx;
+            margin: 230rpx 28rpx 0;
             font-size: 28rpx;
             color: #7a7a7a;
             .items {
@@ -40,13 +40,10 @@
                 padding: 30rpx 24rpx;
                 margin-bottom: 44rpx;
                 position: relative;
-                >view:first-child {
+                >view:first-child{
                     color: #2a2a2a;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
                 }
-                >view:nth-child(3) {
+                >view:first-child,>view:nth-child(3) {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
@@ -114,8 +111,8 @@
                     }
                     .fixed-text-count {
                         position: absolute;
-                        bottom: 0rpx;
-                        right: 0rpx;
+                        bottom: 0;
+                        right: 0;
                         color: #7a7a7a;
                         font-size: 28rpx;
                     }

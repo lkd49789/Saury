@@ -44,7 +44,7 @@
                 background: #f4f4f4;
             }
             .content-bottom {
-                padding: 30rpx 28rpx 30rpx 28rpx;
+                padding: 30rpx 28rpx;
                 >view:first-child {
                     margin-bottom: 30rpx;
                     color: #7a7a7a;
@@ -84,7 +84,7 @@
                 }
             }
             .auditStatus {
-                padding: 40rpx 28rpx 30rpx 28rpx;
+                padding: 40rpx 28rpx 30rpx;
                 .radio-group {
                     display: flex;
                     justify-content: space-between;

@@ -578,7 +578,7 @@
             <navbar :navbars='navbars' :currentTab.sync="currentTab" :twoWayTitle="currentTab"></navbar>
         </view>
         <!-- <view style="height:200rpx;width:100%;"></view> -->
-        <scroll-view scroll-y="true">
+        <scroll-view scroll-y="true" enable-flex="true">
             <view  hidden="{{currentTab == 0?'':true}}">
             <view class="taskdetail-container">
                 <view class="task-title-content">
@@ -1260,7 +1260,7 @@
                     var pages = getCurrentPages();
                     var prevPage = pages[pages.length - 2]; //上一个页面
                     console.log(prevPage);
-                    if (prevPage) {
+                    if (prevPage.isRefresh) {
                         prevPage.isRefresh();
                     }
                 }

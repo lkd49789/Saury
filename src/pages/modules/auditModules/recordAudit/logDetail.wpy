@@ -283,7 +283,7 @@
           </view>
           <view>
             <text>通过{{workLogData.approvalList.length}}位审核人审核</text>
-            <text>{{workLogData.approvalList[0].approvalDateText}}</text>
+            <text>{{workLogData.approvalList[0].operationTime}}</text>
           </view>
         </view>
       </view>
@@ -321,8 +321,8 @@
     };
     methods = {
        toauditResultsDetail(){
-         if(this.workLogData.approvalList.length>0){
-           var approvalList=JSON.stringify(this.workLogData.approvalList)
+         if(this.workLogData.approvalList.length > 0){
+           var approvalList = JSON.stringify(this.workLogData.approvalList)
            wx.navigateTo({ url: '../../myRecord/myLogdetail/auditResultsDetail?approvalList='+approvalList});
          }
       },
@@ -443,11 +443,17 @@
             this.$apply();
           }
         }
-        //通过人数
-        if (workLogData.approvalList.length !== 0) {
-          var approvalList = workLogData.approvalList;
-          approvalList[0].approvalDateText=formatTime(approvalList[0].approvalDate)
+        var { data } = await ajax.getData(
+          '/api/services/web/Workflow/GetLogs',
+          'post',
+          id
+        )
+      //通过人数
+        if (data.result.items.length !== 0) {
+          var approvalList = data.result.items;
+          approvalList[0].operationTime = formatTime(approvalList[0].operationTime)
         }
+        workLogData['approvalList'] = approvalList
         this.workLogData = workLogData
         var isRefresh = {
           isRefresh: false
