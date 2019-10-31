@@ -321,18 +321,17 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
-    import PayPeriod from '@/components/picker/input';
-    import LimitFee from '@/components/picker/input';
-    import LimitHour from '@/components/picker/input';
+    import {  CaseChargeForEdit,CaseChargeList,DCaseCharge,UCaseLawyerCharg } from '@/api/myRegister';
+    import {  EmployeePhoto } from '@/api/common';
+    import Input from '@/components/picker/input';
     import {
         formatDate
     } from '@/utils/cofig/api.js';
     export default class chooseChargeMethod extends wepy.page {
         components = {
-            PayPeriod,
-            LimitFee,
-            LimitHour,
+            PayPeriod:Input,
+            LimitFee:Input,
+            LimitHour:Input,
         };
         data = {
             imageData: '../../../../images/next.png',
@@ -532,9 +531,8 @@
         };
         computed = {};
         async GetCaseChargeAndContractForEdit() {
-            var resData = await ajax.getData(
-                '/api/services/web/case/GetCaseChargeForEdit',
-                'post', {
+            var resData = await CaseChargeForEdit(
+                {
                     Id: this.caseId
                 }
             )
@@ -579,9 +577,8 @@
         //收费类型列表数据
         async GetCaseChargeList(caseId) {
             var id = caseId || this.caseId;
-            var resData = await ajax.getData(
-                '/api/services/web/case/GetCaseChargeList',
-                'post', {
+            var resData = await CaseChargeList(
+                {
                     id
                 }
             )
@@ -616,8 +613,7 @@
         }
         async GetAvatar(data) {
             for (var index in data) {
-                var http = '/api/services/web/personal/GetEmployeePhoto?id=' + data[index].userId;
-                this.lawyerChargeListDatas[index].avatar = await ajax.getAavatar(http);
+                this.lawyerChargeListDatas[index].avatar = await EmployeePhoto(data[index].userId);
             }
             this.$apply();
         }
@@ -628,9 +624,8 @@
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-            var resData = await ajax.getData(
-                '/api/services/web/casePayDetail/DeleteCaseCharge',
-                'post', {
+            var resData = await DCaseCharge(
+                {
                     id
                 }
             )
@@ -672,9 +667,7 @@
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-            var resData = await ajax.getData(
-                '/api/services/web/caseLawyer/UpdateCaseLawyerCharge',
-                'post',
+            var resData = await UCaseLawyerCharg(
                 data
             )
             if (resData.statusCode == 200) {

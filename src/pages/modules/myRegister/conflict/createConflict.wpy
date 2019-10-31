@@ -53,29 +53,23 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
-    import name from '@/components/picker/input';
-    import address from '@/components/picker/input';
-    import cardId from '@/components/picker/input';
-    import email from '@/components/picker/input';
-    import enName from '@/components/picker/input';
-    import linker from '@/components/picker/input';
-    import phone from '@/components/picker/input';
-    import remark from '@/components/picker/input';
-    import category from '@/components/picker/option';
-    import legalType from '@/components/picker/option';
+    import { GeneralCodeComboOutput } from '@/api/common';
+
+    import Input from '@/components/picker/input';
+
+    import Option from '@/components/picker/option';
     export default class createConflict extends wepy.page {
         components = {
-            name,
-            address,
-            cardId,
-            email,
-            enName,
-            linker,
-            phone,
-            remark,
-            category,
-            legalType
+            name:Input,
+            address:Input,
+            cardId:Input,
+            email:Input,
+            enName:Input,
+            linker:Input,
+            phone:Input,
+            remark:Input,
+            category:Option,
+            legalType:Option
         };
         data = {
             addOpacity: 1,
@@ -300,9 +294,7 @@
                 IsRecursive: false,
                 // isAll: true
             }
-            var resData = await ajax.getData(
-                '/api/services/web/common/GetGeneralCodeComboOutput',
-                'post',
+            var resData = await GeneralCodeComboOutput(
                 data
             )
             if (resData.statusCode == 200) {

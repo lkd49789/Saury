@@ -369,17 +369,14 @@
                         this.placeHolder.placeHolderImageIndex = 0;
                         this.placeHolder.placeHolderShow = true;
                     }
-                    this.$apply();
                     break;
                 case 403:
                     this.placeHolder.placeHolderImageIndex = 3;
                     this.placeHolder.placeHolderShow = true;
-                    this.$apply();
                     break;
                 case 500:
                     this.placeHolder.placeHolderImageIndex = 1;
                     this.placeHolder.placeHolderShow = true;
-                    this.$apply();
                 default:
                     break;
             }

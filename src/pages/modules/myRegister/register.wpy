@@ -225,7 +225,8 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '@/utils/cofig/ajax.js';
+  import { OrUpdateCaseGeneralInfo,Client ,CaseInfo,CaseChargeList} from '@/api/myRegister';
+  import { GeneralCodeComboOutput } from '@/api/common';
   export default class register extends wepy.page {
     props = {};
     data = {
@@ -390,11 +391,7 @@
         mask: true, //显示透明蒙层，防止触摸穿透,
         success: res => {}
       });
-      var resData = await ajax.getData(
-        '/api/services/web/case/CreateOrUpdateCaseGeneralInfo',
-        'post',
-        data
-      )
+      var resData = await OrUpdateCaseGeneralInfo(data )
       if (resData.statusCode == 200) {
         wx.setStorageSync('CREATE_CASEINFO_DATA', data)
         this.$apply();
@@ -530,9 +527,8 @@
     }
     //获取客户信息
     async GetClient(id) {
-      var resData = await ajax.getData(
-        '/api/services/web/client/GetClient',
-        'post', {
+      var resData = await Client(
+        {
           id
         }
       )
@@ -546,9 +542,8 @@
     }
     //获取案件费用数据
     async GetCaseInfoData() {
-      var resData = await ajax.getData(
-        '/api/services/web/case/GetCaseInfo',
-        'post', {
+      var resData = await CaseInfo(
+        {
           Id: this.caseId
         }
       )
@@ -584,9 +579,8 @@
     }
     //获取案件信息
     async GetCaseInfo(id) {
-      var resData = await ajax.getData(
-        '/api/services/web/case/GetCaseInfo',
-        'post', {
+      var resData = await CaseInfo(
+         {
           Id: id
         }
       )
@@ -644,9 +638,8 @@
     }
     //获取已有案件律师信息
     async GetCaseChargeList(id) {
-      var resData = await ajax.getData(
-        '/api/services/web/case/GetCaseChargeList',
-        'post', {
+      var resData = await CaseChargeList(
+         {
           id
         }
       )
@@ -680,9 +673,7 @@
         IsRecursive: false,
         ParentId: "",
       }
-      var resData = await ajax.getData(
-        '/api/services/web/common/GetGeneralCodeComboOutput',
-        'post',
+      var resData = await GeneralCodeComboOutput(
         data
       )
       if (resData.statusCode == 200) {

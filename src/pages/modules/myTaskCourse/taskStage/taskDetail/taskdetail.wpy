@@ -876,8 +876,8 @@
 
 <script>
     import wepy from 'wepy';
-    import { DocumentFile,EmployeePhoto } from '@/api/common.js';
-    import { OrUpdateSubTask,CfTaskParticipant,Task,Comment,Attachment,DSubTask,ComTaskParticipant,DeleteTasks,Comments  } from '@/api/myTaskCourse.js';
+    import { EmployeePhoto } from '@/api/common.js';
+    import { OrUpdateSubTask,CfTaskParticipant,Task,Comment,Attachment,DSubTask,ComTaskParticipant,DeleteTasks,Comments,DocumentFile  } from '@/api/myTaskCourse.js';
     import navbar from '@/components/navbar';
     import api from '@/utils/cofig/api.js';
     export default class taskdetail extends wepy.page {
@@ -1145,23 +1145,11 @@
                 } else {
                     switch (fileClass) {
                         case '.jpg':
-                            DocumentFile(fileId, fileClass);
-                            break;
                         case '.png':
-                            DocumentFile(fileId, fileClass);
-                            break;
                         case '.xls':
-                            DocumentFile(fileId, fileClass);
-                            break;
                         case '.xlsx':
-                            DocumentFile(fileId, fileClass);
-                            break;
                         case '.docx':
-                            DocumentFile(fileId, fileClass);
-                            break;
                         case '.doc':
-                            DocumentFile(fileId, fileClass);
-                            break;
                         case '.pdf':
                             DocumentFile(fileId, fileClass);
                             break;
@@ -1175,7 +1163,7 @@
                                             'content-type': 'application/octet-stream',
                                             Authorization: 'Bearer ' + res.data
                                         },
-                                        url: 'https://www.ailinkedlaw.com' + http,
+                                        url: 'https://www.ailinkedlaw.com:8081/api/services/web/taskAttachment/GetDocumentFile?id=' + fileId,
                                         success: res => {
                                             // console.log(res);
                                             this.videoPath = res.tempFilePath;
@@ -1717,7 +1705,7 @@
                     var pages = getCurrentPages();
                     var prevPage = pages[pages.length - 2]; //上一个页面
                     console.log(prevPage);
-                    if (prevPage) {
+                    if (prevPage.isRefresh) {
                         prevPage.isRefresh();
                         wx.navigateBack({
                             delta: 1,
@@ -1740,7 +1728,12 @@
             )
             if (res.data.success) {
                 if (res.statusCode == 200 && res.data.success) {
-                    console.log('完成')
+                     wx.showToast({
+                        title: '完成',
+                        icon: 'none',
+                        duration: 1500,
+                        mask: false,
+                    });
                 } else {
                     wx.showToast({
                         title: '网络问题！',

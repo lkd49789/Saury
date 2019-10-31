@@ -13,14 +13,12 @@
                 padding: 30rpx 28rpx;
             }
         }
-        .space-between {
+        .diplay-flex ,.space-between{
             display: flex;
             align-items: center;
-            justify-content: space-between;
         }
-        .diplay-flex {
-            display: flex;
-            align-items: center;
+        .space-between {
+            justify-content: space-between;
         }
         .flex-column-1 {
             flex: 1;
@@ -36,10 +34,10 @@
             }
         }
         .main {
-            margin: 149rpx 0rpx 44rpx 0rpx;
+            margin: 149rpx 0rpx 44rpx;
             .baseInfo {
                 color: #7a7a7a;
-                padding: 0 28rpx 30rpx 28rpx;
+                padding: 0 28rpx 30rpx;
                 >view:not(:last-child) {
                     margin-bottom: 20rpx;
                 }
@@ -63,7 +61,7 @@
                 }
             }
             .debtEvaluation {
-                padding: 30rpx 28rpx 128rpx 28rpx;
+                padding: 30rpx 28rpx 128rpx;
                 color: #2a2a2a;
                 >view:not(:last-child) {
                     margin-bottom: 20rpx;

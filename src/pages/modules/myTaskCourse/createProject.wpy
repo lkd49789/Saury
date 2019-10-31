@@ -215,16 +215,14 @@
   import wepy from 'wepy';
   import { GeneralCodeComboOutput } from '@/api/common.js';
   import { TemplatesWithGroup, ApplicationTemplatesWithGroup, Stages, ApplicationStages, OrUpdateTaskProject, ProjectCover } from '@/api/myTaskCourse.js';
-  import Name from '@/components/picker/input';
-  import Description from '@/components/picker/input';
-  import Privacy from '@/components/picker/pickerOption';
-  import TemplateId from '@/components/picker/pickerOption';
+  import Input from '@/components/picker/input';
+  import PickerOption from '@/components/picker/pickerOption';
   export default class createProject extends wepy.page {
     components = {
-      Name,
-      Description,
-      Privacy,
-      TemplateId
+      Name:Input,
+      Description:Input,
+      Privacy:PickerOption,
+      TemplateId:PickerOption
     };
     data = {
       subData: {
@@ -459,10 +457,7 @@
         })
       if (resData.statusCode == 200) {
         resData.data.result.forEach(item =>{
-          if(item.name == '案件项目')
-          item.checked = true
-          else
-          item.checked = false
+          item.checked = (item.name == '案件项目')
         })
         this.Category = resData.data.result;
         this.$apply();
@@ -514,10 +509,10 @@
       if (resData.statusCode == 200) {
         var applicationStages = resData.data.result.items;
         applicationStages.map((item)=>{
-             item.checked=true;
+             item.checked = true;
              return item
         })
-        var Stages=applicationStages.map((item,index)=>{
+        var Stages = applicationStages.map((item,index)=>{
             return item.id
         })
         this.subData.StageIds=Stages.toString();
@@ -615,14 +610,11 @@
     isRefresh(item) {
       console.log(item)
       if (item.class == "client") {
-        if(this.subData.Category=='1'){
-          this.ClientIdValue = item.displayText;
-          this.subData.ClientId = item.value;
+        if(this.subData.Category == '1'){
           this.subData.Name=item.displayText;
-        }else{
-          this.ClientIdValue = item.displayText;
-          this.subData.ClientId = item.value;
         }
+        this.ClientIdValue = item.displayText;
+          this.subData.ClientId = item.value;
       } else if (item.class == "case") {
         this.CaseIdValue = item.displayText;
         this.subData.CaseId = item.value;

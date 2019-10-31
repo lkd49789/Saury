@@ -90,7 +90,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { OrUpdateCaseGeneralInfo } from '@/api/myRegister';
     export default class conflictList extends wepy.page {
         data = {
             subCaseInfoData: {},
@@ -154,9 +154,7 @@
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-            var resData = await ajax.getData(
-                '/api/services/web/case/CreateOrUpdateCaseGeneralInfo',
-                'post',
+            var resData = await OrUpdateCaseGeneralInfo(
                 this.subCaseInfoData
             )
             if (resData.statusCode == 200) {

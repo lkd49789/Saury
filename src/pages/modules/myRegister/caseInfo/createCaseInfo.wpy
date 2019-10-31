@@ -212,34 +212,29 @@
     import {
         myDistinct
     } from '@/utils/cofig/api.js'
-    import ajax from '@/utils/cofig/ajax.js';
-    import Name from '@/components/picker/input';
-    import ReasonSupplement from '@/components/picker/input';
-    import MattersEntrusted from '@/components/picker/input';
-    import Description from '@/components/picker/input';
-    import Category from '@/components/picker/option';
-    import Partition from '@/components/picker/option';
-    import OrganizationUnitId from '@/components/picker/option';
-    import Language from '@/components/picker/option';
-    import SecretLevel from '@/components/picker/option';
-    import Stage from '@/components/picker/option';
-    import AgencyAuthority from '@/components/picker/option';
-    import Agent from '@/components/picker/option';
+
+    import { OrUpdateCaseGeneralInfo,GCaseGeneralInfoForEdit } from '@/api/myRegister';
+    import { GeneralCodeComboOutput,Organizations } from '@/api/common';
+    
+    import Input from '@/components/picker/input';
+
+    import Option from '@/components/picker/option';
+
     import ImportLevel from '@/components/picker/pickerOption';
     export default class caseInfo extends wepy.page {
         components = {
-            Name,
-            ReasonSupplement,
-            MattersEntrusted,
-            Description,
-            Category,
-            OrganizationUnitId,
-            Partition,
-            Language,
-            SecretLevel,
-            Stage,
-            AgencyAuthority,
-            Agent,
+            Name:Input,
+            ReasonSupplement:Input,
+            MattersEntrusted:Input,
+            Description:Input,
+            Category:Option,
+            OrganizationUnitId:Option,
+            Partition:Option,
+            Language:Option,
+            SecretLevel:Option,
+            Stage:Option,
+            AgencyAuthority:Option,
+            Agent:Option,
             ImportLevel
         };
         data = {
@@ -800,9 +795,7 @@
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-            var resData = await ajax.getData(
-                '/api/services/web/case/CreateOrUpdateCaseGeneralInfo',
-                'post',
+            var resData = await OrUpdateCaseGeneralInfo(
                 this.submitData
             )
             if (resData.statusCode == 200) {
@@ -838,9 +831,8 @@
         }
         //案件待编辑基础数据
         async GetCaseGeneralInfo() {
-            var resData = await ajax.getData(
-                '/api/services/web/case/GetCaseGeneralInfoForEdit',
-                'post', {
+            var resData = await GCaseGeneralInfoForEdit(
+                {
                     Id: ''
                 }
             )
@@ -953,10 +945,7 @@
         }
         //获取隶属组织架构
         async GetOrganizations() {
-            var resData = await ajax.getData(
-                '/api/services/web/common/GetOrganizations',
-                'post'
-            )
+            var resData = await Organizations()
             if (resData.statusCode == 200) {
                 var GetOrganizationsData = resData.data.result;
                 var OrganizationUnitId_value = [];
@@ -994,9 +983,7 @@
                 IsRecursive: IsRecursive,
                 // isAll: true
             }
-            var resData = await ajax.getData(
-                '/api/services/web/common/GetGeneralCodeComboOutput',
-                'post',
+            var resData = await GeneralCodeComboOutput(
                 data
             )
             if (resData.statusCode == 200) {

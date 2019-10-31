@@ -254,9 +254,8 @@
     import wepy from 'wepy';
     import {
         myDistinct
-    } from '@/utils/cofig/api.js';
-    import ajax from '@/utils/cofig/ajax.js';
-    import { CaseCategoryComboboxItems,GeneralCodeComboboxItems } from '@/api/common.js'
+    } from '@/utils/cofig/api.js';;
+    import { CaseCategoryComboboxItems,GeneralCodeComboboxItems,GEmployees } from '@/api/common'
     import {
         formatDate
     } from '@/utils/cofig/api.js';
@@ -536,7 +535,7 @@
         }
         // 获取律师数据
         async GetEmployees(){
-            let resData = await ajax.getData('/api/services/web/Common/GetEmployees','post',
+            let resData = await GEmployees(
             {pageNumber: 1,
             pageSize: 100,
             singleSelect: false})

@@ -168,7 +168,9 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '@/utils/cofig/ajax.js';
+  import { EmployeePhoto,GeneralCodeComboOutput,GEmployees } from '@/api/common';
+  import { COrUpdateCaseLawyer,CaseChargeList,GMyCommonlyUsedEmployees } from '@/api/myRegister';
+  
   import {
     myObjDistinct
   } from '@/utils/cofig/api.js';
@@ -325,9 +327,7 @@
           });
         }
       });
-      var resData = await ajax.getData(
-        '/api/services/web/caseLawyer/CreateOrUpdateCaseLawyer',
-        'post',
+      var resData = await COrUpdateCaseLawyer(
         subData
       )
       if (resData.statusCode == 200) {
@@ -336,9 +336,8 @@
     }
     //获取已有案件联系人
     async GetCaseChargeList() {
-      var resData = await ajax.getData(
-        '/api/services/web/case/GetCaseChargeList',
-        'post', {
+      var resData = await CaseChargeList(
+        {
           id: this.caseId
         }
       )
@@ -350,8 +349,7 @@
             userId: GetCaseChargeList[i].userId,
             avatar: '',
           }
-          var http = '/api/services/web/personal/GetEmployeePhoto?id=' + GetCaseChargeList[i].userId;
-          lawyerData.avatar = await ajax.getAavatar(http);
+          lawyerData.avatar = await EmployeePhoto(GetCaseChargeList[i].userId);
           for (var j = 0, leng = this.dutiesData.length; j < leng; j++) {
             if (GetCaseChargeList[i].lawyerRole == this.dutiesData[j].id) {
               this.dutiesData[j].addLawyerData.push(lawyerData);
@@ -373,14 +371,11 @@
         isMaxDepth: true,
         isRecursive: false
       }
-      var resData = await ajax.getData(
-        '/api/services/web/common/GetGeneralCodeComboOutput',
-        'post',
+      var resData = await GeneralCodeComboOutput(
         data
       )
-      var GetCaseChargeList = await ajax.getData(
-        '/api/services/web/case/GetCaseChargeList',
-        'post', {
+      var GetCaseChargeList = await CaseChargeList(
+        {
           id: this.caseId
         }
       )
@@ -419,17 +414,15 @@
     }
     //获取相关律师
     async GetMyCommonlyUsedEmployees() {
-      var resData = await ajax.getData(
-        '/api/services/web/common/GetMyCommonlyUsedEmployees',
-        'post', {
+      var resData = await GMyCommonlyUsedEmployees(
+        {
           id: 6
         }
       )
       if (resData.statusCode == 200) {
         var lawyerListData = resData.data.result;
         for (var index in lawyerListData) {
-          var http = '/api/services/web/personal/GetEmployeePhoto?id=' + lawyerListData[index].id;
-          lawyerListData[index].avatar = await ajax.getAavatar(http);
+          lawyerListData[index].avatar = await EmployeePhoto(lawyerListData[index].id);
         }
         this.lawyerListData = lawyerListData
         this.$apply();
@@ -446,16 +439,13 @@
         pageNumber: 1,
         pageSize: 10
       }
-      var resData = await ajax.getData(
-        '/api/services/web/common/GetEmployees',
-        'post',
+      var resData = await GEmployees(
         data
       )
       if (resData.statusCode == 200) {
         var lawyerListData = resData.data.result.items;
         for (var index in lawyerListData) {
-          var http = '/api/services/web/personal/GetEmployeePhoto?id=' + lawyerListData[index].id;
-          lawyerListData[index].avatar = await ajax.getAavatar(http);
+          lawyerListData[index].avatar = await EmployeePhoto(lawyerListData[index].id);
         }
         this.lawyerListData = lawyerListData
         this.$apply();

@@ -293,7 +293,7 @@ export default class contractdoc extends wepy.page {
         console.log(res.data.caseData.caseContractList);
         this.caseContractList = res.data.caseData.caseContractList;
         if (res.data.caseData.caseContractList.length !== 0) {
-          var cacheData=[];
+          var cacheData = [];
           for (var index in res.data.caseData.caseContractList) {
             this.progress[index]=0;
             cacheData[index]=0;
@@ -311,25 +311,16 @@ export default class contractdoc extends wepy.page {
             // console.log(iconClass);
             switch (iconClass) {
               case '.pdf':
-                this.fileIcon[index] = 'icon-pdfpng1';
-                this.fileColor[index] = '#e20000';
-                break;
               case '.png':
                 this.fileIcon[index] = 'icon-pdfpng1';
                 this.fileColor[index] = '#e20000';
                 break;
               case '.xls':
-                this.fileIcon[index] = 'icon-exl1';
-                this.fileColor[index] = '#069400';
-                break;
               case '.xlsx':
                 this.fileIcon[index] = 'icon-exl1';
                 this.fileColor[index] = '#069400';
                 break;
               case '.docx':
-                this.fileIcon[index] = 'icon-wold1';
-                this.fileColor[index] = '#009dff';
-                break;
               case '.doc':
                 this.fileIcon[index] = 'icon-wold1';
                 this.fileColor[index] = '#009dff';

@@ -255,8 +255,8 @@
         components = {};
         methods = {
             previewFile(fileId, fileClass) {
-                fileClass= fileClass.replace('.', '').toLowerCase();
-                if (fileClass == 'pdf'||fileClass == 'png'||fileClass == 'xsl'||fileClass == 'xlsx'||fileClass == 'jpg'||fileClass == 'doc'||fileClass == 'docx') {
+                fileClass = fileClass.replace('.', '').toLowerCase();
+                if (['pdf','png','xsl','xlsx','jpg','doc','docx'].includes(fileClass)) {
                     var http = '/api/services/web/document/GetDocumentFile?id=' + fileId;
                     ajax.preView(http, fileClass);
                 } else {
@@ -290,25 +290,16 @@
                 CaseFileStampOutputData.fileExtension=CaseFileStampOutputData.fileExtension.toLowerCase()
                 switch (CaseFileStampOutputData.fileExtension) {
                     case '.pdf':
-                        CaseFileStampOutputData.fileIcon = 'icon-pdfpng1';
-                        CaseFileStampOutputData.fileColor = '#e20000';
-                        break;
                     case '.png':
                         CaseFileStampOutputData.fileIcon = 'icon-pdfpng1';
                         CaseFileStampOutputData.fileColor = '#e20000';
                         break;
                     case '.xls':
-                        CaseFileStampOutputData.fileIcon = 'icon-exl1';
-                        CaseFileStampOutputData.fileColor = '#069400';
-                        break;
                     case '.xlsx':
                         CaseFileStampOutputData.fileIcon = 'icon-exl1';
                         CaseFileStampOutputData.fileColor = '#069400';
                         break;
                     case '.docx':
-                        CaseFileStampOutputData.fileIcon = 'icon-wold1';
-                        CaseFileStampOutputData.fileColor = '#009dff';
-                        break;
                     case '.doc':
                         CaseFileStampOutputData.fileIcon = 'icon-wold1';
                         CaseFileStampOutputData.fileColor = '#009dff';
@@ -331,13 +322,13 @@
                     var avatar = await ajax.getAavatar(http);
                     CaseFileStampOutputData.Avatar = avatar;
                 }
-                CaseFileStampOutputData.fileSize=this.formatFileSize(+CaseFileStampOutputData.fileSize);
+                CaseFileStampOutputData.fileSize = this.formatFileSize(+CaseFileStampOutputData.fileSize);
             }
             this.$apply();
         }
         formatFileSize(size){
-            var fileSize=null;
-            fileSize=size>=1024?(size/1024/1024).toFixed(2)+'MB':(size/1024).toFixed(2)+'KB';
+            var fileSize = null;
+            fileSize = size >= 1024 ? (size / 1024 / 1024).toFixed(2) + 'MB' : (size/1024).toFixed(2) + 'KB';
             return fileSize
         }
         onLoad(options) {

@@ -111,7 +111,8 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '@/utils/cofig/ajax.js'
+  import {  CaseChargeForEdit,CaseChargeList,COrUpdateCaseCharge } from '@/api/myRegister'
+  import {  EmployeePhoto } from '@/api/common'
   export default class distributionInformation extends wepy.page {
     data = {
       submitData:{},
@@ -147,9 +148,8 @@
       }
     };
     async GetCaseChargeAndContractForEdit(caseId) {
-      var resData = await ajax.getData(
-        '/api/services/web/case/GetCaseChargeForEdit',
-        'post', {
+      var resData = await CaseChargeForEdit(
+        {
           Id: this.caseId
         }
       )
@@ -166,9 +166,8 @@
       }
     }
     async GetCaseChargeList() {
-      var resData = await ajax.getData(
-        '/api/services/web/case/GetCaseChargeList',
-        'post', {
+      var resData = await CaseChargeList(
+         {
           id: this.caseId
         }
       )
@@ -180,8 +179,7 @@
     }
     async GetAvatar(data) {
       for (var index in data) {
-        var http = '/api/services/web/personal/GetEmployeePhoto?id=' + data[index].userId;
-        this.lawyerChargeList[index].avatar = await ajax.getAavatar(http);
+        this.lawyerChargeList[index].avatar = await EmployeePhoto(data[index].userId);
       }
       this.$apply();
     }
@@ -191,9 +189,7 @@
         mask: true, //显示透明蒙层，防止触摸穿透,
         success: res => {}
       });
-      var resData=await ajax.getData(
-        '/api/services/web/caseLawyer/UpdateCaseLawyerCharge',
-        'post',
+      var resData=await UCaseLawyerCharge(
         subData
       )
       if(resData.statusCode==200){
@@ -218,9 +214,7 @@
               
           }
       });
-      var resData = await ajax.getData(
-          '/api/services/web/case/CreateOrUpdateCaseCharge',
-          'post',
+      var resData = await COrUpdateCaseCharge(
           this.submitData
       )
         if (resData.statusCode == 200) {

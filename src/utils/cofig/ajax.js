@@ -11,6 +11,10 @@ var getRequest = ({url, method = 'post', header, data = ''}) => {
       header = { Authorization: 'Bearer ' + token }
     }
     if(urlArr.includes(url) || token){
+      wx.showLoading({
+        title: '加载中,请稍等!', //提示的内容,
+        mask: true, //显示透明蒙层，防止触摸穿透,
+      });
       wx.request({
         url: localhost + url,
         method,
@@ -34,9 +38,9 @@ var getRequest = ({url, method = 'post', header, data = ''}) => {
 };
 
 var getData = (http, method, data = '') => {
-  wx.showLoading({
-    title: '加载中,请稍等!',
-  })
+  // wx.showLoading({
+  //   title: '加载中,请稍等!',
+  // })
   return new Promise((resolve, reject) => {
     wx.getStorage({
       key: 'access',
@@ -46,6 +50,10 @@ var getData = (http, method, data = '') => {
         }else{
           var header = { Authorization: 'Bearer ' + token.data }
         }
+        wx.showLoading({
+          title: '加载中,请稍等!', //提示的内容,
+          mask: true, //显示透明蒙层，防止触摸穿透,
+        });
         wx.request({
           url: localhost + http,
           method,
@@ -59,7 +67,6 @@ var getData = (http, method, data = '') => {
           },
           complete: () => {
             wx.hideLoading();
-
           }
         });
       }

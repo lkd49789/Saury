@@ -73,15 +73,14 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
-    import RiskBasicAmount from '@/components/picker/input';
-    import PayAmount from '@/components/picker/input';
-    import Remark from '@/components/picker/input';
+    import { COrUpdateCaseRiskCharge } from '@/api/myRegister';
+    
+    import Input from '@/components/picker/input';
     export default class createRiskCharge extends wepy.page {
         components = {
-            RiskBasicAmount,
-            PayAmount,
-            Remark
+            RiskBasicAmount:Input,
+            PayAmount:Input,
+            Remark:Input
         };
         data = {
             //判断title
@@ -216,9 +215,7 @@
                   });
               }
             });
-            var resData=await ajax.getData(
-                '/api/services/web/casePayDetail/CreateOrUpdateCaseRiskCharge',
-                'post',
+            var resData=await COrUpdateCaseRiskCharge(
                 this.subCaseRiskChargeData
             )
             if(resData.statusCode==200){

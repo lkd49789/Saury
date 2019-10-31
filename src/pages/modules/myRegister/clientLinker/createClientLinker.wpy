@@ -54,31 +54,25 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
-    import Name from '@/components/picker/input';
-    import ENName from '@/components/picker/input';
-    import Duty from '@/components/picker/option';
-    import Sex from '@/components/picker/option';
-    import WorkPhone from '@/components/picker/input';
-    import Landline from '@/components/picker/input';
-    import WorkEmail from '@/components/picker/input';
-    import Fax from '@/components/picker/input';
-    import Company from '@/components/picker/input';
-    import Address from '@/components/picker/input';
-    import PersonDescription from '@/components/picker/input';
+    import { GClientContactsForEdit,COrUpdateClientContactsBasic,Client } from '@/api/myRegister';
+    import { GClientContactAvatar } from '@/api/common';
+    
+    import Input from '@/components/picker/input';
+
+    import Option from '@/components/picker/option';
     export default class createClientLinker extends wepy.page {
         components = {
-            Name,
-            ENName,
-            Sex,
-            Duty,
-            WorkPhone,
-            Landline,
-            WorkEmail,
-            Fax,
-            Company,
-            Address,
-            PersonDescription
+            Name:Input,
+            ENName:Input,
+            WorkPhone:Input,
+            Landline:Input,
+            WorkEmail:Input,
+            Fax:Input,
+            Company:Input,
+            Address:Input,
+            PersonDescription:Input,
+            Sex:Option,
+            Duty:Option,
         };
         data = {
             addOpacity: 1,
@@ -290,9 +284,8 @@
         }
         //获取职位
         async GetClientContactsForEdit() {
-            var resData = await ajax.getData(
-                '/api/services/web/clientContacts/GetClientContactsForEdit',
-                'post', {}
+            var resData = await GClientContactsForEdit(
+                {}
             )
             if (resData.statusCode == 200) {
                 var GetClientContactsForEditData = resData.data.result;
@@ -332,9 +325,7 @@
         }
         //提交数据
         async CreateOrUpdateClientContactsBasic() {
-            var resData = await ajax.getData(
-                '/api/services/web/clientContacts/CreateOrUpdateClientContactsBasic',
-                'post',
+            var resData = await COrUpdateClientContactsBasic(
                 this.submitData
             )
             if (resData.statusCode == 200) {
@@ -345,9 +336,7 @@
                 }else{
                     create_clientlinkerlist_data.push(clientlinkerdata);
                 }
-                var http =
-                    '/api/services/web/clientContacts/GetClientContactAvatar?id=' + clientlinkerdata.id;
-                    var linkerPhotoData = await ajax.getAavatar(http);
+                    var linkerPhotoData = await GClientContactAvatar(clientlinkerdata.id);
                 clientlinkerdata.avatar = linkerPhotoData;
                 wx.setStorage({
                     key: 'CREATE_CLIENTLINKERLIST_DATA',
@@ -371,9 +360,8 @@
         }
         //获取客户信息
         async GetClient() {
-            var resData = await ajax.getData(
-                '/api/services/web/client/GetClient',
-                'post', {
+            var resData = await Client(
+                {
                     id: this.submitData.ClientId
                 }
             )

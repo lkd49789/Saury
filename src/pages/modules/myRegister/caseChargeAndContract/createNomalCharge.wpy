@@ -79,13 +79,13 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
-    import PayAmount from '@/components/picker/input';
-    import Remark from '@/components/picker/input';
+    import { COrUpdateCaseNormalCharge } from '@/api/myRegister';
+    
+    import Input from '@/components/picker/input';
     export default class createNomalCharge extends wepy.page {
         components = {
-            PayAmount,
-            Remark
+            PayAmount:Input,
+            Remark:Input
         };
         data = {
             //判断一次性与分阶段
@@ -195,9 +195,7 @@
                   });
               }
             });
-            var resData=await ajax.getData(
-                '/api/services/web/casePayDetail/CreateOrUpdateCaseNormalCharge',
-                'post',
+            var resData = await COrUpdateCaseNormalCharge(
                 this.subNormalChargeData
             )
             if(resData.statusCode==200){

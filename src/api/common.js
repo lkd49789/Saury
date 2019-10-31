@@ -4,6 +4,10 @@ export function EmployeePhoto(id){   // 获取图片 头像等
     return getAavatar(`/api/services/web/personal/GetEmployeePhoto?id=${id}`)     
 }
 
+export function GClientContactAvatar(id){   // 获取客户联系人头像
+    return getAavatar(`/api/services/web/clientContacts/GetClientContactAvatar?id=${id}`)     
+}
+
 export function GeneralCodeComboOutput(data){   // 获取通用代码列表(递归或非递归)
     return getRequest({
         url:'/api/services/web/Common/GetGeneralCodeComboOutput',
@@ -48,6 +52,34 @@ export function MyParticipantWorklogs(){   // 获取我参与尚未转化的工�
 export function GeneralCodeComboboxItems(data){   // 获取通用代码列表
     return getRequest({
         url:'/api/services/web/common/GetGeneralCodeComboboxItems',
+        data
+    })       
+}
+
+export function COrUpdateCaseCharge(data){   // 添加或修改案件费用信息
+    return getRequest({
+        url:'/api/services/web/case/CreateOrUpdateCaseCharge',
+        data
+    })       
+}
+
+export function UCaseLawyerCharge(data){   // 修改案件律师费率和分配比例
+    return getRequest({
+        url:'/api/services/web/caseLawyer/UpdateCaseLawyerCharge',
+        data
+    })       
+}
+
+export function GEmployees(data){   // 获取人员分页列表
+    return getRequest({
+        url:'/api/services/web/common/GetEmployees',
+        data
+    })       
+}
+
+export function GClientContacts(data){   // 获取客户联系人列表
+    return getRequest({
+        url:'/api/services/web/common/GetClientContacts',
         data
     })       
 }

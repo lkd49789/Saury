@@ -911,7 +911,7 @@
       <!-- <swiper-item> -->
       <view class="personal-information" wx:if="{{currentTab==2}}">
         <!-- <view class="case-container" style="margin-top:0 "> -->
-        <view class='task-content-container' wx:if="{{caseDetailData.taskDatas.TaskStagesDatas.length!==0}}">
+        <view class='task-content-container' wx:if="{{caseDetailData.taskDatas.TaskStagesDatas.length !== 0}}">
           <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{'300'}}" style="min-height:{{caseDetailData.taskDatas.viewHeight[caseDetailData.taskDatas.current]}}rpx" circular="{{false}}" previous-margin='30rpx'
             next-margin="30rpx" bindchange='taskBindChange' current="{{caseDetailData.taskDatas.current}}">
             <repeat for="{{caseDetailData.taskDatas.TaskStagesDatas}}" key="index" index="sIndex" item="item">
@@ -2004,10 +2004,10 @@
       )
       switch (TaskStagesDatas.statusCode) {
         case 200:
-          if (TaskStagesDatas.data.result.length !== 0) {
-            // console.log(TaskStagesDatas.data.result);
+          // console.log(TaskStagesDatas.data.result);
             var TaskStagesData = TaskStagesDatas.data.result;
             this.caseDetailData.taskDatas.TaskStagesDatas = TaskStagesData;
+            console.log(TaskStagesData)
             for (var index in TaskStagesData) {
               var stageId = TaskStagesData[index].id;
               this.caseDetailData.taskDatas.stageId[index] = TaskStagesData[index].id
@@ -2016,7 +2016,6 @@
               this.GetTasks(index, stageId);
             }
             this.$apply();
-          }
           break;
         case 403:
           console.log('您没有权限');

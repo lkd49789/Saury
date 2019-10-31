@@ -119,7 +119,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { UserCaseActions,DeleteCase,UserCases } from '@/api/myRegister';
     import navbar from '@/components/navbar';
 
     export default class myRegisterList extends wepy.page {
@@ -180,9 +180,7 @@
                 });
             },
             async operations(item) {
-                let { data } = await ajax.getData(
-                    '/api/services/web/Case/GetUserCaseActions',
-                    'post',
+                let { data } = await UserCaseActions(
                     {id : item.id}
                 )
                 var opition = data.result.items.map((item) => item.displayName)
@@ -223,9 +221,7 @@
                                     success : async (res) => {
                                         if (res.confirm) {
                                             console.log('用户点击确定')
-                                            let resData = await ajax.getData(
-                                                '/api/services/web/Case/DeleteCase',
-                                                'post',
+                                            let resData = await DeleteCase(
                                                 {id : item.id}
                                             )
                                             if(resData.statusCode == 200){
@@ -356,11 +352,7 @@
             //     'post',
             //     data
             // )
-            var resData = await ajax.getData(
-                '/api/services/web/Case/GetUserCases',
-                'post',
-                data
-            )
+            var resData = await UserCases(data)
             if (resData.statusCode == 200) {
                 var CaseRecordListDatas = resData.data.result;
                 this.totalCount = CaseRecordListDatas.totalCount;

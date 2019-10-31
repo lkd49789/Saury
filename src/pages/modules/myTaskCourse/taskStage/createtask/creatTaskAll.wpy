@@ -70,19 +70,16 @@
     import { GeneralCodeComboboxItems } from '@/api/common.js';
     import { OrUpdateTask,TaskForEdit } from '@/api/myTaskCourse.js';
     import Estimate from '@/components/picker/input';
-    import StageId from '@/components/picker/option';
-    import RemindTime from '@/components/picker/option';
-    import StartTime from'@/components/Date/DateTimePicker';
-    import EndTime from'@/components/Date/DateTimePicker';
-    import Priority from '@/components/picker/option'; 
+    import Option from '@/components/picker/option';
+    import DateTimePicker from'@/components/Date/DateTimePicker';
     export default class creatTaskAll extends wepy.page {
         components = {
-            StageId,
-            StartTime,
-            EndTime,
+            StageId:Option,
+            RemindTime:Option,
+            Priority:Option,
+            StartTime:DateTimePicker,
+            EndTime:DateTimePicker,
             Estimate,
-            Priority,
-            RemindTime,
         };
         data = {
             // submitData:{

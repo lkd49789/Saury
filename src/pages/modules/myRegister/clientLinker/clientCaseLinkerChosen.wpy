@@ -103,7 +103,9 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { GClientContactAvatar,GClientContacts } from '@/api/common';
+    import { OrUpdateCaseGeneralInfo,GCaseClientContacts } from '@/api/myRegister';
+
     import myDistinct from '@/utils/cofig/api.js'
     export default class clientCaseLinkerChosen extends wepy.page {
         data = {
@@ -175,9 +177,7 @@
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-            var resData = await ajax.getData(
-                '/api/services/web/case/CreateOrUpdateCaseGeneralInfo',
-                'post',
+            var resData = await OrUpdateCaseGeneralInfo(
                 this.subCaseInfoData
             )
             if (resData.statusCode == 200) {
@@ -195,9 +195,7 @@
         async getClientAavatar() {
             for (var i in this.clientListData) {
                 var id = this.clientListData[i].id;
-                var http =
-                    '/api/services/web/clientContacts/GetClientContactAvatar?id=' + id;
-                var linkerPhotoData = await ajax.getAavatar(http);
+                var linkerPhotoData = await GClientContactAvatar(id);
                  this.clientListData[i].avatar = linkerPhotoData;
             }
             wx.setStorage({
@@ -215,9 +213,7 @@
                 pageSize: 10,
                 sorting: "",
             }
-            var resData = await ajax.getData(
-                '/api/services/web/common/GetClientContacts',
-                'post',
+            var resData = await GClientContacts(
                 data
             )
             if (resData.statusCode == 200) {
@@ -235,9 +231,7 @@
         }
         //获取客户方本案联系人
         async GetCaseClientContacts(id){
-            var resData=await ajax.getData(
-                '/api/services/web/case/GetCaseClientContacts',
-                'post',
+            var resData = GCaseClientContacts(
                 {
                     id
                 }

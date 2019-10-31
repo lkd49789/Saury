@@ -221,8 +221,7 @@
             throw '请输入密码'
           }
           let { data } = await IsTenantAvailable({ 'tenancyName':e.detail.value.domain })           
-          let state = data.result.state;
-          if(state == 1){
+          if(data.result.state === 1){
             let resData  = await Authenticate({ 
                 'Abp.TenantId':data.result.tenantId
               },
@@ -236,7 +235,7 @@
               this.storage(resData.data.result.accessToken)
             }
           }else{
-            let content = (state == 2 ) ? '未激活' : '不存在'
+            let content = (data.result.state == 2 ) ? '未激活' : '不存在'
             wx.showModal({
               title: '警告',
               content

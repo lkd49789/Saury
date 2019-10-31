@@ -151,27 +151,21 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
-    import PaidParty from '@/components/picker/option';
-    import ChargeLimit from '@/components/picker/input';
-    import Currency from '@/components/picker/option';
-    import ExchangeRate from '@/components/picker/option';
-    import ExchangeRateValue from '@/components/picker/input';
-    import TargetAmount from '@/components/picker/input';
-    import TargetProrate from '@/components/picker/input';
-    import CostLimit from '@/components/picker/input';
-    import FreeHours from '@/components/picker/input';
+    import { GCaseChargeForEdit,UCaseContract,COrUpdateCaseCharge,GCaseContractList } from '@/api/myRegister'
+
+    import Option from '@/components/picker/option';
+    import Input from '@/components/picker/input';
     export default class lawyerChargeInfo extends wepy.page {
         components = {
-            PaidParty,
-            ChargeLimit,
-            Currency,
-            ExchangeRate,
-            ExchangeRateValue,
-            TargetAmount,
-            TargetProrate,
-            CostLimit,
-            FreeHours
+            PaidParty:Option,
+            Currency:Option,
+            ExchangeRate:Option,
+            ChargeLimit:Input,
+            ExchangeRateValue:Input,
+            TargetAmount:Input,
+            TargetProrate:Input,
+            CostLimit:Input,
+            FreeHours:Input
         };
         data = {
             submitData: {},
@@ -349,7 +343,7 @@
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-             let resData = await ajax.uploadFile('/api/services/web/document/uploadCaseContract',
+             let resData = await uCaseContract(
              file,
              {caseid},
              'file'
@@ -414,9 +408,8 @@
         };
         computed = {};
         async GetCaseChargeAndContractForEdit() {
-            var resData = await ajax.getData(
-                '/api/services/web/Case/GetCaseChargeForEdit',
-                'post', {
+            var resData = await GCaseChargeForEdit(
+                {
                     Id: this.caseId
                 }
             )
@@ -501,9 +494,7 @@
                 success: res => {
                 }
             });
-            var resData = await ajax.getData(
-                '/api/services/web/case/CreateOrUpdateCaseCharge',
-                'post',
+            var resData = await COrUpdateCaseCharge(
                 this.submitData
             )
             if (resData.statusCode == 200) {
@@ -530,7 +521,7 @@
             return filterData
         }
         async GetCaseContractList(){
-            let { data } = await ajax.getData('/api/services/web/document/GetCaseContractList','post',{id:this.caseId}) 
+            let { data } = await GCaseContractList({id:this.caseId}) 
             console.log(data.result )
            if( data.result.length > 0 ){
                  data.result[0].creationTime =  data.result[0].creationTime.split('T')[0];this.CaseContractList =  data.result;     
