@@ -151,7 +151,6 @@
 
 <script>
 import wepy from 'wepy';
-import ajax from '@/utils/cofig/ajax.js';
 // import navbar from '@/components/navbar';
 export default class contractdoc extends wepy.page {
   components = {};

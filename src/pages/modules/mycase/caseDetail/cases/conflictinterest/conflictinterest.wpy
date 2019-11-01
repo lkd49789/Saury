@@ -183,9 +183,9 @@ export default class conflictinterest extends wepy.page {
       success: res => {
         console.log(res.data.caseData.caseClientRelationList);
         this.caseClientRelationList = res.data.caseData.caseClientRelationList;
+        this.$apply();
       }
     });
-    this.$apply();
   }
 }
 </script>

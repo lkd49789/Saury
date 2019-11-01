@@ -125,7 +125,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { GUserVacations } from '@/api/myApplyList.js'
     import { formatTimeSymbol } from '@/utils/cofig/api.js'
     import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
@@ -248,11 +248,7 @@
                 statusList:this.statusList
             }
 
-            var resData = await ajax.getData(
-                '/api/services/web/EmployeeVacation/GetUserVacations',
-                'post',
-                data
-            )
+            var resData = await GUserVacations( data )
             switch (resData.statusCode) {
                 case 200:
                     if (resData.data.result.items.length !== 0) {

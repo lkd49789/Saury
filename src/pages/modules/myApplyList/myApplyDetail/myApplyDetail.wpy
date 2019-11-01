@@ -180,7 +180,8 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { GVacationApplyOutput ,CVacationApprove} from '@/api/myApplyList.js'
+    import { EmployeePhoto } from '@/api/common.js'
     import { formatTimeSymbol } from '@/utils/cofig/api.js'
     import input from '@/components/picker/input';
     export default class clientDetail extends wepy.page {
@@ -263,16 +264,11 @@
             var data = {
                 id: this.submitData.parentId
             }
-            var resData = await ajax.getData(
-                '/api/services/web/employeeVacation/GetVacationApplyOutput',
-                'post',
-                data
-            )
+            var resData = await GVacationApplyOutput( data )
             if (resData.statusCode == 200) {
                 var { result } = resData.data;
                 if (result.creationUser) {
-                    var http = '/api/services/web/personal/GetEmployeePhoto?id=' + result.creationUser;
-                    var avatar = await ajax.getAavatar(http);
+                    var avatar = await EmployeePhoto(result.creationUser);
                     result['avatar'] = avatar;
                 }
                 result.startDate = formatTimeSymbol(result.startDate,'-')
@@ -297,11 +293,7 @@
                     this.$apply();
                  }
                });
-            var resData = await ajax.getData(
-                '/api/services/web/employeeVacation/CreateVacationApprove',
-                'post',
-                data
-            )
+            var resData = await CVacationApprove( data )
             if (resData.statusCode == 200) {
                 wx.showToast({
                     title: '审核完成', //提示的内容,

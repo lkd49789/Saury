@@ -603,9 +603,9 @@
                           wx.setStorageSync('access', resData.data.result.accessToken);
                           getCurrentPages()[0].onShow();  // 刷新首页
                       } else {
-                          wx.redirectTo({
-                            url: '/pages/login/choosePageLogin'
-                          });
+                          // wx.redirectTo({
+                          //   url: '/pages/login/choosePageLogin'
+                          // });
                       }
                   }
                 });

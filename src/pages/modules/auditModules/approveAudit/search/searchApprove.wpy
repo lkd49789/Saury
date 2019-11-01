@@ -109,7 +109,7 @@
             <view class="search_top">
                 <view class="search_input">
                     <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"></icon>
-                    <input value="{{searchClentValue}}" type="text" confirm-type="search" placeholder="案件编号/案件名称/文件名称" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
+                    <input value="{{searchClentValue}}" @input="searchInp" type="text" confirm-type="search" placeholder="案件编号/案件名称/文件名称" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
                     </input>
                 </view>
                 <view class="top_right_btn">
@@ -137,7 +137,7 @@
                 <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
             </view>
             <view class="advanced-search-content">
-                 <view class="tui-picker-content">
+                 <!-- <view class="tui-picker-content">
                     <view>开始时间</view>
                     <picker mode="date" value="{{startDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChangeStart">
                         <view class="tui-picker-detail">
@@ -154,11 +154,12 @@
                             <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
                         </view>
                     </picker>
-                </view>
-                <serialId :input.sync="serialId" :inputValue.sync='serialIdValue' :twoWayTitle="serialIdValue" />
-                <caseName :input.sync="caseName" :inputValue.sync='caseNameValue' :twoWayTitle="caseNameValue" />
-                <clientUser :input.sync="clientUser" :inputValue.sync='clientUserValue' :twoWayTitle="clientUserValue" />
-                <!-- <Status :options.sync="Status" :index.sync='StatusIndex' :twoWayTitle="StatusIndex" /> -->
+                </view> -->
+                <!-- <serialId :input.sync="serialId" :inputValue.sync='serialIdValue' :twoWayTitle="serialIdValue" /> -->
+                <!-- <caseName :input.sync="caseName" :inputValue.sync='caseNameValue' :twoWayTitle="caseNameValue" /> -->
+                <!-- <clientUser :input.sync="clientUser" :inputValue.sync='clientUserValue' :twoWayTitle="clientUserValue" /> -->
+                <Status :options.sync="Status" :index.sync='StatusIndex' />
+                <creationTime :pickerData="creationTime"  />
                 <image class="btn-sub" src="../../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearchSubmit" />
             </view>
         </view>
@@ -167,69 +168,100 @@
 
 <script>
     import wepy from 'wepy';
-    import {
-        myDistinct
-    } from '@/utils/cofig/api.js';
+    import { myDistinct,formatDate } from '@/utils/cofig/api.js';
     import ajax from '@/utils/cofig/ajax.js';
-    import {
-        formatDate
-    } from '@/utils/cofig/api.js';
-    import caseName from '@/components/picker/input';
-    import serialId from '@/components/picker/input';
-    import clientUser from '@/components/picker/input';
+    import { CaseCategoryComboboxItems } from '@/api/common';
+    // import caseName from '@/components/picker/input';
+    // import serialId from '@/components/picker/input';
+    // import clientUser from '@/components/picker/input';
     import Status from '@/components/picker/option';
+    import creationTime from '@/components/picker/pickerDate'
     export default class searchApplyAudit extends wepy.page {
         components={
-            caseName,
-            clientUser,
-            serialId,
+            // caseName,
+            // clientUser,
+            // serialId,
             Status,
+            creationTime
         }
         data = {
-            startDate: '',
-            endDate: '',
+            // startDate: '',
+            // endDate: '',
             //案件编号
-            serialId: {
-                title: '案件编号',
-                name: 'serialId',
-                warning: false,
-            },
-            serialIdValue: '',
+            // serialId: {
+            //     title: '案件编号',
+            //     name: 'serialId',
+            //     warning: false,
+            // },
+            // serialIdValue: '',
             //案件名称
-            caseName: {
-                title: '案件名称',
-                name: 'caseName',
-                warning: false,
-            },
-            caseNameValue: '',
+            // caseName: {
+            //     title: '案件名称',
+            //     name: 'caseName',
+            //     warning: false,
+            // },
+            // caseNameValue: '',
             //客户编号
-            clientUser: {
-                title: '客户名称',
-                name: 'clientUser',
-                warning: false,
-            },
-            clientUserValue: '',
-            // 状态
+            // clientUser: {
+            //     title: '客户名称',
+            //     name: 'clientUser',
+            //     warning: false,
+            // },
+            // clientUserValue: '',
+            // 案件类别
             Status: {
-                title: '状态',
+                title: '案件类别',
                 name: 'Status',
                 value: [],
                 displayText: [],
                 warning: false
             },
             StatusIndex: -1,
-            searchData: {
-                CreationTime: {
-                    StartDate: "",
-                    EndDate: ""
-                },
+            searchData: {},
+            creationTime:{
+                title: '申请时间',
+                startDateData: '',
+                endDateData: ''
             },
             history_keyWord_case: [],
             searchClentValue: '',
             showPage:true,
             isShowArray: [],
         };
+        watch = {
+            // serialIdValue(value){
+            //    this.searchData.serialId=value;
+            //    this.$apply();
+            // },
+            // caseNameValue(value){
+            //    this.searchData.caseName=value;
+            //    this.$apply();
+            // },
+            // clientUserValue(value){
+            //    this.searchData.clientUser=value;
+            //    this.$apply();
+            // },
+            StatusIndex(index){
+                this.searchData.caseCategoryList = [this.Status.value[index]];
+                this.$apply();
+            },
+            creationTime(data) {
+                this.searchData.creationTimeRange = {};
+                this.searchData.creationTimeRange['startDate'] = data.startDateData;
+                this.searchData.creationTimeRange['endDate'] = data.endDateData;
+                this.$apply();
+            }
+        };
         methods = {
+            searchInp(e){
+                var value = e.detail.value.replace(/(^\s*)|(\s*$)/g, "");
+                if (value) {
+                    var pages = getCurrentPages();
+                    var prevPage = pages[pages.length - 2]; //上一个页面
+                    prevPage.data.queryStream.filter = e.detail.value;
+                    this.searchClentValue = e.detail.value
+                }
+            },
             advancedSearchSubmit(){
                 console.log(this.searchData)
                 if(Object.keys(this.searchData).length!==0){
@@ -292,22 +324,22 @@
                 this.searchClentValue = item;
                 this.$apply();
             },
-            bindDateChangeStart(e) {
-                this.searchData.CreationTime.StartDate = e.detail.value;
-                this.startDate = e.detail.value;
-                this.$apply();
-            },
-            bindDateChangeEnd(e) {
-                this.searchData.CreationTime.EndDate = e.detail.value;
-                this.endDate = e.detail.value;
-                this.$apply();
-            },
+            // bindDateChangeStart(e) {
+            //     this.searchData.CreationTime.StartDate = e.detail.value;
+            //     this.startDate = e.detail.value;
+            //     this.$apply();
+            // },
+            // bindDateChangeEnd(e) {
+            //     this.searchData.CreationTime.EndDate = e.detail.value;
+            //     this.endDate = e.detail.value;
+            //     this.$apply();
+            // },
             submitSearch(e) {
                 var value = e.detail.value.replace(/(^\s*)|(\s*$)/g, "");
                 if (value) {
                     var pages = getCurrentPages();
                     var prevPage = pages[pages.length - 2]; //上一个页面
-                    prevPage.data.queryStream.Keyword = e.detail.value;
+                    prevPage.data.queryStream.filter = e.detail.value;
                     prevPage.data.refresh = true;
                     wx.navigateBack({
                         delta: 1, //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
@@ -333,24 +365,6 @@
                 }
             }
         };
-        watch = {
-            serialIdValue(value){
-               this.searchData.serialId=value;
-               this.$apply();
-            },
-            caseNameValue(value){
-               this.searchData.caseName=value;
-               this.$apply();
-            },
-            clientUserValue(value){
-               this.searchData.clientUser=value;
-               this.$apply();
-            },
-            StatusIndex(index){
-                this.searchData.Status=this.Status.value[index];
-                this.$apply();
-            },
-        };
         // 判断初始化历史数据
         isHistory() {
             var pages = getCurrentPages();
@@ -370,19 +384,12 @@
             this.$apply();
         }
          async GetGeneralCodeComboboxItems(){
-              var resData=await ajax.getData(
-                '/api/services/web/common/GetGeneralCodeComboboxItems',
-                'post',
-                {
-                    Id: "DESZT"
-                }
-            )
-            if(resData.statusCode==200){
-                var statusItem=resData.data.result
-                for(var index in statusItem){
-                    this.Status.value[index]=statusItem[index].value;
-                    this.Status.displayText[index]=statusItem[index].displayText;
-                }
+              var { data,statusCode } = await CaseCategoryComboboxItems()
+            if(statusCode==200){
+                data.result.forEach((item,index) =>{
+                    this.Status.value[index] = item.value;
+                    this.Status.displayText[index] = item.displayText;
+                })
                 this.$apply();
             }
         }

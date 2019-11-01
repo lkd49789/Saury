@@ -68,7 +68,7 @@
 <script>
     import wepy from 'wepy';
     import { GeneralCodeComboboxItems } from '@/api/common.js';
-    import { OrUpdateTask,TaskForEdit } from '@/api/myTaskCourse.js';
+    import { OrUpdateTask,TaskStages } from '@/api/myTaskCourse.js';
     import Estimate from '@/components/picker/input';
     import Option from '@/components/picker/option';
     import DateTimePicker from'@/components/Date/DateTimePicker';
@@ -247,7 +247,7 @@
                 projectid: projectId,
                 stageid: id,
             }
-            var resData = await TaskForEdit(data);
+            var resData = await TaskStages(data);
             console.log(resData);
             if(resData.statusCode == 200){
                 var Task = resData.data.result;

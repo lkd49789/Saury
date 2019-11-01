@@ -194,8 +194,9 @@
 </template>
 
 <script>
-import wepy from 'wepy';
-import ajax from '@/utils/cofig/ajax.js';
+    import wepy from 'wepy';
+    import { GCaseInfo } from '@/api/common.js';
+
 // import navbar from '@/components/navbar';
 export default class casebase extends wepy.page {
   components = {
@@ -212,9 +213,7 @@ export default class casebase extends wepy.page {
   async getCaseData() {
     var id = { id: this.id };
     // console.log(id);
-    var caseData = await ajax.getData(
-      '/api/services/web/case/GetCaseInfo',
-      'POST',
+    var caseData = await GCaseInfo(
       id
     );
     // console.log(caseData);

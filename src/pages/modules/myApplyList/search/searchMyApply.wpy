@@ -166,12 +166,9 @@
 <script>
     import wepy from 'wepy';
     import {
-        myDistinct
+        myDistinct,formatDate
     } from '@/utils/cofig/api.js';
-    import ajax from '@/utils/cofig/ajax.js';
-    import {
-        formatDate
-    } from '@/utils/cofig/api.js';
+    import { GeneralCodeComboboxItems } from '@/api/common.js'    
     import Status from '@/components/picker/option';
     import VacationType from '@/components/picker/option';
     export default class searchApply extends wepy.page {
@@ -345,12 +342,8 @@
             this.$apply();
         }
         async GetGeneralCodeComboboxItems(id){
-             var resData=await ajax.getData(
-                '/api/services/web/common/GetGeneralCodeComboboxItems',
-                'POST',
-                {id}
-            )
-             if(resData.statusCode==200){
+             var resData=await GeneralCodeComboboxItems({id})
+             if(resData.statusCode == 200){
                 var GetGeneralCodeComboboxItems=resData.data.result;
                 if(id=="QJ"){
                     for(var index in GetGeneralCodeComboboxItems){

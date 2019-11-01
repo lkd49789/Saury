@@ -213,7 +213,7 @@
 	import wepy from 'wepy';
 	import 'wepy-async-function';
 	import navbar from '@/components/navbar';
-	import ajax from '@/utils/cofig/ajax.js';
+	import { GMyCases } from '@/api/mycase.js';
 	export default class myCase extends wepy.page {
 		config = {
 			enablePullDownRefresh: true,
@@ -370,9 +370,7 @@
 				pageData.lawyerName=this.queryStream.lawyerName || '';
 				pageData.categoryList=this.queryStream.categoryList || '';
 			}
-			var resData = await ajax.getData(
-				'/api/services/web/Case/GetMyCases', //获取办理中数据
-				'post',
+			var resData = await GMyCases(
 				pageData
 			);
 			if (resData.statusCode == 200) {

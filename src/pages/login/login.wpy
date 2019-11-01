@@ -163,13 +163,13 @@
           <!-- <view class="login-top"> -->
           <!-- <image class="text-logo" src="../../images/text-logo.png"></image> -->
           <view class="domain">
-            <input class="input" placeholder="律所标识" placeholder-class="color" type="text" name="domain" value=""></input>
+            <input class="input" placeholder="律所标识" placeholder-class="color" type="text" name="domain" value="bitz_dev"></input>
           </view>
           <view class="username">
-            <input class="input" placeholder="用户名或邮箱地址" placeholder-class="color" type="text" name="username" value=""></input>
+            <input class="input" placeholder="用户名或邮箱地址" placeholder-class="color" type="text" name="username" value="liaokaidi"></input>
           </view>
           <view class="password">
-            <input class="input" placeholder="密码" placeholder-class="color" type="password" name="password" value=""></input>
+            <input class="input" placeholder="密码" placeholder-class="color" type="password" name="password" value="100587"></input>
           </view>
           <!-- </view> -->
           <view class="hint">

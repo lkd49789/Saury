@@ -1246,7 +1246,9 @@
   import wepy from 'wepy';
   import 'wepy-async-function';
   import navbar from '@/components/navbar';
-  import ajax from '@/utils/cofig/ajax.js';
+  import { GCaseInfo,EmployeePhoto,GClient,GClientContactAvatar } from '@/api/common.js';
+  import { GCaseChargeBasic,GClientContactsList,GVisitRecords,GTaskProjectBasic,GDocumentsWithFolders,GWorklogs,GCourts,GUserBillingsCount,GMyBillings,GUserInvoicesCount,GUserInvoices,GUserReceiptsCount,GUserReceipts,GUserChargesCount,GUserCharges } from '@/api/mycase.js';
+  import { TaskStages,Tasks,TaskParticipant,DeleteTaskStages,DeleteTasks } from '@/api/myTaskCourse.js';
   import api from '@/utils/cofig/api.js';
   export default class caseDetail extends wepy.page {
     components = {
@@ -1771,11 +1773,7 @@
       var id = {
         id: this.id
       };
-      var caseData = await ajax.getData(
-        '/api/services/web/case/GetCaseInfo',
-        'POST',
-        id
-      );
+      var caseData = await GCaseInfo(id);
       // console.log(caseData.data.result);
       if (caseData.statusCode == 200 && caseData.data.result !== null) {
         
@@ -1790,31 +1788,16 @@
         this.userId = api.myDistinct(userIds);
         //头像处理
         for (var index in this.userId) {
-          // console.log(this.userId[index])
-          var http =
-            '/api/services/web/personal/GetEmployeePhoto?id=' +
-            this.userId[index];
-          var userAvatar = await ajax.getUserAvatar(http);
-          // console.log(userAvatar);
-          if (userAvatar.statusCode == 200) {
-            this.caseDetailData.caseData.userPhoto[index] =
-              userAvatar.tempFilePath;
+          var userAvatar = await EmployeePhoto(this.userId[index]);
+          this.caseDetailData.caseData.userPhoto[index] =
+              userAvatar;
             this.$apply();
-          } else {
-            wx.showToast({
-              title: '网络故障!',
-              icon: 'none',
-              duration: 1500,
-              mask: false
-            });
-          }
         }
         // 付款方式数据
-        var contractForEditData = await ajax.getData(
-          '/api/services/web/case/GetCaseChargeBasic',
-          'post',
+        var contractForEditData = await GCaseChargeBasic(
           id
         );
+        console.log(contractForEditData.statusCode);
         if (contractForEditData.statusCode == 200) {
           //付款方式字符串替换
           this.caseDetailData.caseData.contractForEditData =
@@ -1849,6 +1832,7 @@
         this.$apply();
       } else {
         if (caseData.statusCode !== 200) {
+          console.log('9');
           wx.showToast({
             title: '网络故障!',
             icon: 'none',
@@ -1867,9 +1851,7 @@
       var clientId = {
         id: this.clientId
       };
-      var clientData = await ajax.getData(
-        '/api/services/web/client/GetClient',
-        'post',
+      var clientData = await GClient(
         clientId
       );
       // console.log(clientData, "客户联系人");
@@ -1892,9 +1874,7 @@
           pageNumber: 1,
           pageSize: 10
         };
-        var clientLinkerData = await ajax.getData(
-          '/api/services/web/clientContacts/GetClientContactsList',
-          'post',
+        var clientLinkerData = await GClientContactsList(
           clientId
         );
         // 客户联系人头像
@@ -1905,21 +1885,10 @@
           var clientLinkerData = clientLinkerData.data.result.items;
           for (var index in clientLinkerData) {
             var id = clientLinkerData[index].id;
-            var http =
-              '/api/services/web/clientContacts/GetClientContactAvatar?id=' + id;
-            var linkerPhoto = await ajax.getUserAvatar(http);
-            if (linkerPhoto.statusCode == 200) {
-              this.caseDetailData.clientData.linkerPhoto[index] =
-                linkerPhoto.tempFilePath;
-              this.caseDetailData.clientData.linkerData[index]['avatar'] = linkerPhoto.tempFilePath
-            } else {
-              wx.showToast({
-                title: '部分数据异常！',
-                icon: 'none',
-                duration: 1500,
-                mask: false
-              });
-            }
+            var linkerPhoto = await GClientContactAvatar(id);
+            this.caseDetailData.clientData.linkerPhoto[index] =
+                linkerPhoto;
+              this.caseDetailData.clientData.linkerData[index]['avatar'] = linkerPhoto
           }
           this.$apply();
         } else {
@@ -1936,9 +1905,7 @@
           pageNumber: 1,
           pageSize: 10,
         };
-        var clientContactsListData = await ajax.getData(
-          '/api/services/web/clientVisitServiceRecords/GetVisitRecords',
-          'post',
+        var clientContactsListData = await GVisitRecords(
           recordId
         );
         if (clientContactsListData.statusCode == 200 && clientContactsListData.data.result.items.length !== 0) {
@@ -1970,6 +1937,7 @@
       } else {
         if (clientData.statusCode !== 200) {
           this.caseDetailData.clientData.clientAllData = null;
+          console.log('10');
           wx.showToast({
             title: '网络故障！',
             icon: 'none',
@@ -1988,18 +1956,14 @@
       var data = {
         projectId: this.id
       }
-      var TaskProjectBasic = await ajax.getData(
-        '/api/services/web/taskProject/GetTaskProjectBasic',
-        'post',
+      var TaskProjectBasic = await GTaskProjectBasic(
         {id:this.id}
       )
       if(!TaskProjectBasic.data.result.id)
       return false;
       else
       this.task = true;
-      var TaskStagesDatas = await ajax.getData(
-        '/api/services/web/taskPlanning/GetTaskStages',
-        'post',
+      var TaskStagesDatas = await TaskStages(
         data
       )
       switch (TaskStagesDatas.statusCode) {
@@ -2007,7 +1971,7 @@
           // console.log(TaskStagesDatas.data.result);
             var TaskStagesData = TaskStagesDatas.data.result;
             this.caseDetailData.taskDatas.TaskStagesDatas = TaskStagesData;
-            console.log(TaskStagesData)
+            // console.log(TaskStagesData)
             for (var index in TaskStagesData) {
               var stageId = TaskStagesData[index].id;
               this.caseDetailData.taskDatas.stageId[index] = TaskStagesData[index].id
@@ -2041,15 +2005,13 @@
         stageId: stageId,
         projectId: this.id
       }
-      var GetTasksDatas = await ajax.getData(
-        '/api/services/web/taskPlanning/GetTasks',
-        'post',
+      var GetTasksDatas = await Tasks(
         data
       )
       if (GetTasksDatas.data.result.items.length !== 0) {
         var TasksData = GetTasksDatas.data.result
         var childChecked = [];
-        console.log('111')
+        // console.log('111')
         TasksData.items.forEach( item =>{
           if (item.isCompleted == 'Y') {
             item['checked'] = true
@@ -2098,9 +2060,7 @@
         isCompleted: isCompleted,
         projectId: this.id
       };
-      var res = await ajax.getData(
-        '/api/services/web/taskParticipant/CompletedTaskParticipant',
-        'post',
+      var res = await TaskParticipant(
         data
       )
       if (res.data.success) {
@@ -2125,9 +2085,8 @@
     }
     //删除阶段任务
     async DeleteTaskStage(id, index) {
-      var resData = await ajax.getData(
-        '/api/services/web/taskPlanning/DeleteTaskStage',
-        'post', {
+      var resData = await DeleteTaskStages(
+         {
           id: id
         }
       )
@@ -2161,9 +2120,7 @@
       var data = {
         id
       }
-      var resData = await ajax.getData(
-        '/api/services/web/taskPlanning/DeleteTask',
-        'post',
+      var resData = await DeleteTasks(
         data
       )
       if (resData.statusCode == 200) {
@@ -2199,9 +2156,7 @@
         title: keyWord,
         topClass: 'M1'
       };
-      var documentData = await ajax.getData(
-        '/api/services/web/document/GetDocumentsWithFolders',
-        'post',
+      var documentData = await GDocumentsWithFolders(
         data
       );
       if (
@@ -2252,6 +2207,7 @@
       } else {
         if (documentData.statusCode !== 200) {
           this.caseDetailData.documentDatas.documentData = [];
+          console.log('11');
           wx.showToast({
             title: '网络故障！',
             icon: 'none',
@@ -2273,9 +2229,7 @@
         pageSize: 10,
         sorting: 'StartTime Desc'
       };
-      var workLogsData = await ajax.getData(
-        '/api/services/web/worklog/GetWorklogs',
-        'post',
+      var workLogsData = await GWorklogs(
         data
       );
       // workLogsData.statusCode=300
@@ -2311,16 +2265,14 @@
             .replace(/[a-zA-Z]/g, ' ')
             .split(' ');
           //创建人头像
-          var http =
-            '/api/services/web/personal/GetEmployeePhoto?id=' +
-            workLogData[index].employeeId;
-          var avatarData = await ajax.getUserAvatar(http);
+          var avatarData = await EmployeePhoto(workLogData[index].employeeId);
           // console.log(avatarData)
           // avatarData.statusCode=100
           if (avatarData.statusCode == 200) {
             this.caseDetailData.workLogsDatas.avatarData[index] =
               avatarData.tempFilePath;
           } else {
+          console.log('12');
             wx.showToast({
               title: '网络故障！部分数据无法正常显示',
               icon: 'none',
@@ -2347,6 +2299,7 @@
         }
       } else {
         if (workLogsData.statusCode !== 200) {
+          console.log('13');
           wx.showToast({
             title: '网络故障！',
             icon: 'none',
@@ -2369,9 +2322,7 @@
         pageSize: 20,
         sorting: 'StartTime Desc'
       };
-      var CourtsDatas = await ajax.getData(
-        '/api/services/web/caseCourt/GetCourts',
-        'post',
+      var CourtsDatas = await GCourts(
         data
       );
       // console.log(CourtsDatas)
@@ -2397,6 +2348,7 @@
         })
       } else {
         if (CourtsDatas.statusCode !== 200) {
+          console.log('1');
           wx.showToast({
             title: '网络故障！',
             icon: 'none',
@@ -2418,9 +2370,7 @@
         isRoleFilter: true,
         statusList: ['A']
       };
-      var UserCaseBillingCount = await ajax.getData(
-        '/api/services/web/financialBilling/GetUserBillingsCount',
-        'POST',
+      var UserCaseBillingCount = await GUserBillingsCount(
         id
       );
       if (UserCaseBillingCount.statusCode == 200 && UserCaseBillingCount.data.result !== null) {
@@ -2431,9 +2381,7 @@
           pageNumber: this.caseDetailData.AmountDatas.PageNumber[0],
           pageSize: 10,
         };
-        var UserCaseBillingItem = await ajax.getData(
-          '/api/services/web/financialBilling/GetMyBillings',
-          'POST',
+        var UserCaseBillingItem = await GMyBillings(
           itemId
         );
         // console.log(UserCaseBillingItem);
@@ -2467,6 +2415,7 @@
             UserCaseBillingItem
           );
         } else {
+          console.log('2');
           wx.showToast({
             title: '网络故障，部分数据无法加载！',
             icon: 'none',
@@ -2477,6 +2426,7 @@
         this.caseDetailData.AmountDatas.AmountData[0] = UserCaseBilling;
       } else {
         if (UserCaseBillingCount.statusCode !== 200) {
+          console.log('3');
           wx.showToast({
             title: '网络故障！',
             icon: 'none',
@@ -2497,9 +2447,7 @@
         isRoleFilter: true,
         statusList: ["Claimed"]
       };
-      var UserCaseInvoiceCount = await ajax.getData(
-        '/api/services/web/financialInvoice/GetUserInvoicesCount',
-        'post',
+      var UserCaseInvoiceCount = await GUserInvoicesCount(
         id
       );
       if (UserCaseInvoiceCount.statusCode == 200) {
@@ -2510,9 +2458,7 @@
           pageNumber: this.caseDetailData.AmountDatas.PageNumber[1],
           pageSize: 10
         };
-        var UserInvoicesItem = await ajax.getData(
-          '/api/services/web/financialInvoice/GetUserInvoices',
-          'post',
+        var UserInvoicesItem = await GUserInvoices(
           itemId
         );
         // console.log(UserInvoicesItem.data.result.items.length);
@@ -2563,6 +2509,7 @@
         this.caseDetailData.AmountDatas.AmountData[1] = UserCaseInvoice;
       } else {
         if (UserCaseInvoiceCount.statusCode !== 200) {
+          console.log('4');
           wx.showToast({
             title: '网络故障！',
             icon: 'none',
@@ -2581,9 +2528,7 @@
       var id = {
         caseId: this.id
       };
-      var UserCaseReceiptCount = await ajax.getData(
-        '/api/services/web/financialReceipt/GetUserReceiptsCount',
-        'post',
+      var UserCaseReceiptCount = await GUserReceiptsCount(
         id
       );
       if (
@@ -2595,9 +2540,7 @@
           pageNumber: this.caseDetailData.AmountDatas.PageNumber[2],
           pageSize: 10
         };
-        var UserReceiptsItem = await ajax.getData(
-          '/api/services/web/financialReceipt/GetUserReceipts',
-          'post',
+        var UserReceiptsItem = await GUserReceipts(
           itemId
         );
         if (UserReceiptsItem.statusCode == 200) {
@@ -2633,6 +2576,7 @@
             UserReceiptsItem
           );
         } else {
+          console.log('5');
           wx.showToast({
             title: '网络故障！部分数据无法加载',
             icon: 'none',
@@ -2644,6 +2588,7 @@
       } else {
         if (UserCaseReceiptCount.statusCode !== 200) {
           this.caseDetailData.AmountDatas.UserCaseReceiptCount = null;
+          console.log('6');
           wx.showToast({
             title: '网络故障！',
             icon: 'none',
@@ -2661,9 +2606,7 @@
       var id = {
         caseId: this.id
       };
-      var UserCaseChargeCount = await ajax.getData(
-        '/api/services/web/financialCharge/GetUserChargesCount',
-        'post',
+      var UserCaseChargeCount = await GUserChargesCount(
         id
       );
       if (
@@ -2676,9 +2619,7 @@
           pageNumber: this.caseDetailData.AmountDatas.PageNumber[3],
           pageSize: 10
         };
-        var UserChargesItem = await ajax.getData(
-          '/api/services/web/financialCharge/GetUserCharges',
-          'post',
+        var UserChargesItem = await GUserCharges(
           itemId
         );
         // console.log(UserChargesItem)
@@ -2712,6 +2653,7 @@
             UserChargesItem
           );
         } else {
+          console.log('7');
           wx.showToast({
             title: '网络故障！部分数据无法正常加载',
             icon: 'none',
@@ -2723,6 +2665,7 @@
         this.caseDetailData.AmountDatas.AmountData[3] = UserCaseCharge;
       } else {
         if (UserCaseChargeCount.statusCode !== 200) {
+          console.log('8');
           wx.showToast({
             title: '网络故障！',
             icon: 'none',

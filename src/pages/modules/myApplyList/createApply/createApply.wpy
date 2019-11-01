@@ -52,7 +52,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax'
+    import { COrUpdateVacationApply,GVacationDays } from '@/api/myApplyList.js'
     import { GeneralCodeComboboxItems } from '@/api/common'
     import Time from '@/components/Date/DateTimePicker';
     import input from '@/components/picker/input';
@@ -231,11 +231,7 @@
                     this.$apply();
                 }
             });
-            var resData = await ajax.getData(
-                '/api/services/web/EmployeeVacation/CreateOrUpdateVacationApply',
-                'post',
-                data
-            )
+            var resData = await COrUpdateVacationApply( data )
             if (resData.statusCode == 200) {
                 var isRefresh = wx.getStorageSync('isRefresh');
                 isRefresh.isRefresh = 'true'
@@ -257,11 +253,7 @@
             var data = {
                 id: this.$parent.global.userInfo.id
             }
-            var resData = await ajax.getData(
-                '/api/services/web/employeeVacation/GetVacationDays',
-                'POST',
-                data
-            )
+            var resData = await GVacationDays( data )
             if (resData.success) {
                 this.annualVacation = resData.result;
                 this.$apply();

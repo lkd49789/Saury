@@ -65,7 +65,8 @@
 
 <script>
 import wepy from 'wepy';
-import ajax from '@/utils/cofig/ajax.js';
+import { GCaseLawyersWithGroup } from '@/api/mycase.js';
+import { EmployeePhoto } from '@/api/common.js';
 export default class casepersonnelinformaition extends wepy.page {
   data = {
     lawyerGroupData: {},
@@ -75,17 +76,14 @@ export default class casepersonnelinformaition extends wepy.page {
   methods = {
   };
   async getLawyerGroup() {
-    var lawyerGroupData = await ajax.getData(
-      '/api/services/web/caseLawyer/GetCaseLawyersWithGroup',
-      'post',
+    var lawyerGroupData = await GCaseLawyersWithGroup(
       { caseId: this.caseId }
     );
     if(lawyerGroupData.statusCode==200){
         var lawyerGroupData=lawyerGroupData.data.result;
         // 获取图片
         for (var index in lawyerGroupData) {
-          var http = '/api/services/web/personal/GetEmployeePhoto?id=' + lawyerGroupData[index].userId;
-          var avatarData = await ajax.getAavatar(http);
+          var avatarData = await EmployeePhoto(lawyerGroupData[index].userId);
           this.userPhoto[index]=avatarData;
           // 处理字符串
           lawyerGroupData[index].lawyerRoleText=lawyerGroupData[index].lawyerRoleText.replace(/、/g, '/');

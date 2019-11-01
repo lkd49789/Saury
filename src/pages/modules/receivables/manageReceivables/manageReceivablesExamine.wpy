@@ -321,7 +321,7 @@
                 organizationUnitId: null,
                 pageNumber: this.pageNumber,
                 pageSize: 10,
-                status: "A",
+                statusList: ["A", "C"],
                 acceptDateRange:null
             };
             if(Object.keys(this.searchData).length>0){

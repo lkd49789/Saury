@@ -155,13 +155,6 @@ export function CaseLawyers(data){   //
     })       
 }
 
-export function TaskForEdit(data){   // 
-    return getRequest({
-        url:'/api/services/web/TaskPlanning/GetTaskStages',
-        data
-    })       
-}
-
 export function OrUpdateTask(data){   // 
     return getRequest({
         url:'/api/services/web/taskPlanning/CreateOrUpdateTask',

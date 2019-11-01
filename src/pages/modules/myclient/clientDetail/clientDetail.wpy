@@ -285,8 +285,8 @@
                 pageNumber: 1,
                 pageSize: 10
             }
-            var CaseManageData=await ajax.getData(
-                '/api/services/web/ClientContacts/GetClientContactsList',
+            var CaseManageData = await ajax.getData(
+                '/api/services/web/Case/GetCases',
                 'post',
                 data
             )

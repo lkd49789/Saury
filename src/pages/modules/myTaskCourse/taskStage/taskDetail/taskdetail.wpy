@@ -578,8 +578,8 @@
             <navbar :navbars='navbars' :currentTab.sync="currentTab" :twoWayTitle="currentTab"></navbar>
         </view>
         <!-- <view style="height:200rpx;width:100%;"></view> -->
-        <scroll-view scroll-y="true" enable-flex="true">
-            <view  hidden="{{currentTab == 0?'':true}}">
+        <scroll-view scroll-y="true" enable-flex="true" scroll-top="{{scrollTop}}" >
+            <view  wx:if="{{currentTab == 0}}">
             <view class="taskdetail-container">
                 <view class="task-title-content">
                     <view>
@@ -754,7 +754,7 @@
                 </view>
             </view>
         </view>
-        <view style="margin-top:170rpx;" hidden="{{currentTab == 1 ? '':true}}">
+        <view wx:else>
             <view class="chat-panel" style="padding-bottom:{{sendShow?'260rpx':'160rpx'}};">
                 <!-- <view class="reverseView"> -->
                 <repeat for="{{fileInfo}}" key="index" index="index" item="item">
@@ -851,7 +851,9 @@
                     <text style="color:#b2b2b2">没有更多了</text>
                 </view>
             </view>
-            <view class="chat-input" wx:if="{{taskData.isAccept=='Y'&&taskData.isParticipant=='Y'}}">
+        </view>
+        </scroll-view>
+        <view class="chat-input" wx:if="{{taskData.isAccept=='Y' && taskData.isParticipant=='Y' && currentTab != 0}}">
                 <view class="input-content">
                     <!-- <view> -->
                     <!-- <form bindreset="cleanInput"> -->
@@ -868,8 +870,6 @@
                     </view>
                 </view>
             </view>
-        </view>
-        </scroll-view>
         
     </view>
 </template>
@@ -920,7 +920,7 @@
             //添加子任务
             childName: '',
             childView: false,
-            TextCount: 0,
+            TextCount: 0
         };
         methods = {
             // 删除子任务
@@ -1104,6 +1104,8 @@
             },
             // 发送信息
             sendMsg(e) {
+                if(!e.detail.value)
+                return false;
                 //  this.CommentsDatas=[];
                 var msg = e.detail.value;
                 this.getComment(msg);
@@ -1222,20 +1224,19 @@
         };
         watch = {
             currentTab(newCurrent, oldCurrent) {
-                if (newCurrent !== oldCurrent) {
-                    if (newCurrent == 0) {
-                        if (wx.pageScrollTo) {
-                            wx.pageScrollTo({
-                                scrollTop: 0,
-                                duration: 0
-                            });
-                        }
-                        this.sendShow = false;
-                    }
-                    if (newCurrent == 1) {
-                        this.getScroll();
-                        this.$apply();
-                    }
+                if (newCurrent == 0) {
+                    // if (wx.pageScrollTo) {
+                    //     wx.pageScrollTo({
+                    //         scrollTop: 0,
+                    //         duration: 0
+                    //     });
+                    // }
+                    this.scrollTop = 0
+                    this.sendShow = false;
+                }
+                if (newCurrent == 1) {
+                    this.getScroll();
+                    this.$apply();
                 }
             },
             childName(value) {
@@ -1265,38 +1266,34 @@
             var res = await OrUpdateSubTask(data);
             
             if (res.statusCode == 200) {
+                let title = '已取消'
                 if (isChecked) {
-                    wx.showToast({
-                        title: '已完成',
-                        icon: 'none',
-                        duration: 500,
-                        mask: false
-                    });
-                } else {
-                    wx.showToast({
-                        title: '已取消',
-                        icon: 'none',
-                        duration: 500,
-                        mask: false
-                    });
+                    title = '已完成'
                 }
+                 wx.showToast({
+                    title,
+                    icon: 'none',
+                    duration: 500,
+                    mask: false
+                });
             }
         }
         // 设置scrollTop
         getScroll() {
-            var that = this;
+            // var that = this;
             //   if(that.scrollTop )
-            wx.createSelectorQuery()
-                .select('.winHeight')
-                .boundingClientRect(function(rect) {
+            wx.nextTick(()=>{
+                wx.createSelectorQuery()
+                .select('.chat-panel')
+                .boundingClientRect((rect) =>{
+                    console.log(rect)
                     // console.log(parseInt(parseInt(rect.bottom)*that.pageNumber*10))
-                    that.scrollTop = parseInt(parseInt(rect.bottom) * that.pageNumber * 10);
-                    wx.pageScrollTo({
-                        scrollTop: that.scrollTop,
-                        duration: 0
-                    });
+                    // that.scrollTop = parseInt(parseInt(rect.bottom) * that.pageNumber * 10);
+                    this.scrollTop = parseInt(parseInt(rect.bottom) * this.pageNumber * 10);
+                    this.$apply()
                 })
                 .exec();
+            })
         }
         // 获得任务详情
         async getTask() {
@@ -1335,16 +1332,17 @@
             //子任务
             if (taskData.result.checkItems.length !== 0) {
                 for (var index in taskData.result.checkItems) {
-                    switch (taskData.result.checkItems[index].isCompleted) {
-                        case 'Y':
-                            this.isChecked[index] = true;
-                            break;
-                        case 'N':
-                            this.isChecked[index] = false;
-                            break;
-                        default:
-                            break;
-                    }
+                    this.isChecked[index] = (taskData.result.checkItems[index].isCompleted == 'Y')
+                    // switch (taskData.result.checkItems[index].isCompleted) {
+                    //     case 'Y':
+                    //         this.isChecked[index] = true;
+                    //         break;
+                    //     case 'N':
+                    //         this.isChecked[index] = false;
+                    //         break;
+                    //     default:
+                    //         break;
+                    // }
 
                 }
             }
@@ -1355,33 +1353,21 @@
                     var iconClass = taskData.result.attachments[index].extension;
                     switch (iconClass) {
                         case '.pdf':
-                            this.fileIcon.push('icon-pdfpng1');
-                            this.fileColor.push('#e20000');
-                            break;
                         case '.png':
                             this.fileIcon.push('icon-pdfpng1');
                             this.fileColor.push('#e20000');
                             break;
                         case '.xls':
-                            this.fileIcon.push('icon-exl1');
-                            this.fileColor.push('#069400');
-                            break;
                         case '.xlsx':
                             this.fileIcon.push('icon-exl1');
                             this.fileColor.push('#069400');
                             break;
                         case '.docx':
-                            this.fileIcon.push('icon-wold1');
-                            this.fileColor.push('#009dff');
-                            break;
                         case '.doc':
                             this.fileIcon.push('icon-wold1');
                             this.fileColor.push('#009dff');
                             break;
                         case '.jpg':
-                            this.fileIcon.push('icon-jpggeshi');
-                            this.fileColor.push('#ff9900');
-                            break;
                         case '.jpeg':
                             this.fileIcon.push('icon-jpggeshi');
                             this.fileColor.push('#ff9900');
@@ -1442,12 +1428,6 @@
                     var extension = file.extension.toLowerCase();
                     switch (extension) {
                         case '.jpg':
-                            obj['icon'] = '';
-                            obj['color'] = '';
-                            var image = await DocumentFile(file.id);
-                            console.log(image);
-                            obj['image'] = image;
-                            break;
                         case '.png':
                             obj['icon'] = '';
                             obj['color'] = '';
@@ -1455,17 +1435,11 @@
                             obj['image'] = image;
                             break;
                         case '.xls':
-                            obj['icon'] = 'icon-exl1';
-                            obj['color'] = '#069400';
-                            break;
                         case '.xlsx':
                             obj['icon'] = 'icon-exl1';
                             obj['color'] = '#069400';
                             break;
                         case '.docx':
-                            obj['icon'] = 'icon-wold1';
-                            obj['color'] = '#009dff';
-                            break;
                         case '.doc':
                             obj['icon'] = 'icon-wold1';
                             obj['color'] = '#009dff';
@@ -1727,21 +1701,16 @@
                 data
             )
             if (res.data.success) {
+                let title = '网络问题！'
                 if (res.statusCode == 200 && res.data.success) {
-                     wx.showToast({
-                        title: '完成',
-                        icon: 'none',
-                        duration: 1500,
-                        mask: false,
-                    });
-                } else {
-                    wx.showToast({
-                        title: '网络问题！',
-                        icon: 'none',
-                        duration: 1500,
-                        mask: false,
-                    });
-                }
+                    title = '完成'
+                } 
+                wx.showToast({
+                    title,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
             }
         }
         //删除该项任务

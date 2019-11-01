@@ -54,7 +54,7 @@
                 <radio-group class="radio-group" @change="bindPickerChang" style="padding-bottom:20rpx;">
                     <label class="radio" wx:for="{{result}}" wx:key="index">
                         <view>
-                            <radio value="{{item.eventName}}" checked="{{item.isSelected}}" eventName="{{item.eventName}}"  color="#5d73fa"/>
+                            <radio value="{{item.condition+','+item.eventName}}" checked="{{item.isSelected}}"   color="#5d73fa"/>
                         <text  style="margin-right:60rpx">{{item.displayName}}</text>
                         </view>
                     </label>
@@ -101,7 +101,8 @@
             },
             bindPickerChang(e){
                 console.log(e)
-                this.submitData.condition = e.detail.value
+                this.submitData.condition = e.detail.value.split(',')[0]
+                this.submitData.eventName = e.detail.value.split(',')[1]
             }
         };
     
@@ -144,6 +145,7 @@
                 item.isSelected = false;
             })
             this.submitData.condition = data.result.items[0].condition;
+            this.submitData.eventName = data.result.items[0].eventName;
             this.submitData.id = id;
             this.submitData.caseId = id
             this.$apply()

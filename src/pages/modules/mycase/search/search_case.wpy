@@ -173,12 +173,10 @@
 <script>
   import wepy from 'wepy';
   import {
-    myDistinct
+    myDistinct,formatDate
   } from '@/utils/cofig/api.js';
-  import ajax from '@/utils/cofig/ajax.js';
-  import {
-    formatDate
-  } from '@/utils/cofig/api.js';
+  import { CaseCategoryComboboxItems } from '@/api/common.js';
+  import { GCaseStatusComboboxItems } from '@/api/mycase.js';
   import lawyerName from '@/components/picker/input';
   import categoryList from '@/components/picker/option';
   export default class searchClient extends wepy.page {
@@ -361,10 +359,7 @@
       }
     };
     async GetCaseCategoryComboboxItems() {
-      var resData = await ajax.getData(
-        '/api/services/web/common/GetCaseCategoryComboboxItems',
-        'POST'
-      )
+      var resData = await CaseCategoryComboboxItems()
       if (resData.statusCode == 200) {
         var GetCaseCategoryComboboxItems = resData.data.result;
         for (var index = 0; index < GetCaseCategoryComboboxItems.length; index++) {
@@ -375,10 +370,7 @@
       }
     }
     async GetCaseStatusComboboxItems() {
-      var resData = await ajax.getData(
-        '/api/services/web/common/GetCaseStatusComboboxItems',
-        'POST'
-      )
+      var resData = await GCaseStatusComboboxItems()
       if (resData.data.success) {
         var GetCaseStatusComboboxItems = resData.data.result;
         var arr1 = [];

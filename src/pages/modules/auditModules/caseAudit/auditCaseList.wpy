@@ -64,7 +64,8 @@
             <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" />
             <!-- </scroll-view> -->
         </view>
-        <view class='main' wx:if="{{currentTab==0}}">
+        <!-- wx:if="{{currentTab==0}}" -->
+        <view class='main' >
             <repeat for="{{waitCreationsData.items}}" key="index" index="index" item="item">
                 <view @tap="toCaseDetailAudit('{{item.id}}')">
                     <view>
@@ -84,7 +85,7 @@
                 </view>
             </repeat>
         </view>
-        <view class='main' wx:if="{{currentTab==1}}">
+        <!-- <view class='main' wx:if="{{currentTab==1}}">
             <repeat for="{{alreadyCreationsData.items}}" key="index" index="index" item="item">
                 <view @tap="toCaseDetailAudit('{{item.id}}')">
                     <view>
@@ -103,7 +104,7 @@
                     </view>
                 </view>
             </repeat>
-        </view>
+        </view> -->
         <placeHolderImage :placeHolder.sync="placeHolder" :twoWayTitle="placeHolder"/>
     </view>
 </template>
@@ -130,59 +131,73 @@
             isSearchRefresh:false,
             queryStream: {},
             currentTab: 0,
-            navbars: ['待审核',],
-            pageNumber: [1, 1],
+            navbars: ['全部','待处理','已退回'],
+            pageNumber: 1,
             waitCreationsData: {},
             alreadyCreationsData: {},
+            processStatusList: ["NF", "ND", "NS"],
+            queryStream:{}
         };
-        watch={
+        watch = {
             currentTab(current){
                  wx.pageScrollTo({
                         scrollTop: 0,
                         duration: 0,
                 });
-                if(current==0){
-                    if (!this.waitCreationsData.totalCount) {
-                        this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
-                        this.placeHolder.placeHolderShow = true;
-                    } else {
-                        this.placeHolder.placeHolderShow = false;
-                    }
-                    this.$apply();
+                this.waitCreationsData = {}
+                if(current === 0){
+                      this.processStatusList = ["NF", "ND", "NS"]
+                }else if(current === 1){
+                      this.processStatusList = ["NF", "NS"]
+                }else if(current === 2){
+                      this.processStatusList = ["ND"]                   
                 }
-                if(current==1){
-                     if (!this.alreadyCreationsData.totalCount) {
-                        this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_1;
-                        this.placeHolder.placeHolderShow = true;
-                    } else {
-                        this.placeHolder.placeHolderShow = false;
-                    }
-                    this.$apply();
-                }
+                this.GetWaitCaseCreations()
+                this.$apply()
+                // if(current==0){
+                //     if (!this.waitCreationsData.totalCount) {
+                //         this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
+                //         this.placeHolder.placeHolderShow = true;
+                //     } else {
+                //         this.placeHolder.placeHolderShow = false;
+                //     }
+                //     this.$apply();
+                // }
+                // if(current==1){
+                //      if (!this.alreadyCreationsData.totalCount) {
+                //         this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_1;
+                //         this.placeHolder.placeHolderShow = true;
+                //     } else {
+                //         this.placeHolder.placeHolderShow = false;
+                //     }
+                //     this.$apply();
+                // }
             }
         }
         // 下拉刷新
          onPullDownRefresh() {
             this.placeHolder.placeHolderShow = false;
-            if(this.currentTab==0){
-                this.pageNumber[0]= 1,
-                this.waitCreationsData={};
-                this.GetWaitCaseCreations();  
-            }else if(this.currentTab==1){
-                 this.pageNumber[1]= 1,
-                this.alreadyCreationsData={};
-                this.GetAlreadyCaseCreations();
-            }
+            this.pageNumber = 1,
+            this.waitCreationsData = {};
+            this.GetWaitCaseCreations(); 
+            // if(this.currentTab == 0){
+            //     this.pageNumber[0] = 1,
+            //     this.waitCreationsData = {};
+            //     this.GetWaitCaseCreations();  
+            // }else if(this.currentTab == 1){
+            //      this.pageNumber[1] = 1,
+            //     this.alreadyCreationsData = {};
+            //     this.GetAlreadyCaseCreations();
+            // }
             this.$apply();
             wx.hideNavigationBarLoading(); //完成停止加载
             wx.stopPullDownRefresh(); //停止下拉刷新
         }
         // 上拉加载
         onReachBottom() {
-            if(this.currentTab==0){
-                 if (this.waitCreationsData.totalCount / 10 > this.pageNumber[0] && this.$parent.global.netWorkString) {
-                this.pageNumber[0] += 1;
-                this.GetWaitCaseCreations();
+             if (this.waitCreationsData.totalCount / 10 > this.pageNumber &&       this.$parent.global.netWorkString) {
+                    this.pageNumber += 1;
+                    this.GetWaitCaseCreations();
             } else {
                 if (this.$parent.global.netWorkString) {
                     wx.showToast({
@@ -200,29 +215,50 @@
                     });
                 }
             }
-            }
-            if(this.currentTab==1){
-                if (this.alreadyCreationsData.totalCount / 10 > this.pageNumber[1] && this.$parent.global.netWorkString) {
-                this.pageNumber[1] += 1;
-                 this.GetAlreadyCaseCreations();
-            } else {
-                if (this.$parent.global.netWorkString) {
-                    wx.showToast({
-                        title: '我们是有底线的！',
-                        icon: 'none',
-                        duration: 1500,
-                        mask: false,
-                    });
-                } else {
-                    wx.showToast({
-                        title: '网络连接失败！',
-                        icon: 'none',
-                        duration: 1500,
-                        mask: false,
-                    });
-                }
-            }
-            }
+            // if(this.currentTab == 0){
+            //     if (this.waitCreationsData.totalCount / 10 > this.pageNumber &&       this.$parent.global.netWorkString) {
+            //         this.pageNumber += 1;
+            //         this.GetWaitCaseCreations();
+            //     } else {
+            //         if (this.$parent.global.netWorkString) {
+            //             wx.showToast({
+            //                 title: '我们是有底线的！',
+            //                 icon: 'none',
+            //                 duration: 1500,
+            //                 mask: false,
+            //             });
+            //         } else {
+            //             wx.showToast({
+            //                 title: '网络连接失败！',
+            //                 icon: 'none',
+            //                 duration: 1500,
+            //                 mask: false,
+            //             });
+            //         }
+            //     }
+            // }
+            // if(this.currentTab==1){
+            //     if (this.alreadyCreationsData.totalCount / 10 > this.pageNumber[1] && this.$parent.global.netWorkString) {
+            //     this.pageNumber[1] += 1;
+            //     this.GetAlreadyCaseCreations();
+            // } else {
+            //     if (this.$parent.global.netWorkString) {
+            //         wx.showToast({
+            //             title: '我们是有底线的！',
+            //             icon: 'none',
+            //             duration: 1500,
+            //             mask: false,
+            //         });
+            //     } else {
+            //         wx.showToast({
+            //             title: '网络连接失败！',
+            //             icon: 'none',
+            //             duration: 1500,
+            //             mask: false,
+            //         });
+            //     }
+            // }
+            // }
             this.$apply();
         }
         methods = {
@@ -236,15 +272,24 @@
             }
         };
         mixins = [mixins];
-        async GetWaitCaseCreations(...arg) {
-            var keyWord=arg[0]?arg[0].KeyWord:'';
+        async GetWaitCaseCreations() {
+            let filter = this.queryStream.filter || '';
+            let CreationDateRange = this.queryStream.CreationDateRange || { startDate:'', endDate:'' };
+            let acceptDateRange = this.queryStream.acceptDateRange || { startDate:'', endDate:'' };
+            let categoryList = this.queryStream.categoryList || [];
+            let lawyerRoleList = this.queryStream.lawyerRoleList || []
             var data = {
-                keyWord,
-                status: '',
-                sorting: 'AcceptDate desc',
-                pageNumber: this.pageNumber[0],
-                pageSize: 10
-            }
+                CreationDateRange,
+                acceptDateRange,
+                categoryList,
+                lawyerRoleList,
+                lawyereIdList: [],
+                pageNumber: this.pageNumber,
+                pageSize: 10,
+                processStatusList:this.processStatusList,
+                LawyerIdList: [],
+                filter
+                }
             var resData = await ajax.getData(
                 '/api/services/web/Case/GetAuditCases',
                 'post',
@@ -254,6 +299,7 @@
                 case 200:
                     this.waitCreationsData['totalCount'] = resData.data.result.totalCount;
                     if (resData.data.result.items.length !== 0) {
+                        this.placeHolder.placeHolderShow = false;
                         var waitCreationsData = resData.data.result.items;
                         if(this.waitCreationsData.items){
                             this.waitCreationsData.items = this.waitCreationsData.items.concat(waitCreationsData);
@@ -270,8 +316,9 @@
                     } else {
                         this.placeHolder.placeHolderImageIndex = 0;
                         this.placeHolder.placeHolderShow = true;
-                        this.placeHolderImageIndex_0=0;
+                        this.placeHolderImageIndex_0 = 0;                      
                     }
+                    console.log(this.waitCreationsData.items)
                     this.$apply();
                     break;
                 case 403:
@@ -291,80 +338,76 @@
                     break;
             }
         }
-        async GetAlreadyCaseCreations(...arg) {
-            var keyWord=arg[0]?arg[0].KeyWord:'';
-            wx.showLoading({
-                title: '加载中,请稍等!',
-                mask: true,
-            });
-            var data = {
-                keyWord,
-                status: '1',
-                sorting: "",
-                pageNumber: this.pageNumber[1],
-                pageSize: 10
-            }
-            var resData = await ajax.getData(
-                '/api/services/web/Case/GetAuditCases',
-                'post',
-                data
-            )
-            switch (resData.statusCode) {
-                case 200:
-                    this.alreadyCreationsData['totalCount'] = resData.data.result.totalCount;
-                    if (resData.data.result.items.length !== 0) {
-                        var alreadyCreationsData = resData.data.result.items;
-                        console.log(alreadyCreationsData);
-                        if(this.alreadyCreationsData.items){
-                            this.alreadyCreationsData.items =this.alreadyCreationsData.items.concat(alreadyCreationsData) ;
-                        }else{
-                            this.alreadyCreationsData['items']=alreadyCreationsData
-                        }
-                        this.$apply();
-                    } else {
-                        this.placeHolderImageIndex_1 = 0;
-                    }
-                    this.$apply();
-                    break;
-                case 403:
-                    console.log('您没有权限');
-                     this.placeHolderImageIndex_1 = 3;
-                    this.$apply();
-                    break;
-                case 500:
-                    console.log('数据请求错误')
-                    this.placeHolderImageIndex_1 = 1;
-                    this.$apply();
-                default:
-                    break;
-            }
-        }
-        isRefresh(...key_word){
-            this.refresh=false;
-            this.pageNumber= [1, 1],
-            this.waitCreationsData={};
-            this.alreadyCreationsData={};
-            this.currentTab=0;
-            this.GetWaitCaseCreations(key_word[0]);
-            this.GetAlreadyCaseCreations(key_word[0]);
+        // async GetAlreadyCaseCreations(...arg) {
+        //     var keyWord = arg[0] ? arg[0].KeyWord : '';
+        //     wx.showLoading({
+        //         title: '加载中,请稍等!',
+        //         mask: true,
+        //     });
+        //     var data = {
+        //         keyWord,
+        //         status: '1',
+        //         sorting: "",
+        //         pageNumber: this.pageNumber[1],
+        //         pageSize: 10
+        //     }
+        //     var resData = await ajax.getData(
+        //         '/api/services/web/Case/GetAuditCases',
+        //         'post',
+        //         data
+        //     )
+        //     switch (resData.statusCode) {
+        //         case 200:
+        //             this.alreadyCreationsData['totalCount'] = resData.data.result.totalCount;
+        //             if (resData.data.result.items.length !== 0) {
+        //                 var alreadyCreationsData = resData.data.result.items;
+        //                 console.log(alreadyCreationsData);
+        //                 if(this.alreadyCreationsData.items){
+        //                     this.alreadyCreationsData.items =this.alreadyCreationsData.items.concat(alreadyCreationsData) ;
+        //                 }else{
+        //                     this.alreadyCreationsData['items']=alreadyCreationsData
+        //                 }
+        //                 this.$apply();
+        //             } else {
+        //                 this.placeHolderImageIndex_1 = 0;
+        //             }
+        //             this.$apply();
+        //             break;
+        //         case 403:
+        //             console.log('您没有权限');
+        //              this.placeHolderImageIndex_1 = 3;
+        //             this.$apply();
+        //             break;
+        //         case 500:
+        //             console.log('数据请求错误')
+        //             this.placeHolderImageIndex_1 = 1;
+        //             this.$apply();
+        //         default:
+        //             break;
+        //     }
+        // }
+        isRefresh(){
+            this.refresh = false;
+            this.pageNumber = 1,
+            this.waitCreationsData = {};
+            this.alreadyCreationsData = {};
+            this.currentTab = 0;
+            this.GetWaitCaseCreations();
+            // this.GetAlreadyCaseCreations(key_word[0]);
             this.$apply();
         }
         onLoad() {
             this.GetWaitCaseCreations();
-            this.GetAlreadyCaseCreations();
+            // this.GetAlreadyCaseCreations();
         }
         onShow(){
             var pages = getCurrentPages();
             var prevPage = pages[pages.length - 1]; //上一个页面
-            var queryStream = prevPage.data.queryStream;
-            var isRefresh= wx.getStorageSync('isRefresh');
-            if(prevPage.data.refresh){
-                prevPage.data.refresh=false;
-                this.isRefresh(queryStream);
-            }else{
-                if(isRefresh.isRefresh){
-                    this.isRefresh();
-                }
+            this.queryStream = prevPage.data.queryStream;
+            var isRefresh = wx.getStorageSync('isRefresh');
+            if(prevPage.data.refresh || isRefresh.isRefresh){
+                prevPage.data.refresh = false;
+                this.isRefresh();
             }
             this.$apply();
         }

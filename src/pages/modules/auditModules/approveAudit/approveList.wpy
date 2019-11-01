@@ -66,7 +66,7 @@
             </view>
             <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" />
         </view>
-        <view class='main' wx:if="{{currentTab==0}}">
+        <view class='main'>
             <repeat for="{{GetApproveCaseFileListData_W}}" key="index" index="index" item="item">
                 <view @tap="toApproveDetailAudit('{{item.id}}')">
                     <view class="caseName oneLine-hidden">
@@ -83,7 +83,7 @@
                 </view>
             </repeat>
         </view>
-        <view class='main' wx:if="{{currentTab==1}}">
+        <!-- <view class='main' wx:if="{{currentTab==1}}">
             <repeat for="{{GetApproveCaseFileListData_A}}" key="index" index="index" item="item">
                 <view @tap="toApproveDetailAudit('{{item.id}}')">
                     <view class="caseName  oneLine-hidden">
@@ -116,7 +116,7 @@
                     </view>
                 </view>
             </repeat>
-        </view>
+        </view> -->
        <placeHolderImage :placeHolder.sync="placeHolder" :twoWayTitle="placeHolder"/>
     </view>
 </template>
@@ -125,7 +125,7 @@
     import wepy from 'wepy';
     import navbar from '@/components/navbar';
     import ajax from '@/utils/cofig/ajax.js';
-     import mixins from '@/utils/cofig/mixin.js';
+    import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
     export default class approveList extends wepy.page {
         config = {
@@ -137,17 +137,18 @@
         data = {
             currentTab:0,
             navbars: ['全部', '待处理'],
-            pageNumber_w: 1,
-            pageNumber_A: 1,
-            pageNumber_R: 1,
+            pageNumber_W: 1,
+            // pageNumber_A: 1,
+            // pageNumber_R: 1,
             pageSize: 10,
             GetApproveCaseFileListData_W: [],
-            GetApproveCaseFileListData_A: [],
-            GetApproveCaseFileListData_R: [],
+            // GetApproveCaseFileListData_A: [],
+            // GetApproveCaseFileListData_R: [],
             totalCount_W: 0,
-            totalCount_A: 0,
-            totalCount_R: 0,
+            // totalCount_A: 0,
+            // totalCount_R: 0,
             queryStream:{},
+            statusList:["NF", "NW"]
         };
         components = {
             placeHolderImage,
@@ -168,113 +169,141 @@
                         scrollTop: 0,
                         duration: 0,
                 });
-                switch (current) {
-                    case 0:
-                                if (this.totalCount_W==0) {
-                                this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
-                                this.placeHolder.placeHolderShow = true;
-                            } else {
-                                this.placeHolder.placeHolderShow = false;
-                            }
-                        break;
-                    case 1:
-                                if (this.totalCount_A==0) {
-                                this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
-                                this.placeHolder.placeHolderShow = true;
-                            } else {
-                                this.placeHolder.placeHolderShow = false;
-                            }
-                        break;
-                    case 2:
-                            if (this.totalCount_R==0) {
-                            this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
-                            this.placeHolder.placeHolderShow = true;
-                            } else {
-                                this.placeHolder.placeHolderShow = false;
-                            }
-                        break;
-                
-                    default:
-                        break;
+                if(this.totalCount_W == 0 || this.totalCount_A == 0 || this.totalCount_R == 0){
+                    this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
+                    this.placeHolder.placeHolderShow = true;
+                }else{
+                    this.placeHolder.placeHolderShow = false;
                 }
+                // switch (current) {
+                //     case 0:
+                //             if (this.totalCount_W == 0) {
+                //                 this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
+                //                 this.placeHolder.placeHolderShow = true;
+                //             } else {
+                //                 this.placeHolder.placeHolderShow = false;
+                //             }
+                //         break;
+                //     case 1:
+                //             if (this.totalCount_A == 0) {
+                //                 this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
+                //                 this.placeHolder.placeHolderShow = true;
+                //             } else {
+                //                 this.placeHolder.placeHolderShow = false;
+                //             }
+                //         break;
+                //     case 2:
+                //             if (this.totalCount_R == 0) {
+                //                 this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
+                //                 this.placeHolder.placeHolderShow = true;
+                //             } else {
+                //                 this.placeHolder.placeHolderShow = false;
+                //             }
+                //         break;
+                
+                //     default:
+                //         break;
+                // }
                 
             },
         };
         computed = {};
-        async GetApproveCaseFileList(pageNumber, status) {
-            var Status =  this.queryStream.Status?this.queryStream.Status:'';
-            var serialId =  this.queryStream.serialId?this.queryStream.serialId:'';
-            var filter =  this.queryStream.Keyword?this.queryStream.Keyword:'';
-            var clientUser =  this.queryStream.clientUser?this.queryStream.clientUser:'';
-            var caseName =  this.queryStream.caseName?this.queryStream.caseName:'';
-            var CreationTime =  this.queryStream.CreationTime?this.queryStream.CreationTime:'';
+        // pageNumber, status
+        async GetApproveCaseFileList() {
+            // var Status =  this.queryStream.Status ? this.queryStream.Status:'';
+            // var serialId =  this.queryStream.serialId ? this.queryStream.serialId:'';
+            // var filter =  this.queryStream.Keyword?this.queryStream.Keyword:'';
+            // var clientUser =  this.queryStream.clientUser?this.queryStream.clientUser:'';
+            // var caseName =  this.queryStream.caseName?this.queryStream.caseName:'';
+            // var CreationTime =  this.queryStream.CreationTime?this.queryStream.CreationTime:'';
+            let creationTimeRange = this.queryStream.creationTimeRange || {startDate: '', endDate: ''}
+            let filter = this.queryStream.filter || ''
+            let caseCategoryList = this.queryStream.caseCategoryList || []
             var data = {
-                Status,
+                // Status,
+                // filter,
+                // caseName,
+                // clientUser,
+                // CreationTime,
+                // serialId,
+                // pageNumber: pageNumber,
+                // pageSize: this.pageSize,
+                // sorting: "",
+                // // pageCount: 0,
+                // status
+
+                caseCategoryList,
+                creationTimeRange,
                 filter,
-                caseName,
-                clientUser,
-                CreationTime,
-                serialId,
-                pageNumber: pageNumber,
+                pageNumber: this.pageNumber_W,
                 pageSize: this.pageSize,
-                sorting: "",
-                // pageCount: 0,
-                status: status
+                statusList:this.statusList
             }
             var resData = await ajax.getData(
                 '/api/services/web/CaseFileStamp/GetAuditCaseFileStamps',
                 'post',
                 data
             )
-            switch (status) {
-                case 'W':
-                    this.totalCount_W = resData.data.result.totalCount;
-                    break;
-                case 'A':
-                     this.totalCount_A = resData.data.result.totalCount;
-                    break;
-                case 'R':
-                     this.totalCount_R = resData.data.result.totalCount;
-                    break;
-                default:
-                    break;
+            this.totalCount_W = resData.data.result.totalCount;
+            if (this.totalCount_W == 0) {
+                this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
+                this.placeHolder.placeHolderShow = true;
             }
+            // switch (status) {
+            //     case 'W':
+            //         this.totalCount_W = resData.data.result.totalCount;
+            //         if (this.totalCount_W == 0) {
+            //             this.placeHolder.placeHolderImageIndex = this.placeHolderImageIndex_0;
+            //             this.placeHolder.placeHolderShow = true;
+            //         }
+            //         break;
+            //     case 'A':
+            //          this.totalCount_A = resData.data.result.totalCount;
+            //         break;
+            //     case 'R':
+            //          this.totalCount_R = resData.data.result.totalCount;
+            //         break;
+            //     default:
+            //         break;
+            // }
             switch (resData.statusCode) {
                 case 200:
                     if (resData.data.result.items.length !== 0) {
-                        switch (status) {
-                            case 'W':
-                                this.GetApproveCaseFileListData_W = this.GetApproveCaseFileListData_W.concat(resData.data.result.items);
-                                break;
-                            case 'A':
+                        this.GetApproveCaseFileListData_W = this.GetApproveCaseFileListData_W.concat(resData.data.result.items);
+                        // switch (status) {
+                        //     case 'W':
+                        //         this.GetApproveCaseFileListData_W = this.GetApproveCaseFileListData_W.concat(resData.data.result.items);
+                        //         break;
+                        //     case 'A':
                                
-                                this.GetApproveCaseFileListData_A = this.GetApproveCaseFileListData_A.concat(resData.data.result.items);
-                                break;
-                            case 'R':
+                        //         this.GetApproveCaseFileListData_A = this.GetApproveCaseFileListData_A.concat(resData.data.result.items);
+                        //         break;
+                        //     case 'R':
                                
-                                this.GetApproveCaseFileListData_R = this.GetApproveCaseFileListData_R.concat(resData.data.result.items);
-                                break;
-                            default:
-                                break;
-                        }
+                        //         this.GetApproveCaseFileListData_R = this.GetApproveCaseFileListData_R.concat(resData.data.result.items);
+                        //         break;
+                        //     default:
+                        //         break;
+                        // }
                         var isRefresh={
                             isRefresh:false
                         }
                         wx.setStorageSync('isRefresh', isRefresh);
                     } else {
-                        switch (status) {
-                            case 'W':
-                                this.placeHolderImageIndex_0 = 0;
-                                break;
-                            case 'A':
-                                this.placeHolderImageIndex_1 = 0;
-                                break;
-                            case 'R':
-                                this.placeHolderImageIndex_2 = 0;
-                                break;
-                            default:
-                                break;
-                        }
+                        this.placeHolderImageIndex_0 = 0;
+                        // switch (status) {
+                        //     case 'W':
+                        //         this.placeHolderImageIndex_0 = 0;
+                        //         break;
+                        //     case 'A':
+                        //         this.placeHolderImageIndex_1 = 0;
+                        //         break;
+                        //     case 'R':
+                        //         this.placeHolderImageIndex_2 = 0;
+                        //         break;
+                        //     default:
+                        //         break;
+                        // }
                     }
                     this.$apply();
                     break;
@@ -294,35 +323,36 @@
         // 下拉刷新
         onPullDownRefresh() {
             this.placeHolder.placeHolderShow = false;
-            this.queryStream={};
-            switch (this.currentTab) {
-                case 0:
-                    this.pageNumber_W = 1;
-                    this.GetApproveCaseFileListData_W = [];
-                    this.GetApproveCaseFileList(this.pageNumber_W, 'W')
-                    break;
-                case 1:
-                    this.pageNumber_A = 1;
-                    this.GetApproveCaseFileListData_A = [];
-                    this.GetApproveCaseFileList(this.pageNumber_A, 'A')
-                    break;
-                default:
-                    this.pageNumber_R = 1;
-                    this.GetApproveCaseFileListData_R = [];
-                    this.GetApproveCaseFileList(this.pageNumber_R, 'R')
-                    break;
-            }
+            this.queryStream = {};
+            this.pageNumber_W = 1;
+            this.GetApproveCaseFileListData_W = [];
+            this.GetApproveCaseFileList()
+            // switch (this.currentTab) {
+            //     case 0:
+            //         this.pageNumber_W = 1;
+            //         this.GetApproveCaseFileListData_W = [];
+            //         this.GetApproveCaseFileList(this.pageNumber_W, 'W')
+            //         break;
+            //     case 1:
+            //         this.pageNumber_A = 1;
+            //         this.GetApproveCaseFileListData_A = [];
+            //         this.GetApproveCaseFileList(this.pageNumber_A, 'A')
+            //         break;
+            //     default:
+            //         this.pageNumber_R = 1;
+            //         this.GetApproveCaseFileListData_R = [];
+            //         this.GetApproveCaseFileList(this.pageNumber_R, 'R')
+            //         break;
+            // }
             this.$apply();
             wx.hideNavigationBarLoading(); //完成停止加载
             wx.stopPullDownRefresh(); //停止下拉刷新
         }
         // 上拉加载
         onReachBottom() {
-            switch (this.currentTab) {
-                case 0:
-                    if (this.totalCount_W / 10 > this.pageNumber_W && this.$parent.global.netWorkString) {
+            if (this.totalCount_W / 10 > this.pageNumber_W && this.$parent.global.netWorkString) {
                         this.pageNumber_W += 1;
-                        this.GetApproveCaseFileList(this.pageNumber_W, 'W')
+                        this.GetApproveCaseFileList()
                     } else {
                         if (this.$parent.global.netWorkString) {
                             wx.showToast({
@@ -340,78 +370,100 @@
                             });
                         }
                     }
-                    break;
-                case 1:
-                    if (this.totalCount_A / 10 > this.pageNumber_W && this.$parent.global.netWorkString) {
-                            this.pageNumber_A += 1;
-                            this.GetApproveCaseFileList(this.pageNumber_A, 'W')
-                        } else {
-                            if (this.$parent.global.netWorkString) {
-                                wx.showToast({
-                                    title: '我们是有底线的！',
-                                    icon: 'none',
-                                    duration: 1500,
-                                    mask: false,
-                                });
-                            } else {
-                                wx.showToast({
-                                    title: '网络连接失败！',
-                                    icon: 'none',
-                                    duration: 1500,
-                                    mask: false,
-                                });
-                            }
-                        }
-                    break;
-                default:
-                 if (this.totalCount_R / 10 > this.pageNumber_R && this.$parent.global.netWorkString) {
-                        this.pageNumber_R += 1;
-                        this.GetApproveCaseFileList(this.pageNumber_R, 'W')
-                    } else {
-                        if (this.$parent.global.netWorkString) {
-                            wx.showToast({
-                                title: '我们是有底线的！',
-                                icon: 'none',
-                                duration: 1500,
-                                mask: false,
-                            });
-                        } else {
-                            wx.showToast({
-                                title: '网络连接失败！',
-                                icon: 'none',
-                                duration: 1500,
-                                mask: false,
-                            });
-                        }
-                    }
-                    break;
-            }
+            // switch (this.currentTab) {
+            //     case 0:
+            //         if (this.totalCount_W / 10 > this.pageNumber_W && this.$parent.global.netWorkString) {
+            //             this.pageNumber_W += 1;
+            //             this.GetApproveCaseFileList()
+            //         } else {
+            //             if (this.$parent.global.netWorkString) {
+            //                 wx.showToast({
+            //                     title: '我们是有底线的！',
+            //                     icon: 'none',
+            //                     duration: 1500,
+            //                     mask: false,
+            //                 });
+            //             } else {
+            //                 wx.showToast({
+            //                     title: '网络连接失败！',
+            //                     icon: 'none',
+            //                     duration: 1500,
+            //                     mask: false,
+            //                 });
+            //             }
+            //         }
+            //         break;
+            //     case 1:
+            //         if (this.totalCount_A / 10 > this.pageNumber_W && this.$parent.global.netWorkString) {
+            //                 this.pageNumber_A += 1;
+            //                 this.GetApproveCaseFileList(this.pageNumber_A, 'W')
+            //             } else {
+            //                 if (this.$parent.global.netWorkString) {
+            //                     wx.showToast({
+            //                         title: '我们是有底线的！',
+            //                         icon: 'none',
+            //                         duration: 1500,
+            //                         mask: false,
+            //                     });
+            //                 } else {
+            //                     wx.showToast({
+            //                         title: '网络连接失败！',
+            //                         icon: 'none',
+            //                         duration: 1500,
+            //                         mask: false,
+            //                     });
+            //                 }
+            //             }
+            //         break;
+            //     default:
+            //      if (this.totalCount_R / 10 > this.pageNumber_R && this.$parent.global.netWorkString) {
+            //             this.pageNumber_R += 1;
+            //             this.GetApproveCaseFileList(this.pageNumber_R, 'W')
+            //         } else {
+            //             if (this.$parent.global.netWorkString) {
+            //                 wx.showToast({
+            //                     title: '我们是有底线的！',
+            //                     icon: 'none',
+            //                     duration: 1500,
+            //                     mask: false,
+            //                 });
+            //             } else {
+            //                 wx.showToast({
+            //                     title: '网络连接失败！',
+            //                     icon: 'none',
+            //                     duration: 1500,
+            //                     mask: false,
+            //                 });
+            //             }
+            //         }
+            //         break;
+            // }
             this.$apply();
         }
         onLoad() {
-            this.GetApproveCaseFileList(this.pageNumber_w, 'W')
-            this.GetApproveCaseFileList(this.pageNumber_A, 'A')
-            this.GetApproveCaseFileList(this.pageNumber_R, 'R')
+            this.GetApproveCaseFileList()
+            // this.GetApproveCaseFileList(this.pageNumber_A, 'A')
+            // this.GetApproveCaseFileList(this.pageNumber_R, 'R')
         };
         isRefresh(){
             this.currentTab=0;
             this.pageNumber_W = 1;
             this.GetApproveCaseFileListData_W = [];
-            this.pageNumber_A = 1;
-            this.GetApproveCaseFileListData_A = [];
-            this.pageNumber_R = 1;
-            this.GetApproveCaseFileListData_R = [];
-            this.GetApproveCaseFileList(this.pageNumber_w, 'W')
-            this.GetApproveCaseFileList(this.pageNumber_A, 'A')
-            this.GetApproveCaseFileList(this.pageNumber_R, 'R')
+            // this.pageNumber_A = 1;
+            // this.GetApproveCaseFileListData_A = [];
+            // this.pageNumber_R = 1;
+            // this.GetApproveCaseFileListData_R = []
+            this.GetApproveCaseFileList()
+            // this.GetApproveCaseFileList(this.pageNumber_A, 'A')
+            // this.GetApproveCaseFileList(this.pageNumber_R, 'R')
             this.$apply();
         }
         onShow(){
-            var isRefresh= wx.getStorageSync('isRefresh')||false;
+            var isRefresh = wx.getStorageSync('isRefresh')||false;
             var pages = getCurrentPages();
             var prevPage = pages[pages.length - 1]; //上一个页面
-            this.queryStream=prevPage.data.queryStream;
-            var refresh=prevPage.data.refresh||false;
+            this.queryStream = prevPage.data.queryStream;
+            var refresh = prevPage.data.refresh||false;
             console.log(refresh,isRefresh.isRefresh);
             if(isRefresh.isRefresh||refresh){
                 prevPage.data.refresh=false;

@@ -310,7 +310,7 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '@/utils/cofig/ajax.js'
+  import { EmployeePhoto } from '@/api/common';
   export default class chargeinfo extends wepy.page {
     components = {};
     data = {
@@ -386,8 +386,7 @@
     }
     async getUserPhoto(lawyerChargeData) {
       for (var index in lawyerChargeData) {
-        var http = '/api/services/web/personal/GetEmployeePhoto?id=' + lawyerChargeData[index].userId;
-        var avatarData = await ajax.getAavatar(http);
+        var avatarData = await EmployeePhoto(lawyerChargeData[index].userId);
         this.userPhoto[index] = avatarData;
       }
       this.$apply();

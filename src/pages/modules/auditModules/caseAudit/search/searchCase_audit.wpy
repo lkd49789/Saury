@@ -58,22 +58,35 @@
         }
       }
     }
+    .advanced-search-input-panel {
+            .advanced-search-title {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                >text {
+                    font-size: 40rpx;
+                }
+            }
+            .advanced-search-content {
+                margin: 30rpx 0;
+            }
+        }
 
   }
 </style>
 
 <template>
   <view class='container'>
-    <view class="keyword-search" >
+    <view class="keyword-search" wx:if="{{showPage}}" >
       <view class="search_top">
         <view class="search_input">
           <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"></icon>
           <input value="{{searchClentValue}}" type="text" confirm-type="search" placeholder="案件名称、客户名称" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
           </input>
         </view>
-        <!-- <view class="top_right_btn">
+        <view class="top_right_btn">
           <icon class="iconfont icon-gaojisousuo" style="color:#5d73fa;font-size:35px;" @tap="showPage"></icon>
-        </view> -->
+        </view>
       </view>
       <view class="search_history">
         <view class="history_title">
@@ -90,25 +103,121 @@
         </view>
       </view>
     </view>
+    <view class="advanced-search-input-panel" wx:else>
+        <view class="advanced-search-title">
+            <text>高级搜索</text>
+            <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
+        </view>
+        <view class="advanced-search-content">
+            <finishTime :pickerData="finishTime" />
+            <JoninPeople :options.sync="JoninPeople" :index.sync='JoninPeopleIndex' :twoWayTitle="JoninPeopleIndex" />
+            <creationTime :pickerData="creationTime" />
+            <LawCase :options.sync="LawCase" :index.sync='LawCaseIndex' :twoWayTitle="LawCaseIndex" />
+        </view>
+        <image class="btn-sub" src="../../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearchSubmit" />
+    </view>
   </view>
 </template>
 <script>
   import wepy from 'wepy';
-  import {
-    myDistinct
-  } from '@/utils/cofig/api.js';
-  import ajax from '@/utils/cofig/ajax.js';
-  import {
-    formatDate
-  } from '@/utils/cofig/api.js';
+  import { myDistinct,formatDate } from '@/utils/cofig/api';
+  import { GeneralCodeComboboxItems,CaseCategoryComboboxItems } from '@/api/common';
+  import Option from '@/components/picker/option';
+  import PickerDate from '@/components/picker/pickerDate'
   export default class searchCaseAudit extends wepy.page {
     data = {
       searchData: {},
       history_keyWord_case: [],
       searchClentValue: '',
       isShowArray: [],
+      showPage:true,
+      finishTime:{
+        title: '收案日期',
+        startDateData: '',
+        endDateData: ''
+      },
+      creationTime:{
+        title: '创建时间',
+        startDateData: '',
+        endDateData: ''
+      },
+      JoninPeople: {
+          title: '参案角色',
+          name: 'JoninPeople',
+          value: [],
+          displayText: [],
+          warning: false
+      },
+      JoninPeopleIndex: -1,
+      LawCase:{
+        title: '案件类别',
+        name: 'LawCase',
+        value: [],
+        displayText: [],
+        warning: false
+      },
+      LawCaseIndex: -1,
+    };
+    components = {
+      creationTime:PickerDate,
+      finishTime:PickerDate,
+      JoninPeople:Option,
+      LawCase:Option
+    }
+    watch = {
+      finishTime(data){
+        if (!this.searchData.acceptDateRange) {
+            this.searchData.acceptDateRange = {
+                startDate:'',
+                endDate:''
+            };
+        }
+        this.searchData.acceptDateRange.startDate = data.startDateData;
+        this.searchData.acceptDateRange.endDate = data.endDateData;
+        this.$apply();
+      },
+      JoninPeopleIndex(index){
+           this.searchData.lawyerRoleList = [this.JoninPeople.value[index]];
+      },
+      creationTime(data) {
+        if (!this.searchData.CreationDateRange) {
+            this.searchData.CreationDateRange = {
+                startDate:'',
+                endDate:''
+            };
+        }
+        this.searchData.CreationDateRange.startDate = data.startDateData;
+        this.searchData.CreationDateRange.endDate = data.endDateData;
+        this.$apply();
+      },
+      LawCaseIndex(index){
+           this.searchData.categoryList = [this.LawCase.value[index]];
+      },
     };
     methods = {
+      advancedSearchSubmit(){
+         console.log(this.searchData)
+         if(Object.keys(this.searchData).length !== 0){
+              var pages = getCurrentPages();
+             var prevPage = pages[pages.length - 2]; //上一个页面
+             prevPage.data.queryStream = this.searchData;
+             prevPage.data.refresh = true;
+             wx.navigateBack({
+                 delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+             });
+        }else{
+           wx.showToast({
+             title: '没有搜索内容！', //提示的内容,
+             icon: 'none', //图标,
+             duration: 2000, //延迟时间,
+             mask: false, //显示透明蒙层，防止触摸穿透,
+             success: res => {}
+           });
+        }
+      },
+      showPage() {
+         this.showPage = !this.showPage;
+      },
       deletItemAll() {
         wx.showModal({
           title: '确认是否删除！', //提示的标题,
@@ -141,18 +250,16 @@
           return item
         })
         this.isShowArray[index] = true;
-        this.$apply();
       },
       history(item) {
         this.searchClentValue = item;
-        this.$apply();
       },
       submitSearch(e) {
         var value = e.detail.value.replace(/(^\s*)|(\s*$)/g, "");
         if (value) {
           var pages = getCurrentPages();
           var prevPage = pages[pages.length - 2]; //上一个页面
-          prevPage.data.queryStream.KeyWord = e.detail.value;
+          prevPage.data.queryStream.filter = e.detail.value;
           prevPage.data.refresh = true;
           wx.navigateBack({
             delta: 1, //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
@@ -178,8 +285,6 @@
         }
       }
     };
-    watch = {
-    };
     // 判断初始化历史数据
     isHistory() {
       var pages = getCurrentPages();
@@ -198,8 +303,26 @@
       }
       this.$apply();
     }
+    // 获取参案角色
+    async GetGeneralCodeComboboxItems(){
+      let { data } = await GeneralCodeComboboxItems({id: "CACBT"})
+      data.result.forEach((item,index) =>{
+          this.JoninPeople.value[index] = item.value
+          this.JoninPeople.displayText[index] = item.displayText
+      })
+    }
+    // 获取案件类别
+    async GetCaseCategoryComboboxItems(){
+      let { data } = await CaseCategoryComboboxItems()
+      data.result.forEach((item,index) =>{
+          this.LawCase.value[index] = item.value
+          this.LawCase.displayText[index] = item.displayText
+      })
+    }
     onLoad() {
       this.isHistory();
+      this.GetGeneralCodeComboboxItems()
+      this.GetCaseCategoryComboboxItems()
     };
     onShow() {};
   }

@@ -137,43 +137,11 @@
                 <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
             </view>
             <view class="advanced-search-content">
-                <view class="tui-picker-content">
-                    <view>开始时间</view>
-                    <view style="display:flex;align-items:center;">
-                        <picker id="startDate" mode="date" value="{{startDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
-                            <view class="tui-picker-detail">
-                                {{startDate||'请选择'}}
-                                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
-                            </view>
-                        </picker>
-                        <text style="margin:0 20rpx">至</text>
-                        <picker id="endDate" mode="date" value="{{endDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
-                            <view class="tui-picker-detail">
-                                {{endDate||'请选择'}}
-                                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
-                            </view>
-                        </picker>
-                    </view>
-                </view>
-                <view class="tui-picker-content">
-                    <view>创建时间</view>
-                    <view style="display:flex;align-items:center;">
-                        <picker id="startCreateDate" mode="date" value="{{startCreateDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
-                            <view class="tui-picker-detail">
-                                {{startCreateDate||'请选择'}}
-                                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
-                            </view>
-                        </picker>
-                        <text style="margin:0 20rpx">至</text>
-                        <picker id="endCreateDate" mode="date" value="{{endCreateDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
-                            <view class="tui-picker-detail">
-                                {{endCreateDate||'请选择'}}
-                                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
-                            </view>
-                        </picker>
-                    </view>
-                </view>
-                <view class="tui-picker-content">
+                <CreationTime :pickerData="creationTime" />
+                <WorkingHours :pickerData="workingHours" />
+                <Status :options.sync="status" :index.sync='statusIndex' />
+                <WorkingStatus :options.sync="workingStatus" :index.sync='workingStatusIndex' />
+                <!-- <view class="tui-picker-content">
                     <view>类别</view>
                     <checkbox-group class="checkbox" bindchange="checkboxChangeCategory">
                         <label class="checkboxItem" wx:for="{{Category}}" wx:key="{{index}}">
@@ -181,8 +149,8 @@
                             {{item.displayText}}
                         </label>
                     </checkbox-group>
-                </view>
-                <view class="tui-picker-content">
+                </view> -->
+                <!-- <view class="tui-picker-content">
                     <view>工作类别</view>
                     <checkbox-group class="checkbox" bindchange="checkboxChangeWorkType"  >
                         <label  class="checkboxItem" wx:for="{{WorkType}}" wx:key="{{index}}">
@@ -190,7 +158,7 @@
                             {{item.displayText}}
                         </label>
                     </checkbox-group>
-                </view>
+                </view> -->
 
                 <image class="btn-sub" src="../../../../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearchSubmit" />
             </view>
@@ -201,74 +169,90 @@
 <script>
     import wepy from 'wepy';
     import {
-        myDistinct
+        myDistinct,formatDate
     } from '@/utils/cofig/api.js';
     import ajax from '@/utils/cofig/ajax.js';
-    import {
-        formatDate
-    } from '@/utils/cofig/api.js';
+    import Option from '@/components/picker/option';
+    import PickerDate from '@/components/picker/pickerDate'
     export default class searchRecordAudit extends wepy.page {
         data = {
-            searchData: {
-                CreationTime:{
-                    EndDate:'',
-                    StartDate:''
-                },
-                WorkTime:{
-                    EndDate:'',
-                    StartDate:''
-                },
-
-            },
+            searchData: {},
             //判断是否有数据
             isData:false,
             //类别
-            Category:[],
+            // Category:[],
             //工作类别
-            WorkType:[],
+            // WorkType:[],
             showPage: true,
             history_keyWord_case: [],
             searchClentValue: '',
             isShowArray: [],
-            startDate:'',
-            endDate:'',
-            startCreateDate:'',
-            endCreateDate:'',
-        };
-        methods = {
-            checkboxChangeCategory(e){
-                this.searchData.Category=e.detail.value.toString();
+            creationTime:{
+                title: '创建时间',
+                startDateData: '',
+                endDateData: ''
             },
-            checkboxChangeWorkType(e){
-                this.searchData.WorkType=e.detail.value.toString();
+            workingHours:{
+                title: '工作时间',
+                startDateData: '',
+                endDateData: ''
+            },
+            status: {
+                title: '类别',
+                name: 'status',
+                value: [],
+                displayText: [],
+                warning: false
+            },
+            statusIndex: -1,
+            workingStatus: {
+                title: '工作类别',
+                name: 'workingStatus',
+                value: [],
+                displayText: [],
+                warning: false
+            },
+            workingStatusIndex: -1,
+        };
+        components = {
+            CreationTime:PickerDate,
+            WorkingHours:PickerDate,
+            Status:Option,
+            WorkingStatus:Option,
+        }
+        watch = {
+            creationTime(data) {
+                this.searchData.creationTime = {}
+                this.searchData.creationTime['startDate'] = data.startDateData;
+                this.searchData.creationTime['endDate'] = data.endDateData;
                 this.$apply();
             },
-           bindDateChange(e){
-               var date=e.detail.value;
-               this.isData=true;
-               switch (e.target.id) {
-                   case 'startDate':
-                       this.startDate=date;
-                       this.searchData.WorkTime.StartDate=date;
-                       break;
-                   case 'endDate':
-                       this.endDate=date;
-                       this.searchData.WorkTime.EndDate=date;
-                       break;
-                   case 'startCreateDate':
-                       this.startCreateDate=date;
-                       this.searchData.CreationTime.StartDate=date;
-                       break;
-                   case 'endCreateDate':
-                       this.endCreateDate=date;
-                       this.searchData.CreationTime.EndDate=date;
-                       break;
-               }
-               this.$apply();
-           },
+            workingHours(data){
+                this.searchData.WorkTime = {}
+                this.searchData.WorkTime['startDate'] = data.startDateData;
+                this.searchData.WorkTime['endDate'] = data.endDateData;
+                this.$apply(); 
+            },
+            statusIndex(index){
+                this.searchData.CategoryList = [this.status.value[index]];
+                this.$apply();
+            },
+            workingStatusIndex(index){
+                this.searchData.WorkTypeList = [this.workingStatus.value[index]];
+                this.$apply();
+            }
+        }
+        methods = {
+            // checkboxChangeCategory(e){
+            //     this.searchData.Category=e.detail.value.toString();
+            // },
+            // checkboxChangeWorkType(e){
+            //     this.searchData.WorkType=e.detail.value.toString();
+            //     this.$apply();
+            // },
            advancedSearchSubmit() {
-               if(this.isData|| this.searchData.Category||this.searchData.WorkType){
-                     var pages = getCurrentPages();
+               if(Object.keys(this.searchData).length > 0){
+                    var pages = getCurrentPages();
                     var prevPage = pages[pages.length - 2]; //上一个页面
                     prevPage.data.queryStream = this.searchData;
                     prevPage.data.refresh = true;
@@ -359,24 +343,26 @@
                 }
             }
         };
-        watch = {};
         async  GetGeneralCodeComboboxItems(id){
             var data_id={
                 id
             }
-            var resData= await ajax.getData(
+            var {data,statusCode}= await ajax.getData(
                 '/api/services/web/common/GetGeneralCodeComboboxItems',
                 'POST',
                 data_id
             )
-            if(resData.statusCode==200){
-                if(id=='wlgz'){
-                    var comboboxItemData=[];
-                    comboboxItemData=resData.data.result.slice(0,2);
-                    this.Category=comboboxItemData;
-                }else{
-                    this.WorkType=resData.data.result
-                }
+            if(statusCode==200){
+                data.result.forEach((item,index) =>{
+                    if(id == 'wlgz'){
+                        this.status.value[index] = item.value
+                        this.status.displayText[index] = item.displayText
+                    }else{
+                        // this.WorkType = resData.data.result
+                        this.workingStatus.value[index] = item.value
+                        this.workingStatus.displayText[index] = item.displayText
+                    }
+                })
                 this.$apply();
             }
         }

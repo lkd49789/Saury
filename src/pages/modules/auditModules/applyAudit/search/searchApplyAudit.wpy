@@ -190,12 +190,12 @@
                 displayText: [],
                 warning: false
             },
+            VacationTypeIndex: -1,
             creationTime:{
                 title: '请假时间',
                 startDateData: '',
                 endDateData: ''
             },
-            VacationTypeIndex: -1,
             searchData: {},
             history_keyWord_case: [],
             searchClentValue: '',

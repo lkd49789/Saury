@@ -83,3 +83,24 @@ export function GClientContacts(data){   // 获取客户联系人列表
         data
     })       
 }
+
+export function GCaseInfo(data){   // 获取案件详细信息
+    return getRequest({
+        url:'/api/services/web/case/GetCaseInfo',
+        data
+    })       
+}
+
+export function GClient(data){   // 获取客户信息
+    return getRequest({
+        url:'/api/services/web/client/GetClient',
+        data
+    })       
+}
+
+export function TaskStages(data){   // 获取项目下的任务阶段列表  1111
+    return getRequest({
+        url:'/api/services/web/TaskPlanning/GetTaskStages',
+        data
+    })       
+}
