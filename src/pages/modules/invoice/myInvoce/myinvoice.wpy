@@ -119,7 +119,7 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { GUserInvoices } from '@/api/mycase.js';
     import placeHolderImage from '@/components/placeHolderImage';
     import mixins from '@/utils/cofig/mixin.js';
     import navbar from '@/components/navbar';
@@ -248,9 +248,7 @@
             this.sorting = sort ? sort : this.sorting;
             var filter = this.queryStream.filter ? this.queryStream.filter : '';
             var creationTimeRange = this.queryStream.creationTimeRange ? this.queryStream.creationTimeRange : '';
-            var resData = await ajax.getData(
-                '/api/services/web/financialInvoice/GetUserInvoices',
-                'post', {
+            var resData = await GUserInvoices({
                     pageNumber: this.pageNumber,
                     pageSize: 10,
                     statusList: state,

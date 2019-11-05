@@ -125,7 +125,7 @@
                 <icon class="iconfont icon-quanxuan" @tap="showTools"></icon>
             </view>
         </view>
-        <view class="messages-list" style="margin-bottom:{{showTools?'148rpx':'44rpx'}}">
+        <view class="messages-list" style="margin-bottom:{{showTools ? '148rpx' : '44rpx'}}">
             <repeat for="{{GetUserNotifications_data}}" key="index" index="index" item="item">
                 <view class="msg-item">
                     <view class="item-checkbox" wx:if="{{showTools}}">
@@ -142,18 +142,18 @@
                             </view>
                             <text style="color:#7a7a7a">{{item.notification.data.message}}</text>
                         </view>
-                        <view class="signed" wx:if="{{item.state==1}}" @tap="jump_page('{{item}}','{{index}}')"></view>
+                        <view class="signed" wx:if="{{item.state == 1}}" @tap="jump_page('{{item}}','{{index}}')"></view>
                     </view>
                 </view>
             </repeat>
         </view>
-        <view class="msg-tools {{showTools?'animation':''}}" wx:if="{{showTools}}">
+        <view class="msg-tools {{showTools ? 'animation' : ''}}" wx:if="{{showTools}}">
             <view @tap="all_checked" style="color:#5d73fa">
                 <text wx:if="{{!all_checked}}">全选</text>
-                <text wx:else="{{!all_checked}}">取消全选</text>
+                <text wx:else>取消全选</text>
             </view>
-            <view style="color:{{show_sign?'#5d73fa':'#7a7a7a'}}" @tap="isAllComlated"> <text>已读</text></view>
-            <view style="color:{{delet_id.length!==0?'#e20000':'#7a7a7a'}}" @tap="DeleteUserNotifications"> <text>删除</text></view>
+            <view style="color:{{show_sign ? '#5d73fa' : '#7a7a7a'}}" @tap="isAllComlated"> <text>已读</text></view>
+            <view style="color:{{delet_id.length !== 0 ? '#e20000' : '#7a7a7a'}}" @tap="DeleteUserNotifications"> <text>删除</text></view>
         </view>
         <placeHolderImage :placeHolder.sync="placeHolder" />
     </view>
@@ -208,10 +208,6 @@
                         });
                         break;
                     case 'App.Financial.Receipt.WaitForConfirmed':
-                        wx.navigateTo({
-                            url: item.linkPage + '?id=' + item.notification.data.properties.Id + '&type=0',
-                        });
-                        break;
                     case 'App.Financial.Receipt.WaitForClaimed':
                         wx.navigateTo({
                             url: item.linkPage + '?id=' + item.notification.data.properties.Id + '&type=0',
@@ -249,8 +245,6 @@
                     this.delet_id = [...this.delet_id, id];
                     if (state == 0) {
                         this.sign_id = [...this.sign_id, id];
-                    } else {
-                        this.sign_id = [...this.sign_id, null];
                     }
                 } else {
                     this.delet_id.splice(this.delet_id.indexOf(id), 1);
@@ -262,12 +256,7 @@
             // 批量完成
             isAllComlated() {
                 if (this.show_sign) {
-                    var id = [];
-                    for (var index=0,len=this.sign_id.length;index<len;index++ ) {
-                        if (this.sign_id[index] !== null) {
-                            id.push(this.sign_id[index]);
-                        }
-                    }
+                    let id = this.sign_id.map(item => item)
                     this.SetAllNotificationsAsRead(id);
                 } else {
                     console.log('1123')
@@ -332,24 +321,10 @@
         events = {};
         watch = {
             isDisabled(value) {
-                var all_checked = value.every(item => {
-                    return item == true
-                })
-                if (all_checked) {
-                    this.all_checked = true
-                } else {
-                    this.all_checked = false
-                }
+                this.all_checked = value.every(item => item == true)
             },
             sign_id(value) {
-                var isSign = value.every(item => {
-                    return item == null
-                })
-                if (!isSign) {
-                    this.show_sign = true;
-                } else {
-                    this.show_sign = false;
-                }
+                this.show_sign = !value.every(item => item == null)
             }
         };
         computed = {};
@@ -365,21 +340,16 @@
                 
                 this.$apply();
             } else {
+                let title = '网络连接失败！';
                 if (this.$parent.global.netWorkString) {
-                    wx.showToast({
-                        title: '我们是有底线的！',
-                        icon: 'none',
-                        duration: 1500,
-                        mask: false,
-                    });
-                } else {
-                    wx.showToast({
-                        title: '网络连接失败！',
-                        icon: 'none',
-                        duration: 1500,
-                        mask: false,
-                    });
+                    title = '我们是有底线的！'
                 }
+                wx.showToast({
+                    title,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
             }
         }
         //下拉刷新
@@ -699,7 +669,7 @@
                 }
             });
             var resData = await ajax.getData(
-                '/api/services/app/Notification/SetNotificationAsRead',
+                '/api/services/app/Notification/SetNotificationsAsRead',
                 'POST',
                 id
             )

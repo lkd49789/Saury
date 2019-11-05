@@ -138,6 +138,18 @@
             navbar
         };
         mixins = [mixins]
+        data = {
+            myinvoice: [],
+            pageNumber: 1,
+            totalCount: 0,
+            navbars: ['全部', '处理中', '已完成', '待认领'],
+            currentTab: 0,
+            state: "",
+            queryStream: {},
+            isShow: false,
+            sorting: '',
+            statusList:["WaitForClaim", "WaitForConfirm", "Returned", "Confirmed", "WaitForSend"]
+        };
         watch = {
             currentTab(newValue, oldValue) {
                 let statusList = [];
@@ -160,18 +172,6 @@
                 }
                 this.getbill(this.statusList);
             }
-        };
-        data = {
-            myinvoice: [],
-            pageNumber: 1,
-            totalCount: 0,
-            navbars: ['全部', '处理中', '已完成', '待认领'],
-            currentTab: 0,
-            state: "",
-            queryStream: {},
-            isShow: false,
-            sorting: '',
-            statusList:["WaitForClaim", "WaitForConfirm", "Returned", "Confirmed", "WaitForSend"]
         };
         methods = {
             toSearch() {

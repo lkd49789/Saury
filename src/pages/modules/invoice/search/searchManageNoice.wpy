@@ -149,12 +149,9 @@
 <script>
     import wepy from 'wepy';
     import {
-        myDistinct
+        myDistinct,formatDate
     } from '@/utils/cofig/api.js';
-    import ajax from '@/utils/cofig/ajax.js';
-    import {
-        formatDate
-    } from '@/utils/cofig/api.js';
+    import { GInvoiceStates } from '@/api/invoice.js';
     import creationTimeRange from '@/components/picker/pickerDate';
     import creatorUserName from '@/components/picker/input';
     import PickerOption from '@/components/picker/pickerOption';
@@ -166,7 +163,7 @@
         }
         data = {
             searchData: {},
-             creationTimeRange: {
+            creationTimeRange: {
                 title: '申请时间',
                 startDateData: '',
                 endDateData: ''
@@ -304,10 +301,7 @@
         };
          // 获取状态
         async GetInvoiceStates(){
-            var { data } = await ajax.getData(
-                '/api/services/web/FinancialInvoice/GetInvoiceStates',
-                'POST'
-            )
+            var { data } = await GInvoiceStates()
              this.PickerOption.data = data.result.items
              console.log(this.PickerOption.data);      
         }

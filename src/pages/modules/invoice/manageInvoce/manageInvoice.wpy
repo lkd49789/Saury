@@ -120,7 +120,7 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { GInvoices } from '@/api/invoice.js';
     import placeHolderImage from '@/components/placeHolderImage';
     import mixins from '@/utils/cofig/mixin.js';
     import navbar from '@/components/navbar';
@@ -137,6 +137,17 @@
         components = {
             placeHolderImage,
             navbar
+        };
+        data = {
+            myinvoice: [],
+            pageNumber: 1,
+            totalCount: 0,
+            navbars: ['待处理', '已开票', '已领取', '已作废', '已退回'],
+            currentTab: 0,
+            statusList: "",
+            queryStream: {},
+            isShow: false,
+            sorting: ''
         };
         mixins = [mixins]
         watch = {
@@ -166,17 +177,6 @@
                 }
             }
         };
-        data = {
-            myinvoice: [],
-            pageNumber: 1,
-            totalCount: 0,
-            navbars: ['待处理', '已开票', '已领取', '已作废', '已退回'],
-            currentTab: 0,
-            statusList: "",
-            queryStream: {},
-            isShow: false,
-            sorting: ''
-        };
         methods = {
             toSearch() {
                 wx.navigateTo({
@@ -191,6 +191,7 @@
             },
             filter(name) {
                 this.pageNumber = 1;
+                this.myinvoice = [];
                 switch (name) {
                     case 'cteateTime':
                         this.getbill(this.statusList,'CreationTime desc')
@@ -232,6 +233,7 @@
         };
         onPullDownRefresh() {
             this.pageNumber = 1;
+            this.myinvoice = [];
             this.getbill(this.statusList);
             wx.hideNavigationBarLoading(); //完成停止加载
             wx.stopPullDownRefresh(); //停止下拉刷新
@@ -245,10 +247,7 @@
              this.sorting = sort ? sort : this.sorting;
             var filter = this.queryStream.filter ? this.queryStream.filter : '';
             var creationTimeRange = this.queryStream.creationTimeRange ? this.queryStream.creationTimeRange : '';
-            this.myinvoice = [];
-            var resData = await ajax.getData(
-                '/api/services/web/financialInvoice/GetInvoices',
-                'post', {
+            var resData = await GInvoices({
                     pageNumber: this.pageNumber,
                     pageSize: 10,
                     statusList,
@@ -262,6 +261,7 @@
                 case 200:
                     if (this.statusList == statusList) {
                         if (resData.data.result.items.length !== 0) {
+                            console.log('concat');
                             this.myinvoice = this.myinvoice.concat(resData.data.result.items);
                             this.totalCount = resData.data.result.totalCount;
                             for (var index in this.myinvoice) {

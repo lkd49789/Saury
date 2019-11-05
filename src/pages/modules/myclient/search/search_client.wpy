@@ -136,7 +136,7 @@
                 <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
             </view>
             <view class="advanced-search-content">
-                <view class="tui-picker-content">
+                <!-- <view class="tui-picker-content">
                     <view>开始时间</view>
                     <picker mode="date" value="{{startDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChangeStart">
                         <view class="tui-picker-detail">
@@ -153,7 +153,8 @@
                             <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
                         </view>
                     </picker>
-                </view>
+                </view> -->
+                <creationTimeRange :pickerData="creationTimeRange" :twoWayTitle="creationTimeRange" />
                 <Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
                 <Id :input.sync="Id" :inputValue.sync='IdValue' :twoWayTitle="IdValue" />
                 <OrganizationUnitId :options.sync="OrganizationUnitId" :index.sync='OrganizationUnitIdIndex' :twoWayTitle="OrganizationUnitIdIndex" />
@@ -176,7 +177,7 @@
                     </picker>
                 </view>
                 <view class="tui-picker-content">
-                    <view>业务类型</view>
+                    <view>客户类型</view>
                     <picker mode="multiSelector" value="{{CategoryIndex}}" @tap="getData('Category')" @change="change('Category')" bindcolumnchange="bindMultiPickerColumnChangeCategory" range="{{Category}}" range-key="name">
                         <view class="tui-picker-detail">
                             {{getCategoryArr.length!==0?getCategoryArr:'请选择'}}
@@ -207,6 +208,7 @@
     import {
         formatDate
     } from '@/utils/cofig/api.js';
+    import creationTimeRange from '@/components/picker/pickerDate';
     import Input from '@/components/picker/input';
     import Option from '@/components/picker/option';
     export default class searchClient extends wepy.page {
@@ -216,9 +218,15 @@
             OrganizationUnitId:Option,
             ImportLevel:Option,
             Origin:Option,
+            creationTimeRange
             // ClientType
         };
         data = {
+            creationTimeRange: {
+                title: '创建时间',
+                startDateData: '',
+                endDateData: ''
+            },
             region:[0,0,0,0],
             regionText:'',
             id:1,
@@ -231,7 +239,7 @@
                 Id: "",
                 ImportLevel: "",
                 IndustryType: "",
-                IsAll: true,
+                // IsAll: true,
                 KeyWord: "",
                 Name: "",
                 OrganizationUnitId: "",
@@ -245,8 +253,8 @@
             history_keyWord_client: [],
             searchClentValue: '',
             isShowArray: [],
-            startDate: '',
-            endDate: '',
+            // startDate: '',
+            // endDate: '',
             Name: {
                 title: '客户名称',
                 name: 'Name',
@@ -454,28 +462,28 @@
                 this.searchData.Region = e.detail.postcode;
                 this.$apply();
             },
-            bindDateChangeStart(e) {
-                if (this.searchData.CreationTime) {
-                    this.searchData.CreationTime.startDate = e.detail.value;
-                } else {
-                    var CreationTime = {};
-                    CreationTime.startDate = e.detail.value;
-                    this.searchData.CreationTime = CreationTime;
-                }
-                this.startDate = e.detail.value;
-                this.$apply();
-            },
-            bindDateChangeEnd(e) {
-                if (this.searchData.CreationTime) {
-                    this.searchData.CreationTime.endDate = e.detail.value;
-                } else {
-                    var CreationTime = {};
-                    CreationTime.endDate = e.detail.value;
-                    this.searchData.CreationTime = CreationTime;
-                }
-                this.endDate = e.detail.value;
-                this.$apply();
-            },
+            // bindDateChangeStart(e) {
+            //     if (this.searchData.CreationTime) {
+            //         this.searchData.CreationTime.startDate = e.detail.value;
+            //     } else {
+            //         var CreationTime = {};
+            //         CreationTime.startDate = e.detail.value;
+            //         this.searchData.CreationTime = CreationTime;
+            //     }
+            //     this.startDate = e.detail.value;
+            //     this.$apply();
+            // },
+            // bindDateChangeEnd(e) {
+            //     if (this.searchData.CreationTime) {
+            //         this.searchData.CreationTime.endDate = e.detail.value;
+            //     } else {
+            //         var CreationTime = {};
+            //         CreationTime.endDate = e.detail.value;
+            //         this.searchData.CreationTime = CreationTime;
+            //     }
+            //     this.endDate = e.detail.value;
+            //     this.$apply();
+            // },
             showPage() {
                 this.showPage = !this.showPage;
                 this.$apply();
@@ -565,6 +573,16 @@
         };
         events = {};
         watch = {
+            creationTimeRange(date){
+                if (!this.searchData.CreationTime) {
+                    this.searchData.CreationTime = {};
+                }
+                this.searchData.CreationTime.StartDate = date.startDateData;
+                this.searchData.CreationTime.EndDate = date.endDateData;
+                this.searchData['CreationTime.StartDate'] =  date.startDateData;
+                this.searchData['CreationTime.EndDate'] =  date.endDateData;
+                this.$apply();
+            },
             NameValue(value) {
                 this.searchData.Name = value;
                 this.$apply();

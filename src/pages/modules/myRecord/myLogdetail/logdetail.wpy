@@ -275,7 +275,8 @@
       </view>
       <view class="log-chunck6" @tap="toauditResultsDetail">
         <view>
-          <text>审核结果</text>
+          <text>操作记录</text>
+          <!-- <text>审核结果</text> -->
         </view>
         <view>
           <view style="color:{{workLogData.processStatus=='R'?'#e20000':workLogData.processStatus=='N'?'#FF9900':'#069400'}}">
@@ -285,7 +286,8 @@
             备注：{{workLogData.remark}}
           </view> -->
           <view>
-            <text>通过{{workLogData.approvalList.length}}位审核人审核</text>
+            <!-- <text>通过{{workLogData.approvalList.length}}位审核人审核</text> -->
+            <text>共{{workLogData.approvalList.length}}条操作记录</text>
             <text>{{workLogData.approvalList[0].operationTime}}</text>
           </view>
         </view>

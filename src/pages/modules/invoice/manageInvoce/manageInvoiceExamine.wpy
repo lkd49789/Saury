@@ -74,18 +74,16 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
-    import input1 from '@/components/picker/input'
-    import input2 from '@/components/picker/input'
-    import input3 from '@/components/picker/input'
-    import input4 from '@/components/picker/input'
+    import { ProcessInvoice,CancelInvoice  } from '@/api/invoice.js'
+    import { GEmployees } from '@/api/common.js'
+    import input from '@/components/picker/input'
     import option from '@/components/picker/option'
     export default class Index extends wepy.page {
         components = {
-            returnInvoice: input1,
-            registerInvoice: input2,
-            cancelInvoice: input3,
-            claimInvoice: input4,
+            returnInvoice: input,
+            registerInvoice: input,
+            cancelInvoice: input,
+            claimInvoice: input,
             claimInvoiceId: option
         };
         data = {
@@ -154,11 +152,13 @@
                             this.$apply();
                         }
                     });
-                    var resData = await ajax.getData(
-                        '/api/services/web/financialInvoice/ReturnInvoice',
-                        'post', {
-                            Id: this.id,
-                            Remark: this.returnInvoiceValue
+                    var resData = await ProcessInvoice({
+                            // Id: this.id,
+                            // Remark: this.returnInvoiceValue,
+                            auditData: {remark: this.returnInvoiceValue},
+                            condition: "Returned",
+                            eventName: "WaitForRegister",
+                            id: this.id
                         }
                     );
                     switch (resData.statusCode) {
@@ -199,11 +199,13 @@
                             this.$apply();
                         }
                     });
-                    var resData = await ajax.getData(
-                        '/api/services/web/financialInvoice/RegisterInvoice',
-                        'post', {
-                            invoiceId: this.id,
-                            invoiceNo: this.registerInvoiceValue
+                    var resData = await ProcessInvoice({
+                            // invoiceId: this.id,
+                            // invoiceNo: this.registerInvoiceValue
+                            condition: "Registered",
+                            eventName: "WaitForRegister",
+                            id: this.id,
+                            registerData: {invoiceNo: this.registerInvoiceValue, fileIds: []}
                         }
                     );
                     switch (resData.statusCode) {
@@ -244,9 +246,7 @@
                             this.$apply();
                         }
                     });
-                    var resData = await ajax.getData(
-                        '/api/services/web/financialInvoice/CancelInvoice',
-                        'post', {
+                    var resData = await CancelInvoice({
                             Id: this.id,
                             Remark: this.cancelInvoiceValue
                         }
@@ -289,13 +289,21 @@
                             this.$apply();
                         }
                     });
-                    var resData = await ajax.getData(
-                        '/api/services/web/financialInvoice/ClaimInvoice',
-                        'post', {
-                            InvoiceId: this.id,
-                            UserName: this.claimInvoiceData[this.claimInvoiceIdIndex - 1].name,
-                            UserId: this.claimInvoiceData[this.claimInvoiceIdIndex - 1].id,
-                            Remark: this.claimInvoiceValue
+                    var resData = await ProcessInvoice({
+                            // InvoiceId: this.id,
+                            // UserName: this.claimInvoiceData[this.claimInvoiceIdIndex - 1].name,
+                            // UserId: this.claimInvoiceData[this.claimInvoiceIdIndex - 1].id,
+                            // Remark: this.claimInvoiceValue
+
+                            claimData: {
+                                InvoiceId: this.id, 
+                                UserId: this.claimInvoiceData[this.claimInvoiceIdIndex - 1].id, 
+                                UserName: this.claimInvoiceData[this.claimInvoiceIdIndex - 1].name, 
+                                Remark: this.claimInvoiceValue
+                            },
+                            condition: "Claimed",
+                            eventName: "WaitForClaim",
+                            id:this.id
                         }
                     );
                     switch (resData.statusCode) {
@@ -327,9 +335,7 @@
             }
         }
         async displayText() {
-            var resData = await ajax.getData(
-                '/api/services/web/common/GetEmployees',
-                'post', {
+            var resData = await GEmployees({
                     pageNumber: 1,
                     pageSize: 100
                 }

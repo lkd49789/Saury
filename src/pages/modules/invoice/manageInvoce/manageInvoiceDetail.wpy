@@ -95,7 +95,7 @@
 </style>
 
 <template>
-    <view class="bill" style="margin-bottom:{{invoiceDataDetail.status=='UnHandled'||invoiceDataDetail.status=='Invoiced'?'64rpx':'0'}}">
+    <view class="bill" style="margin-bottom:{{invoiceDataDetail.status=='WaitForRegister' || invoiceDataDetail.status=='WaitForClaim'?'64rpx':'0'}}">
         <view class="bill_title">
             <text class="title">发票详情</text>
         </view>
@@ -187,11 +187,11 @@
                 </repeat>
             </view>
         </view>
-        <view class="bill_btns" wx:if="{{invoiceDataDetail.status=='UnHandled'}}">
+        <view class="bill_btns" wx:if="{{invoiceDataDetail.status=='WaitForRegister'}}">
             <button class="bill_btn" catchtap="toAuditing('{{0}}')">退回</button>
             <button class="bill_btn" catchtap="toAuditing('{{1}}')">开票</button>
         </view>
-        <view class="bill_btns" wx:if="{{invoiceDataDetail.status=='Invoiced'}}">
+        <view class="bill_btns" wx:if="{{invoiceDataDetail.status=='WaitForClaim'}}">
             <button class="bill_btn" catchtap="toAuditing('{{2}}')">作废</button>
             <button class="bill_btn" catchtap="toAuditing('{{3}}')">认领</button>
         </view>
@@ -199,7 +199,7 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { GInvoice } from '@/api/invoice.js'
     import {
         formatDate
     } from '@/utils/cofig/api.js';
@@ -230,9 +230,7 @@
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-            var resData = await ajax.getData(
-                '/api/services/web/financialInvoice/GetInvoice',
-                'post', {
+            var resData = await GInvoice({
                     id: this.invoiceDetailId
                 }
             );

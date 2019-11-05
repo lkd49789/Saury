@@ -14,7 +14,7 @@
                 justify-content: space-between;
                 align-items: center;
                 font-size: 48rpx;
-                border-bottom: 1px solid #dedede;
+                // border-bottom: 1px solid #dedede;
             }
             .filter {
                 left: 0;
@@ -90,6 +90,7 @@
                     <icon class="iconfont icon-shaixuan1" style="font-size:60rpx;color:#5d73fa" @tap="ishowFilter"></icon>
                 </view>
             </view>
+            <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" />
             <view class="filter animation" wx:if="{{isShow}}">
                 <view catchtap="filter('cteateTime')">创建时间排序</view>
                 <view catchtap="filter('id')">客户编号排序</view>
@@ -114,6 +115,7 @@
     import { GMyBillings } from '@/api/bill.js';
     import placeHolderImage from '@/components/placeHolderImage';
     import mixins from '@/utils/cofig/mixin.js';
+    import navbar from '@/components/navbar';
     export default class Index extends wepy.page {
         config = {
             enablePullDownRefresh: true,
@@ -122,7 +124,8 @@
             backgroundColorBottom: '#f4f4f4',
         };
         components = {
-            placeHolderImage
+            placeHolderImage,
+            navbar
         };
         mixins = [mixins];
         data = {
@@ -132,7 +135,35 @@
             queryStream: {},
             isShow: false,
             sorting: '',
-            processStatusList: ["Y", "A", "R", "N"]
+            processStatusList: ["Y", "A", "R", "N"],
+            navbars: ['全部', '处理中', '已完成', '已退回','预开账单'],
+            currentTab: 0
+        };
+        watch = {
+            currentTab(newValue, oldValue) {
+                this.billData = [];
+                this.pageNumber = 1;
+                switch (newValue) {
+                    case 0:
+                        this.processStatusList = ["Y", "A", "R", "N"]
+                        break;
+                    case 1:
+                        this.processStatusList = ["N"]
+                        break;
+                    case 2:
+                        this.processStatusList = ["A"]
+                        break;
+                    case 3:
+                        this.processStatusList = ["R"]
+                        break;
+                    case 4:
+                        this.processStatusList = ["Y"]
+                        break;
+                    default:
+                        break;
+                }
+                this.getbill()
+            }
         };
         methods = {
             toSearch() {
@@ -227,8 +258,8 @@
                     } else {
                         console.log('数据为空');
                         this.placeHolder.placeHolderImageIndex = 0;
-                        this.placeHolder.placeHolderShow = true;
                     }
+                    this.placeHolder.placeHolderShow = resData.data.result.items.length == 0;
                     this.$apply();
                     break;
                 case 403:

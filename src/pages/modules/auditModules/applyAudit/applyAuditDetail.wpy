@@ -114,7 +114,7 @@
             <view class="content-top">
                 <view>
                     <text wx:if="{{auditStatus}}">{{VacationApplyOutputData.eName}}</text>
-                    <text wx:else="{{auditStatus}}">{{VacationApplyOutputData.vacationTypeText}}</text>
+                    <text wx:else>{{VacationApplyOutputData.vacationTypeText}}</text>
                     <text style="color:#ff9900">{{VacationApplyOutputData.totalDay}}天</text>
                 </view>
                 <view>
@@ -122,7 +122,7 @@
                 </view>
                 <view>
                     <text>请假时间</text>
-                    <text>{{VacationApplyOutputData.startDateText}}至{{VacationApplyOutputData.endDateText}}</text>
+                    <text>{{VacationApplyOutputData.startDate}}至{{VacationApplyOutputData.endDate}}</text>
                 </view>
                 <view>
                     <text>此区间节假日天数</text>
@@ -153,7 +153,7 @@
                             <text>{{VacationApplyOutputData.approveTimeText}}</text>
                         </view>
                         <view>
-                            <text style="color:#7a7a7a">{{VacationApplyOutputData.approveMemo||'未填写'}}</text>
+                            <text style="color:#7a7a7a">{{VacationApplyOutputData.approveMemo || '未填写'}}</text>
                         </view>
                     </view>
                 </view>
@@ -162,8 +162,8 @@
                 <view class="checked">
                     <radio-group class="radio-group" @change="bindPickerChange">
                         <label class="radio" wx:for="{{isPass}}" wx:key="index" style="width:50%;">
-                                <radio value="{{item.value}}"  color="#5d73fa" checked="{{item.isChecked}}" @tap="click"/>
-                                <text  style="margin-right:60rpx">{{item.displayText}}</text>
+                                <radio value="{{item.condition+','+item.eventName}}"  color="#5d73fa" checked="{{item.isChecked}}" @tap="click"/>
+                                <text  style="margin-right:60rpx">{{item.displayName}}</text>
                             </label>
                     </radio-group>
                     <view wx:if="{{warning}}" style="color:#e20000">
@@ -182,28 +182,30 @@
     import wepy from 'wepy';
     import ajax from '@/utils/cofig/ajax.js'
     import input from '@/components/picker/input';
+    import { formatTime } from '@/utils/cofig/api';
     export default class clientDetail extends wepy.page {
         components = {
             textarea: input
         };
         data = {
             addOpacity:1,
-            submitData: {},
+            submitData: {data: {remark: ""}},
             VacationApplyOutputData: {},
             auditStatus: false,
-            isPass: [{
-                    value: 'A',
-                    displayText: '审核通过',
-                    isChecked: false,
-                },
-                {
-                    value: 'R',
-                    displayText: "审核退回",
-                    isChecked: false,
-                }
-            ],
+            // isPass: [{
+            //         value: 'A',
+            //         displayText: '审核通过',
+            //         isChecked: false,
+            //     },
+            //     {
+            //         value: 'R',
+            //         displayText: "审核退回",
+            //         isChecked: false,
+            //     }
+            // ],
+            isPass:[],
             input: {
-                title: '审核意见',
+                title: '备注',
                 name: 'approveUserText',
                 options: true,
                 warning: false,
@@ -217,30 +219,12 @@
                 this.$apply();
             },
             touchEnd(){
-                if (this.submitData.status) {
-                    switch (this.submitData.status ) {
-                        case 'A':
-                             this.CreateVacationApprove(this.submitData);
-                            break;
-                        case 'R':  
-                             if(this.submitData.approveMemo){
-                                  this.CreateVacationApprove(this.submitData);
-                             }else{
-                                 this.input.warning = true;
-                                 this.addOpacity=1;
-                             }
-                            break;
-                        default:
-                            break;
-                    }
-                } else {
-                    this.addOpacity = 1;
-                    this.warning = true;
-                }
+                this.CreateVacationApprove(this.submitData);
                 this.$apply();
             },
             bindPickerChange(e) {
-                this.submitData.status = e.detail.value;
+                this.submitData.condition = e.detail.value.split(',')[0];
+                this.submitData.eventName = e.detail.value.split(',')[1];
                 this.$apply();
             },
             click() {
@@ -249,7 +233,7 @@
         };
         watch = {
             inputValue(data) {
-                this.submitData.approveMemo = data;
+                this.submitData.data.remark = data;
                 this.$apply();
             }
         }
@@ -259,7 +243,7 @@
               mask: true //显示透明蒙层，防止触摸穿透,
             });
             var data = {
-                id: this.submitData.parentId
+                id: this.submitData.id
             }
             var resData = await ajax.getData(
                 '/api/services/web/employeeVacation/GetVacationApplyOutput',
@@ -268,11 +252,14 @@
             )
             if (resData.statusCode == 200) {
                 var VacationApplyOutputData = resData.data.result;
-                if(VacationApplyOutputData.status=='W'){
-                    this.auditStatus=true;
-                }else{
-                    this.auditStatus=false;
-                }
+                this.auditStatus = VacationApplyOutputData.status=='W'
+                // if(VacationApplyOutputData.status=='W'){
+                //     this.auditStatus=true;
+                // }else{
+                //     this.auditStatus=false;
+                // }
+                VacationApplyOutputData.startDate = formatTime(VacationApplyOutputData.startDate)
+                VacationApplyOutputData.endDate = formatTime(VacationApplyOutputData.endDate)
                 if (VacationApplyOutputData.approveUserId) {
                     var http = '/api/services/web/personal/GetEmployeePhoto?id=' + VacationApplyOutputData.approveUserId;
                     var avatar = await ajax.getAavatar(http);
@@ -299,7 +286,7 @@
                  }
                });
             var resData = await ajax.getData(
-                '/api/services/web/employeeVacation/CreateVacationApprove',
+                '/api/services/web/EmployeeVacation/ProcessVacation',
                 'post',
                 data
             )
@@ -327,9 +314,25 @@
                 });
             }
         }
+        // 获取审核请假操作列表.
+        async GetAuditVacationActions(){
+            let { data } = await ajax.getData('/api/services/web/EmployeeVacation/GetAuditVacationActions','post',{id: this.submitData.id})
+            data.result.items.forEach((item,index) =>{ 
+                if(index === 0){
+                    item.isChecked = true; 
+                    this.submitData.condition = item.condition;
+                    this.submitData.eventName = item.eventName;
+                }
+                item.isChecked = index === 0  
+            })
+            this.isPass = data.result.items
+            this.$apply()
+            console.log(data);
+        }
         onLoad(options) {
-            this.submitData.parentId = options.id;
+            this.submitData.id = options.id;
             this.GetVacationApplyOutput();
+            this.GetAuditVacationActions()
             this.$apply();
         }
     }

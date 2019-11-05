@@ -148,6 +148,45 @@
                 color:#fff;
             }
         }
+        .flex{
+            display: flex;
+            justify-content: space-between;
+        }
+        .workflows{
+            box-shadow: 0rpx 8rpx 30rpx 0rpx rgba(65, 98, 213, 0.25);
+            border-radius: 20rpx;
+            margin: 44rpx 28rpx;
+            border-bottom: 0rpx;
+            background: #ffffff;
+            // margin: 0 auto;
+            padding: 30rpx 28rpx;
+            font-size: 28rpx;
+            overflow: auto;
+            border-bottom: 20rpx solid #f2f2f2;
+            .bill_gray{
+                color: #7a7a7a;
+            }
+            .bill_box {
+                .bill_view {
+                    line-height: 42rpx;
+                    margin-bottom: 20rpx;
+                }
+                .bill_blue{
+                    color: #3EB5ff;
+                }
+            }
+            .title{
+                align-items: center;
+            }
+            .status{
+                margin-right: 20rpx;
+            }
+            .bill-del{
+                >text{
+                    color:#5d73fa;
+                }
+            }
+        }
     }
 </style>
 
@@ -191,7 +230,7 @@
                 </view>
                 <view>
                     <text>报审时间</text>
-                    <text>{{CaseFileStampOutputData.creationTimeText||'未填写'}}</text>
+                    <text>{{CaseFileStampOutputData.creationTime||'未填写'}}</text>
                 </view>
                 <view class="document" wx:if="{{CaseFileStampOutputData.status=='A'||CaseFileStampOutputData.status=='R'}}">
                     <text>报审文件</text>
@@ -205,7 +244,19 @@
                 </view>
             </view>
             <view class="parting-line"></view>
-            <view class='through-review' wx:if="{{CaseFileStampOutputData.status=='A'||CaseFileStampOutputData.status=='R'}}">
+            <view class="bill_content workflows"  wx:if="{{CaseFileStampOutputData.status == 'A' || CaseFileStampOutputData.status=='R'}}">
+                <view class="bill_box" @tap="toFOR">
+                    <view class="title flex bill_view ">
+                        <text class="bill_gray">操作记录</text>
+                        <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
+                    </view>
+                    <view class="bill_view "><text class="status">{{CaseFileStampOutputData.statusText}}</text><text class="bill_gray">{{CaseFileStampOutputData.creationTime}}</text></view>
+                    <view class="bill-del bill_gray">
+                        共<text>{{Logs.length}}</text>条操作记录
+                    </view>
+                </view>
+            </view>
+            <!-- <view class='through-review' wx:if="{{CaseFileStampOutputData.status == 'A' || CaseFileStampOutputData.status=='R'}}">
                 <view class="approve-title">
                     <text>审核信息</text>
                 </view>
@@ -213,7 +264,7 @@
                     <view class="approve-left">
                         <image src="{{CaseFileStampOutputData.Avatar}}" mode="scaleToFill"
                           lazy-load="false"/>
-                        <text>{{CaseFileStampOutputData.approveUserText||'未填写'}}</text>
+                        <text>{{CaseFileStampOutputData.creationUserText||'未填写'}}</text>
                     </view>
                     <view class="approve-right"> 
                          <view class="statusText-approveTimeText">
@@ -226,7 +277,7 @@
                     </view>
                    
                 </view>
-            </view>
+            </view> -->
             <view wx:else class="document" style="padding:30rpx 28rpx">
                     <text>报审文件</text>
                     <view @tap="previewFile('{{CaseFileStampOutputData.documentId}}','{{CaseFileStampOutputData.fileExtension}}')" style="margin-right:30rpx" >
@@ -247,10 +298,12 @@
 <script>
     import wepy from 'wepy';
     import ajax from '@/utils/cofig/ajax.js';
+    import { formatTime } from '@/utils/cofig/api.js';
     export default class approveDetail extends wepy.page {
         props = {};
         data = {
-            CaseFileStampOutputData: {}
+            CaseFileStampOutputData: {},
+            Logs:[]
         };
         components = {};
         methods = {
@@ -270,11 +323,11 @@
             },
             toAuditPage(id){
                 wx.navigateTo({ url: './approveAudit?id='+id });
+            },
+            toFOR(){
+                wx.navigateTo({ url: './approveAudit?id='+id });
             }
         };
-        events = {};
-        watch = {};
-        computed = {};
         async GetCaseFileStampOutput() {
             var data = {
                 id: this.id
@@ -286,6 +339,7 @@
             )
             if (resData.statusCode == 200) {
                 var CaseFileStampOutputData = resData.data.result;
+                CaseFileStampOutputData.creationTime = formatTime(CaseFileStampOutputData.creationTime)
                 this.CaseFileStampOutputData = CaseFileStampOutputData;
                 CaseFileStampOutputData.fileExtension=CaseFileStampOutputData.fileExtension.toLowerCase()
                 switch (CaseFileStampOutputData.fileExtension) {
@@ -317,8 +371,8 @@
                         CaseFileStampOutputDatafileColor = '#7a7a7a';
                         break;
                 }
-                if (CaseFileStampOutputData.approveUser) {
-                    var http = '/api/services/web/personal/GetEmployeePhoto?id=' + CaseFileStampOutputData.approveUser;
+                if (CaseFileStampOutputData.creationUser) {
+                    var http = '/api/services/web/personal/GetEmployeePhoto?id=' + CaseFileStampOutputData.creationUser;
                     var avatar = await ajax.getAavatar(http);
                     CaseFileStampOutputData.Avatar = avatar;
                 }
@@ -331,9 +385,17 @@
             fileSize = size >= 1024 ? (size / 1024 / 1024).toFixed(2) + 'MB' : (size/1024).toFixed(2) + 'KB';
             return fileSize
         }
+        // 获取操作记录
+        async Logs(){
+            let { data } = await ajax.getData('/api/services/web/Workflow/GetLogs','post',{id:this.id})
+            console.log(data);
+            this.Logs = data.result.items
+            this.$apply()
+        }
         onLoad(options) {
             this.id = options.id;
             this.GetCaseFileStampOutput();
+            this.Logs()
             this.$apply();
         };
     }

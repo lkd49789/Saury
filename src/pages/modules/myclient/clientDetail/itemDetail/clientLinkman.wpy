@@ -169,8 +169,8 @@ export default class caseintroduce extends wepy.page {
       clientId
     );
     if(resData.statusCode==200){
-      this.totalCount=resData.data.result.totalCount;
-      var linkerData =resData.data.result.items;
+      this.totalCount = resData.data.result.totalCount;
+      var linkerData = resData.data.result.items;
       for (var i in linkerData) {
         var id = linkerData[i].id;
         var http =
@@ -179,8 +179,8 @@ export default class caseintroduce extends wepy.page {
         linkerData[i]['avatar'] = linkerPhotoData;
       }
       this.linkerData.push(...linkerData);
-      var contactsListData=wx.getStorageSync('clientData');
-      contactsListData.ContactsListData=this.linkerData;
+      var contactsListData = wx.getStorageSync('clientData');
+      contactsListData.ContactsListData = this.linkerData;
       wx.setStorageSync('clientData', contactsListData);
       this.$apply();
     }
@@ -189,8 +189,8 @@ export default class caseintroduce extends wepy.page {
   onLoad(options) {
     console.log(options);
     this.clientId=options.id;
-    this.title=options.title||'客户联系人';
-    this.caseId=options.caseId||'';
+    this.title = options.title || '客户联系人';
+    this.caseId = options.caseId || '';
     this.getLinkerData();
   }
 }

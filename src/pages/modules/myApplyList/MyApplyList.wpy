@@ -15,7 +15,7 @@
                 justify-content: space-between;
                 align-items: center;
                 font-size: 48rpx;
-                border-bottom: 1px solid #dedede;
+                // border-bottom: 1px solid #dedede;
             }
             .filter {
                 left: 0;
@@ -44,7 +44,7 @@
             white-space: nowrap;
         }
         .main {
-            margin: 149rpx 28rpx 0 28rpx;
+            margin: 230rpx 28rpx 0 28rpx;
             font-size: 28rpx;
             color: #2a2a2a;
             .item-container {
@@ -87,6 +87,7 @@
                     <icon class="iconfont icon-shaixuan1" style="font-size:60rpx;color:#5d73fa" @tap="ishowFilter"></icon>
                 </view>
             </view>
+            <navbar :navbars="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" />
             <view class="filter animation" wx:if="{{isShow}}">
                 <view catchtap="filter('cteateTime')">创建时间排序</view>
                 <view catchtap="filter('id')">客户编号排序</view>
@@ -129,6 +130,7 @@
     import { formatTimeSymbol } from '@/utils/cofig/api.js'
     import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
+    import navbar from '@/components/navbar';
     export default class myApplyList extends wepy.page {
         config = {
             enablePullDownRefresh: true,
@@ -137,7 +139,8 @@
             backgroundColorBottom: '#f4f4f4',
         };
         components = {
-            placeHolderImage
+            placeHolderImage,
+            navbar
         };
         data = {
             queryStream: {},
@@ -148,7 +151,32 @@
             MyApplyListData: [],
             isShow: false,
             sorting: '',
-            statusList:["R", "W", "A"]
+            statusList:["R", "W", "A"],
+            navbars: ['全部', '处理中', '已完成', '已退回'],
+            currentTab: 0
+        };
+        watch = {
+            currentTab(newValue, oldValue) {
+                this.MyApplyListData = [];
+                this.pageNumber = 1;
+                switch (newValue) {
+                    case 0:
+                        this.statusList = ["R", "W", "A"]
+                        break;
+                    case 1:
+                        this.statusList = ["W"]
+                        break;
+                    case 2:
+                        this.statusList = ["A"]
+                        break;
+                    case 3:
+                        this.statusList = ["R"]
+                        break;
+                    default:
+                        break;
+                }
+                this.GetMyApplyList()
+            }
         };
         methods = {
             toSearch() {
@@ -279,8 +307,8 @@
                     } else {
                         console.log('数据为空');
                         this.placeHolder.placeHolderImageIndex = 0;
-                        this.placeHolder.placeHolderShow = true;
                     }
+                    this.placeHolder.placeHolderShow = resData.data.result.items.length == 0;
                     this.$apply();
                     break;
                 case 403:
