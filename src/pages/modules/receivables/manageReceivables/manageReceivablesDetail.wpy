@@ -243,15 +243,12 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { GetReceipt ,ApproveCharge,ClaimReceipt} from '@/api/receivables.js'
     import input1 from '@/components/picker/input';
     import input2 from '@/components/picker/input';
     import {
         formatTime
     } from '@/utils/cofig/api.js';
-    import {
-        getUserAvatar
-    } from '@/utils/cofig/ajax.js';
     export default class Index extends wepy.page {
         components = {
             lawyerFee: input1,
@@ -313,9 +310,7 @@
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-            var resData = await ajax.getData(
-                '/api/services/web/financialReceipt/GetReceipt',
-                'post', {
+            var resData = await GetReceipt({
                     id: this.invoiceDetailId
                 }
             );
@@ -353,9 +348,7 @@
                     this.$apply();
                 }
             });
-            var resData = await ajax.getData(
-                '/api/services/web/financialCharge/ApproveCharge',
-                'post', {
+            var resData = await ApproveCharge({
                     Id: id
                 }
             );
@@ -393,9 +386,7 @@
                     this.$apply();
                 }
             });
-            var resData = await ajax.getData(
-                '/api/services/web/financialReceipt/ClaimReceipt',
-                'post', {
+            var resData = await ClaimReceipt({
                     CaseFee: this.caseFeeValue,
                     CaseId: this.getcase.caseId,
                     Id: id,

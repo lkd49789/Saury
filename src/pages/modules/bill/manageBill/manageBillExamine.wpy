@@ -88,7 +88,7 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { SendApprovalBilling } from '@/api/bill.js'
     export default class Index extends wepy.page {
         data = {
             id: '',
@@ -159,9 +159,7 @@
                         this.$apply();
                     }
                 });
-                var resData = await ajax.getData(
-                    '/api/services/web/financialBilling/ApprovalBilling',
-                    'post', {
+                var resData = await SendApprovalBilling({
                         Id: this.id,
                         ProcessStatus: this.audtingsSelect,
                         Remark: this.remark

@@ -69,7 +69,7 @@
             right: 20rpx;
             top: 125rpx;
         }
-        .add_city {
+        .add_city,.add_citying {
             width: 228rpx;
             height: 60rpx;
             line-height: 60rpx;
@@ -79,13 +79,8 @@
             margin-right: 20rpx;
         }
         .add_citying {
-            width: 228rpx;
-            height: 60rpx;
-            line-height: 60rpx;
-            text-align: center;
-            border: 2rpx solid #09bb07;
+            border-color:#09bb07;
             color: #09bb07;
-            margin-right: 20rpx;
         }
         .orientation {
             white-space: normal;
@@ -115,7 +110,7 @@
             color: #000;
             text-align: center;
         }
-        .active {
+        .active,.fixed-title {
             color: #2cc1d1;
         }
         .list-fixed {
@@ -129,9 +124,6 @@
             font-size: 28rpx;
             padding: 0 20rpx;
             z-index: 9999;
-        }
-        .fixed-title {
-            color: #2cc1d1
         }
     }
 </style>
@@ -148,7 +140,7 @@
                     <view class="address_top">{{item.region}}</view>
                     <view class="address_bottom" wx:for="{{item.items}}" wx:for-item="item" wx:key="{{item.id}}" @tap="addClient('{{item}}')">
                         <text>{{item.name}}</text>
-                        <text>{{item.clientTypeText}}</text>
+                        <text>{{item.categoryText || '-'}}</text>
                     </view>
                 </view>
             </repeat>
@@ -358,7 +350,7 @@
                         }
                         getData.push(obj)
                     }
-                    console.log(getData)
+                    // console.log(getData)
                     for (var i in getData) {
                         for (var j in this.clientData) {
                             if (this.clientData[j].region == getData[i].region) {

@@ -158,7 +158,6 @@
             caseManageData: [],
             avatarList: []
         };
-        components = {};
         methods = {
             toSearchPage(){
                 wx.navigateTo({ url: './search/search_caseManagement' });
@@ -192,6 +191,9 @@
                                     url: '../myRegister/register?id=' + items.id
                                 });
                                 break;
+                            case "Config":
+                                console.log('案件变更')
+                                break;    
                             case "Delete":
                                 wx.showModal({
                                     title: '你确定吗？', //提示的标题,
@@ -217,9 +219,6 @@
                 });
             }
         };
-        events = {};
-        watch = {};
-        computed = {};
         // 下拉刷新
         onPullDownRefresh() {
             this.caseManageData = [];
@@ -235,21 +234,16 @@
                 this.pageNumber += 1;
                 this.GetCaseManage();
             } else {
+                let title = '网络连接失败！'
                 if (this.$parent.global.netWorkString) {
-                    wx.showToast({
-                        title: '我们是有底线的！',
-                        icon: 'none',
-                        duration: 1500,
-                        mask: false,
-                    });
-                } else {
-                    wx.showToast({
-                        title: '网络连接失败！',
-                        icon: 'none',
-                        duration: 1500,
-                        mask: false,
-                    });
+                    title = '我们是有底线的！'
                 }
+                 wx.showToast({
+                    title,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
             }
         }
         async GetCaseManage() {

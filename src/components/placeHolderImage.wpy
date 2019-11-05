@@ -18,8 +18,8 @@
 </style>
 <template>
     <view wx:if="{{placeHolder.placeHolderShow}}" class="placeHolderImage" catchtouchmove="true">
-                <image src="{{placeHolderImage[placeHolder.placeHolderImageIndex]}}" mode="scaleToFill"
-                  lazy-load="false"  style="width:580rpx;height:580rpx">
+                <image src="{{placeHolderImage[placeHolder.placeHolderImageIndex]}}" mode="widthFix"
+                  lazy-load="false"  style="width:580rpx;">
                 </image>
     </view>
 </template>

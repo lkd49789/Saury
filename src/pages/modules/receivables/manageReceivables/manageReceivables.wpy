@@ -140,7 +140,7 @@
 </template>
 <script>
     import wepy from "wepy";
-    import ajax from "@/utils/cofig/ajax.js";
+    import { GetReceipts } from "@/api/receivables.js";
     import placeHolderImage from "@/components/placeHolderImage";
     import mixins from "@/utils/cofig/mixin.js";
     import navbar from "@/components/navbar";
@@ -272,9 +272,7 @@
             this.sorting = sort ? sort : this.sorting;
             var filter = this.queryStream.filter ? this.queryStream.filter : "";
             var creationTimeRange = this.queryStream.creationTimeRange;
-            var resData = await ajax.getData(
-                "/api/services/web/financialReceipt/GetReceipts",
-                "post", {
+            var resData = await GetReceipts({
                     pageNumber: this.pageNumber,
                     pageSize: 10,
                     statusList,

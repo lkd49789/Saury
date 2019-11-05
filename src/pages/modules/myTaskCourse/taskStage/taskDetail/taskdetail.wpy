@@ -1113,7 +1113,7 @@
                 this.setData({
                     msgData: ''
                 });
-                var time = new Date(new Date().getTime()+8 * 3600000);
+                var time = new Date(new Date().getTime() + 8 * 3600000);
                 var creationTime = api.formatTime(time);
                 console.log(creationTime);
                 var msgInfo = {

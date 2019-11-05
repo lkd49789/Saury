@@ -116,7 +116,7 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { GetBillings } from '@/api/bill.js';
     import navbar from '@/components/navbar'
     import placeHolderImage from '@/components/placeHolderImage';
     import mixins from '@/utils/cofig/mixin.js';
@@ -233,9 +233,7 @@
             var Currency = this.queryStream.Currency ? this.queryStream.Currency : '';
             var Filter = this.queryStream.Filter ? this.queryStream.Filter : '';
             var billDate = this.queryStream.billDate ? this.queryStream.billDate : '';
-            var resData = await ajax.getData(
-                '/api/services/web/FinancialBilling/GetBillings',
-                'post', {
+            var resData = await GetBillings({
                     pageNumber: this.pageNumber,
                     pageSize: 10,
                     ProcessStatus: state,

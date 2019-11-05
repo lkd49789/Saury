@@ -945,7 +945,7 @@
         }
         //获取隶属组织架构
         async GetOrganizations() {
-            var resData = await Organizations()
+            var resData = await Organizations({id:true})
             if (resData.statusCode == 200) {
                 var GetOrganizationsData = resData.data.result;
                 var OrganizationUnitId_value = [];

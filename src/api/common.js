@@ -104,3 +104,10 @@ export function TaskStages(data){   // 获取项目下的任务阶段列表  111
         data
     })       
 }
+
+export function SProcessCase(data){   // 处理案件
+    return getRequest({
+        url:'/api/services/web/Case/ProcessCase',
+        data
+    })       
+}

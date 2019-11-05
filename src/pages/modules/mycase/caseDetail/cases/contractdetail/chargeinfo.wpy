@@ -208,7 +208,7 @@
                   <text>小时收费-</text>
                 </view>
                 <view>
-                  <text>{{contractForEditData.payDetailHourlyText}}</text>
+                  <text>{{contractForEditData.payDetailHourlyText || ''}}</text>
                 </view>
               </view>
               <text style="font-size:48rpx;color:#5d73fa;margin-bottom:10rpx">{{contractForEditData.currency}}{{contractForEditData.limitFee}}</text>

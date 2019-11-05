@@ -567,7 +567,7 @@
           this.global.netWorkString = false;
         }
       });
-      if(Object.keys(this.global.userInfo).length==0){
+      if(Object.keys(this.global.userInfo).length == 0){
         this.GetCurrentLoginInformations();
       }
       if(wx.getSystemInfo.environment){
@@ -603,17 +603,17 @@
                           wx.setStorageSync('access', resData.data.result.accessToken);
                           getCurrentPages()[0].onShow();  // 刷新首页
                       } else {
-                          // wx.redirectTo({
-                          //   url: '/pages/login/choosePageLogin'
-                          // });
+                          wx.redirectTo({
+                            url: '/pages/login/choosePageLogin'
+                          });
                       }
                   }
                 });
-              }else if(!res.authSetting['scope.userInfo'] || !accessToken){
+              }else if(!res.authSetting['scope.userInfo'] && !accessToken){
                 console.log(2);
                  wx.redirectTo({
-                      url: '/pages/login/choosePageLogin'
-                  });
+                    url: '/pages/login/choosePageLogin'
+                });
               }
             }
           })

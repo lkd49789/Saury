@@ -159,7 +159,7 @@
                 <OrganizationUnitId :options.sync="OrganizationUnitId" :index.sync='OrganizationUnitIdIndex' :twoWayTitle="OrganizationUnitIdIndex" />
                 <ImportLevel :options.sync="ImportLevel" :index.sync='ImportLevelIndex' :twoWayTitle="ImportLevelIndex" />
                 <Origin :options.sync="Origin" :index.sync='OriginIndex' :twoWayTitle="OriginIndex" />
-                <ClientType :options.sync="ClientType" :index.sync='ClientTypeIndex' :twoWayTitle="ClientTypeIndex" />
+                <!-- <ClientType :options.sync="ClientType" :index.sync='ClientTypeIndex' :twoWayTitle="ClientTypeIndex" /> -->
                 <view class="tui-picker-content">
                     <view>地区</view>
                     <!-- <picker mode="region" value="{{region}}" bindchange="changePickerData" name="region" bindcolumnchange="changePickerDataColumn" custom-item="{{customItem}}">
@@ -207,20 +207,16 @@
     import {
         formatDate
     } from '@/utils/cofig/api.js';
-    import Name from '@/components/picker/input';
-    import Id from '@/components/picker/input';
-    import OrganizationUnitId from '@/components/picker/option';
-    import ImportLevel from '@/components/picker/option';
-    import Origin from '@/components/picker/option';
-    import ClientType from '@/components/picker/option';
+    import Input from '@/components/picker/input';
+    import Option from '@/components/picker/option';
     export default class searchClient extends wepy.page {
         components = {
-            Name,
-            Id,
-            OrganizationUnitId,
-            ImportLevel,
-            Origin,
-            ClientType
+            Name:Input,
+            Id:Input,
+            OrganizationUnitId:Option,
+            ImportLevel:Option,
+            Origin:Option,
+            // ClientType
         };
         data = {
             region:[0,0,0,0],
@@ -289,14 +285,14 @@
                 warning: false
             },
             OriginIndex: -1,
-            ClientType: {
-                title: '客户类型',
-                name: 'ClientType',
-                value: [],
-                displayText: [],
-                warning: false
-            },
-            ClientTypeIndex: -1,
+            // ClientType: {
+            //     title: '客户类型',
+            //     name: 'ClientType',
+            //     value: [],
+            //     displayText: [],
+            //     warning: false
+            // },
+            // ClientTypeIndex: -1,
             // Category: [],
             // CategoryData: [],
             // IndustryType: [],
@@ -585,10 +581,10 @@
                 this.searchData.Origin = this.Origin.value[index];
                 this.$apply();
             },
-            ClientTypeIndex(index) {
-                this.searchData.ClientType = this.ClientType.value[index];
-                this.$apply();
-            },
+            // ClientTypeIndex(index) {
+            //     this.searchData.ClientType = this.ClientType.value[index];
+            //     this.$apply();
+            // },
             OrganizationUnitIdIndex(index){
                 this.searchData.OrganizationUnitId = this.OrganizationUnitId.value[index];
                 this.$apply();
@@ -652,7 +648,7 @@
         //检索条件信息
         async GetSearchForClients() {
             var resData = await SearchForClients()
-            let { data } = await Organizations()
+            let { data } = await Organizations({id:true})
             if (resData.statusCode == 200) {
                 var SearchForClients_data = resData.data.result;
                 this.forEachData(SearchForClients_data.importantLevelCombobox,this.ImportLevel)
@@ -668,7 +664,7 @@
                 //     this.Origin.displayText[Origin_index] = SearchForClients_data.customerOriginCombobox[Origin_index].displayText;
                 // }
 
-                this.forEachData(SearchForClients_data.customerTypeCombobox,this.ClientType)
+                // this.forEachData(SearchForClients_data.customerTypeCombobox,this.ClientType)
 
                 // for (var ClientType_index in SearchForClients_data.customerTypeCombobox) {
                 //     this.ClientType.value[ClientType_index] = SearchForClients_data.customerTypeCombobox[ClientType_index].value;

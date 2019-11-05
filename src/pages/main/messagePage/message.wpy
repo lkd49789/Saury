@@ -593,17 +593,20 @@
                                     break;  
                                 case 'App.Business.CaseCreation.ReturnContract':
                                     item.TextTile = '立案-合同退回';
-                                    item.linkPage = '';
+                                    item.linkPage = '../../modules/mycase/caseDetail/casedetail';
                                     break;
                                 case 'App.Business.CaseClose.Created':
-                                    item.TextTile = '结案-财务审核-待审核';
+                                    item.TextTile = '结案-负责人审核-待审核';
                                     item.linkPage = '';
                                     break; 
                                 case 'App.Executive.OffficeSeal.Created':
                                     item.TextTile = '行政用章-待审核';
                                     item.linkPage = '';
                                     break;   
-                                    结案-负责人审核-待审核
+                                case 'App.Executive.OffficeSeal.Created':
+                                    item.TextTile = '行政用章-待审核';
+                                    item.linkPage = '';
+                                    break;
                             }
                             isDisabled.push(false)
                         })

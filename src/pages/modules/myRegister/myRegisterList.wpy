@@ -120,6 +120,7 @@
 <script>
     import wepy from 'wepy';
     import { UserCaseActions,DeleteCase,UserCases } from '@/api/myRegister';
+    import { SProcessCase } from '@/api/common';
     import navbar from '@/components/navbar';
 
     export default class myRegisterList extends wepy.page {
@@ -183,7 +184,11 @@
                 let { data } = await UserCaseActions(
                     {id : item.id}
                 )
-                var opition = data.result.items.map((item) => item.displayName)
+                var opition = data.result.items.map((item) => {
+                    if(item.name === 'Redo')
+                    item.displayName = '重新提交'
+                    return item.displayName
+                })
                 console.log(opition);
                 wx.showActionSheet({
                     itemList: opition, //按钮的文字数组，数组长度最大为6个,
@@ -198,48 +203,27 @@
                                     url: '../mycase/caseDetail/casedetail?id=' + item.id + '&clientId=' + item.clientId
                                 });
                                 break;
-                            case 'Edit':
-                                console.log(item.processStatus);
-                                wx.navigateTo({
-                                    url: `../myRegister/register?id=${item.id}`
-                                });
-                                return false;
-                                if(item.processStatus == 'NH'){
-                                    wx.navigateTo({
-                                        url: `../myRegister/caseLawyerLinker/caseLawyerLinkerList?id=${item.id}`
-                                    });
-                                }else if(item.processStatus.includes('NI') || item.processStatus.includes('NK')){
+                            case 'Edit':                      
+                                if(item.processStatus.includes('NI') || item.processStatus.includes('NK')){
                                     wx.navigateTo({
                                         url: `../myRegister/caseChargeAndContract/lawyerChargeInfo?id=${item.id}`
                                     });
+                                }else{
+                                    wx.navigateTo({
+                                        url: `../myRegister/register?id=${item.id}`
+                                    });
                                 }
+                                break; 
+                            case 'Redo':
+                                this.RedoOrDelete('重新提交',()=> SProcessCase({
+                                        EventName:data.result.items[res.tapIndex].eventName,
+                                        condition:data.result.items[res.tapIndex].condition,
+                                        id : item.id
+                                    }) )
                                 break;
                             case 'Delete':
-                                wx.showModal({
-                                    title: '你确定吗?',
-                                    content: '是否确认删除信息？',
-                                    success : async (res) => {
-                                        if (res.confirm) {
-                                            console.log('用户点击确定')
-                                            let resData = await DeleteCase(
-                                                {id : item.id}
-                                            )
-                                            if(resData.statusCode == 200){
-                                                wx.showToast({
-                                                    title: '成功',
-                                                    icon: 'success',
-                                                    duration: 2000
-                                                }) 
-                                                this.CaseRecordListDatas = []
-                                                this.GetCaseRecordList()
-                                            }
-                                        } else if (res.cancel) {
-                                        console.log('用户点击取消')
-                                        }
-                                    }
-                                })
+                               this.RedoOrDelete('是否确认删除信息？',()=> DeleteCase({id : item.id}) )
                                 break;
-
                             default:
                                 break;
                         }
@@ -257,9 +241,29 @@
                 });
             },
         };
-        events = {};
-        watch = {};
-        computed = {};
+        RedoOrDelete(content,fun){
+            wx.showModal({
+                title: '你确定吗?',
+                content,
+                success : async (res) => {
+                    if (res.confirm) {
+                        let { statusCode } = await fun()
+                        if(statusCode === 200){
+                            wx.showToast({
+                                title: '成功',
+                                icon: 'success',
+                                duration: 2000
+                            })
+                            this.CaseRecordListDatas = []
+                            this.pageNumber = 1;
+                            this.GetCaseRecordList()
+                        }
+                    } else if (res.cancel) {
+                        console.log('用户点击取消')
+                    }
+                }
+            })
+        }
     //   // 上传合同附件
     //     async uploadFile(file,caseid){
     //         wx.showLoading({
@@ -334,10 +338,10 @@
             }
             if (Object.keys(this.queryStream).length !== 0) {
                 data.filter = this.queryStream.filter || '';
-                data.acceptDateRange.startDate = this.queryStream.acceptDateRange.startDate ? this.queryStream.acceptDateRange.startDate : '';
-                data.acceptDateRange.endDate = this.queryStream.acceptDateRange.endDate ? this.queryStream.acceptDateRange.endDate : '';
-                data.CreationDateRange.endDate = this.queryStream.CreationDateRange.endDate ? this.queryStream.CreationDateRange.endDate : '';
-                data.CreationDateRange.startDate = this.queryStream.CreationDateRange.startDate ? this.queryStream.CreationDateRange.startDate : '';
+                data.acceptDateRange.startDate = this.queryStream.acceptDateRange.startDate || '';
+                data.acceptDateRange.endDate = this.queryStream.acceptDateRange.endDate || '';
+                data.CreationDateRange.endDate = this.queryStream.CreationDateRange.endDate || '';
+                data.CreationDateRange.startDate =  this.queryStream.CreationDateRange.startDate || '';
                 data.LawyerIdList = this.queryStream.LawyerIdList || [];
                 data.categoryList = this.queryStream.categoryList || [];
                 data.lawyerRoleList = this.queryStream.lawyerRoleList || [];
@@ -372,7 +376,7 @@
         onPullDownRefresh() {
             this.queryStream = {};
             this.CaseRecordListDatas = [],
-                this.pageNumber = 1;
+            this.pageNumber = 1;
             this.GetCaseRecordList();
             wx.hideNavigationBarLoading(); //完成停止加载
             wx.stopPullDownRefresh(); //停止下拉刷新

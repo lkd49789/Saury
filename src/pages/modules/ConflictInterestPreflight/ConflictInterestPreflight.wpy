@@ -181,11 +181,11 @@
     import {myDistinct} from '@/utils/cofig/api.js';
     export default class ConflictInterestPreflight extends wepy.page {
         config = {
-      enablePullDownRefresh: false,
-      backgroundTextStyle: 'dark',
-    //   backgroundColorTop: '#f4f4f4',
-      backgroundColorBottom: '#f4f4f4',
-    };
+            enablePullDownRefresh: false,
+            backgroundTextStyle: 'dark',
+            //   backgroundColorTop: '#f4f4f4',
+            backgroundColorBottom: '#f4f4f4',
+        };
         data = {
             keyWord: '',
             pageNumber: 1,
@@ -201,19 +201,19 @@
             },
             deleteItem(index){
                 this.keyWordArray.splice(index,1);
-                this.pageNumber=1;
-                this.ConflictCaseListData=[];
-                this.GetPreConflictCaseList();
+                this.pageNumber = 1;
+                this.ConflictCaseListData = [];
+                // this.GetPreConflictCaseList();
             },
             keyWordValue(e) {
                 this.keyWord = e.detail.value;
                 this.$apply();
             },
             searchKeyWord() {
-                if(this.keyWord.length>0){
-                    this.pageNumber=1;
-                    this.keyWordArray=[];
-                    this.ConflictCaseListData=[];
+                if(this.keyWord.length > 0){
+                    this.pageNumber = 1;
+                    this.keyWordArray = [];
+                    this.ConflictCaseListData = [];
                     this.GetPreConflictCaseList();
                     this.$apply();
                 }else{
@@ -228,31 +228,22 @@
                 
             },
         };
-        events = {};
-        watch = {
-        };
     // 上拉加载
       onReachBottom() {
           if (this.totalCount / 10 > this.pageNumber && this.$parent.global.netWorkString) {
               this.pageNumber += 1;
               this.GetPreConflictCaseList();
           } else {
+              let title = '网络连接失败！'
               if (this.$parent.global.netWorkString) {
-                  wx.showToast({
-                      title: '我们是有底线的！',
-                      icon: 'none',
-                      duration: 1500,
-                      mask: false,
-                  });
-                   
-              } else {
-                  wx.showToast({
-                      title: '网络连接失败！',
-                      icon: 'none',
-                      duration: 1500,
-                      mask: false,
-                  });
+                  title = '我们是有底线的！'
               }
+              wx.showToast({
+                title,
+                icon: 'none',
+                duration: 1500,
+                mask: false,
+            });
           }
       }
         async GetPreConflictCaseList() {
@@ -269,20 +260,20 @@
                 pageNumber: this.pageNumber,
                 pageSize: 10,
             }
-            data.KeyWord=this.keyWordArray[this.keyWordArray.length-1]||this.keyWord;
+            data.KeyWord = this.keyWordArray[this.keyWordArray.length-1] || this.keyWord;
             var resData = await ajax.getData(
                 '/api/services/web/case/GetPreConflictCaseList',
                 'post',
                 data
             )
-            if (resData.statusCode == 200&&resData.data.result.totalCount>0) {
+            if (resData.statusCode == 200 && resData.data.result.totalCount > 0) {
                 this.totalCount = resData.data.result.totalCount;
                 var ConflictCaseListData = resData.data.result.items;
                 for (var index in ConflictCaseListData) {
                     ConflictCaseListData[index].acceptDate = ConflictCaseListData[index].acceptDate.split('T')[0];
                     ConflictCaseListData[index].isUnfoldData=false;
                 }
-                if(this.keyWordArray.length==0){
+                if(this.keyWordArray.length == 0){
                     var keyWordArray=[];
                     for (var index in ConflictCaseListData) {
                         var keyWord=ConflictCaseListData[index].keyWord.split(',');

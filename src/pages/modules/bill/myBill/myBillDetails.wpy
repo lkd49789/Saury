@@ -138,7 +138,7 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { GetCasePaySummary,GetBillinglogSummary,GetChargeSummary } from '@/api/bill.js'
     import navbar from '@/components/navbar';
     import {
         formatTime
@@ -165,9 +165,7 @@
         //获取账单
         async getbill() {
             if (this.typeId == 1) {
-                var resData = await ajax.getData(
-                    '/api/services/web/financialBilling/GetCasePaySummary',
-                    'post', {
+                var resData = await GetCasePaySummary({
                         billingId: this.Id,
                         id: this.caseId,
                     }
@@ -196,9 +194,7 @@
                         break;
                 }
             } else if (this.typeId == 2) {
-                var resData = await ajax.getData(
-                    '/api/services/web/financialBilling/GetBillinglogSummary',
-                    'post', {
+                var resData = await GetBillinglogSummary({
                         billingId: this.Id,
                         caseId: this.caseId,
                         pageNumber: 1,
@@ -228,9 +224,7 @@
                 }
                 this.$apply();
             } else if (this.typeId == 3) {
-                var resData = await ajax.getData(
-                    '/api/services/web/financialBilling/GetChargeSummary',
-                    'post', {
+                var resData = await GetChargeSummary({
                         billingId: this.Id,
                         caseId: this.caseId,
                         pageNumber: 1,

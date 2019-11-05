@@ -149,12 +149,9 @@
 <script>
     import wepy from 'wepy';
     import {
-        myDistinct
+        myDistinct,formatDate
     } from '@/utils/cofig/api.js';
-    import ajax from '@/utils/cofig/ajax.js';
-    import {
-        formatDate
-    } from '@/utils/cofig/api.js';
+    import { GReceiptStates } from '@/api/receivables.js';
     import creationTimeRange from '@/components/picker/pickerDate';
     import PickerOption from '@/components/picker/pickerOption';
     export default class searchMyBill extends wepy.page {
@@ -292,7 +289,7 @@
         };
         //获取状态信息
         async GetReceiptStates(){
-            let { data } = await ajax.getData('/api/services/web/FinancialReceipt/GetReceiptStates','post') 
+            let { data } = await GReceiptStates() 
             this.PickerOption.data = data.result.items
         }
         // 判断初始化历史数据

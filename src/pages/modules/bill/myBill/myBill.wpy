@@ -111,7 +111,7 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { GMyBillings } from '@/api/bill.js';
     import placeHolderImage from '@/components/placeHolderImage';
     import mixins from '@/utils/cofig/mixin.js';
     export default class Index extends wepy.page {
@@ -205,9 +205,7 @@
             this.sorting = sort ? sort : this.sorting;
             var filter = this.queryStream.filter ? this.queryStream.filter : '';
             var billDate = this.queryStream.billDate ? this.queryStream.billDate : '';
-            var resData = await ajax.getData(
-                '/api/services/web/financialBilling/GetMyBillings',
-                'post', {
+            var resData = await GMyBillings( {
                     pageNumber: this.pageNumber,
                     pageSize: 10,
                     filter,

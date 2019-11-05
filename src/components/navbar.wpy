@@ -7,12 +7,12 @@
   .item {
     display: inline-block;
     color: #b2b2b2;
-    padding:0 20rpx;
-    margin-right: 42rpx;
+    padding:0 10rpx;
+    margin-right: 47rpx;
     font-size: 28rpx;
     padding-bottom: 20rpx;
     &:first-child {
-      margin-left: 8rpx;
+      margin-left: 13rpx;
     }
     &.active {
       color: #5d73fa;

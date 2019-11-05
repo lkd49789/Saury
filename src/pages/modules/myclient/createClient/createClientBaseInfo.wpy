@@ -71,14 +71,14 @@
             <text>创建客户</text>
         </view>
         <view class="checked">
-            <radio-group class="radio-group" @change="bindPickerChang" style="padding-bottom:20rpx;">
+            <!-- <radio-group class="radio-group" @change="bindPickerChang" style="padding-bottom:20rpx;">
                 <label class="radio" wx:for="{{ClientType}}" wx:key="index">
                     <view>
                         <radio value="{{item.value}}" checked="{{item.isSelected}}" color="#5d73fa"/>
                     <text>{{item.displayText}}</text>
                     </view>
                 </label>
-            </radio-group>
+            </radio-group> -->
             <Name :input.sync="Name" :inputValue.sync='NameValue' :twoWayTitle="NameValue" />
             <EnName :input.sync="EnName" :inputValue.sync='EnNameValue' :twoWayTitle="EnNameValue" />
             <pyName :input.sync="pyName" :inputValue.sync='pyNameValue' :twoWayTitle="pyNameValue" />
@@ -529,9 +529,9 @@
             if (resData.statusCode == 200) {
                 var GetClientForEdit_data = resData.data.result;
                 //客户类型
-                this.ClientType = GetClientForEdit_data.customerTypeCombobox;
-                this.clientBaseData.ClientType=this.ClientType[0].value;
-                this.ClientType[0].isSelected=true;
+                // this.ClientType = GetClientForEdit_data.customerTypeCombobox;
+                // this.clientBaseData.ClientType = this.ClientType[0].value;
+                // this.ClientType[0].isSelected = true;
                 //客户来源
                 var OriginData=GetClientForEdit_data.customerOriginCombobox;
                 var Origin_value=[];
@@ -552,7 +552,8 @@
         async GetOrganizations() {
             var resData = await ajax.getData(
                 '/api/services/web/common/GetOrganizations',
-                'post'
+                'post',
+                {id:true}
             )
             if (resData.statusCode == 200) {
                 var GetOrganizationsData = resData.data.result;

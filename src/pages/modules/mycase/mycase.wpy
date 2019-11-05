@@ -3,7 +3,7 @@
 		height: 100%;
 		position: relative;
 	}
-	.fixed-view {
+	.fixed-view,.top-title {
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -17,12 +17,6 @@
 		display: block;
 	}
 	.top-title {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		background: #fff;
-		z-index: 9999;
 		.flex {
 			height: 104rpx;
 			display: flex;
@@ -85,7 +79,6 @@
 		flex-direction: column;
 		justify-content: flex-start;
 		.about-case {
-			margin-bottom: 32rpx;
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
@@ -365,7 +358,7 @@
 				sorting: this.sorting
 			};
 			if(Object.keys(this.queryStream).length > 0){
-				pageData.filter=this.queryStream.filter ||'';
+				pageData.filter=this.queryStream.filter || '';
 				pageData.acceptDateRange=this.queryStream.acceptDateRange || '';
 				pageData.lawyerName=this.queryStream.lawyerName || '';
 				pageData.categoryList=this.queryStream.categoryList || '';

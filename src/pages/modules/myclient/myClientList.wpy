@@ -197,13 +197,13 @@
                             <view>
                                 <text style="color:#2a2a2a">{{item.name||'未填写'}}</text>
                             </view>
-                            <view style="display:flex;align-items:center">
+                            <!-- <view style="display:flex;align-items:center">
                                 <view style="height:20rpx;width:20rpx;border-radius:50%;background:{{item.bgcolor||'#7a7a7a'}};margin-right:10rpx">
                                 </view>
                                 <view>
                                     <text>{{item.clientTypeText||'未填写'}}</text>
                                 </view>
-                            </view>
+                            </view> -->
                         </view>
                         <view class="list-center">
                             客户来源：{{item.originText}}
@@ -343,21 +343,21 @@
                 case 200:
                     if (clientsData.data.result.items.length !== 0) {
                         var clientsData = clientsData.data.result.items;
-                        for (var index in clientsData) {
-                            switch (clientsData[index].clientType) {
-                                case 'G':
-                                    clientsData[index]['bgcolor'] = '#069400'
-                                    break;
-                                case 'N':
-                                    clientsData[index]['bgcolor'] = '#ff9900'
-                                    break;
-                                case 'V':
-                                    clientsData[index]['bgcolor'] = '#5d73fa'
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
+                        // for (var index in clientsData) {
+                        //     switch (clientsData[index].clientType) {
+                        //         case 'G':
+                        //             clientsData[index]['bgcolor'] = '#069400'
+                        //             break;
+                        //         case 'N':
+                        //             clientsData[index]['bgcolor'] = '#ff9900'
+                        //             break;
+                        //         case 'V':
+                        //             clientsData[index]['bgcolor'] = '#5d73fa'
+                        //             break;
+                        //         default:
+                        //             break;
+                        //     }
+                        // }
                         this.GetPersonAnnualCounts();
                         this.clientsData = this.clientsData.concat(clientsData);
                         var clientsDataStorage = {
@@ -406,21 +406,16 @@
                 this.pageNumber += 1;
                 this.GetClients();
             } else {
+                let title = '网络连接失败！'
                 if (this.$parent.global.netWorkString) {
-                    wx.showToast({
-                        title: '我们是有底线的！',
-                        icon: 'none',
-                        duration: 1500,
-                        mask: false,
-                    });
-                } else {
-                    wx.showToast({
-                        title: '网络连接失败！',
-                        icon: 'none',
-                        duration: 1500,
-                        mask: false,
-                    });
+                    title = '我们是有底线的！'
                 }
+                wx.showToast({
+                    title,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
             }
             this.$apply();
         }

@@ -367,21 +367,16 @@
                 this.pageNumber += 1;
                 this.GetCaseChecks();
             } else {
+                let title = '网络连接失败！';
                 if (this.$parent.global.netWorkString) {
-                    wx.showToast({
-                        title: '我们是有底线的！',
-                        icon: 'none',
-                        duration: 1500,
-                        mask: false,
-                    });
-                } else {
-                    wx.showToast({
-                        title: '网络连接失败！',
-                        icon: 'none',
-                        duration: 1500,
-                        mask: false,
-                    });
-                }
+                    title = '我们是有底线的！'
+                } 
+                wx.showToast({
+                    title,
+                    icon: 'none',
+                    duration: 1500,
+                    mask: false,
+                });
             }
         }
         async GetCaseChecks() {
@@ -403,12 +398,12 @@
                 sorting:this.sorting
             }
             if(Object.keys(this.queryStream).length>0){
-                data.CaseCategory=this.queryStream.CaseCategory;
-                data.CaseName=this.queryStream.CaseName;
-                data.ClientName=this.queryStream.ClientName;
-                data.EndDate=this.queryStream.EndDate;
-                data.KeyWord=this.queryStream.KeyWord;
-                data.StartDate=this.queryStream.StartDate;
+                data.CaseCategory = this.queryStream.CaseCategory;
+                data.CaseName = this.queryStream.CaseName;
+                data.ClientName = this.queryStream.ClientName;
+                data.EndDate = this.queryStream.EndDate;
+                data.KeyWord = this.queryStream.KeyWord;
+                data.StartDate = this.queryStream.StartDate;
             }
             var resData = await ajax.getData(
                 '/api/services/web/caseCheck/GetCaseChecks',

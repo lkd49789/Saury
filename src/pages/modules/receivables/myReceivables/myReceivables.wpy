@@ -119,7 +119,7 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { GUserReceipts } from '@/api/receivables.js';
     import placeHolderImage from '@/components/placeHolderImage';
     import mixins from '@/utils/cofig/mixin.js';
     import navbar from '@/components/navbar';
@@ -239,9 +239,7 @@
         async getbill(statusList,sort) {
             this.sorting = sort ? sort : this.sorting;
             var filter = this.queryStream.filter ? this.queryStream.filter : '';
-            var resData = await ajax.getData(
-                '/api/services/web/financialReceipt/GetUserReceipts',
-                'post', {
+            var resData = await GUserReceipts({
                     isRoleFilter: true,
                     pageNumber: this.pageNumber,
                     pageSize: 10,

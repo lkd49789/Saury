@@ -21,10 +21,19 @@ var getRequest = ({url, method = 'post', header, data = ''}) => {
         header,
         data,
         success(res) {
-          if(res.statusCode === 200)
-          resolve(res);
-          else
-          reject(res.data.error.details);
+          switch(res.statusCode){
+            case 200:
+              resolve(res);
+              break;
+            case 401:
+              wx.redirectTo({
+                  url: '/pages/login/choosePageLogin'
+              });
+              break; 
+            default:
+              reject(res.data.error.details);
+              break;
+          }
         },
         fail(err) {
           reject(err.message);

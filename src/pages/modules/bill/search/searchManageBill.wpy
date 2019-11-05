@@ -167,12 +167,9 @@
 <script>
     import wepy from 'wepy';
     import {
-        myDistinct
+        myDistinct,formatDate
     } from '@/utils/cofig/api.js';
-    import ajax from '@/utils/cofig/ajax.js';
-    import {
-        formatDate
-    } from '@/utils/cofig/api.js';
+    import { GeneralCodeComboboxItems } from '@/api/common.js';
     import CaseName from '@/components/picker/input';
     import ClientName from '@/components/picker/input';
     import Currency from '@/components/picker/option';
@@ -355,9 +352,7 @@
             this.$apply();
         }
         async GetGeneralCodeComboboxItems() {
-            var resData = await ajax.getData(
-                '/api/services/web/common/GetGeneralCodeComboboxItems',
-                'POST', {
+            var resData = await GeneralCodeComboboxItems({
                     id: "CURRENCY"
                 }
             )

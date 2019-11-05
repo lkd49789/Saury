@@ -201,7 +201,7 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { SendApprovalBilling,GetBillInfoForEdit } from '@/api/bill.js'
     export default class Index extends wepy.page {
         components = {};
         data = {
@@ -236,9 +236,7 @@
                     this.$apply();
                 }
             });
-            var resData = await ajax.getData(
-                '/api/services/web/financialBilling/SendApprovalBilling',
-                'post', {
+            var resData = await SendApprovalBilling({
                     id: this.billDataDetail.id
                 }
             );
@@ -269,9 +267,7 @@
         }
         //获取账单
         async getbill(num) {
-            var resData = await ajax.getData(
-                '/api/services/web/financialBilling/GetBillInfoForEdit',
-                'post', {
+            var resData = await GetBillInfoForEdit({
                     id: this.billDetailId
                 }
             );
@@ -300,9 +296,7 @@
         }
         //合同信息
         async charge() {
-            var resData = await ajax.getData(
-                '/api/services/web/financialBilling/GetCasePaySummary',
-                'post', {
+            var resData = await GetCasePaySummary({
                     billingId: this.billDataDetail.id,
                     id: this.billDataDetail.caseId
                 }
@@ -329,9 +323,7 @@
         }
         //日志清单
         async journal(num) {
-            var resData = await ajax.getData(
-                '/api/services/web/financialBilling/GetBillinglogSummary',
-                'post', {
+            var resData = await GetCasePaySummary({
                     billingId: this.billDataDetail.id,
                     caseId: this.billDataDetail.caseId,
                 }
@@ -358,9 +350,7 @@
         }
         //费用清单
         async cost(num) {
-            var resData = await ajax.getData(
-                '/api/services/web/financialBilling/GetChargeSummary',
-                'post', {
+            var resData = await GetChargeSummary({
                     billingId: this.billDataDetail.id,
                     caseId: this.billDataDetail.caseId,
                     pageNumber: 1,

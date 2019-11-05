@@ -145,7 +145,7 @@
                     <view class="bill_view">{{receivablesData.payCurrencyName||'未填写'}}</view>
                 </view>
             </view>
-            <view class="bill_btns" wx:if="{{receivablesData.status=='WaitForConfirmed'}}">
+            <view class="bill_btns" wx:if="{{receivablesData.status == 'WaitForConfirmed'}}">
                 <button class="bill_btn" catchtap="toAuditing('{{0}}')">退回</button>
                 <button class="bill_btn" catchtap="toAuditing('{{1}}')">确认</button>
             </view>
@@ -154,13 +154,10 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { GetReceipt,ReturnReceipt } from '@/api/receivables.js'
     import {
         formatTime
     } from '@/utils/cofig/api.js';
-    import {
-        getUserAvatar
-    } from '@/utils/cofig/ajax.js';
     export default class Index extends wepy.page {
         components = {};
         data = {
@@ -191,9 +188,7 @@
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-            var resData = await ajax.getData(
-                '/api/services/web/financialReceipt/GetReceipt',
-                'post', {
+            var resData = await GetReceipt({
                     id: this.id
                 }
             );
@@ -237,9 +232,7 @@
                     this.$apply();
                 }
             });
-            var resData = await ajax.getData(
-                '/api/services/web/financialReceipt/ReturnReceipt',
-                'post', {
+            var resData = await ReturnReceipt({
                     Id: id
                 }
             );
@@ -277,9 +270,7 @@
                     this.$apply();
                 }
             });
-            var resData = await ajax.getData(
-                '/api/services/web/financialReceipt/ConfirmReceipt',
-                'post', {
+            var resData = await ConfirmReceipt({
                     Id: id
                 }
             );

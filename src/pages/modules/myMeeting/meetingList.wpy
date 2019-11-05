@@ -306,9 +306,6 @@
                             var end = formatDate(resData[index].endTime);
                             resData[index].endTime = end[3] + ':' + end[4];
                             switch (resData[index].statusId) {
-                                case 'D':
-                                    resData[index]['statusColor'] = "#ff9900"
-                                    break;
                                 case 'C':
                                     resData[index]['statusColor'] = "#009dff"
                                     break;

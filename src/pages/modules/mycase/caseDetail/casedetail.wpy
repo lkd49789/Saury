@@ -11,8 +11,7 @@
       align-items: center;
       justify-content: center;
       >image {
-        width: 325rpx;
-        width: 325rpx;
+        width: 580rpx;
         // display: flex;
         // align-items: center;
         // justify-content: center;
@@ -30,9 +29,9 @@
       position: fixed;
       left: 0;
       top: 0;
-      z-index: 100000;
       width: 100%;
       background: #fff; // display: fixed;
+      z-index: 1;
       .container-title {
         height: 104rpx;
         font-size: 48rpx;
@@ -2265,21 +2264,21 @@
             .replace(/[a-zA-Z]/g, ' ')
             .split(' ');
           //创建人头像
-          var avatarData = await EmployeePhoto(workLogData[index].employeeId);
+          this.caseDetailData.workLogsDatas.avatarData[index] = await EmployeePhoto(workLogData[index].employeeId);
           // console.log(avatarData)
           // avatarData.statusCode=100
-          if (avatarData.statusCode == 200) {
-            this.caseDetailData.workLogsDatas.avatarData[index] =
-              avatarData.tempFilePath;
-          } else {
-          console.log('12');
-            wx.showToast({
-              title: '网络故障！部分数据无法正常显示',
-              icon: 'none',
-              duration: 1500,
-              mask: false
-            });
-          }
+          // if (avatarData.statusCode == 200) {
+          //   this.caseDetailData.workLogsDatas.avatarData[index] =
+          //     avatarData;
+          // } else {
+          // console.log('12');
+          //   wx.showToast({
+          //     title: '网络故障！部分数据无法正常显示',
+          //     icon: 'none',
+          //     duration: 1500,
+          //     mask: false
+          //   });
+          // }
           //审核状态
           let color = '';
           switch (workLogData[index].processStatus) {

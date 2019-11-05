@@ -696,7 +696,7 @@
               item.TextTile = '立案-合同退回';
               break;
             case 'App.Business.CaseClose.Created':
-              item.TextTile = '结案-财务审核-待审核';
+              item.TextTile = '结案-负责人审核-待审核';
               break;
             case 'App.Executive.OffficeSeal.Created':
               item.TextTile = '行政用章-待审核';

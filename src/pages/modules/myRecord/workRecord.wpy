@@ -16,7 +16,6 @@
                 justify-content: space-between;
                 align-items: center;
                 font-size: 48rpx;
-                border-bottom: 1px solid #dedede;
             }
             .filter {
                 left: 0;
@@ -40,7 +39,7 @@
             z-index: 99999;
         }
         .main {
-            margin: 149rpx 28rpx 0 ;
+            margin: 230rpx 28rpx 0 ;
             font-size: 28rpx;
             color: #2a2a2a;
             position: relative;
@@ -104,14 +103,15 @@
                     <icon class="iconfont icon-shaixuan1" style="font-size:60rpx;color:#5d73fa" @tap="ishowFilter"></icon>
                 </view>
             </view>
-            <view class="filter animation" wx:if="{{isShow}}">
+			<navbar :navbars.sync="navbars" :currentTab.sync="currentTab" :twoWayTitle="currentTab" />
+            <view class="filter animation" wx:if="{{ isShow }}">
                 <view catchtap="filter('cteateTime')">创建时间排序</view>
                 <view catchtap="filter('recordTime')">日志时间排序</view>
                 <view catchtap="filter('case')">案件排序</view>
             </view>
         </view>
         <view class='main'>
-            <view class="records-remind" wx:if="{{MyParticipantWorklogsCount}}" @tap="toMPworkLogsDetail">
+            <view class="records-remind" wx:if="{{ MyParticipantWorklogsCount  }}" @tap="toMPworkLogsDetail">
                 <icon class="iconfont icon-xuanxiang" style="font-size:30rpx;color:#5d73fa;margin-right:10rpx"></icon>
                 <text>您好！最近有{{MyParticipantWorklogsCount}}条工作日志将您设为了参与人</text>
             </view>
@@ -121,22 +121,22 @@
                         <view class="item-onLine">
                             <view>
                                 <text>{{item.sTime.Y}} {{item.sTime.M}}-</text>
-                                <text><text wx:if="{{item.sTime.Y!==item.eTime.Y}}">{{item.eTime.Y}} </text>{{item.eTime.M}}</text>
+                                <text><text wx:if="{{item.sTime.Y !== item.eTime.Y}}">{{item.eTime.Y}} </text>{{item.eTime.M}}</text>
                             </view>
                             <text style="color:#5d73fa">{{item.selfDuration||'未填写'}}h</text>
                         </view>
                         <view class="item-twoLine" style="color:#7a7a7a">
-                            <text>{{item.description||'未填写'}}</text>
+                            <text>{{item.description || '未填写'}}</text>
                         </view>
                         <view class="item-threeLine">
                             <view>
                                 <icon class="iconfont icon-xiaotouxiang" style="font-size:40rpx;color:#5d73fa;margin-right:10rpx;margin-right:20rpx"></icon>
-                                <text>{{item.employeeName||'未填写'}}</text>
+                                <text>{{item.employeeName || '未填写'}}</text>
                             </view>
                             <view>
                                 <view style="height:20rpx;width:20rpx;border-radius:50%;border:1px solid {{item.statusColor}};margin-right:20rpx">
                                 </view>
-                                <text>{{item.processStatusText||'未填写'}}</text>
+                                <text>{{item.processStatusText || '未填写'}}</text>
                             </view>
                         </view>
                     </view>
@@ -157,6 +157,7 @@
     import {
         formatDate
     } from '@/utils/cofig/api.js';
+	import navbar from '@/components/navbar';
     import placeHolderImage from '@/components/placeHolderImage';
     export default class workRecord extends wepy.page {
         config = {
@@ -166,9 +167,12 @@
             backgroundColorBottom: '#f4f4f4',
         };
         components = {
-            placeHolderImage
+            placeHolderImage,
+            navbar
         };
         data = {
+            navbars: ['全部', '处理中', '已完成','已退回'],
+			currentTab: 0,            
             isSearchRefresh: false,
             refresh: false,
             queryStream: {},
@@ -178,8 +182,55 @@
             pageNumber: 1,
             totalCount: 0,
             isShow: false,
-            sorting: ''
+            sorting: '',
+            processStatusList:["R", "A", "N"]
         };
+        mixins = [mixins];
+        watch = {
+            currentTab(current){
+                if (wx.pageScrollTo) {
+					wx.pageScrollTo({
+						scrollTop: 0,
+						duration: 0
+					});
+                }
+                switch(current){
+                    case 0:
+                        this.processStatusList = ["R", "A", "N"]
+                        break;
+                    case 1:
+                        this.processStatusList = ["N"]
+                        break;
+                    case 2:
+                        this.processStatusList = ["A"]
+                        break;
+                    case 3:
+                        this.processStatusList = ["R"]
+                        break;
+                    default:
+                        break;            
+                }
+                this.MyWorklogsData = [];
+                this.pageNumber = 1;
+                this.GetMyWorklogs()
+            },
+            totalCount(count) {
+                if (count == 0) {
+                    this.placeHolder.placeHolderImageIndex = 0;
+                    this.placeHolder.placeHolderShow = true;
+                } else {
+                    this.placeHolder.placeHolderShow = false;
+                }
+            },
+            MyParticipantWorklogsCount(count) {
+                if (count == 0) {
+                    this.placeHolder.placeHolderImageIndex = 0;
+                    this.placeHolder.placeHolderShow = true;
+                } else {
+                    this.placeHolder.placeHolderShow = false;
+                }
+            }
+        }
         methods = {
             filter(name) {
                 this.MyWorklogsData = [];
@@ -250,25 +301,6 @@
                 });
             }
         };
-        mixins = [mixins];
-        watch = {
-            totalCount(count) {
-                if (count == 0) {
-                    this.placeHolder.placeHolderImageIndex = 0;
-                    this.placeHolder.placeHolderShow = true;
-                } else {
-                    this.placeHolder.placeHolderShow = false;
-                }
-            },
-            MyParticipantWorklogsCount(count) {
-                if (count == 0) {
-                    this.placeHolder.placeHolderImageIndex = 0;
-                    this.placeHolder.placeHolderShow = true;
-                } else {
-                    this.placeHolder.placeHolderShow = false;
-                }
-            }
-        }
         // 下拉刷新
         onPullDownRefresh() {
             this.MyWorklogsData = [];
@@ -324,13 +356,14 @@
         }
         async GetMyWorklogs(sort) {
             this.sorting = sort ? sort : this.sorting;
-            var filter = this.queryStream.filter ? this.queryStream.filter : '';
+            var filter = this.queryStream.filter || '';
             var data = {
                 EmployeeId: this.$parent.global.userInfo.id,
                 pageNumber: this.pageNumber,
                 pageSize: 10,
                 filter,
-                sorting: this.sorting
+                sorting: this.sorting,
+                processStatusList:this.processStatusList
             }
             var MyWorklogsData = await MyWorklogs(
                 data

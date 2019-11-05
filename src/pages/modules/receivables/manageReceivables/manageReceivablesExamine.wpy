@@ -165,7 +165,6 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
     import { Organizations, CaseCategoryComboboxItems } from '@/api/common.js';
     import { Cases } from '@/api/receivables.js';
     import {

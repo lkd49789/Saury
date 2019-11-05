@@ -139,7 +139,7 @@
     </view>
     <view class="scroll-y">
       <view class="chooseClientInfo box" style="border-left-color:{{stageIdentColor[0].color}}">
-        <view class="chooseRight" wx:if="{{clientId==''}}">
+        <view class="chooseRight" wx:if="{{clientId == ''}}">
           <text class="clientTitle">客户信息<text style="color:#7a7a7a;font-weight: normal">（创建客户或者选择已有客户）</text></text>
           <view class="chooseBtn">
             <view>
@@ -152,8 +152,8 @@
         </view>
         <view class="FillData" wx:else @tap="toClientDetail">
           <text class="titleBlod">{{clientData.name}}</text>
-          <text>{{clientData.clientTypeText}}</text>
-          <text>{{clientData.categoryText||'未填写'}}</text>
+          <!-- <text>{{clientData.clientTypeText}}</text> -->
+          <text>{{clientData.categoryText || '-'}}</text>
           <icon class="iconfont icon-gengduo fixedIcon" catchtap="deleteClientInfo"></icon>
         </view>
       </view>

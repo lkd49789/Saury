@@ -286,7 +286,7 @@
             // ClientName,
             AcceptDate,
             CreateDate:AcceptDate,
-            // OrganizationUnitId,
+            // OrganizationUnitId:PickerOption,
             Join:PickerOption,
             Lawyer:PickerOption,
             SecretLevel:PickerOption,
@@ -349,7 +349,6 @@
             //     data: [],
             //     warning: false
             // },
-            // //参案角色
             // OrganizationUnitIdIndex: -1,
             Lawyer: {
                 title: '律师',
@@ -594,6 +593,10 @@
                 this.searchData.categoryList = this.Type.data[index].value;
                 this.$apply();
             },
+            // OrganizationUnitIdIndex(index) {
+            //     this.searchData.OrganizationUnitId = this.OrganizationUnitId.data[index].id;
+            //     this.$apply();
+            // },
             // IdValue(value) {
             //     this.searchData.Id = value;
             //     this.$apply();
@@ -689,18 +692,19 @@
             this.$apply();
         }
         //获取隶属组织架构
-        async GetOrganizations() {
-            var resData = await ajax.getData(
-                '/api/services/web/common/GetOrganizations',
-                'post'
-            )
-            console.log(resData.data);
-            if (resData.statusCode == 200) {
-                var GetOrganizationsData = resData.data.result;
-                // this.OrganizationUnitId.data = GetOrganizationsData;
-            }
-            this.$apply();
-        }
+        // async GetOrganizations() {
+        //     var resData = await ajax.getData(
+        //         '/api/services/web/common/GetOrganizations',
+        //         'post',
+        //         {id:true}
+        //     )
+        //     console.log(resData.data);
+        //     if (resData.statusCode == 200) {
+        //         var GetOrganizationsData = resData.data.result;
+        //         this.OrganizationUnitId.data = GetOrganizationsData;
+        //     }
+        //     this.$apply();
+        // }
         //状态数据过滤
         statusFilter(status) {
             var ProcessStatusData = this.ProcessStatusData;
@@ -730,7 +734,7 @@
             this.isHistory();
             this.GetCaseApplyListSearchInput();
             this.GetCaseGeneralInfo();
-            this.GetOrganizations();
+            // this.GetOrganizations();
             this.GetGeneralCodeComboboxItems()
             this.GetLawyer()
         };

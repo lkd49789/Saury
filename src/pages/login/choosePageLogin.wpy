@@ -144,12 +144,9 @@
         onShow() {
             wx.login({
                 success: res => {
-                    console.log(res.code)
                     this.code = res.code;
                     this.$apply();
-                },
-                fail: () => {},
-                complete: () => {}
+                }
             });
         };
     }
