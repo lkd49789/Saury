@@ -53,10 +53,17 @@
 			"current": -1,
 			"list": [
 				{
+					"id": 0,
+					"name": "pages/common/operatingRecord",
+					"pathName": "pages/common/operatingRecord",
+					"query": "",
+					"scene": null
+				},
+				{
 					"id": -1,
-					"name": "pages/modules/myRecord/compileRecord/compileRecord",
-					"pathName": "pages/modules/myRecord/compileRecord/compileRecord",
-					"query": "data=%7B%22startTime%22%3A%7B%22Y%22%3A%222019%2F10%2F10%22%2C%22M%22%3A%2215%3A55%22%7D%2C%22endTime%22%3A%7B%22Y%22%3A%222019%2F10%2F10%22%2C%22M%22%3A%2223%3A55%22%7D%2C%22id%22%3A%22WL698bdcbed28f33au%22%2C%22clientId%22%3A%22CL20190300073%22%2C%22caseId%22%3A%22%22%7D",
+					"name": "pages/modules/myRecord/myLogdetail/logdetail",
+					"pathName": "pages/modules/myRecord/myLogdetail/logdetail",
+					"query": "id=WL557bd36110f7d2a9",
 					"scene": null
 				}
 			]

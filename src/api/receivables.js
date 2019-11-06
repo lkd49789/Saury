@@ -21,9 +21,9 @@ export function GetReceipt(data){   // 获取收款信息.
     })       
 }
 
-export function ApproveCharge(data){   // 
+export function ProcessReceipt(data){   // 
     return getRequest({
-        url:'/api/services/web/financialCharge/ApproveCharge',
+        url:'/api/services/web/FinancialReceipt/ProcessReceipt',
         data
     })       
 }

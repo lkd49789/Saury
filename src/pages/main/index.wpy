@@ -701,6 +701,9 @@
             case 'App.Executive.OffficeSeal.Created':
               item.TextTile = '行政用章-待审核';
               break;
+            case 'App.Business.CaseRecord.Info':
+              item.TextTile = '立案-处理过程';
+              break;
             default:
               break;
           }

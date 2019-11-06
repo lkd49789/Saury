@@ -1,102 +1,8 @@
-<!--  -->
-<style lang='scss'>
-    .container {
-        color: #2a2a2a;
-        .top-title {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: #fff;
-            z-index: 9999;
-            .flex {
-                border-bottom: 1px solid #dedede;
-                height: 104rpx;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                font-size: 48rpx;
-            }
-            .filter {
-                left: 0;
-                width: 100%;
-                background: #fff;
-                z-index: 99999;
-                padding: 20rpx 28rpx 0 28rpx;
-                >view {
-                    display: flex;
-                    flex-direction: column;
-                    padding: 10rpx 0;
-                }
-            }
-        }
-        .main {
-            margin: 149rpx 28rpx 44rpx 28rpx;
-            .caseItem {
-                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
-                border-radius: 20rpx;
-                padding: 30rpx 24rpx;
-                margin-bottom: 44rpx;
-                >view:first-child {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                }
-                >view {
-                    margin-bottom: 20rpx;
-                }
-                .textColor {
-                    color: #7a7a7a;
-                }
-                .whitespace {
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                }
-                >view:last-child {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    >view:first-child {
-                        width: 73%;
-                        display: flex;
-                        align-items: center;
-                        >text:first-child {
-                            height: 20rpx;
-                            width: 20rpx;
-                            border-radius: 50%;
-                            margin-right: 14rpx;
-                            border: 1px solid #ff9900;
-                        }
-                        >text:last-child {
-                            width: 90%;
-                        }
-                    }
-                }
-                .caseLawyer {
-                    position: relative;
-                    height: 100%;
-                    padding: 30rpx 0;
-                    display: flex;
-                    align-items: center;
-                    >image {
-                        height: 60rpx;
-                        width: 60rpx; // background: #ff9900;
-                        border-radius: 50%;
-                        position: absolute; //   top: 50%;
-                        border: 1px solid #fff;
-                    }
-                }
-            }
-        }
-    }
-</style>
-
 <template>
-    <view class='container'>
+    <view class="{{popboxShow ? 'tripList_root' : ''}} container">
         <view class="top-title">
             <view class="flex">
-                <view style="margin-left:28rpx">
+                <view style="margin-left:28rpx"> 
                     <text>案件管理</text>
                 </view>
                 <view style="margin-right:28rpx">
@@ -138,12 +44,25 @@
                 </view>
             </repeat>
         </view>
+        <view class="popbox_bg" wx:if="{{popboxShow}}" catchtouchmove="false" @tap="close">
+            <view class="popbox" catchtap="false">
+                <view class="title">案件变更</view>
+                <view>案件名称</view>
+                <view class="bor">名称</view>
+                <Status :options.sync="status" :index.sync='statusIndex' :twoWayTitle="statusIndex" />
+                <view class="btn_wrap">
+                    <button size="default" catchtap="close">取消</button>
+                    <button size="default" catchtap="ProcessCase">确认</button>
+                </view>
+            </view>
+        </view>
     </view>
 </template>
 
 <script>
     import wepy from 'wepy';
     import ajax from '@/utils/cofig/ajax.js'
+    import PickerOption from '@/components/picker/pickerOption';
     export default class caseManagement extends wepy.page {
         config = {
             enablePullDownRefresh: true,
@@ -156,8 +75,27 @@
             pageNumber: 1,
             totalCount: 0,
             caseManageData: [],
-            avatarList: []
+            avatarList: [],
+            popboxShow:false,
+            status: {
+                title: '状态',
+                key: 'displayName',
+                name: 'status',
+                data: [],
+                warning: false
+            },
+            statusIndex: 0,
+            condition:'',
+            id:''
         };
+        components = {
+            Status:PickerOption,
+        }
+        watch = {
+            statusIndex(index){
+                this.condition = this.status.data[index].name;
+            }
+        }
         methods = {
             toSearchPage(){
                 wx.navigateTo({ url: './search/search_caseManagement' });
@@ -193,6 +131,9 @@
                                 break;
                             case "Config":
                                 console.log('案件变更')
+                                this.popboxShow = true
+                                this.id = items.id
+                                this.$apply()
                                 break;    
                             case "Delete":
                                 wx.showModal({
@@ -214,6 +155,37 @@
                                 break;
                             default:
                                 break;
+                        }
+                    }
+                });
+            },
+            close(){
+                this.popboxShow = false;
+            },
+            ProcessCase(){
+                wx.showModal({
+                    title: '你确定吗？', //提示的标题,
+                    showCancel: true, //是否显示取消按钮,
+                    cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
+                    cancelColor: '#000000', //取消按钮的文字颜色,
+                    confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
+                    confirmColor: '#5d73fa', //确定按钮的文字颜色,
+                    success: async res => {
+                        if (res.confirm) {
+                            wx.showLoading({
+                                title: '提交中',
+                            })
+                            let { statusCode } = await ajax.getData('/api/services/web/Case/ProcessCase','post',{
+                                condition:this.condition,
+                                eventName: "StateChange",
+                                id:this.id
+                            })
+                            this.popboxShow = false;
+                            this.isRefresh()
+                            wx.hideLoading()
+                            this.$apply()
+                        } else if (res.cancel) {
+                            console.log('用户点击取消')
                         }
                     }
                 });
@@ -356,7 +328,12 @@
         //     )
 
         // }
-        // /api/services/web/Case/GetCaseActions
+        async GetCaseChangeStates(){
+            let { data } = await ajax.getData('/api/services/web/Case/GetCaseChangeStates','POST')
+            this.condition = data.result.items[0].name
+            this.status.data = data.result.items
+            this.$apply()
+        }
         isRefresh(searchData){
             console.log(searchData+ '1');
             if(searchData){
@@ -365,11 +342,157 @@
             // this.searchData={};
             this.caseManageData = [];
             this.pageNumber = 1;
-            this.GetCaseManage();  
+            this.GetCaseManage(); 
         }
         onLoad() {
+            this.GetCaseChangeStates() 
             this.GetCaseManage()
         };
         onShow() {};
     }
 </script>
+<!--  -->
+<style lang='scss'>
+    .container {
+        color: #2a2a2a;
+        .top-title {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 100;
+            .flex {
+                border-bottom: 1px solid #dedede;
+                height: 104rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 48rpx;
+            }
+            .filter {
+                left: 0;
+                width: 100%;
+                background: #fff;
+                z-index: 100;
+                padding: 20rpx 28rpx 0 28rpx;
+                >view {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 10rpx 0;
+                }
+            }
+        }
+        .main {
+            margin: 149rpx 28rpx 44rpx;
+            .caseItem {
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                padding: 30rpx 24rpx;
+                margin-bottom: 44rpx;
+                >view:first-child {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+                >view {
+                    margin-bottom: 20rpx;
+                }
+                .textColor {
+                    color: #7a7a7a;
+                }
+                .whitespace {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+                >view:last-child {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    >view:first-child {
+                        width: 73%;
+                        display: flex;
+                        align-items: center;
+                        >text:first-child {
+                            height: 20rpx;
+                            width: 20rpx;
+                            border-radius: 50%;
+                            margin-right: 14rpx;
+                            border: 1px solid #ff9900;
+                        }
+                        >text:last-child {
+                            width: 90%;
+                        }
+                    }
+                }
+                .caseLawyer {
+                    position: relative;
+                    height: 100%;
+                    padding: 30rpx 0;
+                    display: flex;
+                    align-items: center;
+                    >image {
+                        height: 60rpx;
+                        width: 60rpx; // background: #ff9900;
+                        border-radius: 50%;
+                        position: absolute; //   top: 50%;
+                        border: 1px solid #fff;
+                    }
+                }
+            }
+        }
+        .popbox_bg{
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba($color: #000000, $alpha: .4);
+            z-index: 101;
+            .popbox{
+                background: #fff;
+                border-radius: 20rpx;
+                box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+                width: 70vw;
+                position: absolute;
+                top: 20%;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 30rpx 46rpx;
+                >view{
+                    margin-bottom: 20rpx;
+                }
+                >.title{
+                    text-align: center;
+                    font-size: 32rpx;
+                    color: #424242;
+                }
+                .bor{
+                    border-bottom: 2rpx solid #dfdfdf;
+                    padding: 20rpx 0;
+                    color:#7a7a7a;
+                }
+                .btn_wrap{
+                    display: flex;
+                    button{
+                        width: 30%;
+                    }
+                    >button:last-child{
+                        background: #5d73fa;
+                        color:#fff;
+                    }
+                }
+            }
+        }
+    }
+    // .tripList_root{
+    //         top:0px;
+    //         left: 0px;
+    //         width: 100%;
+    //         height: 100%;
+    //         overflow: hidden;
+    //         position: fixed;
+    //         z-index: 0;
+    //     }
+</style>

@@ -322,8 +322,10 @@
     methods = {
        toauditResultsDetail(){
          if(this.workLogData.approvalList.length > 0){
-           var approvalList = JSON.stringify(this.workLogData.approvalList)
-           wx.navigateTo({ url: '../../myRecord/myLogdetail/auditResultsDetail?approvalList='+approvalList});
+          //  var approvalList = JSON.stringify(this.workLogData.approvalList)
+          //  wx.navigateTo({ url: '../../myRecord/myLogdetail/auditResultsDetail?approvalList='+approvalList});
+          wx.setStorageSync('logs', JSON.stringify(this.workLogData.approvalList))
+          wx.navigateTo({ url:'../../../common/operatingRecord'});
          }
       },
       toDocument(){

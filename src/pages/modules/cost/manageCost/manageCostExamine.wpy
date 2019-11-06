@@ -59,12 +59,12 @@
         <view class="bill_content">
             <returnInvoice :input.sync="returnInvoice" :inputValue.sync='returnInvoiceValue' :twoWayTitle="returnInvoiceValue" />
         </view>
-        <image src="{{'../../../../images/test.png'}}" style="opacity:{{addOpacity}}" mode="scaleToFill" lazy-load="true" class="addImage" @tap="submitData"></image>
+        <image src="{{'../../../../images/test.png'}}" style="opacity:{{addOpacity}}" mode="scaleToFill" lazy-load="true" class="addImage" @tap="auditing"></image>
     </view>
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { ProcessCharge } from '@/api/cost'
     import input1 from '@/components/picker/input'
     export default class Index extends wepy.page {
         components = {
@@ -79,25 +79,12 @@
             returnInvoice: {
                 title: '退回原因 ',
                 name: 'returnInvoice',
-                warning: true,
+                warning: false,
                 options:true
             },
         };
-         methods= {
-           submitData(){
-                if (this.returnInvoiceValue !== '') {
-                    this.auditing()
-                }else{
-                    this.returnInvoice.warning=true;
-                    this.$apply();
-                }
-           }
-        }
-        onLoad(e) {
-            this.id = e.id;
-            this.$apply()
-        };
-        async auditing() {
+         methods = {
+           async auditing() {
             wx.showLoading({
                 title: '提交中，请稍等！', //提示的内容,
                 mask: true, //显示透明蒙层，防止触摸穿透,
@@ -106,11 +93,11 @@
                     this.$apply();
                 }
             });
-            var resData = await ajax.getData(
-                '/api/services/web/financialCharge/ReturnCharge',
-                'post', {
-                    Id: this.id,
-                    Remark: this.returnInvoiceValue
+            var resData = await ProcessCharge({
+                    auditData: {remark: this.returnInvoiceValue},
+                    condition: "Returned",
+                    eventName: "WaitForApprove",
+                    id: this.id
                 }
             );
             switch (resData.statusCode) {
@@ -137,5 +124,10 @@
                     break;
             }
         }
+        }
+        onLoad(e) {
+            this.id = e.id;
+            this.$apply()
+        };
     }
 </script>

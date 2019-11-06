@@ -164,11 +164,7 @@
 <script>
     import wepy from 'wepy';
     import {
-        myDistinct
-    } from '@/utils/cofig/api.js';
-    import ajax from '@/utils/cofig/ajax.js';
-    import {
-        formatDate
+        myDistinct,formatDate
     } from '@/utils/cofig/api.js';
     export default class searchCost extends wepy.page {
         components={

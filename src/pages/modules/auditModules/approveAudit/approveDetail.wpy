@@ -245,7 +245,7 @@
             </view>
             <view class="parting-line"></view>
             <view class="bill_content workflows"  wx:if="{{CaseFileStampOutputData.status == 'A' || CaseFileStampOutputData.status=='R'}}">
-                <view class="bill_box" @tap="toFOR">
+                <view class="bill_box" @tap="go">
                     <view class="title flex bill_view ">
                         <text class="bill_gray">操作记录</text>
                         <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
@@ -324,8 +324,11 @@
             toAuditPage(id){
                 wx.navigateTo({ url: './approveAudit?id='+id });
             },
-            toFOR(){
-                wx.navigateTo({ url: './approveAudit?id='+id });
+            go(){
+                if(this.Logs.length > 0){
+                    wx.setStorageSync('logs', JSON.stringify(this.Logs))
+                    wx.navigateTo({ url: '../../../common/operatingRecord' });
+                }
             }
         };
         async GetCaseFileStampOutput() {
@@ -386,16 +389,15 @@
             return fileSize
         }
         // 获取操作记录
-        async Logs(){
+        async Glogs(){
             let { data } = await ajax.getData('/api/services/web/Workflow/GetLogs','post',{id:this.id})
-            console.log(data);
             this.Logs = data.result.items
             this.$apply()
         }
         onLoad(options) {
             this.id = options.id;
             this.GetCaseFileStampOutput();
-            this.Logs()
+            this.Glogs()
             this.$apply();
         };
     }

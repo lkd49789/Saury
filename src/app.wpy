@@ -120,6 +120,8 @@
         'pages/mine/webView/help_webView',
         //设置
         'pages/mine/tools',
+        //公共页面
+        'pages/common/operatingRecord',
         //模块
         // //我的案件
         // 'pages/modules/mycase/mycase',

@@ -1,80 +1,3 @@
-<style lang="less">
-    .bill {
-        .top-title {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: #fff;
-            z-index: 10000;
-            .flex {
-                height: 104rpx;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                font-size: 48rpx;
-            }
-            .filter {
-                left: 0;
-                width: 100%;
-                background: #fff;
-                z-index: 99999;
-                padding: 20rpx 28rpx 0 28rpx;
-                >view {
-                    display: flex;
-                    flex-direction: column;
-                    padding: 10rpx 0;
-                }
-            }
-        }
-        .bill_content {
-            background: #ffffff;
-            margin: 0 auto;
-            box-shadow: 0rpx 8rpx 30rpx 0rpx rgba(65, 98, 213, 0.25);
-            border-radius: 20rpx;
-            padding: 30rpx 24rpx;
-            margin: 44rpx 28rpx;
-            font-size: 28rpx;
-            overflow: auto;
-            .caseConflictBorder_radius {
-                border: 1px solid;
-                width: 15rpx;
-                height: 15rpx;
-                line-height: 28rpx;
-                border-radius: 15rpx;
-                margin-right: 10rpx;
-                display: inline-block;
-            }
-            .bill_view {
-                line-height: 50rpx;
-            }
-            .bill_gray {
-                color: #7a7a7a;
-                border-color: #7a7a7a
-            }
-            .bill_blue {
-                color: #009dff;
-                border-color: #009dff
-            }
-            .bill_red {
-                color: #e20000;
-                border-color: #e20000
-            }
-            .bill_yellow {
-                color: #ff9900;
-                border-color: #ff9900
-            }
-            .bill_green {
-                color: #069400;
-                border-color: #069400
-            }
-            .bill_state {
-                float: right;
-                position: relative;
-            }
-        }
-    }
-</style>
 <template>
     <view class="bill">
         <!-- <view style="height:200rpx"></view>
@@ -240,7 +163,7 @@
             this.sorting = sort ? sort : this.sorting;
             var filter = this.queryStream.filter ? this.queryStream.filter : '';
             var resData = await GUserReceipts({
-                    isRoleFilter: true,
+                    isRoleFilter: false,
                     pageNumber: this.pageNumber,
                     pageSize: 10,
                     statusList,
@@ -299,3 +222,80 @@
         };
     }
 </script>
+<style lang="less">
+    .bill {
+        .top-title {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            z-index: 10000;
+            .flex {
+                height: 104rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 48rpx;
+            }
+            .filter {
+                left: 0;
+                width: 100%;
+                background: #fff;
+                z-index: 99999;
+                padding: 20rpx 28rpx 0 28rpx;
+                >view {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 10rpx 0;
+                }
+            }
+        }
+        .bill_content {
+            background: #ffffff;
+            margin: 0 auto;
+            box-shadow: 0rpx 8rpx 30rpx 0rpx rgba(65, 98, 213, 0.25);
+            border-radius: 20rpx;
+            padding: 30rpx 24rpx;
+            margin: 44rpx 28rpx;
+            font-size: 28rpx;
+            overflow: auto;
+            .caseConflictBorder_radius {
+                border: 1px solid;
+                width: 15rpx;
+                height: 15rpx;
+                line-height: 28rpx;
+                border-radius: 15rpx;
+                margin-right: 10rpx;
+                display: inline-block;
+            }
+            .bill_view {
+                line-height: 50rpx;
+            }
+            .bill_gray {
+                color: #7a7a7a;
+                border-color: #7a7a7a
+            }
+            .bill_blue {
+                color: #009dff;
+                border-color: #009dff
+            }
+            .bill_red {
+                color: #e20000;
+                border-color: #e20000
+            }
+            .bill_yellow {
+                color: #ff9900;
+                border-color: #ff9900
+            }
+            .bill_green {
+                color: #069400;
+                border-color: #069400
+            }
+            .bill_state {
+                float: right;
+                position: relative;
+            }
+        }
+    }
+</style>

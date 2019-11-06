@@ -1,0 +1,98 @@
+<!--  -->
+<template>
+  <view class='container'>
+      <view class="page-title">
+            <text class="title">操作记录</text>
+    </view>
+    <view class="main">
+        <view class="content">
+          <repeat for="{{logs}}" key="index" index="index" item="item">
+          <view class="item">
+            <view class="left">
+              <image src="{{item.src}}" mode="scaleToFill"
+                lazy-load="false">
+              </image>
+              <view>{{item.operatorUserName}}</view>
+            </view>
+            <view class="right">
+              <view class="flex">
+                <text>{{item.operationTypeName ? item.operationTypeName + '-' + item.result : item.result}}</text>
+                <text>{{item.time}}</text>
+              </view>
+              <text style="color: #009dff">{{item.Remark || '未填写'}}</text>
+            </view>
+
+          </view>
+          </repeat>
+        </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import { formatTime } from '@/utils/cofig/api'
+  import { EmployeePhoto } from '@/api/common'
+  export default class operatingRecord extends wepy.page {
+
+    data = {
+      logs:[]
+    };
+
+    components = {};
+
+    methods = {};
+
+    events = {};
+
+    watch = {};
+
+    computed = {};
+
+    async onLoad() { 
+      let logs = JSON.parse(wx.getStorageSync('logs'))
+      for(let i in logs){
+        logs[i]['src'] = await EmployeePhoto(logs[i].operatorUserId)
+        logs[i].time = formatTime(logs[i].operationTime)
+        if(logs[i].jsonData && logs[i].jsonData != 'null')
+        logs[i]['Remark'] = JSON.parse(logs[i].jsonData).Remark
+
+      }
+      this.logs = logs
+      this.$apply()
+    };
+
+    onShow() { };
+  }
+</script>
+
+<style lang='scss'>
+  .main{
+    margin-top:136rpx;
+    padding:0 28rpx 24rpx;
+    .item{
+      padding: 20rpx 0 ;
+      display: flex;
+      align-items: center;
+      .left{
+        width: 20%;
+        // text-align: center;
+        image{
+          width: 80rpx;
+          height: 80rpx;
+          border-radius: 100%;  
+        }
+      }
+      .right{
+        width:80%;
+        line-height: 52rpx;
+        .flex{
+          display: flex;
+          justify-content: space-between;
+          color: #7a7a7a;
+        }
+      }
+
+    }
+  }
+</style>

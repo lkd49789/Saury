@@ -12,8 +12,8 @@
 6 silly lifecycle lvzhihui@0.0.2~predev: no script for predev, continuing
 7 info lifecycle lvzhihui@0.0.2~dev: lvzhihui@0.0.2
 8 verbose lifecycle lvzhihui@0.0.2~dev: unsafe-perm in lifecycle true
-9 verbose lifecycle lvzhihui@0.0.2~dev: PATH: C:\Users\Administrator\AppData\Roaming\npm\node_modules\npm\bin\node-gyp-bin;C:\Users\Administrator\Desktop\2.0\node_modules\.bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows7Master;D:\Wo\Git\cmd;D:\sdk\tools;D:\sdk\platform-tools;D:\Wo\Microsoft VS Code\bin;C:\Program Files\Git\cmd;D:\Program Files\nodejs\;D:\Program Files\python\Scripts\;D:\Program Files\python\;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows7Master;D:\Program Files\nodejs\;D:\Program Files\Java\jdk1.8.0_92\bin;D:\Program Files\Java\jdk1.8.0_92\bin;D:\Program Files\Java\jdk1.8.0_92\jre\bin;D:\Wo\Microsoft VS Code\bin;C:\Users\Administrator\AppData\Roaming\npm
-10 verbose lifecycle lvzhihui@0.0.2~dev: CWD: C:\Users\Administrator\Desktop\2.0
+9 verbose lifecycle lvzhihui@0.0.2~dev: PATH: C:\Users\Administrator\AppData\Roaming\npm\node_modules\npm\bin\node-gyp-bin;c:\Users\Administrator\Desktop\2.0\node_modules\.bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows7Master;D:\Wo\Git\cmd;D:\sdk\tools;D:\sdk\platform-tools;D:\Wo\Microsoft VS Code\bin;C:\Program Files\Git\cmd;D:\Program Files\nodejs\;D:\Program Files\python\Scripts\;D:\Program Files\python\;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows7Master;D:\Program Files\nodejs\;D:\Program Files\Java\jdk1.8.0_92\bin;D:\Program Files\Java\jdk1.8.0_92\bin;D:\Program Files\Java\jdk1.8.0_92\jre\bin;D:\Wo\Microsoft VS Code\bin;C:\Users\Administrator\AppData\Roaming\npm
+10 verbose lifecycle lvzhihui@0.0.2~dev: CWD: c:\Users\Administrator\Desktop\2.0
 11 silly lifecycle lvzhihui@0.0.2~dev: Args: [ '/d /s /c', 'wepy build --watch' ]
 12 silly lifecycle lvzhihui@0.0.2~dev: Returned: code: 1  signal: null
 13 info lifecycle lvzhihui@0.0.2~dev: Failed to exec dev script
@@ -26,7 +26,7 @@
 14 verbose stack     at maybeClose (internal/child_process.js:1021:16)
 14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:283:5)
 15 verbose pkgid lvzhihui@0.0.2
-16 verbose cwd C:\Users\Administrator\Desktop\2.0
+16 verbose cwd c:\Users\Administrator\Desktop\2.0
 17 error Windows_NT 6.1.7601
 18 error argv "D:\\Program Files\\nodejs\\node.exe" "C:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js" "run" "dev"
 19 error node v12.10.0

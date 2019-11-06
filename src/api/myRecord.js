@@ -55,10 +55,3 @@ export function ClientYearTotal(data){   //获取案件客户基础数据统计
     })       
 }
 
-export function GetLogs(data){   //获取操作日志列表.
-    return getRequest({
-        url:'/api/services/web/Workflow/GetLogs',
-        data
-    })       
-}
-

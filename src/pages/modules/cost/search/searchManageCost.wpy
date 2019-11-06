@@ -149,12 +149,9 @@
 <script>
     import wepy from 'wepy';
     import {
-        myDistinct
+        myDistinct,formatDate
     } from '@/utils/cofig/api.js';
-    import ajax from '@/utils/cofig/ajax.js';
-    import {
-        formatDate
-    } from '@/utils/cofig/api.js';
+    import { GChargeStates } from '@/api/cost';
     import creationTimeRange from '@/components/picker/pickerDate';
     import creatorUserName from '@/components/picker/input';
     import PickerOption from '@/components/picker/pickerOption';
@@ -323,10 +320,7 @@
         }
          // 获取状态
         async GetChargeStates(){
-            var { data } = await ajax.getData(
-                '/api/services/web/FinancialCharge/GetChargeStates',
-                'POST'
-            )
+            var { data } = await GChargeStates()
              this.PickerOption.data = data.result.items
              console.log(this.PickerOption.data);
         

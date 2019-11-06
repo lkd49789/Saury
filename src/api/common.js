@@ -111,3 +111,10 @@ export function SProcessCase(data){   // 处理案件
         data
     })       
 }
+
+export function GetLogs(data){   //获取操作日志列表.
+    return getRequest({
+        url:'/api/services/web/Workflow/GetLogs',
+        data
+    })       
+}

@@ -1,164 +1,3 @@
-<!--  -->
-<style lang='less'>
-    .container {
-        margin: 44rpx 28rpx;
-        .keyword-search {
-            .search_top {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                .search_input {
-                    width: 100%; // border:1px solid #dfdfdf;
-                    padding: 10rpx 20rpx;
-                    border-radius: 100rpx;
-                    background: #f4f4f4;
-                    display: flex;
-                    align-items: center;
-                    margin-right: 14rpx;
-                    >icon {
-                        margin-right: 14rpx;
-                    }
-                    >input {
-                        width: 100%;
-                    }
-                }
-                .top_right_btn {
-                    // width: 15%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-            }
-            .search_history {
-                margin-top: 28rpx;
-                .history_title {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                }
-                .history_content {
-                    margin-top: 10rpx;
-                    display: flex;
-                    align-items: center;
-                    flex-wrap: wrap;
-                    >view {
-                        background: #f4f4f4;
-                        padding: 10rpx 20rpx;
-                        border-radius: 50rpx;
-                        color: #7a7a7a;
-                        margin: 14rpx;
-                        position: relative;
-                        >icon {
-                            // animation: item_delet_icon 1s linear;
-                            position: absolute;
-                            top: -30rpx;
-                            right: -10rpx;
-                        }
-                    }
-                }
-            }
-        }
-        .advanced-search-input-panel {
-            .advanced-search-title {
-                display: flex;
-                justify-content: space-between;
-                align-items: baseline;
-                >text {
-                    font-size: 40rpx;
-                }
-            }
-            .advanced-search-content {
-                margin: 30rpx 0 40rpx 0;
-            }
-        }
-        .tui-picker-content {
-            margin-bottom: 36rpx;
-            picker {
-                padding: 20rpx 0;
-                border-bottom: 1px solid #dfdfdf;
-                .tui-picker-detail {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    color: #7a7a7a;
-                }
-            }
-            .checkbox {
-                display: flex;
-                flex-wrap: wrap;
-                align-items: center;
-                .checkboxItem {
-                    margin: 20rpx 20rpx 0 0;
-                }
-            }
-        }
-        .checkedBox {
-            margin-bottom: 36rpx;
-            border-bottom: 1px solid #dedede;
-            .checkbox-group {
-                padding-top: 22rpx; // height: 106rpx;
-                display: flex;
-                align-items: center; // justify-content: center;
-                flex-wrap: wrap;
-                width: 100%;
-                .label {
-                    padding-bottom: 22rpx;
-                    width: 50%;
-                    align-items: center;
-                    display: flex;
-                }
-            }
-        }
-        .checkedRadioBox {
-            // padding: 0 28rpx 22rpx 28rpx;
-            margin-bottom: 36rpx;
-            border-bottom: 1px solid #dedede;
-            .radio-group {
-                height: 106rpx;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-wrap: nowrap;
-                width: 100%;
-                .radio {
-                    align-items: center;
-                    flex: 1;
-                    display: flex;
-                    justify-content: center;
-                }
-            }
-        }
-        .btn-sub {
-            width: 160rpx;
-            height: 160rpx;
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            z-index: 99;
-        }
-    }
-    .caseSearchInput{
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          >view:first-child{
-            width:90%;
-          }
-          >view:last-child{
-            background: #5d73fa;
-            height:60rpx;
-            width:60rpx;
-            line-height:60rpx;
-            text-align: center;
-              >icon{
-                font-size:40rpx;
-                color:#ffffff;
-              }
-          }
-          
-        }
-</style>
-
 <template>
     <view class='container'>
         <view class="keyword-search" wx:if="{{showPage}}">
@@ -728,7 +567,6 @@
                 }
             );
             this.Lawyer.data = resData.data.result.items
-            console.log(this.Lawyer.data);
         }
         onLoad() {
             this.isHistory();
@@ -741,4 +579,163 @@
         onShow() {};
     }
 </script>
-
+<!--  -->
+<style lang='less'>
+    .container {
+        margin: 44rpx 28rpx;
+        .keyword-search {
+            .search_top {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .search_input {
+                    width: 100%; // border:1px solid #dfdfdf;
+                    padding: 10rpx 20rpx;
+                    border-radius: 100rpx;
+                    background: #f4f4f4;
+                    display: flex;
+                    align-items: center;
+                    margin-right: 14rpx;
+                    >icon {
+                        margin-right: 14rpx;
+                    }
+                    >input {
+                        width: 100%;
+                    }
+                }
+                .top_right_btn {
+                    // width: 15%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+            .search_history {
+                margin-top: 28rpx;
+                .history_title {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+                .history_content {
+                    margin-top: 10rpx;
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    >view {
+                        background: #f4f4f4;
+                        padding: 10rpx 20rpx;
+                        border-radius: 50rpx;
+                        color: #7a7a7a;
+                        margin: 14rpx;
+                        position: relative;
+                        >icon {
+                            // animation: item_delet_icon 1s linear;
+                            position: absolute;
+                            top: -30rpx;
+                            right: -10rpx;
+                        }
+                    }
+                }
+            }
+        }
+        .advanced-search-input-panel {
+            .advanced-search-title {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                >text {
+                    font-size: 40rpx;
+                }
+            }
+            .advanced-search-content {
+                margin: 30rpx 0 40rpx 0;
+            }
+        }
+        .tui-picker-content {
+            margin-bottom: 36rpx;
+            picker {
+                padding: 20rpx 0;
+                border-bottom: 1px solid #dfdfdf;
+                .tui-picker-detail {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    color: #7a7a7a;
+                }
+            }
+            .checkbox {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                .checkboxItem {
+                    margin: 20rpx 20rpx 0 0;
+                }
+            }
+        }
+        .checkedBox {
+            margin-bottom: 36rpx;
+            border-bottom: 1px solid #dedede;
+            .checkbox-group {
+                padding-top: 22rpx; // height: 106rpx;
+                display: flex;
+                align-items: center; // justify-content: center;
+                flex-wrap: wrap;
+                width: 100%;
+                .label {
+                    padding-bottom: 22rpx;
+                    width: 50%;
+                    align-items: center;
+                    display: flex;
+                }
+            }
+        }
+        .checkedRadioBox {
+            // padding: 0 28rpx 22rpx 28rpx;
+            margin-bottom: 36rpx;
+            border-bottom: 1px solid #dedede;
+            .radio-group {
+                height: 106rpx;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: nowrap;
+                width: 100%;
+                .radio {
+                    align-items: center;
+                    flex: 1;
+                    display: flex;
+                    justify-content: center;
+                }
+            }
+        }
+        .btn-sub {
+            width: 160rpx;
+            height: 160rpx;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 99;
+        }
+    }
+    .caseSearchInput{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          >view:first-child{
+            width:90%;
+          }
+          >view:last-child{
+            background: #5d73fa;
+            height:60rpx;
+            width:60rpx;
+            line-height:60rpx;
+            text-align: center;
+              >icon{
+                font-size:40rpx;
+                color:#ffffff;
+              }
+          }
+          
+        }
+</style>

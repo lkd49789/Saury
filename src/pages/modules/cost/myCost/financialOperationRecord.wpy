@@ -103,7 +103,8 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '@/utils/cofig/ajax.js'
+  import { GetLogs,EmployeePhoto } from '@/api/common.js'
+  import { GInvoice } from '@/api/invoice.js'
   import { formatTime } from '@/utils/cofig/api.js'
   export default class financialOperationRecord extends wepy.page {
     data = {
@@ -127,21 +128,20 @@
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-            let url = '/api/services/web/Workflow/GetLogs';
             if(this.invoice){
-                url = `/api/services/web/financialInvoice/GetInvoice`
-            }
-            var resData = await ajax.getData(
-                url,
-                'post', {
+                var resData = await GInvoice({
                     id: this.invoiceDetailId
-                }
-            );
+                });
+            }else{
+                var resData = await GetLogs({
+                    id: this.invoiceDetailId
+                });
+            }
+            
             if(resData.statusCode == 200){
                 this.workflows = resData.data.result.items
                 for(let i in this.workflows){
-                    var http = "/api/services/web/personal/GetEmployeePhoto?id=" + this.workflows[i].operatorUserId
-                    var avatar = await ajax.getAavatar(http);
+                    var avatar = await EmployeePhoto(this.workflows[i].operatorUserId);
                     this.workflows[i].avatar = avatar
                     this.workflows[i].jsonData = JSON.parse(this.workflows[i].jsonData)
                     this.workflows[i].operationTime = formatTime(this.workflows[i].operationTime)

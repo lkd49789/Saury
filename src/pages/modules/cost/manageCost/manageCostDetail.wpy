@@ -91,11 +91,11 @@
                 <view class="bill_view flex"><text> <text class="bill_gray">申请时间：</text> {{costData.creationTime||'未填写'}}</text><text class="bill_state {{costData.status=='WaitForApproved'?'bill_yellow':costData.status=='Returned'?'bill_gray':'bill_green'}}">{{costData.statusName||'未填写'}}</text></view>
                 <repeat for="{{costData.chargeItems}}" key="index" index="index" item="item">
                     <view class="bill_box bill_b">
-                        <view class="bill_view bill_mar">
+                        <view class="bill_view bill_mar flex">
                             <text>{{item.chargeDate||'未填写'}}</text>
                             <text class="bill_state">{{item.chargeTypeName||'未填写'}}</text>
                         </view>
-                        <view class="bill_view bill_mar">
+                        <view class="bill_view bill_mar flex">
                             <text class="bill_gray bill_blue">{{item.chargeAmount}}({{item.chargeCurrency}})</text>
                             <text class="bill_state">{{item.chargeRate||'未填写'}}</text>
                         </view>
@@ -117,14 +117,14 @@
                         <text class="bill_gray">财务操作记录</text>
                         <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
                     </view>
-                    <view class="bill_view "><text class="{{costData.status == 'WaitForApproved' ? 'bill_yellow':costData.status=='Returned'?'bill_gray':'bill_green'}} status">{{costData.statusName}}</text><text class="bill_gray">{{workflows[0].creationTime}}</text></view>
+                    <view class="bill_view "><text class="{{costData.status == 'WaitForApproved' ? 'bill_yellow':costData.status=='Returned'?'bill_gray':'bill_green'}} status">{{costData.statusName}}</text><text class="bill_gray">{{costData.creationTime}}</text></view>
                     <view class="bill-del bill_gray">
                         通过<text>{{workflows.length}}</text>位审核人审核
                     </view>
                 </view>
             </view>
         </view>
-        <view class="bill_btns" wx:if="{{costData.status=='WaitForApproved'}}">
+        <view class="bill_btns" wx:if="{{costData.status=='WaitForApprove'}}">
             <button class="bill_btn" catchtap="toAuditing('{{0}}')">退回</button>
             <button class="bill_btn" catchtap="toAuditing('{{1}}')">批准</button>
         </view>
@@ -132,7 +132,8 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { GCharge,ProcessCharge } from '@/api/cost'
+    import { GetLogs } from '@/api/common'
     import {
         formatDate,formatTime
     } from '@/utils/cofig/api.js';
@@ -146,9 +147,13 @@
         };
         methods = {
               toFOR() {
-                wx.navigateTo({
-                    url: '../myCost/financialOperationRecord?invoiceDetailId=' + this.invoiceDetailId
-                });
+                // wx.navigateTo({
+                //     url: '../myCost/financialOperationRecord?invoiceDetailId=' + this.invoiceDetailId
+                // });
+                if(this.workflows.length > 0){
+                    wx.setStorageSync('logs', JSON.stringify(this.workflows))
+                    wx.navigateTo({ url: '../../../common/operatingRecord' });
+                }
             },
             toAuditing(type) {
                 if (type == 0) {
@@ -167,9 +172,7 @@
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-            var resData = await ajax.getData(
-                '/api/services/web/financialCharge/GetCharge',
-                'post', {
+            var resData = await GCharge({
                     id: this.invoiceDetailId
                 }
             );
@@ -218,11 +221,12 @@
                     this.$apply();
                 }
             });
-            var resData = await ajax.getData(
-                '/api/services/web/financialCharge/ApproveCharge',
-                'post', {
-                    Id: id
-                }
+             var resData = await ProcessCharge({
+                auditData: {remark: ""},
+                condition: "Approved",
+                eventName: "WaitForApprove",
+                id: id
+            }
             );
             console.log(resData);
             switch (resData.statusCode) {
@@ -251,14 +255,11 @@
         }
         // 获取操作记录
         async GetLogs(){
-            var { data } = await ajax.getData(
-                '/api/services/web/Workflow/GetLogs',
-                'post', {
+            var { data } = await GetLogs({
                     id: this.invoiceDetailId
                 }
             );
-            this.workflows = data.result.items.filter(item => item.creationTime = formatTime(item.operationTime))
-            console.log(this.workflows);
+            this.workflows = data.result.items
             this.$apply()
         }
         onLoad(options) {

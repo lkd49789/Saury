@@ -1,190 +1,3 @@
-
-<style lang="less">
-  .body {
-    height: 100%;
-    position: relative;
-    .container-title {
-      height: 104rpx;
-      font-size: 48rpx; // padding-left: 28rpx;
-      color: #2a2a2a;
-      line-height: 104rpx;
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid #dedede;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: #fff;
-      z-index: 9999;
-      >text {
-        margin-left: 28rpx;
-      }
-      icon {
-        margin-right: 28rpx;
-      }
-    }
-    .logDetail-container {
-      font-size: 28rpx;
-      color: #2a2a2a; // > view:not(:first-child)::before {
-      //   content: '';
-      //   display: block;
-      //   height: 14rpx;
-      //   background: #f4f4f4;
-      // }
-      .bold::after {
-        content: '';
-        display: block;
-        height: 14rpx;
-        background: #f4f4f4;
-      }
-      .bold-line {
-        height: 7px;
-        background: #f4f4f4;
-      }
-      .log-chunck1 {
-        padding: 149rpx 28rpx 0 28rpx;
-        display: flex;
-        flex-wrap: wrap;
-        >view {
-          width: 50%;
-          display: flex;
-          flex-direction: column;
-          margin-bottom: 32rpx;
-          >text:first-child {
-            color: #7a7a7a;
-            margin-bottom: 22rpx
-          }
-        }
-      }
-      .log-chunck2 {
-        padding: 44rpx 28rpx 0 28rpx;
-        >view {
-          margin-bottom: 32rpx;
-          >text {
-            margin-bottom: 22rpx;
-            display: flex;
-            flex-direction: column;
-          }
-          >text:first-child {
-            color: #7a7a7a
-          }
-        }
-      }
-      .log-chunck3 {
-        padding: 44rpx 28rpx 0 28rpx;
-        display: flex;
-        flex-wrap: wrap;
-        >view {
-          width: 50%;
-          display: flex;
-          flex-direction: column;
-          margin-bottom: 32rpx;
-          >text:first-child {
-            color: #7a7a7a;
-            margin-bottom: 22rpx
-          }
-        }
-      }
-      .log-chunck4 {
-        padding: 44rpx 28rpx 0 28rpx;
-        >view:first-child {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 32rpx;
-        }
-        >view:last-child {
-          display: flex;
-          align-items: center;
-          margin-bottom: 32rpx;
-        }
-      }
-      .log-chunck5 {
-        padding: 44rpx 28rpx 0 28rpx;
-        >view:nth-child(1) {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 32rpx;
-        }
-        >view:nth-child(2) {
-          display: flex;
-          position: relative;
-          margin-bottom: 32rpx;
-          height: 78rpx;
-          >image {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 70rpx;
-            height: 70rpx;
-            border-radius: 50%;
-          }
-        }
-      }
-      .log-chunck6 {
-        padding: 44rpx 28rpx 44rpx 28rpx;
-        color: #7a7a7a;
-        >view:first-child {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 32rpx;
-        }
-        >view:last-child {
-          display: flex;
-          flex-direction: column;
-          >view:nth-child(2){
-            margin-top:22rpx;
-          }
-          >view:last-child {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 22rpx;
-          }
-        }
-      }
-    }
-    .chooseMe {
-      position: fixed;
-      height: 98rpx;
-      width: 100%;
-      bottom: 0;
-      display: flex;
-      align-items: center;
-      background: #5d73fa;
-      color: #fff;
-      z-index: 9999;
-      >view {
-        width: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 34rpx;
-        height: 100%;
-      }
-      >view:first-child {
-        border-right: 1px solid #fff;
-      }
-    }
-    .auditBtn {
-      position: fixed;
-      z-index: 999;
-      bottom: 0;
-      height: 98rpx;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #5d73fa;
-      font-size: 36rpx; // border-top: 1px solid #f4f4f4;
-      color: #fff;
-    }
-  }
-</style>
-
 <template>
   <view class="body">
     <view class="container-title">
@@ -278,9 +91,9 @@
           <text>操作记录</text>
           <!-- <text>审核结果</text> -->
         </view>
-        <view>
-          <view style="color:{{workLogData.processStatus=='R'?'#e20000':workLogData.processStatus=='N'?'#FF9900':'#069400'}}">
-            <text>{{workLogData.processStatusText||'未填写'}}</text>
+        <view class="box">
+            <text style="color:{{workLogData.processStatus=='R'?'#e20000':workLogData.processStatus=='N'?'#FF9900':'#069400'}};">{{workLogData.processStatusText||'未填写'}}</text>
+            <text>{{workLogData.approvalList[0].operationTime}}</text>
           </view>
           <!-- <view wx:if="{{workLogData.processStatus=='R'}}">
             备注：{{workLogData.remark}}
@@ -288,9 +101,7 @@
           <view>
             <!-- <text>通过{{workLogData.approvalList.length}}位审核人审核</text> -->
             <text>共{{workLogData.approvalList.length}}条操作记录</text>
-            <text>{{workLogData.approvalList[0].operationTime}}</text>
           </view>
-        </view>
       </view>
     </view>
     <view class="chooseMe" wx:if='{{chooseMe}}'>
@@ -309,8 +120,8 @@
 
 <script>
   import wepy from 'wepy';
-  import { Worklog,MyParticipantWorklog,MyParticipantWorklogs,GetLogs } from '@/api/myRecord.js';
-  import { EmployeePhoto } from '@/api/common.js';
+  import { Worklog,MyParticipantWorklog,MyParticipantWorklogs } from '@/api/myRecord.js';
+  import { EmployeePhoto,GetLogs } from '@/api/common.js';
   import {
     formatDate,formatTime
   } from '@/utils/cofig/api.js';
@@ -328,8 +139,10 @@
     methods = {
       toauditResultsDetail(){
         if(this.workLogData.approvalList.length > 0){
-        var approvalList=JSON.stringify(this.workLogData.approvalList)
-        wx.navigateTo({ url: './auditResultsDetail?approvalList='+approvalList});
+        // var approvalList=JSON.stringify(this.workLogData.approvalList)
+        // wx.navigateTo({ url: './auditResultsDetail?approvalList='+approvalList});
+          wx.setStorageSync('logs', JSON.stringify(this.workLogData.approvalList))
+          wx.navigateTo({ url:'../../../common/operatingRecord'});
         }
       },
       toDocument(){
@@ -528,3 +341,197 @@
     }
   }
 </script>
+
+<style lang="less">
+  .body {
+    height: 100%;
+    position: relative;
+    .container-title {
+      height: 104rpx;
+      font-size: 48rpx; // padding-left: 28rpx;
+      color: #2a2a2a;
+      line-height: 104rpx;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #dedede;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      z-index: 9999;
+      >text {
+        margin-left: 28rpx;
+      }
+      icon {
+        margin-right: 28rpx;
+      }
+    }
+    .logDetail-container {
+      font-size: 28rpx;
+      color: #2a2a2a; // > view:not(:first-child)::before {
+      //   content: '';
+      //   display: block;
+      //   height: 14rpx;
+      //   background: #f4f4f4;
+      // }
+      .bold::after {
+        content: '';
+        display: block;
+        height: 14rpx;
+        background: #f4f4f4;
+      }
+      .bold-line {
+        height: 7px;
+        background: #f4f4f4;
+      }
+      .log-chunck1 {
+        padding: 149rpx 28rpx 0 28rpx;
+        display: flex;
+        flex-wrap: wrap;
+        >view {
+          width: 50%;
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 32rpx;
+          >text:first-child {
+            color: #7a7a7a;
+            margin-bottom: 22rpx
+          }
+        }
+      }
+      .log-chunck2 {
+        padding: 44rpx 28rpx 0 28rpx;
+        >view {
+          margin-bottom: 32rpx;
+          >text {
+            margin-bottom: 22rpx;
+            display: flex;
+            flex-direction: column;
+          }
+          >text:first-child {
+            color: #7a7a7a
+          }
+        }
+      }
+      .log-chunck3 {
+        padding: 44rpx 28rpx 0 28rpx;
+        display: flex;
+        flex-wrap: wrap;
+        >view {
+          width: 50%;
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 32rpx;
+          >text:first-child {
+            color: #7a7a7a;
+            margin-bottom: 22rpx
+          }
+        }
+      }
+      .log-chunck4 {
+        padding: 44rpx 28rpx 0 28rpx;
+        >view:first-child {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 32rpx;
+        }
+        >view:last-child {
+          display: flex;
+          align-items: center;
+          margin-bottom: 32rpx;
+        }
+      }
+      .log-chunck5 {
+        padding: 44rpx 28rpx 0 28rpx;
+        >view:nth-child(1) {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 32rpx;
+        }
+        >view:nth-child(2) {
+          display: flex;
+          position: relative;
+          margin-bottom: 32rpx;
+          height: 78rpx;
+          >image {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 70rpx;
+            height: 70rpx;
+            border-radius: 50%;
+          }
+        }
+      }
+      .log-chunck6 {
+        padding: 44rpx 28rpx 44rpx 28rpx;
+        color: #7a7a7a;
+        margin: 44rpx 28rpx;
+        box-shadow: 0rpx 8rpx 30rpx 0rpx rgba(65,98,213,0.25);
+        .box{
+          margin-bottom: 20rpx;
+          text:first-child{
+            margin-right: 20rpx;
+          }
+        }
+        >view:first-child {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 32rpx;
+        }
+        >view:last-child {
+          display: flex;
+          flex-direction: column;
+          >view:nth-child(2){
+            margin-top:22rpx;
+          }
+          >view:last-child {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 22rpx;
+          }
+        }
+      }
+    }
+    .chooseMe {
+      position: fixed;
+      height: 98rpx;
+      width: 100%;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      background: #5d73fa;
+      color: #fff;
+      z-index: 9999;
+      >view {
+        width: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 34rpx;
+        height: 100%;
+      }
+      >view:first-child {
+        border-right: 1px solid #fff;
+      }
+    }
+    .auditBtn {
+      position: fixed;
+      z-index: 999;
+      bottom: 0;
+      height: 98rpx;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #5d73fa;
+      font-size: 36rpx; // border-top: 1px solid #f4f4f4;
+      color: #fff;
+    }
+  }
+</style>
