@@ -152,7 +152,6 @@
     import {
         myDistinct ,formatDate
     } from '@/utils/cofig/api';
-    import ajax from '@/utils/cofig/ajax';
     import { GeneralCodeComboboxItems } from '@/api/common';
     // import EName from '@/components/picker/input';
     // import DepartmentId from '@/components/picker/option';

@@ -69,7 +69,8 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { SProcessCase } from '@/api/common'
+    import { GAuditCaseActions } from '@/api/auditModules'
     import remark from '@/components/picker/input'
     export default class auditCase extends wepy.page {
         components = {
@@ -114,9 +115,7 @@
                     this.$apply();
                 }
             });
-            var resData=await ajax.getData(
-                '/api/services/web/Case/ProcessCase',
-                'post',
+            var resData=await SProcessCase(
                 this.submitData
             )
             if(resData.statusCode==200){
@@ -136,7 +135,7 @@
             }
         }
         async GetAuditCaseActions(id){
-            let { data } = await ajax.getData('/api/services/web/Case/GetAuditCaseActions','post',{id})
+            let { data } = await GAuditCaseActions({id})
             this.result  = data.result.items;
             data.result.items.forEach((item,index) =>{
                 if(index === 0)

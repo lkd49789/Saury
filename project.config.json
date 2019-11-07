@@ -51,22 +51,7 @@
 		},
 		"miniprogram": {
 			"current": -1,
-			"list": [
-				{
-					"id": 0,
-					"name": "pages/common/operatingRecord",
-					"pathName": "pages/common/operatingRecord",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/modules/myRecord/myLogdetail/logdetail",
-					"pathName": "pages/modules/myRecord/myLogdetail/logdetail",
-					"query": "id=WL557bd36110f7d2a9",
-					"scene": null
-				}
-			]
+			"list": []
 		}
 	}
 }

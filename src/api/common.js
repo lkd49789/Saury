@@ -118,3 +118,10 @@ export function GetLogs(data){   //获取操作日志列表.
         data
     })       
 }
+
+export function GCaseCheckList(data){   //获取冲突检索结果.
+    return getRequest({
+        url:'/api/services/web/Case/GetCaseCheckList',
+        data
+    })       
+}

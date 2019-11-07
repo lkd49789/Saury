@@ -421,15 +421,15 @@
                 this.$apply();
             },
             LawyerIndex(index){
-                this.searchData.LawyerIdList = this.Lawyer.data[index].id;;
+                this.searchData.LawyerIdList = [this.Lawyer.data[index].id];
                 this.$apply();
             },
             JoinIndex(index){
-                this.searchData.lawyerRoleList = this.Join.data[index].value;
+                this.searchData.lawyerRoleList = [this.Join.data[index].value];
                 this.$apply();
             },
             TypeIndex(index){
-                this.searchData.categoryList = this.Type.data[index].value;
+                this.searchData.categoryList = [this.Type.data[index].value];
                 this.$apply();
             },
             // OrganizationUnitIdIndex(index) {

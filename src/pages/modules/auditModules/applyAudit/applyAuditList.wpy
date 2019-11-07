@@ -116,7 +116,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax'
+    import { GAuditVacations } from '@/api/applyAudit'
     import mixins from '@/utils/cofig/mixin';
     import navbar from '@/components/navbar';
     import { formatTimeSymbol } from '@/utils/cofig/api';
@@ -212,9 +212,7 @@
                 creationTimeRange,
                 VacationTypeList
             }
-            var resData = await ajax.getData(
-                '/api/services/web/EmployeeVacation/GetAuditVacations',
-                'post',
+            var resData = await GAuditVacations(
                 data
             )
             switch (resData.statusCode) {

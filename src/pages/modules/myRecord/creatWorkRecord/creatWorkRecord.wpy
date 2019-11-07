@@ -207,8 +207,7 @@
 
 <script>
     import wepy from 'wepy';
-    import { WorklogForEdit } from '@/api/myRecord.js'
-    import ajax from '@/utils/cofig/ajax.js'
+    import { WorklogForEdit,OrUpdateWorklog } from '@/api/myRecord.js'
     import {GeneralComboboxList} from '@/api/common.js'
 
     import {
@@ -663,10 +662,7 @@
                     this.$apply();
                 }
             });
-            var resData = await ajax.getData('/api/services/web/worklog/CreateOrUpdateWorklog',
-            'post',
-                data
-            );
+            var resData = await OrUpdateWorklog(data);
             if (resData.statusCode == 200) {
                 var isRefresh = wx.getStorageSync('isRefresh');
                 isRefresh.isRefresh = true;

@@ -1065,7 +1065,7 @@
                         console.log(res);
                         var tempFilePath = res.tempFilePath;
                         var thumbTempFilePath = res.thumbTempFilePath;
-                        var time = new Date(new Date().getTime()+8 * 3600000);
+                        var time = new Date(new Date().getTime() + 8 * 3600000);
                         var creationTime = api.formatTime(time);
                         this.uploadFile(
                             'video',
@@ -1087,7 +1087,7 @@
                         // tempFilePath可以作为img标签的src属性显示图片
                         console.log(res);
                         const tempFilePaths = res.tempFilePaths[0];
-                        var time = new Date(new Date().getTime()+8 * 3600000);
+                        var time = new Date(new Date().getTime() + 8 * 3600000);
                         var creationTime = api.formatTime(time);
                         this.uploadFile('image', tempFilePaths, creationTime);
                         this.getScroll();

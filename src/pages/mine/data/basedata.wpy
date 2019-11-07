@@ -249,7 +249,7 @@
 <script>
 import wepy from 'wepy';
 import navbar from '@/components/navbar';
-import ajax from '@/utils/cofig/ajax.js'
+import { GetUsers,LaborRelation } from '@/api/mine'
 export default class baseData extends wepy.page {
   components = {
     navbar
@@ -268,22 +268,14 @@ export default class baseData extends wepy.page {
     }
   };
   async GetMe(){
-    var resData =await ajax.getData(
-      '/api/services/web/personal/GetMe',
-      'post',
-      {}
-    )
+    var resData =await GetUsers()
     if(resData.statusCode==200){
       this.baseData=resData.data.result;
       this.$apply();
     }
   }
   async GetLaborRelation(){
-    var resData=await ajax.getData(
-      '/api/services/web/personal/GetLaborRelation',
-      'post',
-      {}
-    )
+    var resData = await LaborRelation()
     if(resData.statusCode==200){
       this.laborRelationData=resData.data.result;
       this.$apply();

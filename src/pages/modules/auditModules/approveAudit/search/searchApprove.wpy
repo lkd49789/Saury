@@ -169,7 +169,6 @@
 <script>
     import wepy from 'wepy';
     import { myDistinct,formatDate } from '@/utils/cofig/api.js';
-    import ajax from '@/utils/cofig/ajax.js';
     import { CaseCategoryComboboxItems } from '@/api/common';
     // import caseName from '@/components/picker/input';
     // import serialId from '@/components/picker/input';

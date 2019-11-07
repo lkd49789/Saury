@@ -171,7 +171,7 @@
     import {
         myDistinct,formatDate
     } from '@/utils/cofig/api.js';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { GeneralCodeComboboxItems } from '@/api/common';
     import Option from '@/components/picker/option';
     import PickerDate from '@/components/picker/pickerDate'
     export default class searchRecordAudit extends wepy.page {
@@ -347,9 +347,7 @@
             var data_id={
                 id
             }
-            var {data,statusCode}= await ajax.getData(
-                '/api/services/web/common/GetGeneralCodeComboboxItems',
-                'POST',
+            var {data,statusCode}= await GeneralCodeComboboxItems(
                 data_id
             )
             if(statusCode==200){

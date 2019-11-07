@@ -1,7 +1,7 @@
 //微信提示框
 // 时间格式化
 var formatTime = (dateTime) => {
-  var time = new Date(dateTime).getTime()- 8 * 3600000;
+  var time = new Date(dateTime).getTime() - 8 * 3600000;
   var date = new Date(time);
   var year = date.getFullYear()
   var month = date.getMonth() + 1
@@ -13,7 +13,7 @@ var formatTime = (dateTime) => {
   return [year, month, day].map(formatNumber).join('-') + ' ' + [hour, minute, second].map(formatNumber).join(':')
 }
 var formatTimeSymbol = (dateTime, symbol) => {
-  var date = new Date(new Date(dateTime).getTime()- 8 * 3600000);
+  var date = new Date(new Date(dateTime).getTime() - 8 * 3600000);
   var year = date.getFullYear()
   var month = date.getMonth() + 1
   var day = date.getDate()

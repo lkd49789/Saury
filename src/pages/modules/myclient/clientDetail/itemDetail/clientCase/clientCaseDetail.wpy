@@ -192,7 +192,8 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { GCaseInfo } from '@/api/common'
+    import { GCaseLawyersWithGroup } from '@/api/mycase'
     import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
     export default class clientCaseDetail extends wepy.page {
@@ -210,9 +211,7 @@
            var id={
                id:this.caseId
            }
-           var caseInfoData=await ajax.getData(
-               '/api/services/web/case/GetCaseInfo',
-               'post',
+           var caseInfoData=await GCaseInfo(
                id
            )
             switch (caseInfoData.statusCode) {
@@ -248,9 +247,7 @@
         // 获取案件人员头像
         async GetCaseLawyersWithGroupData(){
             var caseId = { caseId: this.caseId };
-            var lawyerGroupData = await ajax.getData(
-            '/api/services/web/caseLawyer/GetCaseLawyersWithGroup',
-            'post',
+            var lawyerGroupData = await GCaseLawyersWithGroup(
             caseId
             );
             if(lawyerGroupData.statusCode==200&&lawyerGroupData.data.result.length!==0){
@@ -258,8 +255,7 @@
                 for(var index in lawyerGroupData ){
                     var userId=lawyerGroupData[index].userId
                     console.log(lawyerGroupData[index].userId);
-                    var http='/api/services/web/personal/GetEmployeePhoto?id='+userId
-                    var avatarData=await ajax.getUserAvatar(http); 
+                    var avatarData=await EmployeePhoto(userId); 
                     this.caseAvatar[index]=avatarData.tempFilePath;
                     lawyerGroupData[index]['avatar']=avatarData.tempFilePath;
                 }

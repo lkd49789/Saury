@@ -259,6 +259,7 @@
                     id: this.invoiceDetailId
                 }
             );
+            data.result.items.forEach(item => item.operationTime = formatTime(item.operationTime))
             this.workflows = data.result.items
             this.$apply()
         }

@@ -304,7 +304,8 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '@/utils/cofig/ajax.js';
+  import { Worklog } from '@/api/myRecord';
+  import { EmployeePhoto,GetLogs,MyParticipantWorklogs,MyParticipantWorklog } from '@/api/common';
   import {
     formatDate,formatTime
   } from '@/utils/cofig/api.js';
@@ -404,9 +405,7 @@
       var id = {
         id: this.id
       };
-      var workLogData = await ajax.getData(
-        '/api/services/web/worklog/GetWorklog',
-        'post',
+      var workLogData = await Worklog(
         id
       )
       if (workLogData.statusCode == 200) {
@@ -439,15 +438,12 @@
           var participantList = workLogData.participantList;
           for (var index in participantList) {
             var employeeId = participantList[index].employeeId
-            var http = '/api/services/web/personal/GetEmployeePhoto?id=' + employeeId;
-            var avatar = await ajax.getAavatar(http);
+            var avatar = await EmployeePhoto(employeeId);
             this.avatar[index] = avatar;
             this.$apply();
           }
         }
-        var { data } = await ajax.getData(
-          '/api/services/web/Workflow/GetLogs',
-          'post',
+        var { data } = await GetLogs(
           id
         )
       //通过人数
@@ -479,10 +475,7 @@
         title: '提交中，请稍等！', //提示的内容,
         mask: true, //显示透明蒙层，防止触摸穿透,
       });
-      var GetMyParticipantWorklogs = await ajax.getData(
-        '/api/services/web/worklog/GetMyParticipantWorklogs',
-        'post'
-      )
+      var GetMyParticipantWorklogs = await MyParticipantWorklogs()
       var MyParticipantWorklogsCount = GetMyParticipantWorklogs.data.result.length;
       if (MyParticipantWorklogsCount) {
         wx.navigateBack({
@@ -506,9 +499,7 @@
       var data = {
         id: this.id
       }
-      var CancelData = await ajax.getData(
-        '/api/services/web/worklog/CancelMyParticipantWorklog',
-        'post',
+      var CancelData = await MyParticipantWorklog(
         data
       )
       if (CancelData.statusCode == 200) {

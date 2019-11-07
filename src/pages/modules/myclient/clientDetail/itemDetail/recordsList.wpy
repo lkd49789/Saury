@@ -183,7 +183,8 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '@/utils/cofig/ajax.js';
+  import { getUserAvatar } from '@/utils/cofig/ajax.js';
+  import { GVisitRecords } from '@/api/myclient';
   import mixins from '@/utils/cofig/mixin.js';
   import placeHolderImage from '@/components/placeHolderImage';
   export default class visitrecord extends wepy.page {
@@ -232,7 +233,7 @@
         var interviewee = []
         for (var j in intervieweeList) {
           var http = intervieweeList[j].avatar;
-          var intervieweeAvatar = await ajax.getUserAvatar(http);
+          var intervieweeAvatar = await getUserAvatar(http);
           if (intervieweeAvatar.statusCode == 200) {
             interviewee.push(intervieweeAvatar.tempFilePath)
           } else {
@@ -251,7 +252,7 @@
         var visitor = []
         for (var j in visitorList) {
           var http = visitorList[j].avatar;
-          var intervieweeAvatar = await ajax.getUserAvatar(http)
+          var intervieweeAvatar = await getUserAvatar(http)
           if (intervieweeAvatar.statusCode == 200) {
             visitor.push(intervieweeAvatar.tempFilePath)
           } else {
@@ -273,12 +274,8 @@
         pageNumber: this.pageNumber,
         pageSize: 10
       }
-      var VisitRecordsData=await ajax.getData(
-        '/api/services/web/clientVisitServiceRecords/GetVisitRecords',
-        'post',
-        data
-      )
-      this.VisitRecordsData=this.VisitRecordsData.concat(VisitRecordsData.data.result.items);
+      var VisitRecordsData = await GVisitRecords(data)
+      this.VisitRecordsData = this.VisitRecordsData.concat(VisitRecordsData.data.result.items);
       this.$apply();
     }
     onLoad() {

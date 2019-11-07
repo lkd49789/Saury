@@ -17,7 +17,7 @@
             <view class="right">
               <view class="flex">
                 <text>{{item.operationTypeName ? item.operationTypeName + '-' + item.result : item.result}}</text>
-                <text>{{item.time}}</text>
+                <text>{{item.operationTime}}</text>
               </view>
               <text style="color: #009dff">{{item.Remark || '未填写'}}</text>
             </view>
@@ -53,7 +53,6 @@
       let logs = JSON.parse(wx.getStorageSync('logs'))
       for(let i in logs){
         logs[i]['src'] = await EmployeePhoto(logs[i].operatorUserId)
-        logs[i].time = formatTime(logs[i].operationTime)
         if(logs[i].jsonData && logs[i].jsonData != 'null')
         logs[i]['Remark'] = JSON.parse(logs[i].jsonData).Remark
 

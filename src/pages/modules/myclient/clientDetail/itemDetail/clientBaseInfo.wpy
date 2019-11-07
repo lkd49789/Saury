@@ -292,7 +292,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { GClient } from '@/api/common'
     import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
     export default class clientBaseInfo extends wepy.page {
@@ -306,9 +306,7 @@
         mixins = [mixins];
          //获取客户信息
         async GetClient(id){
-        var resData=await ajax.getData(
-            '/api/services/web/client/GetClient',
-            'post',
+        var resData=await GClient(
             {id}
         )
         if(resData.statusCode==200){

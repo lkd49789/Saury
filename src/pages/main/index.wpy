@@ -243,10 +243,8 @@
   import { EmployeePhoto } from '@/api/common.js';
   import 'wepy-async-function';
   import {
-    toFixed,
-    beautify_time
+    toFixed,beautify_time
   } from '../../utils/cofig/api.js';
-  import ajax from '@/utils/cofig/ajax.js';
   export default class mainIndex extends wepy.page {
     components = {};
     data = {
@@ -703,6 +701,9 @@
               break;
             case 'App.Business.CaseRecord.Info':
               item.TextTile = '立案-处理过程';
+              break;
+            case 'App.Business.CaseFile.Created':
+              item.TextTile = '结案-待归档';
               break;
             default:
               break;

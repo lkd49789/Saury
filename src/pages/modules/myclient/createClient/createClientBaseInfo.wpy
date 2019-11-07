@@ -130,7 +130,9 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { GClientForEdit } from '@/api/myclient';
+    import { GCaseLawyersWithGroup } from '@/api/mycase';
+    import { Organizations,GeneralCodeComboOutput } from '@/api/common';
     import Name from '@/components/picker/input';
     import EnName from '@/components/picker/input';
     import pyName from '@/components/picker/input';
@@ -521,10 +523,7 @@
         };
         computed = {};
         async GetClientForEdit() {
-            var resData = await ajax.getData(
-                '/api/services/web/client/GetClientForEdit',
-                'post', {}
-            )
+            var resData = await GClientForEdit({})
             console.log(resData.data.result)
             if (resData.statusCode == 200) {
                 var GetClientForEdit_data = resData.data.result;
@@ -550,9 +549,7 @@
         }
         //获取隶属组织机构
         async GetOrganizations() {
-            var resData = await ajax.getData(
-                '/api/services/web/common/GetOrganizations',
-                'post',
+            var resData = await Organizations(
                 {id:true}
             )
             if (resData.statusCode == 200) {
@@ -578,9 +575,7 @@
                 IsRecursive: false,
                 // isAll: true
             }
-            var resData = await ajax.getData(
-                '/api/services/web/common/GetGeneralCodeComboOutput',
-                'post',
+            var resData = await GeneralCodeComboOutput(
                 data
             )
             // console.log(resData);

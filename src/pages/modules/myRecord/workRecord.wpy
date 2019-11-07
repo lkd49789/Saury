@@ -155,7 +155,7 @@
     import { MyWorklogs,myRecord,MyParticipantWorklogs } from '@/api/myRecord.js'
     import mixins from '@/utils/cofig/mixin.js';
     import {
-        formatDate
+        formatDate,formatTimeSymbol
     } from '@/utils/cofig/api.js';
 	import navbar from '@/components/navbar';
     import placeHolderImage from '@/components/placeHolderImage';

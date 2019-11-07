@@ -64,7 +64,7 @@
             // console.log(this.timeObj);
             // 获取完整的年月日 时分秒，以及默认显示的数组
            var nowDate=this.timeObj.time;
-            nowDate = new Date(new Date(nowDate).getTime()+8 * 3600000);
+            nowDate = new Date(new Date(nowDate).getTime());
             var date= formatTime(nowDate)
             var obj = dateTimePicker.dateTimePicker(this.data.startYear, this.data.endYear,date);
             if(!this.timeObj.date){

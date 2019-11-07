@@ -43,7 +43,8 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import ajax from '@/utils/cofig/ajax';
+    import { UserNotifications,SNotificationAsRead } from '@/api/main';
     import { EmployeePhoto } from '@/api/common';
     import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
@@ -71,6 +72,8 @@
             delet_id_all: [],
             all_checked: false,
             show_sign: false,
+            headIdList:[],
+            headUrlList:[]
         };
         components = {
             placeHolderImage
@@ -265,11 +268,7 @@
                 skipCount: this.skipCount,
                 state
             }
-            var resData = await ajax.getData(
-                '/api/services/app/Notification/GetUserNotifications',
-                'GET',
-                data
-            )
+            var resData = await UserNotifications(data)
             switch (resData.statusCode) {
                 case 200:
                     if (resData.data.result.totalCount !== 0) {
@@ -463,10 +462,13 @@
                                     item.TextTile = '立案-处理过程';
                                     item.linkPage = '../../modules/mycase/caseDetail/casedetail';
                                     break;
+                                case 'App.Business.CaseFile.Created':
+                                    item.TextTile = '结案-待归档';
+                                    item.linkPage = '';
+                                    break;
                             }
                             isDisabled.push(false)
                         })
-                        console.log(1)
                         this.GetPhoto(UserNotifications_Data, isRresh);
                         this.GetState(UserNotifications_Data, isRresh);
                         if (isRresh) {
@@ -532,11 +534,7 @@
             var data = {
                 id
             }
-            var resData = await ajax.getData(
-                '/api/services/app/notification/SetNotificationAsRead',
-                'POST',
-                data
-            )
+            var resData = await SNotificationAsRead(data)
             if (resData.data.success) {
                 console.log('完成')
             }

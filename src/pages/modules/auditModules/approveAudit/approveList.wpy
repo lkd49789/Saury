@@ -77,7 +77,7 @@
                         <text class="omit">{{item.stampNumber}}</text>
                     </view>
                     <view class="documentTypeText_stampTypeText">
-                        <text class="omit">{{item.documentTypeText}}</text>
+                        <text class="omit">{{item.documentTypeText || ''}}</text>
                         <text class="omit">{{item.stampTypeText}}</text>
                     </view>
                 </view>
@@ -124,7 +124,7 @@
 <script>
     import wepy from 'wepy';
     import navbar from '@/components/navbar';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { GAuditCaseFileStamps } from '@/api/auditModules';
     import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
     export default class approveList extends wepy.page {
@@ -148,7 +148,7 @@
             // totalCount_A: 0,
             // totalCount_R: 0,
             queryStream:{},
-            statusList:["NF", "NW"]
+            statusList:["NF", "NW","W"]
         };
         components = {
             placeHolderImage,
@@ -239,9 +239,7 @@
                 pageSize: this.pageSize,
                 statusList:this.statusList
             }
-            var resData = await ajax.getData(
-                '/api/services/web/CaseFileStamp/GetAuditCaseFileStamps',
-                'post',
+            var resData = await GAuditCaseFileStamps(
                 data
             )
             this.totalCount_W = resData.data.result.totalCount;

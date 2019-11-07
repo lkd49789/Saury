@@ -205,7 +205,6 @@
   import wepy from 'wepy';
   import 'wepy-async-function';
   import { GetUsers, PersonAnnualCount } from '@/api/mine.js';
-  import ajax from '../../utils/cofig/ajax.js';
   export default class mineIndex extends wepy.page {
     data = {
       isScroll: true,

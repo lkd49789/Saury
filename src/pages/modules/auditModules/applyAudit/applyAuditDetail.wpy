@@ -180,9 +180,10 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
-    import input from '@/components/picker/input';
+    import { GVacationApplyOutput } from '@/api/myApplyList'
+    import { ProcessVacation,GAuditVacationActions } from '@/api/auditModules'
     import { formatTime } from '@/utils/cofig/api';
+    import input from '@/components/picker/input';
     export default class clientDetail extends wepy.page {
         components = {
             textarea: input
@@ -245,9 +246,7 @@
             var data = {
                 id: this.submitData.id
             }
-            var resData = await ajax.getData(
-                '/api/services/web/employeeVacation/GetVacationApplyOutput',
-                'post',
+            var resData = await GVacationApplyOutput(
                 data
             )
             if (resData.statusCode == 200) {
@@ -261,8 +260,7 @@
                 VacationApplyOutputData.startDate = formatTime(VacationApplyOutputData.startDate)
                 VacationApplyOutputData.endDate = formatTime(VacationApplyOutputData.endDate)
                 if (VacationApplyOutputData.approveUserId) {
-                    var http = '/api/services/web/personal/GetEmployeePhoto?id=' + VacationApplyOutputData.approveUserId;
-                    var avatar = await ajax.getAavatar(http);
+                    var avatar = await EmployeePhoto(VacationApplyOutputData.approveUserId);
                     VacationApplyOutputData['avatar'] = avatar;
                 }
                 this.VacationApplyOutputData = VacationApplyOutputData;
@@ -285,9 +283,7 @@
                     this.$apply();
                  }
                });
-            var resData = await ajax.getData(
-                '/api/services/web/EmployeeVacation/ProcessVacation',
-                'post',
+            var resData = await ProcessVacation(
                 data
             )
             if (resData.statusCode == 200) {
@@ -316,7 +312,7 @@
         }
         // 获取审核请假操作列表.
         async GetAuditVacationActions(){
-            let { data } = await ajax.getData('/api/services/web/EmployeeVacation/GetAuditVacationActions','post',{id: this.submitData.id})
+            let { data } = await GAuditVacationActions({id: this.submitData.id})
             data.result.items.forEach((item,index) =>{ 
                 if(index === 0){
                     item.isChecked = true; 

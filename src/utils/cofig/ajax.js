@@ -149,10 +149,10 @@ var preView = (http,fileClass) => {
           success: res => {
             var filePath = res.tempFilePath;
             // this.showView = !this.showView;
-            console.log(res);
             switch (fileClass) {
               case 'jpg':
               case 'png':
+              case 'jpeg':
                 wx.previewImage({
                   current: res.tempFilePath, // 当前显示图片的http链接
                   urls: [res.tempFilePath] // 需要预览的图片http链接列表

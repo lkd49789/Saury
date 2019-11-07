@@ -159,6 +159,8 @@
         // 获取操作记录
         async Glogs(){
             let { data } = await GetLogs({id:this.invoiceDetailId})
+            data.result.items.forEach(item => item.operationTime = formatTime(item.operationTime))
+            this.workflows = data.result.items
             this.Logs = data.result.items
             this.$apply()
         }

@@ -250,7 +250,7 @@
                         <text class="bill_gray">操作记录</text>
                         <icon class="iconfont icon-gengduo icon-more" style="font-size:30rpx;color:#b2b2b2"></icon>
                     </view>
-                    <view class="bill_view "><text class="status">{{CaseFileStampOutputData.statusText}}</text><text class="bill_gray">{{CaseFileStampOutputData.creationTime}}</text></view>
+                    <view class="bill_view "><text class="status">{{CaseFileStampOutputData.statusText}}</text><text class="bill_gray">{{Logs[0].operationTime}}</text></view>
                     <view class="bill-del bill_gray">
                         共<text>{{Logs.length}}</text>条操作记录
                     </view>
@@ -297,7 +297,9 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { GCaseFileStampOutput } from '@/api/auditModules';
+    import { EmployeePhoto,GetLogs } from '@/api/common';
+    import { preView } from '@/utils/cofig/ajax.js'
     import { formatTime } from '@/utils/cofig/api.js';
     export default class approveDetail extends wepy.page {
         props = {};
@@ -311,7 +313,7 @@
                 fileClass = fileClass.replace('.', '').toLowerCase();
                 if (['pdf','png','xsl','xlsx','jpg','doc','docx'].includes(fileClass)) {
                     var http = '/api/services/web/document/GetDocumentFile?id=' + fileId;
-                    ajax.preView(http, fileClass);
+                    preView(http, fileClass);
                 } else {
                     wx.showToast({
                         title: '暂不支持此文件预览！',
@@ -335,9 +337,7 @@
             var data = {
                 id: this.id
             }
-            var resData = await ajax.getData(
-                '/api/services/web/caseFileStamp/GetCaseFileStampOutput',
-                'post',
+            var resData = await GCaseFileStampOutput(
                 data
             )
             if (resData.statusCode == 200) {
@@ -375,8 +375,7 @@
                         break;
                 }
                 if (CaseFileStampOutputData.creationUser) {
-                    var http = '/api/services/web/personal/GetEmployeePhoto?id=' + CaseFileStampOutputData.creationUser;
-                    var avatar = await ajax.getAavatar(http);
+                    var avatar = await EmployeePhoto(CaseFileStampOutputData.creationUser);
                     CaseFileStampOutputData.Avatar = avatar;
                 }
                 CaseFileStampOutputData.fileSize = this.formatFileSize(+CaseFileStampOutputData.fileSize);
@@ -390,7 +389,8 @@
         }
         // 获取操作记录
         async Glogs(){
-            let { data } = await ajax.getData('/api/services/web/Workflow/GetLogs','post',{id:this.id})
+            let { data } = await GetLogs({id:this.id})
+            data.result.items.forEach(item => item.operationTime = formatTime(item.operationTime))
             this.Logs = data.result.items
             this.$apply()
         }

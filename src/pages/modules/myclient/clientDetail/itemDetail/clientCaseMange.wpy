@@ -88,7 +88,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { GCases } from '@/api/myclient';
     import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
     export default class clientCaseMange extends wepy.page {
@@ -160,9 +160,7 @@
                         pageNumber: this.pageNumber,
                         pageSize:10
                     }
-                    var manageDatas = await ajax.getData(
-                        '/api/services/web/Case/GetCases',
-                        'post',
+                    var manageDatas = await GCases(
                         data
                         );
                     if(manageDatas.statusCode == 200 && manageDatas.data.result.items.length !== 0){

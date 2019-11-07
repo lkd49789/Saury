@@ -89,7 +89,8 @@
 
 <script>
 import wepy from 'wepy';
-import ajax from '@/utils/cofig/ajax.js';
+import { GClientContactsList } from '@/api/mycase';
+import { GClientContactAvatar } from '@/api/common';
 import mixins from '@/utils/cofig/mixin.js';
 import placeHolderImage from '@/components/placeHolderImage';
 export default class caseintroduce extends wepy.page {
@@ -163,9 +164,7 @@ export default class caseintroduce extends wepy.page {
       title: '加载中,请稍等!',
       mask: true,
     });
-    var resData = await ajax.getData(
-      '/api/services/web/clientContacts/GetClientContactsList',
-      'post',
+    var resData = await GClientContactsList(
       clientId
     );
     if(resData.statusCode==200){
@@ -173,9 +172,7 @@ export default class caseintroduce extends wepy.page {
       var linkerData = resData.data.result.items;
       for (var i in linkerData) {
         var id = linkerData[i].id;
-        var http =
-          '/api/services/web/clientContacts/GetClientContactAvatar?id=' + id;
-        var linkerPhotoData = await ajax.getAavatar(http);
+        var linkerPhotoData = await GClientContactAvatar(id);
         linkerData[i]['avatar'] = linkerPhotoData;
       }
       this.linkerData.push(...linkerData);

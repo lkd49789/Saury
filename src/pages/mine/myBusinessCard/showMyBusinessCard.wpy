@@ -164,7 +164,6 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
     export default class showMyBusinessCard extends wepy.page {
         config = {
             navigationBarTitleText: "个人名片",

@@ -205,7 +205,9 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { GClientContactsList,GVisitRecords } from '@/api/mycase'
+    import { GCases } from '@/api/myclient'
+    import { GClientContactAvatar } from '@/api/common'
     import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
     export default class clientDetail extends wepy.page {
@@ -251,9 +253,7 @@
                 pageNumber: 1,
                 pageSize: 10,
             }
-            var ContactsListData=await ajax.getData(
-                '/api/services/web/clientContacts/GetClientContactsList',
-                'post',
+            var ContactsListData=await GClientContactsList(
                 data
             )
             if(ContactsListData.statusCode==200&&ContactsListData.data.result.items.length!==0){
@@ -264,8 +264,7 @@
                   success: res => {}
                 });
                 for(var index in ContactsListData){
-                    var http='/api/services/web/clientContacts/GetClientContactAvatar?id='+ContactsListData[index].id;
-                    var contactAvatar=await ajax.getUserAvatar(http);
+                    var contactAvatar=await GClientContactAvatar(ContactsListData[index].id);
                     if(contactAvatar.statusCode==200){
                         ContactsListData[index].avatar=contactAvatar.tempFilePath;
                     }
@@ -285,9 +284,7 @@
                 pageNumber: 1,
                 pageSize: 10
             }
-            var CaseManageData = await ajax.getData(
-                '/api/services/web/Case/GetCases',
-                'post',
+            var CaseManageData = await GCases(
                 data
             )
             if(CaseManageData.statusCode==200&&CaseManageData.data.result.items.length!==0){
@@ -305,9 +302,7 @@
                 pageNumber: 1,
                 pageSize: 10
             }
-            var VisitRecordsDatas=await ajax.getData(
-                '/api/services/web/clientVisitServiceRecords/GetVisitRecords',
-                'post',
+            var VisitRecordsDatas=await GVisitRecords(
                 data
             )
             if(VisitRecordsDatas.statusCode==200&&VisitRecordsDatas.data.result.items.length!==0){

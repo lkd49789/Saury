@@ -76,7 +76,7 @@
 
 <script>
   import wepy from 'wepy';
-  import ajax from '@/utils/cofig/ajax.js';
+  import { GClientForEdit,COrUpdateClientBasic } from '@/api/myclient';
   import Linker from '@/components/picker/input';
   import LegalPerson from '@/components/picker/option';
   import LegalDuty from '@/components/picker/option';
@@ -254,10 +254,7 @@
     };
     computed = {};
     async GetClientForEdit() {
-      var resData = await ajax.getData(
-        '/api/services/web/client/GetClientForEdit',
-        'post', {}
-      )
+      var resData = await GClientForEdit({})
       if (resData.statusCode == 200) {
         var GetClientForEdit_data = resData.data.result;
         //代表类型
@@ -284,11 +281,7 @@
           this.$apply();
         }
       });
-      var resData = await ajax.getData(
-        '/api/services/web/client/CreateOrUpdateClientBasic',
-        'post',
-        data
-      )
+      var resData = await COrUpdateClientBasic(data)
       if (resData.statusCode == 200) {
         var pages = getCurrentPages();
         var prevPage = pages[pages.length - 3]; //上两个页面

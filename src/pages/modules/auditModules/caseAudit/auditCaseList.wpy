@@ -112,7 +112,7 @@
 <script>
     import wepy from 'wepy';
     import navbar from '@/components/navbar';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { GetAuditCases } from '@/api/auditModules'
     import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
     export default class autitCaseList extends wepy.page {
@@ -290,9 +290,7 @@
                 LawyerIdList: [],
                 filter
                 }
-            var resData = await ajax.getData(
-                '/api/services/web/Case/GetAuditCases',
-                'post',
+            var resData = await GetAuditCases(
                 data
             )
             switch (resData.statusCode) {

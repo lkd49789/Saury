@@ -164,7 +164,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { Clients } from '@/api/myclient';
     import Pinyin from '@/utils/cofig/pinyin.js';
     export default class directory extends wepy.page {
         props = {};
@@ -332,9 +332,7 @@
                 pageSize: 1000,
                 sorting: ""
             }
-            var resData = await ajax.getData(
-                '/api/services/web/common/GetClients',
-                'post',
+            var resData = await Clients(
                 data
             )
             switch (resData.statusCode) {

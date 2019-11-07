@@ -144,7 +144,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { ClientBasicTotal } from '@/api/myRecord'
     import mixins from '@/utils/cofig/mixin.js';
     import navbar from '@/components/navbar';
     import placeHolderImage from '@/components/placeHolderImage';
@@ -256,9 +256,7 @@
                 modeValue: 0,
                 statisticsMode: 0,
             }
-            var resData = await ajax.getData(
-                '/api/services/web/clientStatistics/GetClientBasicTotal',
-                'post',
+            var resData = await ClientBasicTotal(
                 data
             )
             if (resData.statusCode == 200) {
@@ -292,9 +290,7 @@
                 modeValue: 0,
                 statisticsMode: 0,
             }
-            var resData= await ajax.getData(
-                '/api/services/web/clientStatistics/GetClientYearTotal',
-                'post',
+            var resData= await ClientBasicTotal(
                 data
             )
             if(resData.statusCode==200){
