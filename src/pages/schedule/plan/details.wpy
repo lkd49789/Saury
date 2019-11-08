@@ -322,7 +322,8 @@
 </template>
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax';
+    import { preView as pView} from '@/utils/cofig/request';
+    import { GetSchedule } from '@/api/schedule';
     import { EmployeePhoto } from '@/api/common';
     import {
         formatTimeSymbol
@@ -341,18 +342,14 @@
                 console.log(fileId, fileName);
                 var http = '/api/services/web/scheduleAttachment/GetDocumentFile?id=' + fileId
                 var fileClass = '.' + fileName.split('.')[1];
-                ajax.preView(http, fileClass)
+                pView(http, fileClass)
             },
         };
         async GetPlanlog() {
             var id = {
                 id: this.id
             };
-            var { data } = await ajax.getData(
-                '/api/services/web/schedule/GetSchedule',
-                'post',
-                id
-            )
+            var { data } = await GetSchedule(id)
             var planLogData = data;
             planLogData.result.tag = planLogData.result.tag.split(',')
             planLogData.result.privacy = ((new Date(planLogData.result.endTime).getTime() - new Date(planLogData.result.startTime).getTime()) /1000 / 60 /60).toFixed(1)
@@ -364,8 +361,7 @@
              //会议参与人
             for (var i in  planLogData.result.participantList) {
                //头像
-                var phttp = '/api/services/web/personal/GetEmployeePhoto?id=' + planLogData.result.participantList[i].employeeId
-                var Avatar = await ajax.getUserAvatar(phttp);
+                var Avatar = await EmployeePhoto(planLogData.result.participantList[i].employeeId);
                 planLogData.result.participantList[i].employeeAvatar = Avatar.tempFilePath;
                 //状态
                  planLogData.result.participantList[i].status=planLogData.result.participantList[i].status.replace(/\s+/g,"");
@@ -374,11 +370,6 @@
             for (var i in planLogData.result.attachmentList) {
                 switch (planLogData.result.attachmentList[i].extension.split('.')[1]) {
                     case 'pdf':
-                        var iconfont = {};
-                        iconfont['icon'] = 'icon-pdfpng1';
-                        iconfont['color'] = '#e20000';
-                        planLogData.result.attachmentList[i].icon = iconfont;
-                        break;
                     case 'png':
                         var iconfont = {};
                         iconfont['icon'] = 'icon-pdfpng1';
@@ -386,11 +377,6 @@
                         planLogData.result.attachmentList[i].icon = iconfont;
                         break;
                     case 'docx':
-                        var iconfont = {};
-                        iconfont['icon'] = 'icon-wold1';
-                        iconfont['color'] = '#009dff';
-                        planLogData.result.attachmentList[i].icon = iconfont;
-                        break;
                     case 'doc':
                         var iconfont = {};
                         iconfont['icon'] = 'icon-wold1';
@@ -398,11 +384,6 @@
                         planLogData.result.attachmentList[i].icon = iconfont;
                         break;
                     case 'xls':
-                        var iconfont = {};
-                        iconfont['icon'] = 'icon-exl1';
-                        iconfont['color'] = '#069400';
-                        planLogData.result.attachmentList[i].icon = iconfont;
-                        break;
                     case 'xlsx':
                         var iconfont = {};
                         iconfont['icon'] = 'icon-exl1';

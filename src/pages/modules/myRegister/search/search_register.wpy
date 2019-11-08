@@ -213,7 +213,7 @@
                 </view>
                 <LawyerRole :options.sync="LawyerRole" :index.sync='LawyerRoleIndex' :twoWayTitle="LawyerRoleIndex" />
                 <LawcaseType :options.sync="LawcaseType" :index.sync='LawcaseTypeIndex' :twoWayTitle="LawcaseTypeIndex" />
-                <Lawyer :options.sync="Lawyer" :index.sync='LawyerIndex' :twoWayTitle="LawyerIndex" />
+                <!-- <Lawyer :options.sync="Lawyer" :index.sync='LawyerIndex' :twoWayTitle="LawyerIndex" /> -->
             </view>
             <!-- <view class="checkedBox">
                 <view class="title">
@@ -268,7 +268,7 @@
             // ClientName,
             LawyerRole,
             LawcaseType:LawyerRole,
-            Lawyer:LawyerRole
+            // Lawyer:LawyerRole
         }
         data = {
             searchData: {},
@@ -304,14 +304,14 @@
                 warning: false
             },
             LawyerRoleIndex: -1,
-            Lawyer:{
-                title: '律师',
-                name: 'Lawyer',
-                value: [],
-                displayText: [],
-                warning: false
-            },
-            LawyerIndex:-1,
+            // Lawyer:{
+            //     title: '律师',
+            //     name: 'Lawyer',
+            //     value: [],
+            //     displayText: [],
+            //     warning: false
+            // },
+            // LawyerIndex:-1,
             //案件类别
             Category: [],
             //状态
@@ -338,10 +338,10 @@
                 this.searchData.categoryList = [this.LawcaseType.value[index]];
                 this.$apply();
             },
-            LawyerIndex(index){
-                this.searchData.LawyerIdList = [this.Lawyer.value[index]];
-                this.$apply();
-            }
+            // LawyerIndex(index){
+            //     this.searchData.LawyerIdList = [this.Lawyer.value[index]];
+            //     this.$apply();
+            // }
         };
         methods = {
             checkboxChangeProcessStatus(e){
@@ -534,18 +534,18 @@
             this.$apply();
         }
         // 获取律师数据
-        async GetEmployees(){
-            let resData = await GEmployees(
-            {pageNumber: 1,
-            pageSize: 100,
-            singleSelect: false})
-            if (resData.statusCode == 200) {
-                resData.data.result.items.forEach(item =>{
-                    this.Lawyer.value.push(item.id)
-                    this.Lawyer.displayText.push(item.name)
-                })
-            }
-        }
+        // async GetEmployees(){
+        //     let resData = await GEmployees(
+        //     {pageNumber: 1,
+        //     pageSize: 100,
+        //     singleSelect: false})
+        //     if (resData.statusCode == 200) {
+        //         resData.data.result.items.forEach(item =>{
+        //             this.Lawyer.value.push(item.id)
+        //             this.Lawyer.displayText.push(item.name)
+        //         })
+        //     }
+        // }
         // 参案角色
         async GetGeneralCodeComboboxItems(){
             let resData = await GeneralCodeComboboxItems({id: "CACBT"})

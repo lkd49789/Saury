@@ -1,4 +1,4 @@
-import { getRequest, getAavatar, uploadFile, preView } from '@/utils/cofig/ajax.js';
+import { getRequest, getAavatar, uploadFile, preView } from '@/utils/cofig/request.js';
 
 export function ProjectCover(id){   // 获取项目的封面图片
     return getAavatar(`/api/services/web/TaskProject/GetProjectCover?id=${id}`)     

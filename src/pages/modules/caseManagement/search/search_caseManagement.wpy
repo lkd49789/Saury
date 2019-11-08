@@ -96,15 +96,11 @@
 
 <script>
     import wepy from 'wepy';
-    import {
-        myDistinct
-    } from '@/utils/cofig/api.js';
-    import ajax from '@/utils/cofig/ajax.js';
-    import { GeneralCodeComboboxItems } from '@/api/common.js';
+    import { myDistinct,formatDate } from '@/utils/cofig/api.js';
+    import { GeneralCodeComboboxItems,GEmployees } from '@/api/common';
+    import { GCaseStates } from '@/api/caseManagement';
+    import { GCaseGeneralInfoForEdit } from '@/api/myRegister';
 
-    import {
-        formatDate
-    } from '@/utils/cofig/api.js';
     // import Id from '@/components/picker/input';
     // import Name from '@/components/picker/input';
     // import ClientId from '@/components/picker/input';
@@ -494,10 +490,7 @@
         }
         //获取代编辑数据
         async GetCaseApplyListSearchInput() {
-            var resData = await ajax.getData(
-                '/api/services/web/Case/GetCaseStates',
-                'post'
-            )
+            var resData = await GCaseStates()
             if (resData.statusCode == 200) {
                 this.State.data = resData.data.result.items;
                 // this.Category = CaseApplyListSearchInputDatas.categoryList;
@@ -508,12 +501,7 @@
         }
         //案件待编辑基础数据
         async GetCaseGeneralInfo() {
-            var resData = await ajax.getData(
-                '/api/services/web/case/GetCaseGeneralInfoForEdit',
-                'post', {
-                    Id: ''
-                }
-            )
+            var resData = await GCaseGeneralInfoForEdit({Id: ''})
             if (resData.statusCode == 200) {
                 var caseGeneralInfoData = resData.data.result;
                 this.Type.data = caseGeneralInfoData.caseCategoryCombobox.splice(1)
@@ -559,9 +547,7 @@
         }
         // 获取律师
         async GetLawyer(){
-            var resData = await ajax.getData(
-                '/api/services/web/common/GetEmployees',
-                'post', {
+            var resData = await GEmployees({
                     pageNumber: 1,
                     pageSize: 100
                 }

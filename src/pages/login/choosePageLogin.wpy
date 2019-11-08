@@ -79,7 +79,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { GetWechatUserInfo } from '@/api/login'
     export default class chooseLogin extends wepy.page {
         config = {
             backgroundTextStyle: 'dark',
@@ -97,15 +97,15 @@
             async bindGetUserInfo(res) {
                 if (res.detail.userInfo) {
                     console.log(res.detail);
-                    let resData = await ajax.getRequest({url:'/api/Account/GetWechatUserInfo',
-                    data:{
+                    let resData = await GetWechatUserInfo(
+                    {
                             code: this.code,
                             encryptedData: res.detail.encryptedData,
                             iv: res.detail.iv,
                             rawData: res.detail.rawData,
                             signature: res.detail.signature
                         }
-                    })
+                    )
                     if (resData.data.result.accessToken) {
                        wx.switchTab({
                            url: '../main/index'

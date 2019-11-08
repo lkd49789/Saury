@@ -1,4 +1,4 @@
-import { getRequest  } from '@/utils/cofig/ajax.js';
+import { getRequest  } from '@/utils/cofig/request.js';
 
 export function GMyBillings(data){   // 获取我的账单列表信息.
     return getRequest({

@@ -1,4 +1,4 @@
-import { getRequest } from '../utils/cofig/ajax.js';
+import { getRequest } from '../utils/cofig/request.js';
 
 export function AllPermissions(){   // 获取权限
     return getRequest({

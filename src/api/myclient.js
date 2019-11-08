@@ -1,4 +1,4 @@
-import { getRequest } from '@/utils/cofig/ajax.js';
+import { getRequest } from '@/utils/cofig/request.js';
 
 export function Clients(data){   // 获取客户列表
     return getRequest({

@@ -1,4 +1,4 @@
-import { getRequest  } from '@/utils/cofig/ajax.js';
+import { getRequest  } from '@/utils/cofig/request.js';
 
 export function MyWorklogs(data){   // 获取我的工作日志信息列表
     return getRequest({

@@ -11,18 +11,21 @@
                 justify-content: space-between;
                 color: #7a7a7a;
                 .part-item {
-                    position: relative;
-                    margin: 10rpx;
-                    background: #dfdfdf;
-                    padding: 5rpx 20rpx;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    >icon {
-                        position: absolute;
-                        bottom: 31rpx;
-                        right: -12rpx;
-                    }
+                    // position: relative;
+                    // margin: 10rpx;
+                    // background: #dfdfdf;
+                    // padding: 5rpx 20rpx;
+                    // display: flex;
+                    // justify-content: center;
+                    // align-items: center;
+                    // >icon {
+                    //     position: absolute;
+                    //     bottom: 31rpx;
+                    //     right: -12rpx;
+                    // }
+                }
+                .remove{
+                    margin-right: 20rpx;
                 }
             }
         }
@@ -39,7 +42,10 @@
                 <view>
                     <text>{{options.data[index][options.key]||'请选择'}}</text>
                 </view>
-                <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                <view>
+                    <!-- <icon catchtap='remove' class="remove iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:32rpx;"></icon> -->
+                    <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
+                </view>
             </view>
         </picker>
          <view  wx:if="{{options.warning}}" style="color:#e20000">
@@ -71,6 +77,10 @@
                 }
                 this.$apply();
             },
+            // remove(){
+            //     console.log(1);
+            //     this.index = -1;
+            // }
         };
         onLoad() {
              this.options.disabled = this.options.disabled ||false;

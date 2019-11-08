@@ -204,7 +204,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import ajax from '@/utils/cofig/request.js';
     import navbar from '@/components/navbar';
     export default class conflictRetrievalList extends wepy.page {
         config = {

@@ -1,4 +1,4 @@
-import { getRequest } from '@/utils/cofig/ajax.js';
+import { getRequest } from '@/utils/cofig/request.js';
 
 export function GUserVacations(data){   // 获取用户请假分页列表
     return getRequest({

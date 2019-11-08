@@ -61,7 +61,10 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js'
+    import { GCases } from '@/api/myclient'
+    import { GetCaseActions,GCaseChangeStates } from '@/api/caseManagement'
+    import { EmployeePhoto,SProcessCase } from '@/api/common'
+    import { DeleteCase } from '@/api/myRegister'
     import PickerOption from '@/components/picker/pickerOption';
     export default class caseManagement extends wepy.page {
         config = {
@@ -106,12 +109,7 @@
                     });
             },
             async operations(items, index) {
-                var { data } = await ajax.getData(
-                    '/api/services/web/Case/GetCaseActions',
-                    'post', {
-                        id: items.id
-                    }
-                )
+                var { data } = await GetCaseActions({id: items.id})
                 var operations = data.result.items.map(item => item.displayName)
                 wx.showActionSheet({
                     itemList: operations, //按钮的文字数组，数组长度最大为6个,
@@ -175,7 +173,7 @@
                             wx.showLoading({
                                 title: '提交中',
                             })
-                            let { statusCode } = await ajax.getData('/api/services/web/Case/ProcessCase','post',{
+                            let { statusCode } = await SProcessCase({
                                 condition:this.condition,
                                 eventName: "StateChange",
                                 id:this.id
@@ -247,11 +245,7 @@
             if(Object.keys(this.searchData).length>0){
                 subData = Object.assign(subData, this.searchData);
             }
-            var resData = await ajax.getData(
-                '/api/services/web/Case/GetCases',
-                'post', 
-                subData
-            )
+            var resData = await GCases(subData)
             if (resData.statusCode == 200) {
                 this.totalCount = resData.data.result.totalCount;
                 var caseManageData = resData.data.result.items;
@@ -267,8 +261,7 @@
                 var lawyerListData = [];
                 for (var index_2 = 0; caseManageData[index_1].lawyerList && index_2 < lawyerList.length; index_2++) {
                     if (index_2 < 6) {
-                        var http = '/api/services/web/personal/GetEmployeePhoto?id=' + lawyerList[index_2].userId;
-                        lawyerListData[index_2] = await ajax.getAavatar(http);
+                        lawyerListData[index_2] = await EmployeePhoto(lawyerList[index_2].userId);
                     } else {
                         break;
                     }
@@ -285,12 +278,7 @@
                 mask: true, //显示透明蒙层，防止触摸穿透,
                 success: res => {}
             });
-            var resData = await ajax.getData(
-                '/api/services/web/case/DeleteCase',
-                'post', {
-                    id: id
-                }
-            )
+            var resData = await DeleteCase({id})
             if (resData.statusCode == 200) {
                 this.caseManageData.splice(index, 1);
                 this.avatarList.splice(index, 1);
@@ -329,7 +317,7 @@
 
         // }
         async GetCaseChangeStates(){
-            let { data } = await ajax.getData('/api/services/web/Case/GetCaseChangeStates','POST')
+            let { data } = await GCaseChangeStates()
             this.condition = data.result.items[0].name
             this.status.data = data.result.items
             this.$apply()

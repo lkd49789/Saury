@@ -183,7 +183,7 @@
 
 <script>
   import wepy from 'wepy';
-  import { getUserAvatar } from '@/utils/cofig/ajax.js';
+  import { getUserAvatar } from '@/utils/cofig/request.js';
   import { GVisitRecords } from '@/api/myclient';
   import mixins from '@/utils/cofig/mixin.js';
   import placeHolderImage from '@/components/placeHolderImage';

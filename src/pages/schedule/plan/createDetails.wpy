@@ -316,10 +316,9 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
-    import {
-        myDistinct
-    } from '@/utils/cofig/api.js';
+    import { GetScheduleForEdit,CreateOrUpdateSchedule } from '@/api/schedule';
+    import { GeneralComboboxList } from '@/api/common';
+    import { myDistinct } from '@/utils/cofig/api.js';
     import StartTime from '@/components/Date/nowDateTimePicker';
     import EndTime from '@/components/Date/endDateTimePicker';
     import RemindTime from '@/components/picker/option';
@@ -636,11 +635,7 @@
         }
         async GetPlanForEdit() {
             var data = {};
-            var resData = await ajax.getData(
-                '/api/services/web/schedule/GetScheduleForEdit',
-                'post',
-                data
-            )
+            var resData = await GetScheduleForEdit(data)
             if (resData.statusCode == 200) {
                 var EditData = resData.data.result;
                 // wx.setStorageSync('meetingRoomData',EditData.meetingRoomCombobox);
@@ -684,11 +679,7 @@
                     this.$apply();
                 }
             });
-            var resData = await ajax.getData(
-                '/api/services/web/schedule/CreateOrUpdateSchedule',
-                'post',
-                this.submitData
-            )
+            var resData = await CreateOrUpdateSchedule(this.submitData)
             if (resData.statusCode == 200) {
                 wx.navigateBack({
                     delta: 2
@@ -711,11 +702,7 @@
                         class: keyWord,
                         parentId: arg[0]
                     }
-                    var resData = await ajax.getData(
-                        '/api/services/web/common/GetGeneralComboboxList',
-                        'post',
-                        data
-                    )
+                    var resData = await GeneralComboboxList( data)
                     console.log(resData);
                     if (resData.statusCode == 200) {
                         console.log(resData.data.result.length !== 0)
@@ -740,11 +727,7 @@
                     var data = {
                         class: keyWord
                     }
-                    var resData = await ajax.getData(
-                        '/api/services/web/common/GetGeneralComboboxList',
-                        'post',
-                        data
-                    )
+                    var resData = await GeneralComboboxList(data)
                     if (resData.statusCode == 200) {
                         var ComboboxList = resData.data.result
                         for (var index in ComboboxList) {
@@ -760,11 +743,7 @@
                         class: keyWord,
                         shortCode: arg[0]
                     }
-                    var resData = await ajax.getData(
-                        '/api/services/web/common/GetGeneralComboboxList',
-                        'post',
-                        data
-                    )
+                    var resData = await GeneralComboboxList(data)
                     this.$apply();
                     break
                 default:

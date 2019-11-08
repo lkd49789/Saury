@@ -1,4 +1,4 @@
-import { getRequest,getAavatar  } from '@/utils/cofig/ajax.js';
+import { getRequest,getAavatar  } from '@/utils/cofig/request.js';
 
 export function EmployeePhoto(id){   // 获取图片 头像等
     return getAavatar(`/api/services/web/personal/GetEmployeePhoto?id=${id}`)     
@@ -122,6 +122,20 @@ export function GetLogs(data){   //获取操作日志列表.
 export function GCaseCheckList(data){   //获取冲突检索结果.
     return getRequest({
         url:'/api/services/web/Case/GetCaseCheckList',
+        data
+    })       
+}
+
+export function GPreConflictCaseList(data){   //利益冲突预检案件检索列表
+    return getRequest({
+        url:'/api/services/web/case/GetPreConflictCaseList',
+        data
+    })       
+}
+
+export function GUserTypeComboboxItems(data){   //获取用户类型下拉列表.
+    return getRequest({
+        url:'/api/services/web/Common/GetUserTypeComboboxItems',
         data
     })       
 }

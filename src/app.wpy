@@ -87,7 +87,9 @@
 <script>
   import wepy from 'wepy';
   import 'wepy-async-function';
-  import { getRequest, getData, getAavatar } from './utils/cofig/ajax.js';
+  import { EmployeePhoto } from '@/api/common';
+  import { GetWechatUserInfo } from '@/api/login';
+  import { CurrentLoginInformations } from '@/api/main';
   export default class extends wepy.app {
     config = {
       "pages": [
@@ -121,7 +123,8 @@
         //设置
         'pages/mine/tools',
         //公共页面
-        'pages/common/operatingRecord',
+        'pages/common/operatingRecord',   //操作记录
+        'pages/common/selectPeople'    //所属人
         //模块
         // //我的案件
         // 'pages/modules/mycase/mycase',
@@ -545,16 +548,12 @@
     }
     //获取用户信息
     async GetCurrentLoginInformations() {
-      var CurrentLoginInformationsData = await getData(
-        '/api/services/app/session/GetCurrentLoginInformations',
-        'get'
-      )
+      var CurrentLoginInformationsData = await CurrentLoginInformations()
       if (CurrentLoginInformationsData.statusCode == 200) {
         var userInfo = {}
         userInfo = CurrentLoginInformationsData.data.result.user;
-        var http = '/api/services/web/personal/GetEmployeePhoto?id=' + CurrentLoginInformationsData.data.result.user.id;
         this.global.currentUserId = CurrentLoginInformationsData.data.result.user.id;
-        var avatarData = await getAavatar(http);
+        var avatarData = await EmployeePhoto(CurrentLoginInformationsData.data.result.user.id);
         userInfo['userAvatar'] = avatarData;
         this.global.userInfo = userInfo;
         this.global.tenant = CurrentLoginInformationsData.data.result.tenant;
@@ -591,15 +590,14 @@
                 wx.getUserInfo({
                   withCredentials: true,
                   success: async res => {
-                    let resData = await getRequest({url:'/api/Account/GetWechatUserInfo',
-                    data: {
+                    let resData = await GetWechatUserInfo({
                         code: code,
                         encryptedData: res.encryptedData,
                         iv: res.iv,
                         rawData: res.rawData,
                         signature: res.signature
                       }
-                      })
+                      )
                       if (resData.data.result.accessToken) {
                           console.log(3)
                           wx.setStorageSync('access', resData.data.result.accessToken);

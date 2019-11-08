@@ -1,0 +1,287 @@
+<!--  -->
+<template>
+  <view class='container'>
+      <view wx:if="{{isShowPage}}" class="search">
+          <view class="bill_title">
+                <text class="title">{{title}}</text>
+                <view class="search_top flex">
+                    <view class="search_input flex">
+                        <icon class="iconfont icon-sousuo1 input_sousuo" style="color:#5d73fa;font-size:24px;"></icon>
+                        <input value="{{searchClentValue}}" type="text" confirm-type="search" placeholder="搜索关键字" placeholder-class="placeholder" maxlength="30" bindconfirm="submitSearch" focus="true">
+                        </input>
+                    </view>
+                    <view class="top_right_btn">
+                        <icon @tap="isShowPage" class="iconfont icon-gaojisousuo" style="color:#5d73fa;font-size:35px;"></icon>
+                    </view>
+                </view>
+           </view>
+           <repeat for="{{list}}" key="index" index="index" item="item">
+                <view class="item flex" @tap="touch({{item}})">
+                    <view>
+                        <image src="{{item.src}}" mode="scaleToFill"
+                          lazy-load="false">
+                        </image>
+                    </view>
+                    <view>
+                        <view>{{item.name}} ({{item.emailAddress}})</view>
+                        <view>{{item.categoryName || '-'}}</view>
+                    </view>
+                </view>
+           </repeat>
+      </view>
+      <view wx:else>
+        <view class="advanced_search_title flex">
+            <text>高级搜索</text>
+            <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" catchtap="isShowPage"></icon>
+        </view>
+        <view class="advanced_search_content">
+            <OrganizationUnitId :options.sync="OrganizationUnitId" :index.sync='OrganizationUnitIdIndex' :twoWayTitle="OrganizationUnitIdIndex" />
+            <UserType :options.sync="UserType" :index.sync='UserTypeIndex' :twoWayTitle="UserTypedIndex" />
+        </view>
+        <image class="btn-sub" src="../../images/test.png" mode="scaleToFill" lazy-load="false" catchtap="advancedSearchSubmit" />
+      </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import { GEmployees,EmployeePhoto,Organizations,GUserTypeComboboxItems } from '@/api/common';
+  import PickerOption from '@/components/picker/pickerOption'
+  export default class selectPeople extends wepy.page {
+    config = {
+        enablePullDownRefresh: true
+    }
+    data = {
+        isShowPage:true,
+        title:'所属人',
+        list:[],
+        pageNumber:1,
+        searchClentValue:'',
+        OrganizationUnitId: {
+            title: '组织机构',
+            key: 'displayName',
+            name: 'OrganizationUnitId',
+            data: [],
+            warning: false
+        },
+        OrganizationUnitIdIndex: -1,
+        UserType:{
+            title: '用户类型',
+            key: 'displayText',
+            name: 'UserType',
+            data: [],
+            warning: false
+        },
+        UserTypeIndex:-1,
+        searchData:{},
+        totalCount:0
+    };
+
+    components = {
+        OrganizationUnitId:PickerOption,
+        UserType:PickerOption
+    };
+    watch = {
+        OrganizationUnitIdIndex(index){
+            this.searchData.organizationUnitId = this.OrganizationUnitId.data[index].id;
+        },
+        UserTypeIndex(index){
+            this.searchData.category = this.UserType.data[index].value;
+        }
+    };
+    methods = {
+        submitSearch(e){
+            this.list = []
+            this.pageNumber = 1
+            this.searchClentValue = e.detail.value;
+            this.GetEmployees()
+        },
+        touch(item){
+            var pages = getCurrentPages();
+            var prevPage = pages[pages.length - 2]; //上一个页面
+                // this.searchData.keyWord = value;
+            if (prevPage) {
+                prevPage.isRefresh('',item)
+            }
+            wx.navigateBack({
+                delta: 1
+            });
+        },
+        isShowPage(){
+            this.isShowPage = !this.isShowPage
+        },
+        advancedSearchSubmit(){
+            if(Object.keys(this.searchData).length > 0){
+                this.list = []
+                this.pageNumber = 1
+                this.GetEmployees()
+                this.isShowPage = !this.isShowPage
+            }else{
+               wx.showToast({
+                    title: '没有搜索内容！', //提示的内容,
+                    icon: 'none', //图标,
+                    duration: 2000, //延迟时间,
+                    mask: false //显示透明蒙层，防止触摸穿透,
+                }); 
+            }
+        }
+    };
+    async GetEmployees(){
+        let category = this.searchData.category || null;
+        let organizationUnitId = this.searchData.organizationUnitId || null;
+        let { data } = await GEmployees({
+            category,
+            filter: this.searchClentValue,
+            organizationUnitId,
+            pageNumber: this.pageNumber,
+            pageSize: 10,
+            singleSelect: false,
+        })
+        this.totalCount = data.result.totalCount
+        for(let i in data.result.items){
+            data.result.items[i]['src'] = await EmployeePhoto(data.result.items[i].id)
+        }
+        this.list = data.result.items
+        wx.stopPullDownRefresh(); //停止下拉刷新
+        this.$apply()
+    }
+    async GetOrganizations(){
+        let { data } = await Organizations({})
+        this.OrganizationUnitId.data = data.result
+        this.$apply()
+    }
+    async GetUserTypeComboboxItems(){
+        let { data } = await GUserTypeComboboxItems()
+        this.UserType.data = data.result
+        this.$apply()
+    }
+    //下拉刷新
+    onPullDownRefresh() {
+        this.pageNumber = 1;
+        this.list = []
+        this.searchData = {}
+        this.searchClentValue = ''
+        this.GetEmployees()
+        this.$apply();
+    }
+    // 上拉加载
+    onReachBottom() {
+        if (this.totalCount / 10 > this.pageNumber && this.$parent.global.netWorkString) {
+            this.pageNumber += 1;
+            this.GetEmployees();
+        } else {
+            let title = '网络连接失败！'
+            if (this.$parent.global.netWorkString) {
+                title = '我们是有底线的！'
+            }
+            wx.showToast({
+                title,
+                icon: 'none',
+                duration: 1500,
+                mask: false,
+            });
+        }
+        this.$apply();
+    }
+    onLoad() {
+        this.GetEmployees()
+        this.GetOrganizations()
+        this.GetUserTypeComboboxItems()
+     };
+
+    onShow() { };
+  }
+</script>
+
+<style lang='scss'>
+    .flex{
+       display: flex;
+       align-items: center; 
+    }
+    .container{
+        padding: 44rpx 28rpx 0;
+        .search{
+            padding-top:166rpx;
+            .bill_title {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                background: #fff;
+                .title {
+                    height: 104rpx;
+                    line-height: 104rpx;
+                    padding: 0 28rpx;
+                    font-size: 48rpx;
+                }
+                .search_top {
+                    padding: 10rpx 28rpx;
+                    justify-content: space-between;
+                    .search_input {
+                        width: 100%; // border:1px solid #dfdfdf;
+                        padding: 10rpx 20rpx;
+                        border-radius: 100rpx;
+                        background: #f4f4f4;
+                        margin-right: 14rpx;
+                        >icon {
+                            margin-right: 14rpx;
+                        }
+                        >input {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+            .item{
+                background: #ffffff;
+                margin: 0 auto;
+                box-shadow: 0rpx 8rpx 30rpx 0rpx rgba(65, 98, 213, 0.25);
+                border-radius: 20rpx;
+                padding: 30rpx 24rpx;
+                margin: 44rpx 28rpx;
+                font-size: 28rpx;
+                line-height: 60rpx;
+                image{
+                    height: 80rpx;
+                    width: 80rpx;
+                    border-radius: 50%;
+                    margin-right: 30rpx;
+                }
+            }
+        }
+        .advanced_search_title {
+            justify-content: space-between;
+            >text {
+            font-size: 40rpx;
+            }
+        }
+        .advanced_search_content {
+            margin: 30rpx 0;
+            .caseSearchInput{
+                justify-content: space-between;
+                >view:first-child{
+                    width:90%;
+                }
+                >view:last-child{
+                    background: #5d73fa;
+                    height:60rpx;
+                    width:60rpx;
+                    line-height:60rpx;
+                    text-align: center;
+                    >icon{
+                        font-size:40rpx;
+                        color:#ffffff;
+                    }
+                }
+            }
+            .btn-sub {
+                width: 160rpx;
+                height: 160rpx;
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                z-index: 99;
+            }
+        }
+    }
+</style>

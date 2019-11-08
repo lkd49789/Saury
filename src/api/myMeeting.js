@@ -1,4 +1,4 @@
-import { getRequest,preView } from '@/utils/cofig/ajax.js';
+import { getRequest,preView } from '@/utils/cofig/request.js';
 
 export function Meetings(data){   // 获取会议列表
     return getRequest({

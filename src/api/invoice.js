@@ -1,4 +1,4 @@
-import { getRequest } from '../utils/cofig/ajax.js';
+import { getRequest } from '../utils/cofig/request.js';
 
 export function GInvoice(data){ // 获取发票信息
     return getRequest({url:'/api/services/web/FinancialInvoice/GetInvoice',

@@ -51,7 +51,7 @@
                 border-radius: 20rpx;
                 padding: 30rpx 24rpx;
                 position: fixed;
-                top: 149rpx;
+                top: 190rpx;
                 left: 28rpx;
                 right: 28rpx;
                 z-index: 9999;
@@ -115,7 +115,7 @@
                 <icon class="iconfont icon-xuanxiang" style="font-size:30rpx;color:#5d73fa;margin-right:10rpx"></icon>
                 <text>您好！最近有{{MyParticipantWorklogsCount}}条工作日志将您设为了参与人</text>
             </view>
-            <view style="margin-top:{{MyParticipantWorklogsCount?'300rpx':'0'}}">
+            <view style="margin-top:{{MyParticipantWorklogsCount ? '320rpx':'0'}}">
                 <repeat for="{{MyWorklogsData}}" key="index" index="index" item="item">
                     <view class="records-item" @tap="toLogDetail('{{item.id}}')">
                         <view class="item-onLine">

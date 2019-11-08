@@ -1,4 +1,4 @@
-import { getRequest,uploadFile  } from '@/utils/cofig/ajax.js';
+import { getRequest,uploadFile  } from '@/utils/cofig/request.js';
 
 export function UserCaseActions(data){   // 获取用户案件操作列表
     return getRequest({

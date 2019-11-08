@@ -63,7 +63,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import ajax from '@/utils/cofig/request.js';
     import remark from '@/components/picker/input';
     export default class subSearchResult extends wepy.page {
         components = {

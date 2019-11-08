@@ -713,7 +713,7 @@
 
 <script>
     import wepy from 'wepy';
-    import { preView as pView } from '@/utils/cofig/ajax.js'
+    import { preView as pView } from '@/utils/cofig/request.js'
     import { GCaseInfo,GClientContactAvatar,EmployeePhoto,GClient,GCaseCheckList   } from '@/api/common'
     import { GConflictCheckList } from '@/api/auditModules'
     import mixins from '@/utils/cofig/mixin.js';

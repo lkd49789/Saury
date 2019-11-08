@@ -719,13 +719,10 @@
 <script>
     import wepy from 'wepy';
     import navbar from '@/components/navbar';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { ScheduleCenterForCalendar } from '@/api/schedule';
     import mixins from '@/utils/cofig/mixin.js';
-    import {myDistinct} from '@/utils/cofig/api.js';
+    import { myDistinct,formatTime } from '@/utils/cofig/api.js';
     import placeHolderImage from '@/components/placeHolderImage'
-    import {
-        formatTime
-    } from '@/utils/cofig/api.js'
     export default class Index extends wepy.page {
         data = {
             addImage: '../../images/add.png',
@@ -1114,11 +1111,7 @@
                 },
                 isCurrent: true,
             }
-            var resData = await ajax.getData(
-                '/api/services/web/schedule/GetScheduleCenterForCalendar',
-                'post',
-                data
-            );
+            var resData = await ScheduleCenterForCalendar(data);
             let { tasks, schedules, workLogs, caseCourts, meetings, vacations } = resData.data.result;
 
             this.dateArr.forEach( item =>{
@@ -1172,11 +1165,7 @@
                 },
                 isCurrent: true,
             }
-            var resData = await ajax.getData(
-                '/api/services/web/schedule/GetScheduleCenterForCalendar',
-                'post',
-                data
-            );
+            var resData = await ScheduleCenterForCalendar(data);
             let {tasks, schedules, workLogs, caseCourts, meetings, vacations} = resData.data.result;
             switch (resData.statusCode) {
                 case 200:

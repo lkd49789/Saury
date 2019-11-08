@@ -231,25 +231,16 @@
       let iconfont = {};
       switch (fileClass) {
         case 'pdf':
-          iconfont['icon'] = 'icon-pdfpng1';
-          iconfont['color'] = '#e20000';
-          break;
         case 'png':
           iconfont['icon'] = 'icon-pdfpng1';
           iconfont['color'] = '#e20000';
           break;
         case 'docx':
-          iconfont['icon'] = 'icon-wold1';
-          iconfont['color'] = '#009dff';
-          break;
         case 'doc':
           iconfont['icon'] = 'icon-wold1';
           iconfont['color'] = '#009dff';
           break;
         case 'xls':
-          iconfont['icon'] = 'icon-exl1';
-          iconfont['color'] = '#069400';
-          break;
         case 'xlsx':
           iconfont['icon'] = 'icon-exl1';
           iconfont['color'] = '#069400';

@@ -69,6 +69,40 @@
             }
             .advanced-search-content {
                 margin: 30rpx 0 40rpx 0;
+                .Tag {
+                    margin-bottom: 36rpx;
+                    position: relative;
+                    color: #2a2a2a;
+                    display: flex;
+                    justify-content: space-between;
+align-items: center;
+
+                    .left{
+                        width: 90%;
+                            
+                            .tagInput {
+                                padding: 28rpx 0;
+                                border-bottom: 1px solid #dfdfdf;
+                                display: flex;
+                                bottom: 0;
+                                left: 0;
+                                .tag-item {
+                                    position: relative;
+                                    margin: 12rpx;
+                                    border: 1px dotted #dedede;
+                                    padding: 5rpx 20rpx;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    >icon {
+                                        position: absolute;
+                                        bottom: 23rpx;
+                                        right: -21rpx;
+                                    }
+                                }
+                        }
+                    }
+                }
             }
         }
         .tui-picker-content {
@@ -107,8 +141,9 @@
           align-items: center;
           >view:first-child{
             width:90%;
-          }
-          >view:last-child{
+          }   
+        }
+        .searchIcon{
             background: #5d73fa;
             height:60rpx;
             width:60rpx;
@@ -119,8 +154,6 @@
                 color:#ffffff;
               }
           }
-          
-        }
 </style>
 
 <template>
@@ -151,7 +184,7 @@
                 </view>
             </view>
         </view>
-        <view class="advanced-search-input-panel" wx:else="{{showPage}}">
+        <view class="advanced-search-input-panel" wx:else>
             <view class="advanced-search-title">
                 <text>高级搜索</text>
                 <icon class="iconfont icon-zirenwushanchu" style="color:#7a7a7a;font-size:40rpx;" @tap="showPage"></icon>
@@ -159,8 +192,27 @@
             <view class="advanced-search-content">
                 <view class="caseSearchInput">
                     <CaseName :input.sync="CaseName" :inputValue.sync='CaseNameValue' :twoWayTitle="CaseNameValue" />
-                    <view>
+                    <view class="searchIcon">
                     <icon class="iconfont icon-sousuo1" @tap="toCaseSearchPage"></icon>
+                    </view>
+                </view>
+                <view class="Tag">
+                    <view class="left">
+                        <view>
+                            <text>标签</text>
+                        </view>
+                        <view class="tagInput" style="display:flex;flex-wrap: wrap;align-items:center;">
+                            <text wx:if="{{!Employee}}">请选择</text>
+                                <repeat for="{{Employee}}" key="index" index="index" item="item">
+                                    <view class="tag-item">
+                                        <text>{{item.name}}</text>
+                                        <icon class="iconfont icon-zirenwushanchu1" style="font-size:48rpx" catchtap="deleteTagItem('{{index}}')"></icon>
+                                    </view>
+                                </repeat>
+                        </view>
+                    </view>
+                    <view class="searchIcon right">
+                            <icon class="iconfont icon-sousuo1" @tap="goSelectPeople"></icon>
                     </view>
                 </view>
                 <view class="tui-picker-content">
@@ -168,14 +220,14 @@
                     <view style="display:flex;align-items:center;">
                         <picker id="startMeetingDate" mode="date" value="{{searchData.MeetingTime.StartDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
                             <view class="tui-picker-detail">
-                                {{searchData.MeetingTime.StartDate||'请选择'}}
+                                {{searchData.MeetingTime.StartDate || '请选择'}}
                                 <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
                             </view>
                         </picker>
                         <text style="margin:0 20rpx">至</text>
                         <picker id="endMeetingDate" mode="date" value="{{searchData.MeetingTime.EndDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
                             <view class="tui-picker-detail">
-                                {{searchData.MeetingTime.EndDate||'请选择'}}
+                                {{searchData.MeetingTime.EndDate || '请选择'}}
                                 <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
                             </view>
                         </picker>
@@ -186,14 +238,14 @@
                     <view style="display:flex;align-items:center;">
                         <picker id="startCreateDate" mode="date" value="{{searchData.CreationTime.StartDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
                             <view class="tui-picker-detail">
-                                {{searchData.CreationTime.StartDate||'请选择'}}
+                                {{searchData.CreationTime.StartDate || '请选择'}}
                                 <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
                             </view>
                         </picker>
                         <text style="margin:0 20rpx">至</text>
                         <picker id="endCreateDate" mode="date" value="{{searchData.CreationTime.EndDate}}" start="2000-01-01" end="2050-12-31" bindchange="bindDateChange" style="flex:1">
                             <view class="tui-picker-detail">
-                                {{searchData.CreationTime.EndDate||'请选择'}}
+                                {{searchData.CreationTime.EndDate || '请选择'}}
                                 <icon class="updown iconfont icon-gengduoneirongdianjichakanxiangqing" style="font-size:30rpx;color:#b2b2b2"></icon>
                             </view>
                         </picker>
@@ -216,13 +268,10 @@
 <script>
     import wepy from 'wepy';
     import {
-        myDistinct
+        myDistinct,formatDate,myObjDistinct
     } from '@/utils/cofig/api.js';
     import { MeetingRoomCombobox } from '@/api/myMeeting.js';
     import { GeneralCodeComboboxItems } from '@/api/common.js';
-    import {
-        formatDate
-    } from '@/utils/cofig/api.js';
     import Input from '@/components/picker/input';
     // import Title from '@/components/picker/input';
     import Option from '@/components/picker/option';
@@ -320,7 +369,7 @@
             history_keyWord_case: [],
             searchClentValue: '',
             showPage: true,
-            isShowArray: [],
+            Employee:[]
         };
         watch = {
             LawCaseNameIndex(index){
@@ -358,9 +407,15 @@
             },
         };
         methods = {
+            deleteTagItem(index){
+                console.log(this.Employee);
+                this.Employee.splice(index,1)
+            },
             toCaseSearchPage(){
-                wx.navigateTo({ url: '../../receivables/manageReceivables/manageReceivablesExamine' });
-                this.$apply();        
+                wx.navigateTo({ url: '../../receivables/manageReceivables/manageReceivablesExamine' });      
+            },
+            goSelectPeople(){
+                wx.navigateTo({ url: '../../../common/selectPeople' });                      
             },
             advancedSearchSubmit() {
                 console.log(this.searchData)
@@ -498,10 +553,7 @@
             this.$apply();
         }
         async  GetGeneralCodeComboboxItems(id){
-            var data_id={
-                id
-            }
-            var resData= await GeneralCodeComboboxItems(data_id)
+            var resData= await GeneralCodeComboboxItems({id})
             if(resData.statusCode == 200){
                 var GetGeneralCodeComboboxItemsData = resData.data.result;
                 let key = ''
@@ -530,8 +582,8 @@
         }
         //会议室
         async GetMeetingRoomCombobox(){
-            var resData=await MeetingRoomCombobox()
-            if(resData.statusCode==200){
+            var resData = await MeetingRoomCombobox()
+            if(resData.statusCode == 200){
                 var GetMeetingRoomComboboxData=resData.data.result;
                 for(var index in GetMeetingRoomComboboxData){
                     this.MeetingRoomId.value.push(GetMeetingRoomComboboxData[index].value);
@@ -540,9 +592,19 @@
                 this.$apply();
             }
         }
-        isRefresh(caseInfoData){
-            this.CaseNameValue = caseInfoData.name;
-            this.searchData.CaseName = caseInfoData.name;
+        EmployeeInit(){
+            this.searchData.EmployeeId = this.Employee.map(item => item.id).join(',')
+            this.searchData.EmployeeName = this.Employee.map(item => item.name).join(',')
+        }
+        isRefresh(caseInfoData,people){
+            if(caseInfoData){
+                this.CaseNameValue = caseInfoData.name;
+                this.searchData.CaseName = caseInfoData.name;
+            }else if(people){
+                this.Employee = myObjDistinct(this.Employee,[people],'id')
+                this.Employee.push(people)
+                this.EmployeeInit()
+            }
         }
         onLoad() {
             this.isHistory();

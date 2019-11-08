@@ -35,7 +35,7 @@
                 <text wx:else>取消全选</text>
             </view>
             <view style="color:{{show_sign ? '#5d73fa' : '#7a7a7a'}}" @tap="isAllComlated"> <text>已读</text></view>
-            <view style="color:{{delet_id.length !== 0 ? '#e20000' : '#7a7a7a'}}" @tap="DeleteUserNotifications"> <text>删除</text></view>
+            <!-- <view style="color:{{delet_id.length !== 0 ? '#e20000' : '#7a7a7a'}}" @tap="DeleteUserNotifications"> <text>删除</text></view> -->
         </view>
         <placeHolderImage :placeHolder.sync="placeHolder" />
     </view>
@@ -43,14 +43,12 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax';
+    import ajax from '@/utils/cofig/request';
     import { UserNotifications,SNotificationAsRead } from '@/api/main';
     import { EmployeePhoto } from '@/api/common';
     import mixins from '@/utils/cofig/mixin.js';
     import placeHolderImage from '@/components/placeHolderImage';
-    import {
-        beautify_time
-    } from '@/utils/cofig/api.js';
+    import { beautify_time } from '@/utils/cofig/api.js';
     export default class message extends wepy.page {
         config = {
             enablePullDownRefresh: true,
@@ -147,44 +145,44 @@
                     console.log('1123')
                 }
             },
-            //删除提醒消息
-            deleteNotification(id, index) {
-                if (!this.showTools) {
-                    wx.showModal({
-                        title: '是否确认！', //提示的标题,
-                        content: '一旦删除将无法恢复！', //提示的内容,
-                        showCancel: true, //是否显示取消按钮,
-                        cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
-                        cancelColor: '#7a7a7a', //取消按钮的文字颜色,
-                        confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
-                        confirmColor: '#5d73fa', //确定按钮的文字颜色,
-                        success: res => {
-                            if (res.confirm) {
-                                this.showTools = false;
-                                this.DeleteUserNotification(id, index)
-                            }
-                        }
-                    });
-                }
-            },
+            // //删除提醒消息
+            // deleteNotification(id, index) {
+            //     if (!this.showTools) {
+            //         wx.showModal({
+            //             title: '是否确认！', //提示的标题,
+            //             content: '一旦删除将无法恢复！', //提示的内容,
+            //             showCancel: true, //是否显示取消按钮,
+            //             cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
+            //             cancelColor: '#7a7a7a', //取消按钮的文字颜色,
+            //             confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
+            //             confirmColor: '#5d73fa', //确定按钮的文字颜色,
+            //             success: res => {
+            //                 if (res.confirm) {
+            //                     this.showTools = false;
+            //                     this.DeleteUserNotification(id, index)
+            //                 }
+            //             }
+            //         });
+            //     }
+            // },
             //批量删除
-            DeleteUserNotifications() {
-                wx.showModal({
-                    title: '是否确认！', //提示的标题,
-                    content: '一旦删除将无法恢复！', //提示的内容,
-                    showCancel: true, //是否显示取消按钮,
-                    cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
-                    cancelColor: '#7a7a7a', //取消按钮的文字颜色,
-                    confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
-                    confirmColor: '#5d73fa', //确定按钮的文字颜色,
-                    success: res => {
-                        if (res.confirm) {
-                            this.showTools = false;
-                            this.DeleteUserNotifications()
-                        }
-                    }
-                });
-            },
+            // DeleteUserNotifications() {
+            //     wx.showModal({
+            //         title: '是否确认！', //提示的标题,
+            //         content: '一旦删除将无法恢复！', //提示的内容,
+            //         showCancel: true, //是否显示取消按钮,
+            //         cancelText: '取消', //取消按钮的文字，默认为取消，最多 4 个字符,
+            //         cancelColor: '#7a7a7a', //取消按钮的文字颜色,
+            //         confirmText: '确定', //确定按钮的文字，默认为取消，最多 4 个字符,
+            //         confirmColor: '#5d73fa', //确定按钮的文字颜色,
+            //         success: res => {
+            //             if (res.confirm) {
+            //                 this.showTools = false;
+            //                 this.DeleteUserNotifications()
+            //             }
+            //         }
+            //     });
+            // },
             showTools() {
                 this.showTools = !this.showTools;
                 this.sign_id = [];
@@ -203,7 +201,6 @@
             }
         };
         mixins = [mixins]
-        events = {};
         watch = {
             isDisabled(value) {
                 this.all_checked = value.every(item => item == true)
@@ -561,51 +558,51 @@
                 this.showTools = false;
             }
         }
-        //删除消息
-        async DeleteUserNotification(id, index) {
-            wx.showLoading({
-                title: '加载中,请稍等!', //提示的内容,
-                mask: true, //显示透明蒙层，防止触摸穿透,
-                success: res => {
-                    this.GetUserNotifications_data.splice(index, 1);
-                    this.EmployeePhoto.splice(index, 1);
-                    this.isDisabled.splice(index, 1);;
-                    this.delet_id_all.splice(index, 1);
-                    this.sign_id_all.splice(index, 1);
-                    this.$apply();
-                }
-            });
-            var data = {
-                id
-            }
-            var resData = await ajax.getData(
-                '/api/services/app/notification/DeleteUserNotification',
-                'POST',
-                data
-            )
-            if (resData.data.success) {
-                console.log('删除成功')
-            }
-        }
-        //批量删除
-        async DeleteUserNotifications() {
-            wx.showLoading({
-                title: '加载中,请稍等!', //提示的内容,
-                mask: true, //显示透明蒙层，防止触摸穿透,
-                success: res => {
-                    this.GetUserNotifications(false);
-                }
-            });
-            var data = this.delet_id
-            var resData = await ajax.getData(
-                '/api/services/app/notification/DeleteUserNotifications',
-                'POST',
-                data
-            )
-            if(resData.success){
-                console.log('多选删除完成')
-            }
-        }
+        // //删除消息
+        // async DeleteUserNotification(id, index) {
+        //     wx.showLoading({
+        //         title: '加载中,请稍等!', //提示的内容,
+        //         mask: true, //显示透明蒙层，防止触摸穿透,
+        //         success: res => {
+        //             this.GetUserNotifications_data.splice(index, 1);
+        //             this.EmployeePhoto.splice(index, 1);
+        //             this.isDisabled.splice(index, 1);;
+        //             this.delet_id_all.splice(index, 1);
+        //             this.sign_id_all.splice(index, 1);
+        //             this.$apply();
+        //         }
+        //     });
+        //     var data = {
+        //         id
+        //     }
+        //     var resData = await ajax.getData(
+        //         '/api/services/app/notification/DeleteUserNotification',
+        //         'POST',
+        //         data
+        //     )
+        //     if (resData.data.success) {
+        //         console.log('删除成功')
+        //     }
+        // }
+        // //批量删除
+        // async DeleteUserNotifications() {
+        //     wx.showLoading({
+        //         title: '加载中,请稍等!', //提示的内容,
+        //         mask: true, //显示透明蒙层，防止触摸穿透,
+        //         success: res => {
+        //             this.GetUserNotifications(false);
+        //         }
+        //     });
+        //     var data = this.delet_id
+        //     var resData = await ajax.getData(
+        //         '/api/services/app/notification/DeleteUserNotifications',
+        //         'POST',
+        //         data
+        //     )
+        //     if(resData.success){
+        //         console.log('多选删除完成')
+        //     }
+        // }
         onLoad() {
             this.GetUserNotifications(false);
         };

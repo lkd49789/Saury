@@ -160,7 +160,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { ScheduleCenterForCalendar } from '@/api/schedule';
     export default class schedule extends wepy.page {
         data = {
             viewHeight: 0,
@@ -357,11 +357,7 @@
                 },
                 isCurrent: true,
             }
-            var resData = await ajax.getData(
-                '/api/services/web/schedule/GetScheduleCenterForCalendar',
-                'post',
-                data
-            );
+            var resData = await ScheduleCenterForCalendar(data);
             switch (resData.statusCode) {
                 case 200:
                     if (resData.data.result.schedules.length !== 0) {

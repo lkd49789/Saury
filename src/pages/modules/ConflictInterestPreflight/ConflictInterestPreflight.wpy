@@ -1,119 +1,3 @@
-<!--  -->
-<style lang='scss'>
-    .container {
-        .shadowBox {
-            box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
-            border-radius: 20rpx;
-            padding: 30rpx 24rpx;
-            margin-bottom: 44rpx;
-        }
-        .main {
-            margin: 149rpx 28rpx 44rpx 28rpx;
-            .searchBox {
-                >view:nth-child(2) {
-                    margin-bottom: 14rpx;
-                    border-bottom: 1px solid #dedede;
-                    color: #7a7a7a;
-                    padding: 28rpx 0;
-                }
-                >view:nth-child(3) {
-                    display: flex;
-                    align-items: center;
-                    flex-direction: row-reverse;
-                    color: #5d73fa;
-                    >view {
-                        width: 10%;
-                        padding: 10rpx 30rpx;
-                        border: 1px solid #5d73fa;
-                        border-radius: 100rpx;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                    }
-                }
-            }
-            .keywordBox {
-                display: flex;
-                .keywordItems {
-                    display: flex;
-                    align-items: center;
-                    flex-wrap: wrap;
-                    flex: 1;
-                    >view {
-                        background: #dedede;
-                        padding: 10rpx 50rpx 10rpx 20rpx;
-                        border-radius: 100rpx;
-                        position: relative;
-                        margin: 10rpx;
-                        >icon {
-                            position: absolute;
-                            top: -4rpx;
-                            bottom: 0;
-                            right: 10rpx;
-                        }
-                    }
-                }
-            }
-            .searchResultBox {
-                >view:not(:first-child) {
-                    color: #7a7a7a;
-                }
-                >view:first-child {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 20rpx;
-                    justify-content: space-between; 
-                    position: relative;
-                    >view:last-child {
-                        // font-size: 23rpx;
-                        // background: #e20000;
-                        // border-radius: 100rpx;
-                        // padding: 5rpx 10rpx;
-                        // color: #ffff;
-                        // position: absolute;
-                        // top:-25rpx;
-                        // right:0;
-                    }
-                }
-                >view:nth-child(2) {
-                    margin-bottom: 14rpx;
-                }
-                >view:nth-child(3) {
-                    margin-bottom: 20rpx;
-                }
-                >view:nth-child(4) {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    >view:last-child {
-                        display: flex;
-                        align-items: center;
-                        >view:first-child {
-                            border-radius: 50%;
-                            border: 1px solid #ff9900;
-                            height: 20rpx;
-                            width: 20rpx;
-                            margin-right: 14rpx;
-                        }
-                    }
-                }
-            }
-            .lawyerList{
-                color:#7a7a7a;
-                >view{
-                    padding-bottom:20rpx;
-                    border-bottom:1px solid #dfdfdf;
-                    margin-bottom: 20rpx;
-                    >view:not(:last-child){
-                        margin-bottom: 14rpx;
-                    }
-                }
-                
-            }
-        }
-    }
-</style>
-
 <template>
     <view class='container'>
         <view class="page-title">
@@ -135,7 +19,7 @@
                     <repeat for="{{keyWordArray}}" key="index" index="index" item="item">
                         <view>
                             <view>{{item}}</view>
-                            <icon class="iconfont icon-guanbi" style="font-size:20rpx;color:#7a7a7a;" @tap="deleteItem('{{index}}')"/>
+                            <icon class="iconfont icon-guanbi" @tap="deleteItem('{{index}}')"/>
                         </view>
                     </repeat>
                 </view>
@@ -177,7 +61,7 @@
 
 <script>
     import wepy from 'wepy';
-    import ajax from '@/utils/cofig/ajax.js';
+    import { GPreConflictCaseList } from '@/api/common';
     import {myDistinct} from '@/utils/cofig/api.js';
     export default class ConflictInterestPreflight extends wepy.page {
         config = {
@@ -261,17 +145,13 @@
                 pageSize: 10,
             }
             data.KeyWord = this.keyWordArray[this.keyWordArray.length-1] || this.keyWord;
-            var resData = await ajax.getData(
-                '/api/services/web/case/GetPreConflictCaseList',
-                'post',
-                data
-            )
+            var resData = await GPreConflictCaseList(data)
             if (resData.statusCode == 200 && resData.data.result.totalCount > 0) {
                 this.totalCount = resData.data.result.totalCount;
                 var ConflictCaseListData = resData.data.result.items;
                 for (var index in ConflictCaseListData) {
                     ConflictCaseListData[index].acceptDate = ConflictCaseListData[index].acceptDate.split('T')[0];
-                    ConflictCaseListData[index].isUnfoldData=false;
+                    ConflictCaseListData[index].isUnfoldData = false;
                 }
                 if(this.keyWordArray.length == 0){
                     var keyWordArray=[];
@@ -300,3 +180,121 @@
         onShow() {};
     }
 </script>
+<!--  -->
+<style lang='scss'>
+    .container {
+        .shadowBox {
+            box-shadow: 0px 8px 30px rgba(65, 98, 213, 0.25);
+            border-radius: 20rpx;
+            padding: 30rpx 24rpx;
+            margin-bottom: 44rpx;
+        }
+        .main {
+            margin: 149rpx 28rpx 44rpx 28rpx;
+            .searchBox {
+                >view:nth-child(2) {
+                    margin-bottom: 14rpx;
+                    border-bottom: 1px solid #dedede;
+                    color: #7a7a7a;
+                    padding: 28rpx 0;
+                }
+                >view:nth-child(3) {
+                    display: flex;
+                    align-items: center;
+                    flex-direction: row-reverse;
+                    color: #5d73fa;
+                    >view {
+                        width: 10%;
+                        padding: 10rpx 30rpx;
+                        border: 1px solid #5d73fa;
+                        border-radius: 100rpx;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                }
+            }
+            .keywordBox {
+                display: flex;
+                align-items: center;
+                .keywordItems {
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    flex: 1;
+                    >view {
+                        background: #dedede;
+                        padding: 10rpx 50rpx 10rpx 20rpx;
+                        border-radius: 100rpx;
+                        position: relative;
+                        margin: 10rpx;
+                        >icon {
+                            position: absolute;
+                            top: -4rpx;
+                            bottom: 0;
+                            right: 10rpx;
+                            font-size:30rpx;
+                            color:#7a7a7a;
+                        }
+                    }
+                }
+            }
+            .searchResultBox {
+                >view:not(:first-child) {
+                    color: #7a7a7a;
+                }
+                >view:first-child {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 20rpx;
+                    justify-content: space-between; 
+                    position: relative;
+                    >view:last-child {
+                        // font-size: 23rpx;
+                        // background: #e20000;
+                        // border-radius: 100rpx;
+                        // padding: 5rpx 10rpx;
+                        // color: #ffff;
+                        // position: absolute;
+                        // top:-25rpx;
+                        // right:0;
+                    }
+                }
+                >view:nth-child(2) {
+                    margin-bottom: 14rpx;
+                }
+                >view:nth-child(3) {
+                    margin-bottom: 20rpx;
+                }
+                >view:nth-child(4) {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    >view:last-child {
+                        display: flex;
+                        align-items: center;
+                        >view:first-child {
+                            border-radius: 50%;
+                            border: 1px solid #ff9900;
+                            height: 20rpx;
+                            width: 20rpx;
+                            margin-right: 14rpx;
+                        }
+                    }
+                }
+            }
+            .lawyerList{
+                color:#7a7a7a;
+                >view{
+                    padding-bottom:20rpx;
+                    border-bottom:1px solid #dfdfdf;
+                    margin-bottom: 20rpx;
+                    >view:not(:last-child){
+                        margin-bottom: 14rpx;
+                    }
+                }
+                
+            }
+        }
+    }
+</style>

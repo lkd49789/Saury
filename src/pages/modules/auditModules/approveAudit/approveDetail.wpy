@@ -299,7 +299,7 @@
     import wepy from 'wepy';
     import { GCaseFileStampOutput } from '@/api/auditModules';
     import { EmployeePhoto,GetLogs } from '@/api/common';
-    import { preView } from '@/utils/cofig/ajax.js'
+    import { preView } from '@/utils/cofig/request.js'
     import { formatTime } from '@/utils/cofig/api.js';
     export default class approveDetail extends wepy.page {
         props = {};

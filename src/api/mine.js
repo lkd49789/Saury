@@ -1,4 +1,4 @@
-import { getRequest,preView } from '@/utils/cofig/ajax.js';
+import { getRequest,preView } from '@/utils/cofig/request.js';
 
 export function GetUsers(){   // 获取个人信息
     return getRequest({

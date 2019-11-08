@@ -1,4 +1,4 @@
-import { getRequest  } from '@/utils/cofig/ajax.js';
+import { getRequest  } from '@/utils/cofig/request.js';
 
 export function GCharge(data){   // 获取费用信息.
     return getRequest({

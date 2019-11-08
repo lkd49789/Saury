@@ -280,6 +280,8 @@
             var Status = this.queryStream.Status ? this.queryStream.Status : '';
             var Subject = this.queryStream.Subject ? this.queryStream.Subject : '';
             var Title = this.queryStream.Title ? this.queryStream.Title : '';
+            var EmployeeId = this.queryStream.EmployeeId || '';
+            var EmployeeName = this.queryStream.EmployeeName || '';
             var data = {
                 pageNumber: this.pageNumber,
                 pageSize: 10,
@@ -292,6 +294,8 @@
                 Status,
                 Subject,
                 Title,
+                EmployeeId,
+                EmployeeName,
                 sorting: this.sorting,
             };
             var meetingsData = await Meetings(data)

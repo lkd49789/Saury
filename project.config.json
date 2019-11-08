@@ -24,7 +24,7 @@
 	"appid": "wxef90042fdcbc1459",
 	"projectname": "2.0",
 	"miniprogramRoot": "dist/",
-	"libVersion": "2.9.1",
+	"libVersion": "2.9.2",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {
 		"qywx_simulator_plugin": "1.2.0"
@@ -51,7 +51,22 @@
 		},
 		"miniprogram": {
 			"current": -1,
-			"list": []
+			"list": [
+				{
+					"id": -1,
+					"name": "pages/modules/myTaskCourse/taskStage/createtask/creatTask",
+					"pathName": "pages/modules/myTaskCourse/taskStage/createtask/creatTask",
+					"query": "projectId=841C7B06-1AEF-E911-AC1B-B0D9BF31DAD7&currentStage=0&category=0",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/main/index",
+					"pathName": "pages/common/selectPeople",
+					"query": "",
+					"scene": null
+				}
+			]
 		}
 	}
 }
